@@ -2430,6 +2430,81 @@
    "finding": "Composite withheld under BIG. Coverage 0.70 < 0.75; axes ['WSE'] absent."
   }
  ],
+ "uncertainty_ledger": {
+  "generated": true,
+  "note": "Every known limitation of this vintage, derived from the index at build time. Read it before citing anything.",
+  "by_severity": {
+   "high": 2,
+   "medium": 4,
+   "low": 2
+  },
+  "entries": [
+   {
+    "id": "U-01",
+    "severity": "high",
+    "domain": "coverage",
+    "statement": "3 of 35 states carry no composite: HKG, SGP, TWN. Water stress is absent and coverage falls to 0.70 against the declared 0.75 threshold.",
+    "effect": "Those states cannot be ranked or compared on composite.",
+    "remedy": "Source a water-stress reading for city-state and disputed territories, which Aqueduct 4.0 does not resolve."
+   },
+   {
+    "id": "U-02",
+    "severity": "high",
+    "domain": "configurational",
+    "statement": "The fsQCA HYPER condition was calibrated on the ordinal ODI proxy, which D-045 replaced with the continuous measure.",
+    "effect": "Pathway memberships, solution and necessity statistics in this vintage are not derived from the axis now published.",
+    "remedy": "Re-run the fsQCA pipeline against the v8.2 ODI, re-derive the HYPER anchors, and publish the conservative and intermediate solutions together with their statistics."
+   },
+   {
+    "id": "U-03",
+    "severity": "medium",
+    "domain": "fidelity",
+    "statement": "Fidelity is computed for 3 of 35 states (DEU, ESP, GBR).",
+    "effect": "Structural Lack is unavailable for the rest of the sample, so no fidelity ranking exists.",
+    "remedy": "Extend the Bhattacharyya computation to the full sample or state the three-state scope wherever fidelity is cited."
+   },
+   {
+    "id": "U-04",
+    "severity": "medium",
+    "domain": "measurement",
+    "statement": "Availability-zone counts are missing for 27 of 35 states, so the ODI Herfindahl is weighted one unit per active cloud region rather than by capacity.",
+    "effect": "Operator concentration is measured by region count, which treats a one-zone and a six-zone region alike.",
+    "remedy": "Complete intra_region_fault_domains in cloud_regions_master.csv; the capacity-weighted value is already published where the source records it."
+   },
+   {
+    "id": "U-05",
+    "severity": "medium",
+    "domain": "scope",
+    "statement": "FPE, ESE are published per state and enter no composite (D-044).",
+    "effect": "The headline number omits the only fully component-audited axis (ESE) and the platform-exposure axis (FPE).",
+    "remedy": "Derive a weight from something, or keep stating the exclusion wherever the composite is presented. Do not assert a weight."
+   },
+   {
+    "id": "U-06",
+    "severity": "medium",
+    "domain": "scope",
+    "statement": "No semiconductor axis exists. The February roadmap named semiconductor capacity as the Infrastructure Pillar of the Macro-Systemic Sovereign Predictor; three vintages have shipped without it.",
+    "effect": "Compute-fabrication dependency is unmeasured, and the roadmap claim is unsupported.",
+    "remedy": "Retire the claim, or identify a 35-state source and scope it as a declared roadmap item with a date."
+   },
+   {
+    "id": "U-07",
+    "severity": "low",
+    "domain": "lineage",
+    "statement": "The v8.0 ordinal ODI carried four manual overrides (NLD, HKG, KOR, SGP), each one step below its own stated rule, recorded in no export.",
+    "effect": "Any analysis reproducing the v8.0 ODI from its documented rule will disagree on those four states.",
+    "remedy": "Superseded by D-045. Retained here so the v8.0 discrepancy is explainable rather than mysterious."
+   },
+   {
+    "id": "U-08",
+    "severity": "low",
+    "domain": "measurement",
+    "statement": "CSE composes EMODnet and SubmarineMap at 0.6/0.4 for EU states and uses SubmarineMap alone elsewhere.",
+    "effect": "The axis is not constructed identically inside and outside the EU, so cross-region CSE comparisons carry a method difference.",
+    "remedy": "State the split wherever CSE is compared across regions."
+   }
+  ]
+ },
  "coupling": {
   "global": {
    "n": 32,
@@ -2735,7 +2810,7 @@
   "source": "cloud_regions_master.csv"
  },
  "lineage": {
-  "generated_at_utc": "2026-07-29T13:33:20Z",
+  "generated_at_utc": "2026-07-29T13:56:21Z",
   "generator": "scripts/build_index.py",
   "formula_id": "QESIS_THEORY_v2",
   "sources": {
