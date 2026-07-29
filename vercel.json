@@ -2,16 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "public",
   "framework": null,
-
-  "//": "One deployable branch only. Vercel runs ignoreCommand before building and skips the build on exit 0, so every ref except main is skipped. Without this, feature branches produce preview URLs that answer alongside production and it stops being obvious which one is the index.",
-  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"skipping build for $VERCEL_GIT_COMMIT_REF; only main deploys\"; exit 0; fi",
-
+  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else exit 0; fi",
   "git": {
     "deploymentEnabled": {
       "main": true
     }
   },
-
   "rewrites": [
     { "source": "/mcp", "destination": "/api/index" },
     { "source": "/mcp/:path*", "destination": "/api/index" }
