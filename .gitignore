@@ -1,0 +1,36 @@
+# Operator-only tooling. Kept out of the public repo under the publishing
+# guide's rule against exposing local paths: build_index.py resolves the
+# canonical source inside the private thesis corpus, and HANDOFF.md documents
+# machine paths and internal decisions. Both are backed up in the private
+# sovereign-infra repository.
+scripts/build_index.py
+data/qesis_v8.0_superseded.json
+HANDOFF.md
+
+# Never publishable on any channel
+.env
+.env.*
+*.key
+*.pem
+credentials*.json
+service-account*.json
+
+# Local noise
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vercel/
+.DS_Store
+Thumbs.db
+*.sqlite
+*.sqlite3
+
+# Large binaries do not belong in a product repo
+*.pdf
+*.ipynb
+
+# Not part of the published product
+docker-compose.yml
+sovereign_infra_backup.sql
+REPORT_EXECUTIVE.md

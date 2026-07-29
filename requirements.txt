@@ -1,0 +1,6 @@
+# Runtime for both transports: stdio locally, streamable HTTP on Vercel.
+# starlette and pydantic arrive with mcp; pinned as direct deps because
+# server.py and api/index.py import them by name.
+mcp>=1.9,<2
+pydantic>=2.7,<3
+starlette>=0.37

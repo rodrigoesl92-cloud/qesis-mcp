@@ -1,0 +1,403 @@
+"""qesis_mcp: Sovereign Substrate Intelligence as an MCP server.
+
+Exposes the QESIS+ v8.0 index (Batista Silva, 2026) so any MCP-capable AI
+client (Claude.ai, Claude Code, enterprise agents) can query substrate
+sovereignty data as a first-class tool.
+
+Tiering: without QESIS_LICENSE_KEY in the environment the server runs in
+DEMO mode (top-10 ranking depth, scores rounded to integers, component
+audit locked). Any non-empty key unlocks the institutional vintage.
+
+Run (local stdio):      python server.py
+Run (remote, HTTP):     python server.py --http   (streamable HTTP on :8000)
+"""
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Optional, List
+
+from pydantic import BaseModel, Field, ConfigDict
+from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
+
+DATA_PATH = Path(__file__).parent / "data" / "qesis_v8.json"
+LICENSED = bool(os.environ.get("QESIS_LICENSE_KEY", "").strip())
+
+DATA: dict = {}
+_LOADED_MTIME: float | None = None
+
+
+def _refresh() -> dict:
+    """Reload the index when the file on disk changes.
+
+    The server is long-lived: a stdio host keeps it resident for the whole
+    session. Without this, regenerating the index leaves every client reading
+    the previous generation from memory while the corrected file sits on disk,
+    which is the hardest class of drift to notice because both look right.
+    """
+    global DATA, _LOADED_MTIME
+    try:
+        m = DATA_PATH.stat().st_mtime
+    except OSError:
+        return DATA
+    if m != _LOADED_MTIME:
+        DATA = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+        _LOADED_MTIME = m
+        print(f"[qesis] loaded {DATA.get('vintage')} "
+              f"({len(DATA.get('countries', {}))} states)", file=sys.stderr)
+    return DATA
+
+
+_refresh()
+AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
+AXIS_NAMES = {
+    "WSE": "Water Stress Exposure", "CSE": "Cable Stress Exposure",
+    "REE": "Rare Earth Element Stress", "FPE": "Foreign Platform Exposure",
+    "ODI": "Operator Dependency Index", "CRD": "Cloud Risk Density",
+    "ESE": "Electricity Stress Exposure",
+}
+
+def _allowed_hosts() -> list[str]:
+    """Hosts accepted by the DNS-rebinding guard on the HTTP transport.
+
+    The guard stays on. It defaults to refusing every Host it was not told
+    about, which rejected the production domain with HTTP 421 until this was
+    configured. Matching is exact, apart from a ':*' port wildcard, so Vercel
+    preview deployments cannot be covered by a static list: their hostname
+    changes per deploy. Vercel exports it as VERCEL_URL, so read it.
+    """
+    hosts = [h.strip() for h in os.environ.get("QESIS_ALLOWED_HOSTS", "").split(",")
+             if h.strip()]
+    if not hosts:
+        hosts = ["qesis-mcp.vercel.app", "localhost", "localhost:*",
+                 "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"]
+    for var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
+        v = os.environ.get(var, "").strip()
+        if v and v not in hosts:
+            hosts.append(v)
+    return hosts
+
+
+_HOSTS = _allowed_hosts()
+
+# stateless_http and json_response are required for serverless hosting: each
+# invocation is a fresh process, so a session-bound transport has nothing to
+# resume and a long-lived SSE stream has nowhere to live. Neither setting
+# affects the stdio transport used locally.
+mcp = FastMCP(
+    "qesis_mcp",
+    stateless_http=True,
+    json_response=True,
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=_HOSTS,
+        allowed_origins=[f"https://{h}" for h in _HOSTS if not h.endswith(":*")]
+                        + [f"http://{h}" for h in _HOSTS if h.startswith(("localhost", "127."))],
+    ),
+)
+
+
+def _tier_note() -> str:
+    return "" if LICENSED else (
+        "\n\n[DEMO TIER] Scores rounded; depth limited. Set QESIS_LICENSE_KEY "
+        "for the institutional vintage (full precision, component audit, exports)."
+    )
+
+
+def _score(v):
+    if v is None:
+        return None
+    return v if LICENSED else round(v)
+
+
+def _country_or_error(iso: str):
+    c = DATA["countries"].get(iso.upper())
+    if not c:
+        valid = ", ".join(sorted(DATA["countries"]))
+        raise ValueError(f"Unknown ISO3 '{iso}'. Valid codes: {valid}")
+    return c
+
+
+class CountryInput(BaseModel):
+    """Input for a single-country lookup."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    iso3: str = Field(..., description="ISO3 country code, e.g. 'DEU', 'ESP', 'GBR'",
+                      min_length=3, max_length=3)
+
+
+class RankInput(BaseModel):
+    """Input for ranking countries."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    axis: str = Field(default="composite",
+                      description="What to rank by: 'composite' or one of WSE, CSE, REE, FPE, ODI, CRD, ESE")
+    top_n: int = Field(default=10, ge=1, le=35, description="How many countries to return")
+    ascending: bool = Field(default=False, description="False = most exposed first (default)")
+
+
+class CompareInput(BaseModel):
+    """Input for comparing two countries."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    iso3_a: str = Field(..., min_length=3, max_length=3, description="First ISO3 code")
+    iso3_b: str = Field(..., min_length=3, max_length=3, description="Second ISO3 code")
+
+
+class PathwayInput(BaseModel):
+    """Input for pathway queries."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    iso3: Optional[str] = Field(default=None, min_length=3, max_length=3,
+                                description="Optional ISO3 filter: return only pathways this country belongs to")
+
+
+@mcp.tool(name="qesis_get_country", annotations={
+    "title": "Get country substrate profile", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_country(params: CountryInput) -> str:
+    """Full substrate sovereignty profile for one country: seven axis scores
+    (0-100 stress), composite exposure, BIG coverage flags, fidelity to the
+    planetary-safe reference state where computed, and pathway memberships.
+
+    Returns JSON. Axis legend: WSE water, CSE submarine cable, REE rare
+    earths, FPE foreign platform share, ODI hyperscaler operator
+    concentration, CRD cloud risk density, ESE electricity stress."""
+    _refresh()
+    c = _country_or_error(params.iso3)
+    iso = params.iso3.upper()
+    paths = [p["id"] for p in DATA["fsqca"]["pathways"] if iso in p["members"]]
+    out = {
+        "iso3": iso, "name": c["name"], "vintage": DATA["vintage"],
+        "axes": {k: _score(v) for k, v in c["axes"].items()},
+        "composite_exposure": _score(c["composite"]),
+        "composite_status": c.get("composite_status"),
+        "coverage": c.get("coverage"),
+        "big_flags": c["big_flags"] or "none, full coverage",
+        "fidelity": DATA["fidelity"]["scores"].get(iso),
+        "pathway_memberships": paths or "none at >0.5 membership",
+        # Operator concentration at full resolution alongside the ordinal axis
+        # the composite still consumes. Both are published; neither is hidden.
+        "odi_continuous": c.get("odi_continuous"),
+        "fsqca_conditions": c.get("fsqca_conditions"),
+    }
+    if c.get("composite") is None:
+        finding = next((e for e in DATA.get("epis_findings", [])
+                        if e["iso3"] == iso), None)
+        out["epis_finding"] = finding["finding"] if finding else (
+            "Composite withheld under the BIG coverage gate.")
+    return json.dumps(out, indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_rank_countries", annotations={
+    "title": "Rank countries by exposure", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_rank_countries(params: RankInput) -> str:
+    """Rank the 35-state sample by composite exposure or by any single axis.
+    Demo tier returns at most 10 rows. Countries with a BIG coverage flag on
+    the requested axis are listed separately rather than silently dropped."""
+    _refresh()
+    axis = params.axis.upper() if params.axis.lower() != "composite" else "composite"
+    if axis != "composite" and axis not in AXES:
+        raise ValueError(f"axis must be 'composite' or one of {AXES}")
+    rows, flagged = [], []
+    for iso, c in DATA["countries"].items():
+        v = c["composite"] if axis == "composite" else c["axes"][axis]
+        if v is None:
+            flagged.append(iso)
+        else:
+            rows.append((iso, c["name"], v))
+    rows.sort(key=lambda r: r[2], reverse=not params.ascending)
+    limit = params.top_n if LICENSED else min(params.top_n, 10)
+    body = [{"rank": i + 1, "iso3": r[0], "name": r[1], axis: _score(r[2])}
+            for i, r in enumerate(rows[:limit])]
+    out = {"ranked_by": AXIS_NAMES.get(axis, "composite exposure"),
+           "ranked_n": len(rows), "sample_n": len(DATA["countries"]),
+           "results": body}
+    if flagged:
+        # An unranked state is a published finding, never a silent omission and
+        # never a zero pushed to the bottom of the table.
+        findings = {e["iso3"]: e["finding"] for e in DATA.get("epis_findings", [])}
+        out["big_epistemic_gaps"] = [
+            {"iso3": i, "name": DATA["countries"][i]["name"],
+             "coverage": DATA["countries"][i].get("coverage"),
+             "finding": findings.get(i, "Value withheld under the BIG coverage gate.")}
+            for i in flagged]
+    return json.dumps(out, indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_compare_countries", annotations={
+    "title": "Compare two countries", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_compare_countries(params: CompareInput) -> str:
+    """Side-by-side substrate comparison of two countries with per-axis
+    deltas and the binding constraint (highest-stress axis) of each."""
+    _refresh()
+    a, b = _country_or_error(params.iso3_a), _country_or_error(params.iso3_b)
+    ia, ib = params.iso3_a.upper(), params.iso3_b.upper()
+    table, deltas = {}, {}
+    for ax in AXES:
+        va, vb = a["axes"][ax], b["axes"][ax]
+        table[ax] = {ia: _score(va), ib: _score(vb)}
+        if va is not None and vb is not None:
+            deltas[ax] = _score(round(va - vb, 1))
+    bind = lambda c: max((ax for ax in AXES if c["axes"][ax] is not None),
+                         key=lambda ax: c["axes"][ax])
+    out = {
+        "comparison": table, "delta_a_minus_b": deltas,
+        "composite": {ia: _score(a["composite"]), ib: _score(b["composite"])},
+        "binding_constraint": {ia: bind(a), ib: bind(b)},
+    }
+    return json.dumps(out, indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_get_coupling", annotations={
+    "title": "Two-tier substrate coupling", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_coupling() -> str:
+    """The headline finding: substrate entanglement is geopolitical, not
+    universal. Returns the two-tier von Neumann coupling ratios (global
+    n=32 vs import-dependent core n=26), key cross-axis correlations, and
+    the interpretation."""
+    _refresh()
+    return json.dumps(DATA["coupling"], indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_get_pathways", annotations={
+    "title": "fsQCA pathways to sovereignty loss", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_pathways(params: PathwayInput) -> str:
+    """Configurational (fsQCA) pathways to high sovereignty vulnerability:
+    declared model, necessity results, solution statistics, outcome
+    calibration anchors with the anti-circularity test, and the five
+    pathway terms with consistency/coverage and member states. Optionally
+    filtered to one country's memberships."""
+    _refresh()
+    fs = dict(DATA["fsqca"])
+    if params.iso3:
+        iso = params.iso3.upper()
+        _country_or_error(iso)
+        fs = {**fs, "pathways": [p for p in fs["pathways"] if iso in p["members"]],
+              "filtered_for": iso}
+    return json.dumps(fs, indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_get_component_audit", annotations={
+    "title": "ESE component audit trail", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_component_audit(params: CountryInput) -> str:
+    """[Institutional tier] The full audit trail behind a country's scores:
+    ESE components (carbon intensity from Ember, industrial electricity price
+    from IEA/Eurostat, SAIDI grid reliability from World Bank), the CSE
+    component split, REE base and stress vintages, the ODI construction with
+    its operator shares, and the composite recomputed from the published axes
+    so the headline number can be checked line by line."""
+    _refresh()
+    if not LICENSED:
+        return ("LOCKED. Component-level audit requires the institutional "
+                "license (QESIS_LICENSE_KEY). The demo tier exposes scores and "
+                "methodology; the audit trail is the paid layer. Contact: "
+                "see repository README.")
+    c = _country_or_error(params.iso3)
+    iso = params.iso3.upper()
+    model = DATA.get("composite_model") or {}
+    W = model.get("weights") or {}
+    # Recompute in front of the caller rather than restating the stored value.
+    terms, recomputed = {}, None
+    if all(c["axes"].get(a) is not None for a in W):
+        terms = {a: round(W[a] * c["axes"][a], 3) for a in W}
+        recomputed = round(sum(terms.values()), 1)
+    return json.dumps({
+        "iso3": iso, "name": c["name"], "vintage": DATA["vintage"],
+        "composite": {
+            "served": c["composite"], "recomputed_from_axes": recomputed,
+            "reproduces": (recomputed == c["composite"]),
+            "weighted_terms": terms, "weights": W,
+            "coverage": c.get("coverage"), "status": c.get("composite_status"),
+        },
+        "ese": {"score": c["axes"]["ESE"], "components": c["ese_components"],
+                "method": DATA["ese_method"]},
+        "axis_provenance": c.get("audit"),
+        "odi_continuous": c.get("odi_continuous"),
+        "odi_method": DATA.get("odi_method"),
+        "fsqca_conditions": c.get("fsqca_conditions"),
+        "csove": c.get("csove"),
+        "lineage": DATA.get("lineage"),
+    }, indent=1)
+
+
+@mcp.tool(name="qesis_get_integrity", annotations={
+    "title": "Index integrity and lineage", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_integrity() -> str:
+    """Which generation of the index is being served, how the composite is
+    derived, and every state whose composite is withheld under BIG. Query this
+    before citing any number: it answers 'is what I am reading reproducible'
+    without requiring access to the build machine."""
+    _refresh()
+    C = DATA["countries"]
+    W = (DATA.get("composite_model") or {}).get("weights") or {}
+    drift = []
+    for iso, c in C.items():
+        if c["composite"] is None or any(c["axes"].get(a) is None for a in W):
+            continue
+        calc = round(sum(W[a] * c["axes"][a] for a in W), 1)
+        if abs(calc - c["composite"]) > 0.051:
+            drift.append({"iso3": iso, "served": c["composite"], "recomputed": calc})
+    return json.dumps({
+        "vintage": DATA["vintage"], "supersedes": DATA.get("supersedes"),
+        "composite_model": DATA.get("composite_model"),
+        "lineage": DATA.get("lineage"),
+        "self_check": {
+            "states": len(C),
+            "ranked": sum(1 for c in C.values() if c["composite"] is not None),
+            "withheld_epis": sum(1 for c in C.values() if c["composite"] is None),
+            "composites_reproducing_from_axes": drift == [],
+            "drift": drift or "none",
+        },
+        "epis_findings": DATA.get("epis_findings"),
+        "coupling_exclusions": {
+            "excluded_from_global": DATA["coupling"].get("excluded_from_global"),
+            "excluded_from_core": DATA["coupling"].get("excluded_from_core"),
+            "rule": DATA["coupling"].get("exclusion_rule"),
+        },
+    }, indent=1) + _tier_note()
+
+
+@mcp.tool(name="qesis_get_methodology", annotations={
+    "title": "Methodology and provenance", "readOnlyHint": True,
+    "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def qesis_get_methodology() -> str:
+    """Framework documentation: the seven axes, the Binary Integrity Guard
+    (BIG) coverage discipline, fidelity construction, ESE composite method,
+    data sources, and citation. Use this before interpreting any score."""
+    _refresh()
+    return json.dumps({
+        "framework": "QESIS+ (Quantitative Epistemic Sovereignty Index Stack), STIR composite",
+        "axes": AXIS_NAMES,
+        "big_protocol": ("Coverage >= 0.75 required to rank (DORM); below it the gap is "
+                         "published as a finding (EPIS), never imputed; INFR marks "
+                         "inferred vulnerability under data opacity. From v8.1 the gate "
+                         "also binds the composite: a state missing a weighted axis "
+                         "returns no composite rather than a number resting on a zero."),
+        "composite_model": DATA.get("composite_model"),
+        "fidelity": DATA["fidelity"],
+        "ese_method": DATA["ese_method"],
+        "odi_method": DATA.get("odi_method"),
+        "vintage": DATA["vintage"],
+        "citation": {
+            "work": "Batista Silva, R. (2026). Liquid Sovereignty. ESIC/LSE.",
+            "dataset": f"Sovereign_Infra_Intelligence {DATA['vintage']}.",
+            "supersedes": ("Metadata through v8.0 carried an earlier working title, "
+                           "'Ontological Blind-Spots'. That citation is withdrawn."),
+            "subtitle_status": ("Short form served here. The full subtitle is set by "
+                                "the deposited thesis record and is not asserted from "
+                                "this dataset; confirm against the deposit before "
+                                "quoting it in a publication."),
+        },
+        "license": DATA["license"],
+    }, indent=1)
+
+
+if __name__ == "__main__":
+    if "--http" in sys.argv:
+        mcp.run(transport="streamable-http")
+    else:
+        mcp.run()
