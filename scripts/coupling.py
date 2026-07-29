@@ -109,17 +109,57 @@ def selftest(countries: dict) -> tuple[bool, str]:
     return ok, "\n".join(lines)
 
 
+def verify_served(doc: dict) -> tuple[bool, str]:
+    """Does the served coupling block recompute from the served axes?
+
+    This is the property that matters on a published artifact, and unlike the
+    v8.0 selftest it needs nothing but the committed index, so it runs in CI.
+    A carried coupling block is the same defect class as a carried composite.
+    """
+    cp = doc.get("coupling") or {}
+    axes = cp.get("global", {}).get("axes") or COUPLING_AXES
+    rows = {i: c["axes"] for i, c in doc["countries"].items()
+            if all(c["axes"].get(a) is not None for a in axes)}
+    core = {i: r for i, r in rows.items() if i not in CORE_EXCLUDED}
+    lines, ok = [], True
+    for label, served, got in (("global", cp.get("global", {}), coupling(rows, axes)),
+                               ("core", cp.get("core", {}), coupling(core, axes))):
+        hit = all(abs(served.get(k, -9) - got[k]) < 1e-9
+                  for k in ("CR", "S_nats", "dominant_eigenmode")) \
+              and served.get("n") == got["n"]
+        ok &= hit
+        lines.append(f"  {'ok ' if hit else 'X  '}{label}: served CR "
+                     f"{served.get('CR')} n={served.get('n')} vs recomputed "
+                     f"CR {got['CR']} n={got['n']}")
+    return ok, "\n".join(lines)
+
+
 if __name__ == "__main__":
     import json
     import sys
     from pathlib import Path
 
-    src = Path(sys.argv[1]) if len(sys.argv) > 1 else (
-        Path(__file__).resolve().parent.parent / "data" / "qesis_v8.0_superseded.json")
-    doc = json.loads(src.read_text(encoding="utf-8"))
-    good, report = selftest(doc["countries"])
-    print(f"coupling selftest against published v8.0 values ({src.name}):")
+    root = Path(__file__).resolve().parent.parent
+    served_path = Path(sys.argv[1]) if len(sys.argv) > 1 else root / "data" / "qesis_v8.json"
+    served = json.loads(served_path.read_text(encoding="utf-8"))
+
+    print(f"coupling check on {served_path.name} ({served.get('vintage')})")
+    ok, report = verify_served(served)
+    print("\nserved block recomputes from the served axes:")
     print(report)
-    print("\nPASS: implementation reproduces the published coupling." if good
-          else "\nFAIL: implementation does not reproduce the published coupling.")
-    raise SystemExit(0 if good else 1)
+
+    # The v8.0 reproduction check needs the frozen baseline, which is operator
+    # only and absent from the public repository. Skip rather than fail: its
+    # absence is expected in CI and says nothing about the served artifact.
+    baseline = root / "data" / "qesis_v8.0_superseded.json"
+    if baseline.exists():
+        good, rep = selftest(json.loads(baseline.read_text(encoding="utf-8"))["countries"])
+        print("\nimplementation reproduces the published v8.0 values:")
+        print(rep)
+        ok &= good
+    else:
+        print(f"\n.. skipped v8.0 reproduction check: {baseline.name} is operator "
+              f"only and not published.")
+
+    print("\nPASS" if ok else "\nFAIL")
+    raise SystemExit(0 if ok else 1)
