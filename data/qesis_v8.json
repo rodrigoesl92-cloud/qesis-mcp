@@ -1,0 +1,2755 @@
+{
+ "vintage": "v8.2 (2026-07)",
+ "supersedes": "v8.0 (2026-06)",
+ "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
+ "composite_model": {
+  "formula_id": "QESIS_THEORY_v2",
+  "expression": "0.3*WSE + 0.3*CSE + 0.17*ODI + 0.08*CRD + 0.15*REE",
+  "weights": {
+   "WSE": 0.3,
+   "CSE": 0.3,
+   "ODI": 0.17,
+   "CRD": 0.08,
+   "REE": 0.15
+  },
+  "weight_sum": 1.0,
+  "diagnostic_axes_excluded": [
+   "FPE",
+   "ESE"
+  ],
+  "big_coverage_min": 0.75,
+  "derivation": "Computed from published axes at build time. Never carried.",
+  "change_note": "v8.0 served the spreadsheet column `QESIS Theory`, computed against an earlier axis vintage. It was not reproducible from the axes published beside it: GBR dominates CHE on all seven axes yet carried composite 28.1 against 46.2, which no non-negative weighting admits. Every composite changed in v8.1."
+ },
+ "countries": {
+  "ARE": {
+   "name": "United Arab Emirates",
+   "axes": {
+    "WSE": 100.0,
+    "CSE": 22.2,
+    "REE": 63.1,
+    "FPE": 35.9,
+    "ODI": 55.6,
+    "CRD": 11.1,
+    "ESE": 23.2
+   },
+   "composite": 56.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 420,
+    "industrial_usd_kwh": 0.08,
+    "saidi_hours": 0.05
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.42733,
+    "ESC_inv": 57.3,
+    "KEY_SOV_tier": "E-AU"
+   },
+   "csove": {
+    "claim": 72.0,
+    "verify": 74.0,
+    "gap": 73.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 55.6,
+    "hhi": 0.5556,
+    "n_providers": 2,
+    "n_regions": 3,
+    "provider_shares": {
+     "Azure": 0.6667,
+     "AWS": 0.3333
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 22.2,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 3.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 84.4,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "AUS": {
+   "name": "Australia",
+   "axes": {
+    "WSE": 58.1,
+    "CSE": 29.2,
+    "REE": 55.5,
+    "FPE": 28.6,
+    "ODI": 30.9,
+    "CRD": 44.4,
+    "ESE": 50.2
+   },
+   "composite": 43.3,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 515,
+    "industrial_usd_kwh": 0.12,
+    "saidi_hours": 2.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 96.2,
+    "GCI_inv": 3.8,
+    "EFF_SOV_EXT": 0.82267,
+    "ESC_inv": 17.7,
+    "KEY_SOV_tier": "B-5E"
+   },
+   "csove": {
+    "claim": 52.0,
+    "verify": 45.0,
+    "gap": 48.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 30.9,
+    "hhi": 0.3086,
+    "n_providers": 4,
+    "n_regions": 9,
+    "provider_shares": {
+     "Azure": 0.4444,
+     "AWS": 0.2222,
+     "OCI": 0.2222,
+     "GCP": 0.1111
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 29.2,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 55.5,
+    "ree_stress_2026": 62.5,
+    "regions": 9.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 59.8,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "AUT": {
+   "name": "Austria",
+   "axes": {
+    "WSE": 5.2,
+    "CSE": 0.0,
+    "REE": 84.1,
+    "FPE": 87.7,
+    "ODI": 100.0,
+    "CRD": 0.0,
+    "ESE": 27.1
+   },
+   "composite": 31.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 85,
+    "industrial_usd_kwh": 0.16,
+    "saidi_hours": 0.4
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 89.1,
+    "GCI_inv": 10.9,
+    "EFF_SOV_EXT": 0.822,
+    "ESC_inv": 17.8,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "Azure": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 0.0,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 84.1,
+    "ree_stress_2026": 93.6,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 56.8,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "BEL": {
+   "name": "Belgium",
+   "axes": {
+    "WSE": 88.2,
+    "CSE": 39.7,
+    "REE": 82.5,
+    "FPE": 33.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 28.4
+   },
+   "composite": 59.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 140,
+    "industrial_usd_kwh": 0.15,
+    "saidi_hours": 0.4
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 96.8,
+    "GCI_inv": 3.2,
+    "EFF_SOV_EXT": 0.84333,
+    "ESC_inv": 15.7,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "Azure": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 62.4,
+     "SubmarineMap": 5.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 66.6,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "BHR": {
+   "name": "Bahrain",
+   "axes": {
+    "WSE": 100.0,
+    "CSE": 5.6,
+    "REE": 63.1,
+    "FPE": 92.1,
+    "ODI": 100.0,
+    "CRD": 0.0,
+    "ESE": 34.5
+   },
+   "composite": 58.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 560,
+    "industrial_usd_kwh": 0.05,
+    "saidi_hours": 0.3
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 97.9,
+    "GCI_inv": 2.1,
+    "EFF_SOV_EXT": 0.398,
+    "ESC_inv": 60.2,
+    "KEY_SOV_tier": "E-AU"
+   },
+   "csove": {
+    "claim": 88.0,
+    "verify": 82.0,
+    "gap": 85.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "AWS": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 100.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 5.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 90.0,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "BRA": {
+   "name": "Brazil",
+   "axes": {
+    "WSE": 20.8,
+    "CSE": 16.7,
+    "REE": 63.1,
+    "FPE": 19.9,
+    "ODI": 36.0,
+    "CRD": 22.2,
+    "ESE": 39.3
+   },
+   "composite": 28.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 95,
+    "industrial_usd_kwh": 0.13,
+    "saidi_hours": 10.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 96.5,
+    "GCI_inv": 3.5,
+    "EFF_SOV_EXT": 0.694,
+    "ESC_inv": 30.6,
+    "KEY_SOV_tier": "D-BR"
+   },
+   "csove": {
+    "claim": 62.0,
+    "verify": 60.0,
+    "gap": 61.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 36.0,
+    "hhi": 0.36,
+    "n_providers": 3,
+    "n_regions": 5,
+    "provider_shares": {
+     "Azure": 0.4,
+     "OCI": 0.4,
+     "AWS": 0.2
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 16.7,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 5.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 51.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "CAN": {
+   "name": "Canada",
+   "axes": {
+    "WSE": 24.7,
+    "CSE": 9.7,
+    "REE": 55.5,
+    "FPE": 25.0,
+    "ODI": 25.0,
+    "CRD": 38.9,
+    "ESE": 29.0
+   },
+   "composite": 26.0,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 125,
+    "industrial_usd_kwh": 0.07,
+    "saidi_hours": 3.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 93.2,
+    "GCI_inv": 6.8,
+    "EFF_SOV_EXT": 0.80667,
+    "ESC_inv": 19.3,
+    "KEY_SOV_tier": "B-5E"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 25.0,
+    "hhi": 0.25,
+    "n_providers": 4,
+    "n_regions": 8,
+    "provider_shares": {
+     "AWS": 0.25,
+     "Azure": 0.25,
+     "GCP": 0.25,
+     "OCI": 0.25
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 9.7,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 55.5,
+    "ree_stress_2026": 62.5,
+    "regions": 8.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 47.5,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "CHE": {
+   "name": "Switzerland",
+   "axes": {
+    "WSE": 8.1,
+    "CSE": 0.0,
+    "REE": 63.1,
+    "FPE": 35.6,
+    "ODI": 37.5,
+    "CRD": 16.7,
+    "ESE": 20.4
+   },
+   "composite": 19.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 35,
+    "industrial_usd_kwh": 0.14,
+    "saidi_hours": 0.25
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 91.3,
+    "GCI_inv": 8.7,
+    "EFF_SOV_EXT": 0.84867,
+    "ESC_inv": 15.1,
+    "KEY_SOV_tier": "B-NA"
+   },
+   "csove": {
+    "claim": 40.0,
+    "verify": 25.0,
+    "gap": 32.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 37.5,
+    "hhi": 0.375,
+    "n_providers": 3,
+    "n_regions": 4,
+    "provider_shares": {
+     "Azure": 0.5,
+     "AWS": 0.25,
+     "GCP": 0.25
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 0.0,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 4.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 46.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "CHL": {
+   "name": "Chile",
+   "axes": {
+    "WSE": 89.4,
+    "CSE": 8.3,
+    "REE": 63.1,
+    "FPE": 13.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 43.3
+   },
+   "composite": 47.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 270,
+    "industrial_usd_kwh": 0.13,
+    "saidi_hours": 4.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 70.2,
+    "GCI_inv": 29.8,
+    "EFF_SOV_EXT": 0.72267,
+    "ESC_inv": 27.7,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "Azure": 0.5,
+     "OCI": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 8.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 80.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "DEU": {
+   "name": "Germany",
+   "axes": {
+    "WSE": 40.8,
+    "CSE": 7.3,
+    "REE": 82.5,
+    "FPE": 27.9,
+    "ODI": 28.0,
+    "CRD": 22.2,
+    "ESE": 40.8
+   },
+   "composite": 33.3,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 370,
+    "industrial_usd_kwh": 0.2,
+    "saidi_hours": 0.2
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 97.9,
+    "GCI_inv": 2.1,
+    "EFF_SOV_EXT": 0.87,
+    "ESC_inv": 13.0,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": 38.0,
+    "verify": 22.0,
+    "gap": 30.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 28.0,
+    "hhi": 0.28,
+    "n_providers": 4,
+    "n_regions": 5,
+    "provider_shares": {
+     "Azure": 0.4,
+     "AWS": 0.2,
+     "GCP": 0.2,
+     "OCI": 0.2
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 2.9,
+     "SubmarineMap": 13.9,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 5.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 17.5,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "DNK": {
+   "name": "Denmark",
+   "axes": {
+    "WSE": 19.0,
+    "CSE": 29.1,
+    "REE": 84.1,
+    "FPE": 87.7,
+    "ODI": 100.0,
+    "CRD": 0.0,
+    "ESE": 23.1
+   },
+   "composite": 44.0,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 120,
+    "industrial_usd_kwh": 0.14,
+    "saidi_hours": 0.2
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.83,
+    "ESC_inv": 17.0,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "Azure": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 25.4,
+     "SubmarineMap": 34.7,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 84.1,
+    "ree_stress_2026": 93.6,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 35.6,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "ESP": {
+   "name": "Spain",
+   "axes": {
+    "WSE": 78.8,
+    "CSE": 58.7,
+    "REE": 82.5,
+    "FPE": 33.3,
+    "ODI": 33.3,
+    "CRD": 11.1,
+    "ESE": 27.7
+   },
+   "composite": 60.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 140,
+    "industrial_usd_kwh": 0.12,
+    "saidi_hours": 0.7
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.7,
+    "GCI_inv": 0.3,
+    "EFF_SOV_EXT": 0.83,
+    "ESC_inv": 17.0,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 33.3,
+    "hhi": 0.3333,
+    "n_providers": 3,
+    "n_regions": 3,
+    "provider_shares": {
+     "AWS": 0.3333,
+     "Azure": 0.3333,
+     "GCP": 0.3333
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 78.3,
+     "SubmarineMap": 29.2,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 3.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 62.8,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "FIN": {
+   "name": "Finland",
+   "axes": {
+    "WSE": 16.2,
+    "CSE": 15.3,
+    "REE": 82.5,
+    "FPE": 100.0,
+    "ODI": 100.0,
+    "CRD": 0.0,
+    "ESE": 22.5
+   },
+   "composite": 38.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 60,
+    "industrial_usd_kwh": 0.09,
+    "saidi_hours": 1.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.83,
+    "ESC_inv": 17.0,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "GCP": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 100.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 15.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 60.7,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "FRA": {
+   "name": "France",
+   "axes": {
+    "WSE": 38.3,
+    "CSE": 40.3,
+    "REE": 82.5,
+    "FPE": 27.9,
+    "ODI": 28.0,
+    "CRD": 22.2,
+    "ESE": 25.0
+   },
+   "composite": 42.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 40,
+    "industrial_usd_kwh": 0.13,
+    "saidi_hours": 0.8
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.0,
+    "GCI_inv": 1.0,
+    "EFF_SOV_EXT": 0.87,
+    "ESC_inv": 13.0,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": 35.0,
+    "verify": 20.0,
+    "gap": 27.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 28.0,
+    "hhi": 0.28,
+    "n_providers": 4,
+    "n_regions": 5,
+    "provider_shares": {
+     "Azure": 0.4,
+     "AWS": 0.2,
+     "GCP": 0.2,
+     "OCI": 0.2
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 40.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 5.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 50.6,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "GBR": {
+   "name": "United Kingdom",
+   "axes": {
+    "WSE": 26.0,
+    "CSE": 51.6,
+    "REE": 74.0,
+    "FPE": 35.6,
+    "ODI": 37.5,
+    "CRD": 16.7,
+    "ESE": 44.3
+   },
+   "composite": 42.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 180,
+    "industrial_usd_kwh": 0.26,
+    "saidi_hours": 0.6
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.82267,
+    "ESC_inv": 17.7,
+    "KEY_SOV_tier": "B-5E"
+   },
+   "csove": {
+    "claim": 32.0,
+    "verify": 20.0,
+    "gap": 26.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 37.5,
+    "hhi": 0.375,
+    "n_providers": 3,
+    "n_regions": 4,
+    "provider_shares": {
+     "Azure": 0.5,
+     "AWS": 0.25,
+     "GCP": 0.25
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 30.4,
+     "SubmarineMap": 83.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 74.0,
+    "ree_stress_2026": 82.0,
+    "regions": 4.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 28.1,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "HKG": {
+   "name": "Hong Kong",
+   "axes": {
+    "WSE": null,
+    "CSE": 0.0,
+    "REE": 63.1,
+    "FPE": 33.3,
+    "ODI": 50.0,
+    "CRD": 11.1,
+    "ESE": 38.0
+   },
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "ese_components": {
+    "carbon_gco2_kwh": 580,
+    "industrial_usd_kwh": 0.15,
+    "saidi_hours": 0.03
+   },
+   "fsqca_conditions": {
+    "GCI_2024": null,
+    "GCI_inv": null,
+    "EFF_SOV_EXT": 0.35333,
+    "ESC_inv": 64.7,
+    "KEY_SOV_tier": "E-SI"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 50.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": true,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 0.0,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 75.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "IDN": {
+   "name": "Indonesia",
+   "axes": {
+    "WSE": 53.4,
+    "CSE": 27.8,
+    "REE": 63.1,
+    "FPE": 33.3,
+    "ODI": 33.3,
+    "CRD": 11.1,
+    "ESE": 57.4
+   },
+   "composite": 40.4,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 680,
+    "industrial_usd_kwh": 0.07,
+    "saidi_hours": 8.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.63533,
+    "ESC_inv": 36.5,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": 82.0,
+    "verify": 72.0,
+    "gap": 77.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 33.3,
+    "hhi": 0.3333,
+    "n_providers": 3,
+    "n_regions": 3,
+    "provider_shares": {
+     "AWS": 0.3333,
+     "Azure": 0.3333,
+     "GCP": 0.3333
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 27.8,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 3.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 61.5,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "IND": {
+   "name": "India",
+   "axes": {
+    "WSE": 82.2,
+    "CSE": 22.2,
+    "REE": 63.1,
+    "FPE": 31.3,
+    "ODI": 30.6,
+    "CRD": 33.3,
+    "ESE": 63.9
+   },
+   "composite": 48.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 655,
+    "industrial_usd_kwh": 0.1,
+    "saidi_hours": 20.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 98.5,
+    "GCI_inv": 1.5,
+    "EFF_SOV_EXT": 0.61533,
+    "ESC_inv": 38.5,
+    "KEY_SOV_tier": "D-EM"
+   },
+   "csove": {
+    "claim": 55.0,
+    "verify": 55.0,
+    "gap": 55.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 30.6,
+    "hhi": 0.3061,
+    "n_providers": 4,
+    "n_regions": 7,
+    "provider_shares": {
+     "Azure": 0.4286,
+     "AWS": 0.2857,
+     "GCP": 0.1429,
+     "OCI": 0.1429
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 22.2,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 7.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 67.1,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "ISR": {
+   "name": "Israel",
+   "axes": {
+    "WSE": 98.8,
+    "CSE": 6.9,
+    "REE": 63.1,
+    "FPE": 25.0,
+    "ODI": 25.0,
+    "CRD": 16.7,
+    "ESE": 42.5
+   },
+   "composite": 46.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 420,
+    "industrial_usd_kwh": 0.11,
+    "saidi_hours": 1.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 93.8,
+    "GCI_inv": 6.2,
+    "EFF_SOV_EXT": 0.75467,
+    "ESC_inv": 24.5,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 25.0,
+    "hhi": 0.25,
+    "n_providers": 4,
+    "n_regions": 4,
+    "provider_shares": {
+     "AWS": 0.25,
+     "Azure": 0.25,
+     "GCP": 0.25,
+     "OCI": 0.25
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 6.9,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 4.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 71.3,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "ITA": {
+   "name": "Italy",
+   "axes": {
+    "WSE": 66.9,
+    "CSE": 15.0,
+    "REE": 84.1,
+    "FPE": 25.0,
+    "ODI": 25.0,
+    "CRD": 16.7,
+    "ESE": 44.1
+   },
+   "composite": 42.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 270,
+    "industrial_usd_kwh": 0.21,
+    "saidi_hours": 0.8
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.76867,
+    "ESC_inv": 23.1,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 25.0,
+    "hhi": 0.25,
+    "n_providers": 4,
+    "n_regions": 4,
+    "provider_shares": {
+     "AWS": 0.25,
+     "Azure": 0.25,
+     "GCP": 0.25,
+     "OCI": 0.25
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 0.0,
+     "SubmarineMap": 37.5,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 84.1,
+    "ree_stress_2026": 93.6,
+    "regions": 4.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 25.1,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "JPN": {
+   "name": "Japan",
+   "axes": {
+    "WSE": 39.4,
+    "CSE": 30.6,
+    "REE": 70.0,
+    "FPE": 29.8,
+    "ODI": 26.5,
+    "CRD": 33.3,
+    "ESE": 39.6
+   },
+   "composite": 38.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 445,
+    "industrial_usd_kwh": 0.15,
+    "saidi_hours": 0.25
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 97.6,
+    "GCI_inv": 2.4,
+    "EFF_SOV_EXT": 0.79067,
+    "ESC_inv": 20.9,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": 65.0,
+    "verify": 52.0,
+    "gap": 58.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 26.5,
+    "hhi": 0.2653,
+    "n_providers": 4,
+    "n_regions": 7,
+    "provider_shares": {
+     "AWS": 0.2857,
+     "Azure": 0.2857,
+     "GCP": 0.2857,
+     "OCI": 0.1429
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 30.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 70.0,
+    "ree_stress_2026": 78.0,
+    "regions": 7.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 52.1,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "KOR": {
+   "name": "South Korea",
+   "axes": {
+    "WSE": 47.6,
+    "CSE": 0.0,
+    "REE": 70.0,
+    "FPE": 35.6,
+    "ODI": 50.0,
+    "CRD": 16.7,
+    "ESE": 31.4
+   },
+   "composite": 34.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 425,
+    "industrial_usd_kwh": 0.105,
+    "saidi_hours": 0.15
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.77467,
+    "ESC_inv": 22.5,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": 62.0,
+    "verify": 45.0,
+    "gap": 53.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 51.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": true,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 0.0,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 70.0,
+    "ree_stress_2026": 78.0,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 65.6,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "MEX": {
+   "name": "Mexico",
+   "axes": {
+    "WSE": 79.9,
+    "CSE": 5.6,
+    "REE": 63.1,
+    "FPE": 19.9,
+    "ODI": 33.3,
+    "CRD": 11.1,
+    "ESE": 45.4
+   },
+   "composite": 41.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 420,
+    "industrial_usd_kwh": 0.1,
+    "saidi_hours": 3.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 85.8,
+    "GCI_inv": 14.2,
+    "EFF_SOV_EXT": 0.63533,
+    "ESC_inv": 36.5,
+    "KEY_SOV_tier": "D-EM"
+   },
+   "csove": {
+    "claim": 78.0,
+    "verify": 65.0,
+    "gap": 72.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 33.3,
+    "hhi": 0.3333,
+    "n_providers": 3,
+    "n_regions": 3,
+    "provider_shares": {
+     "AWS": 0.3333,
+     "Azure": 0.3333,
+     "OCI": 0.3333
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 5.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 3.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 70.7,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "MYS": {
+   "name": "Malaysia",
+   "axes": {
+    "WSE": 20.7,
+    "CSE": 26.4,
+    "REE": 63.1,
+    "FPE": 29.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 44.5
+   },
+   "composite": 32.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 570,
+    "industrial_usd_kwh": 0.095,
+    "saidi_hours": 0.8
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 98.8,
+    "GCI_inv": 1.2,
+    "EFF_SOV_EXT": 0.65133,
+    "ESC_inv": 34.9,
+    "KEY_SOV_tier": "C-HY"
+   },
+   "csove": {
+    "claim": 62.0,
+    "verify": 62.0,
+    "gap": 62.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "Azure": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 26.4,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 56.1,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "NLD": {
+   "name": "Netherlands",
+   "axes": {
+    "WSE": 31.6,
+    "CSE": 24.0,
+    "REE": 82.5,
+    "FPE": 13.9,
+    "ODI": 100.0,
+    "CRD": 5.6,
+    "ESE": 33.3
+   },
+   "composite": 46.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 240,
+    "industrial_usd_kwh": 0.16,
+    "saidi_hours": 0.35
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.2,
+    "GCI_inv": 0.8,
+    "EFF_SOV_EXT": 0.85133,
+    "ESC_inv": 14.9,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "OCI": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 100.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": true,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 24.3,
+     "SubmarineMap": 23.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 39.6,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "NOR": {
+   "name": "Norway",
+   "axes": {
+    "WSE": 3.8,
+    "CSE": 5.6,
+    "REE": 63.1,
+    "FPE": 87.7,
+    "ODI": 100.0,
+    "CRD": 5.6,
+    "ESE": 16.3
+   },
+   "composite": 29.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 25,
+    "industrial_usd_kwh": 0.07,
+    "saidi_hours": 0.6
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 97.0,
+    "GCI_inv": 3.0,
+    "EFF_SOV_EXT": 0.83267,
+    "ESC_inv": 16.7,
+    "KEY_SOV_tier": "B-NA"
+   },
+   "csove": {
+    "claim": 28.0,
+    "verify": 18.0,
+    "gap": 23.0,
+    "tier": "ACTIVE"
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 2,
+    "provider_shares": {
+     "Azure": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 5.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 56.9,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "NZL": {
+   "name": "New Zealand",
+   "axes": {
+    "WSE": 1.0,
+    "CSE": 6.9,
+    "REE": 63.1,
+    "FPE": 29.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 29.1
+   },
+   "composite": 20.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 110,
+    "industrial_usd_kwh": 0.1,
+    "saidi_hours": 2.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 82.6,
+    "GCI_inv": 17.4,
+    "EFF_SOV_EXT": 0.78533,
+    "ESC_inv": 21.5,
+    "KEY_SOV_tier": "B-5E"
+   },
+   "csove": {
+    "claim": 50.0,
+    "verify": 38.0,
+    "gap": 44.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "Azure": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 6.9,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 49.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "POL": {
+   "name": "Poland",
+   "axes": {
+    "WSE": 33.2,
+    "CSE": 59.3,
+    "REE": 82.5,
+    "FPE": 33.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 59.3
+   },
+   "composite": 49.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 610,
+    "industrial_usd_kwh": 0.18,
+    "saidi_hours": 1.7
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 93.5,
+    "GCI_inv": 6.5,
+    "EFF_SOV_EXT": 0.79867,
+    "ESC_inv": 20.1,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": 55.0,
+    "verify": 38.0,
+    "gap": 46.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "Azure": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 96.9,
+     "SubmarineMap": 2.8,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 59.4,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "QAT": {
+   "name": "Qatar",
+   "axes": {
+    "WSE": 100.0,
+    "CSE": 8.3,
+    "REE": 63.1,
+    "FPE": 33.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 28.4
+   },
+   "composite": 50.9,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 490,
+    "industrial_usd_kwh": 0.04,
+    "saidi_hours": 0.2
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.414,
+    "ESC_inv": 58.6,
+    "KEY_SOV_tier": "E-AU"
+   },
+   "csove": {
+    "claim": 85.0,
+    "verify": 78.0,
+    "gap": 82.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "Azure": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 8.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 83.9,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "SAU": {
+   "name": "Saudi Arabia",
+   "axes": {
+    "WSE": 99.6,
+    "CSE": 64.3,
+    "REE": 63.1,
+    "FPE": 60.0,
+    "ODI": 100.0,
+    "CRD": 0.0,
+    "ESE": 42.3
+   },
+   "composite": 75.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 610,
+    "industrial_usd_kwh": 0.05,
+    "saidi_hours": 1.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 100.0,
+    "GCI_inv": 0.0,
+    "EFF_SOV_EXT": 0.41667,
+    "ESC_inv": 58.3,
+    "KEY_SOV_tier": "E-AU"
+   },
+   "csove": {
+    "claim": 92.0,
+    "verify": 80.0,
+    "gap": 86.0,
+    "tier": "INFR"
+   },
+   "odi_continuous": {
+    "odi_hhi": 100.0,
+    "hhi": 1.0,
+    "n_providers": 1,
+    "n_regions": 1,
+    "provider_shares": {
+     "OCI": 1.0
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 100.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 100.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 94.3,
+     "SubmarineMap": 19.4,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 1.0,
+    "providers": 1.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 87.9,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "SGP": {
+   "name": "Singapore",
+   "axes": {
+    "WSE": null,
+    "CSE": 29.2,
+    "REE": 63.1,
+    "FPE": 25.0,
+    "ODI": 33.3,
+    "CRD": 16.7,
+    "ESE": 36.5
+   },
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "ese_components": {
+    "carbon_gco2_kwh": 470,
+    "industrial_usd_kwh": 0.18,
+    "saidi_hours": 0.02
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.9,
+    "GCI_inv": 0.1,
+    "EFF_SOV_EXT": 0.75267,
+    "ESC_inv": 24.7,
+    "KEY_SOV_tier": "D-AS"
+   },
+   "csove": {
+    "claim": 58.0,
+    "verify": 42.0,
+    "gap": 50.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 33.3,
+    "hhi": 0.3333,
+    "n_providers": 3,
+    "n_regions": 3,
+    "provider_shares": {
+     "AWS": 0.3333,
+     "GCP": 0.3333,
+     "OCI": 0.3333
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 38.8
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": true,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 29.2,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 3.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 1.7,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "SWE": {
+   "name": "Sweden",
+   "axes": {
+    "WSE": 15.6,
+    "CSE": 45.7,
+    "REE": 82.5,
+    "FPE": 29.9,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 18.2
+   },
+   "composite": 39.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 25,
+    "industrial_usd_kwh": 0.07,
+    "saidi_hours": 0.9
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.3,
+    "GCI_inv": 0.7,
+    "EFF_SOV_EXT": 0.84333,
+    "ESC_inv": 15.7,
+    "KEY_SOV_tier": "A-EU"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "Azure": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": 55.7,
+     "SubmarineMap": 30.6,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 82.5,
+    "ree_stress_2026": 91.5,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 38.9,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "TWN": {
+   "name": "Taiwan",
+   "axes": {
+    "WSE": null,
+    "CSE": 15.3,
+    "REE": 63.1,
+    "FPE": 36.1,
+    "ODI": 50.0,
+    "CRD": 5.6,
+    "ESE": 41.1
+   },
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "ese_components": {
+    "carbon_gco2_kwh": 560,
+    "industrial_usd_kwh": 0.11,
+    "saidi_hours": 0.3
+   },
+   "fsqca_conditions": {
+    "GCI_2024": null,
+    "GCI_inv": null,
+    "EFF_SOV_EXT": 0.62467,
+    "ESC_inv": 37.5,
+    "KEY_SOV_tier": "E-SI"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 50.0,
+    "hhi": 0.5,
+    "n_providers": 2,
+    "n_regions": 2,
+    "provider_shares": {
+     "AWS": 0.5,
+     "GCP": 0.5
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": true,
+    "odi_hhi_az_weighted": 50.0
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 66.7,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 15.3,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 2.0,
+    "providers": 2.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 75.2,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "USA": {
+   "name": "United States",
+   "axes": {
+    "WSE": 52.1,
+    "CSE": 100.0,
+    "REE": 55.5,
+    "FPE": 35.7,
+    "ODI": 36.8,
+    "CRD": 100.0,
+    "ESE": 43.1
+   },
+   "composite": 68.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 370,
+    "industrial_usd_kwh": 0.08,
+    "saidi_hours": 5.5
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 99.9,
+    "GCI_inv": 0.1,
+    "EFF_SOV_EXT": 0.87,
+    "ESC_inv": 13.0,
+    "KEY_SOV_tier": "B-5E"
+   },
+   "csove": {
+    "claim": null,
+    "verify": null,
+    "gap": null,
+    "tier": null
+   },
+   "odi_continuous": {
+    "odi_hhi": 36.8,
+    "hhi": 0.3684,
+    "n_providers": 3,
+    "n_regions": 19,
+    "provider_shares": {
+     "Azure": 0.4737,
+     "GCP": 0.3158,
+     "AWS": 0.2105
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 33.3,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 100.0,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 55.5,
+    "ree_stress_2026": 62.5,
+    "regions": 19.0,
+    "providers": 3.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 69.9,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  },
+  "ZAF": {
+   "name": "South Africa",
+   "axes": {
+    "WSE": 83.4,
+    "CSE": 9.7,
+    "REE": 63.1,
+    "FPE": 27.9,
+    "ODI": 28.0,
+    "CRD": 22.2,
+    "ESE": 75.1
+   },
+   "composite": 43.9,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "ese_components": {
+    "carbon_gco2_kwh": 700,
+    "industrial_usd_kwh": 0.115,
+    "saidi_hours": 100.0
+   },
+   "fsqca_conditions": {
+    "GCI_2024": 86.2,
+    "GCI_inv": 13.8,
+    "EFF_SOV_EXT": 0.63533,
+    "ESC_inv": 36.5,
+    "KEY_SOV_tier": "D-EM"
+   },
+   "csove": {
+    "claim": 62.0,
+    "verify": 55.0,
+    "gap": 58.0,
+    "tier": "EPIS"
+   },
+   "odi_continuous": {
+    "odi_hhi": 28.0,
+    "hhi": 0.28,
+    "n_providers": 4,
+    "n_regions": 5,
+    "provider_shares": {
+     "Azure": 0.4,
+     "AWS": 0.2,
+     "GCP": 0.2,
+     "OCI": 0.2
+    },
+    "weighting": "one unit per active cloud region",
+    "az_weighted_available": false
+   },
+   "audit": {
+    "ODI_source": "continuous",
+    "ODI_ordinal_rule": "100*(4-n_providers)/3, 4-level count proxy",
+    "ODI_ordinal_value": 0.0,
+    "ODI_ordinal_manual_override": false,
+    "source_row": "v8_qesis_country_scores.csv",
+    "cse_components": {
+     "EMODnet": null,
+     "SubmarineMap": 9.7,
+     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+    },
+    "ree_base_2026": 63.1,
+    "ree_stress_2026": 70.2,
+    "regions": 5.0,
+    "providers": 4.0
+   },
+   "legacy_v8_0": {
+    "composite_published": 66.4,
+    "source_column": "QESIS Theory",
+    "status": "SUPERSEDED: stale axis vintage, not reproducible from v8 axes"
+   }
+  }
+ },
+ "epis_findings": [
+  {
+   "iso3": "HKG",
+   "name": "Hong Kong",
+   "coverage": 0.7,
+   "missing_weighted_axes": [
+    "WSE"
+   ],
+   "finding": "Composite withheld under BIG. Coverage 0.70 < 0.75; axes ['WSE'] absent."
+  },
+  {
+   "iso3": "SGP",
+   "name": "Singapore",
+   "coverage": 0.7,
+   "missing_weighted_axes": [
+    "WSE"
+   ],
+   "finding": "Composite withheld under BIG. Coverage 0.70 < 0.75; axes ['WSE'] absent."
+  },
+  {
+   "iso3": "TWN",
+   "name": "Taiwan",
+   "coverage": 0.7,
+   "missing_weighted_axes": [
+    "WSE"
+   ],
+   "finding": "Composite withheld under BIG. Coverage 0.70 < 0.75; axes ['WSE'] absent."
+  }
+ ],
+ "coupling": {
+  "global": {
+   "n": 32,
+   "CR": 0.124,
+   "S_nats": 1.57,
+   "dominant_eigenmode": 0.4,
+   "frobenius": 1.698,
+   "matrix": {
+    "WSE": {
+     "WSE": 1.0,
+     "CSE": 0.07,
+     "REE": -0.259,
+     "FPE": -0.211,
+     "ODI": -0.179,
+     "ESE": 0.36
+    },
+    "CSE": {
+     "WSE": 0.07,
+     "CSE": 1.0,
+     "REE": 0.114,
+     "FPE": -0.095,
+     "ODI": -0.072,
+     "ESE": 0.137
+    },
+    "REE": {
+     "WSE": -0.259,
+     "CSE": 0.114,
+     "REE": 1.0,
+     "FPE": 0.197,
+     "ODI": 0.245,
+     "ESE": -0.281
+    },
+    "FPE": {
+     "WSE": -0.211,
+     "CSE": -0.095,
+     "REE": 0.197,
+     "FPE": 1.0,
+     "ODI": 0.783,
+     "ESE": -0.385
+    },
+    "ODI": {
+     "WSE": -0.179,
+     "CSE": -0.072,
+     "REE": 0.245,
+     "FPE": 0.783,
+     "ODI": 1.0,
+     "ESE": -0.423
+    },
+    "ESE": {
+     "WSE": 0.36,
+     "CSE": 0.137,
+     "REE": -0.281,
+     "FPE": -0.385,
+     "ODI": -0.423,
+     "ESE": 1.0
+    }
+   },
+   "axes": [
+    "WSE",
+    "CSE",
+    "REE",
+    "FPE",
+    "ODI",
+    "ESE"
+   ]
+  },
+  "core": {
+   "n": 26,
+   "CR": 0.176,
+   "S_nats": 1.476,
+   "dominant_eigenmode": 0.472,
+   "frobenius": 2.126,
+   "matrix": {
+    "WSE": {
+     "WSE": 1.0,
+     "CSE": 0.089,
+     "REE": -0.16,
+     "FPE": -0.49,
+     "ODI": -0.509,
+     "ESE": 0.576
+    },
+    "CSE": {
+     "WSE": 0.089,
+     "CSE": 1.0,
+     "REE": 0.138,
+     "FPE": -0.105,
+     "ODI": -0.148,
+     "ESE": 0.099
+    },
+    "REE": {
+     "WSE": -0.16,
+     "CSE": 0.138,
+     "REE": 1.0,
+     "FPE": 0.295,
+     "ODI": 0.387,
+     "ESE": -0.304
+    },
+    "FPE": {
+     "WSE": -0.49,
+     "CSE": -0.105,
+     "REE": 0.295,
+     "FPE": 1.0,
+     "ODI": 0.755,
+     "ESE": -0.445
+    },
+    "ODI": {
+     "WSE": -0.509,
+     "CSE": -0.148,
+     "REE": 0.387,
+     "FPE": 0.755,
+     "ODI": 1.0,
+     "ESE": -0.485
+    },
+    "ESE": {
+     "WSE": 0.576,
+     "CSE": 0.099,
+     "REE": -0.304,
+     "FPE": -0.445,
+     "ODI": -0.485,
+     "ESE": 1.0
+    }
+   },
+   "axes": [
+    "WSE",
+    "CSE",
+    "REE",
+    "FPE",
+    "ODI",
+    "ESE"
+   ]
+  },
+  "excluded_from_global": [
+   "HKG",
+   "SGP",
+   "TWN"
+  ],
+  "excluded_from_core": [
+   "ARE",
+   "BHR",
+   "IDN",
+   "MYS",
+   "QAT",
+   "SAU"
+  ],
+  "exclusion_rule": "The global matrix requires a complete vector over the six coupling axes. The states omitted are exactly those carrying a BIG coverage flag, not a discretionary selection.",
+  "interpretation": "Substrate entanglement is geopolitical, not universal: energy-rich states decouple via cheap, reliable, carbon-heavy power; coupling concentrates in the import-dependent core.",
+  "derivation": "Recomputed at build time from the published axes. rho = C/6 trace-normalised; CR = 1 - S(rho)/ln 6. Implementation verified against the published v8.0 values before use.",
+  "odi_source": "continuous",
+  "change_note": "ODI now carries the continuous Herfindahl measure, so these correlations differ from the v8.0 published block, which was computed on the ordinal proxy. v8.0 reported global CR 0.11 and core 0.163."
+ },
+ "fsqca": {
+  "model": "WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -> HIGH_SOV_VULN (n=35; freq>=1; incl>=0.80; conservative; Quine-McCluskey)",
+  "necessity": {
+   "REE": 0.916
+  },
+  "solution": {
+   "consistency": 0.807,
+   "coverage": 0.862
+  },
+  "robustness_7cond": {
+   "consistency": 0.809,
+   "coverage": 0.86
+  },
+  "outcome_anchors": {
+   "full_membership": 80,
+   "crossover": 55,
+   "full_exclusion": 30,
+   "anticircularity": "variant outcome deflates solution to 0.708 — published solution not condition-derived"
+  },
+  "pathways": [
+   {
+    "id": "P1",
+    "term": "CABLE*REE*esc_inv*gci_inv",
+    "label": "connectivity-mineral, strong institutions",
+    "consistency": 0.837,
+    "coverage": 0.664,
+    "members": [
+     "GBR",
+     "ESP",
+     "BEL",
+     "POL",
+     "SAU"
+    ]
+   },
+   {
+    "id": "P2",
+    "term": "REE*~HYPER*esc_inv*gci_inv",
+    "label": "mineral path without hyperscaler density",
+    "consistency": 0.849,
+    "coverage": 0.423,
+    "members": [
+     "ISR",
+     "FRA",
+     "ITA"
+    ]
+   },
+   {
+    "id": "P3",
+    "term": "WSE*~CABLE*REE*HYPER*gci_inv",
+    "label": "water-mineral-hyperscaler",
+    "consistency": 0.938,
+    "coverage": 0.488,
+    "members": [
+     "DEU",
+     "KOR",
+     "CHL"
+    ]
+   },
+   {
+    "id": "P4",
+    "term": "WSE*CABLE*HYPER*esc_inv*gci_inv",
+    "label": "full exposure",
+    "consistency": 0.951,
+    "coverage": 0.541,
+    "members": [
+     "ESP",
+     "USA",
+     "AUS",
+     "IDN"
+    ]
+   },
+   {
+    "id": "P5",
+    "term": "ESE*REE",
+    "label": "energy-mineral (sufficiency, not necessity)",
+    "consistency": 0.953,
+    "coverage": 0.3,
+    "members": [
+     "ZAF",
+     "IND",
+     "POL",
+     "IDN"
+    ],
+    "note": "necessity 0.481 rejected; near-perfect sufficiency"
+   }
+  ],
+  "recalibration_required": {
+   "condition": "HYPER",
+   "reason": "Calibrated on the ordinal ODI proxy. The axis is now the continuous Herfindahl measure, so the fuzzy-set membership thresholds no longer correspond to the published anchors.",
+   "status": "PENDING",
+   "affects": [
+    "pathways",
+    "solution",
+    "necessity"
+   ],
+   "instruction": "Re-run the fsQCA pipeline against the v8.2 ODI and re-derive the HYPER anchors before citing any pathway membership from this vintage."
+  },
+  "conditions_source": {
+   "WSE/CABLE/REE/HYPER": "axes WSE, CSE, REE, ODI",
+   "ESC_inv": "100*(1 - EFF_SOV_EXT); per country under fsqca_conditions",
+   "GCI_inv": "100 - GCI_2024; per country under fsqca_conditions",
+   "note": "Both previously unqueryable (gap G2); exposed from v8.1."
+  }
+ },
+ "fidelity": {
+  "anchors": {
+   "WSE": 10,
+   "CSE": 10,
+   "REE": 40,
+   "FPE": 30,
+   "ODI": "P10",
+   "ESE": "P10=22.7"
+  },
+  "scores": {
+   "DEU": 0.943,
+   "ESP": 0.782,
+   "GBR": 0.833
+  },
+  "method": "Bhattacharyya fidelity between trace-normalised stress distributions; Structural Lack = 1-F"
+ },
+ "ese_method": {
+  "weights": {
+   "grid": 0.4,
+   "carbon": 0.3,
+   "cost": 0.3
+  },
+  "bounds": {
+   "carbon_gco2_kwh": [
+    20,
+    700
+   ],
+   "industrial_usd_kwh": [
+    0.03,
+    0.3
+   ],
+   "saidi_hours_logscale": [
+    0.05,
+    250
+   ]
+  },
+  "sources": [
+   "Ember Yearly Electricity Data 2024",
+   "IEA End-use Prices / Eurostat nrg_pc_205",
+   "World Bank IC.ELC.OUTG SAIDI + ENTSO-E ERAA"
+  ]
+ },
+ "odi_method": {
+  "active": "continuous",
+  "ordinal": "100*(4-n_providers)/3, a 4-level count proxy. v8.0 legacy, retained per country under audit.ODI_ordinal_value. Carried four manual overrides (NLD, HKG, KOR, SGP) that appear in no export.",
+  "continuous": "100 * HHI over operator shares of active cloud regions per country. 35 of 35 states covered, spanning 25.6 to 100.0 against the four levels of the proxy.",
+  "decision": "D-045 resolved 2026-07-29: the composite and the coupling matrix consume the continuous measure. A macro polycrisis model runs time evolution and a Lindblad generator over these axes, and neither is defined on a step function.",
+  "scale_note": "The measures do not share a zero. Four evenly split operators give ordinal 0 but HHI 25, because four hyperscalers is concentration rather than its absence. Composites therefore rise slightly against v8.1; the shift is a scale change, not a data revision.",
+  "source": "cloud_regions_master.csv"
+ },
+ "lineage": {
+  "generated_at_utc": "2026-07-29T13:33:20Z",
+  "generator": "scripts/build_index.py",
+  "formula_id": "QESIS_THEORY_v2",
+  "sources": {
+   "v8_qesis_country_scores.csv": {
+    "sha256": "022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121",
+    "bytes": 8516
+   },
+   "cloud_regions_master.csv": {
+    "sha256": "44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423",
+    "bytes": 114774
+   }
+  },
+  "n_countries": 35,
+  "n_ranked": 32,
+  "n_epis": 3
+ }
+}

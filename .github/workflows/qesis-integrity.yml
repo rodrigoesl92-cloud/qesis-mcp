@@ -1,0 +1,88 @@
+name: QESIS+ integrity gate
+
+# Runs in GitHub's cloud, not on the build machine. The gate reads only the
+# committed index, so it needs no OneDrive, no database and no local runtime.
+# This is the check whose absence let the v8.0 composite defect reach release.
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["data/**", "scripts/**", "server.py", ".github/workflows/**"]
+  pull_request:
+    paths: ["data/**", "scripts/**", "server.py"]
+  workflow_dispatch:
+  schedule:
+    # Ahead of the 08:30 local morning protocol, so a drift is already known.
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Integrity gate
+        run: python scripts/verify_index.py
+
+      - name: Gate self-test (mutation)
+        # A gate that only ever passes proves nothing. This injects each defect
+        # class it must catch and fails the build if the gate misses one.
+        run: python scripts/test_gate.py
+
+      - name: Install runtime
+        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
+      - name: Server contract smoke test
+        run: python scripts/smoke_server.py
+
+      - name: Coupling reproduces the published values
+        run: python scripts/coupling.py
+
+      - name: Serverless entry answers MCP over HTTP
+        # Catches the two failures that broke the first Vercel wiring: the
+        # session manager never starting without lifespan events, and the
+        # DNS-rebinding guard rejecting the production Host with 421.
+        env:
+          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,localhost,localhost:*"
+        run: python scripts/test_http.py
+
+      - name: Evaluation set is in sync with the index
+        # The v8.0 set was hand-written and began failing correct answers the
+        # moment the index was corrected. It is generated now, and this check
+        # is what keeps it honest.
+        run: python scripts/build_eval.py --check
+
+      - name: Landing page is in sync with the index
+        # The page is generated from the index, so it must not state a number
+        # the index no longer holds. Byte equality is the wrong test: the focus
+        # state rotates by day of year, so the numbers are what get compared.
+        run: python scripts/build_landing.py --check
+
+      - name: Summary
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          d = json.loads(pathlib.Path("data/qesis_v8.json").read_text(encoding="utf-8"))
+          lin, mdl = d.get("lineage", {}), d.get("composite_model", {})
+          print(f"## QESIS+ {d.get('vintage')}\n")
+          print(f"- formula `{mdl.get('formula_id')}`: `{mdl.get('expression')}`")
+          print(f"- states {lin.get('n_countries')}, ranked {lin.get('n_ranked')}, "
+                f"EPIS {lin.get('n_epis')}")
+          print(f"- generated {lin.get('generated_at_utc')}\n")
+          print("| source | sha256 |\n|---|---|")
+          for k, v in (lin.get("sources") or {}).items():
+              print(f"| `{k}` | `{v['sha256'][:16]}...` |")
+          PY
