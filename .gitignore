@@ -34,3 +34,6 @@ Thumbs.db
 docker-compose.yml
 sovereign_infra_backup.sql
 REPORT_EXECUTIVE.md
+
+# Local MCP wiring: absolute machine paths, never published
+.mcp.json
