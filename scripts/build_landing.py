@@ -114,6 +114,13 @@ def build(doc: dict, day_of_year: int) -> str:
     src_names = ", ".join(lin.get("sources", {}))
     gen = lin.get("generated_at_utc", "")
 
+    ul = doc.get("uncertainty_ledger", {})
+    entries = ul.get("entries", [])
+    ledger_count = len(entries)
+    ledger_rows = "\n".join(
+        f'<tr><td class="epis">{esc(u["id"])}</td><td>{esc(u["severity"])}</td>'
+        f'<td>{esc(u["statement"])}</td></tr>' for u in entries)
+
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8">
@@ -180,6 +187,17 @@ and its operator concentration reads {focus['axes']['ODI']:.1f} across
 <p class="src">Focus rotates daily so the instrument does not read as a single
 case study. Asset: qesis_v8.json, coverage 35 of 35, vintage
 {esc(doc['vintage'])}.</p>
+
+<h2>What this vintage does not know</h2>
+<p>Every known limitation, derived from the index at build time rather than
+kept by hand. An instrument that publishes its own uncertainty is checkable;
+one that does not is a claim.</p>
+<div class="scroll"><table>
+<thead><tr><th>Id</th><th>Severity</th><th>Limitation</th></tr></thead>
+<tbody>{ledger_rows}</tbody></table></div>
+<p class="src">Asset: qesis_v8.json uncertainty_ledger, {ledger_count} entries,
+vintage {esc(doc['vintage'])}. Also served by
+<code>qesis_get_integrity</code>.</p>
 
 <h2>Connect it</h2>
 <p>The index is an MCP server, so any MCP-capable client can call it as a tool.

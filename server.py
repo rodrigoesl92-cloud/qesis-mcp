@@ -353,6 +353,7 @@ async def qesis_get_integrity() -> str:
             "drift": drift or "none",
         },
         "epis_findings": DATA.get("epis_findings"),
+        "uncertainty_ledger": DATA.get("uncertainty_ledger"),
         "coupling_exclusions": {
             "excluded_from_global": DATA["coupling"].get("excluded_from_global"),
             "excluded_from_core": DATA["coupling"].get("excluded_from_core"),

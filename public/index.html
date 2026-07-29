@@ -138,7 +138,7 @@ Coverage is the declared weight mass actually present.</caption>
 <tr><td class="n">32</td><td>Switzerland</td><td class="n">19.6</td><td class="n">37.5</td><td class="n">20.4</td><td class="n">1.00</td></tr></tbody></table></div>
 <p class="src">Composite = 0.3*WSE + 0.3*CSE + 0.17*ODI + 0.08*CRD + 0.15*REE. Derived at build time,
 never carried. ODI is the continuous Herfindahl measure over operator shares of
-active cloud regions. Sources: v8_qesis_country_scores.csv, cloud_regions_master.csv. Generated 2026-07-29T13:33:20Z.</p>
+active cloud regions. Sources: v8_qesis_country_scores.csv, cloud_regions_master.csv. Generated 2026-07-29T13:56:21Z.</p>
 
 <h2>Today's focus: Mexico</h2>
 <p>Mexico sits at composite 41.7 with coverage
@@ -150,6 +150,24 @@ and its operator concentration reads 33.3 across
 <p class="src">Focus rotates daily so the instrument does not read as a single
 case study. Asset: qesis_v8.json, coverage 35 of 35, vintage
 v8.2 (2026-07).</p>
+
+<h2>What this vintage does not know</h2>
+<p>Every known limitation, derived from the index at build time rather than
+kept by hand. An instrument that publishes its own uncertainty is checkable;
+one that does not is a claim.</p>
+<div class="scroll"><table>
+<thead><tr><th>Id</th><th>Severity</th><th>Limitation</th></tr></thead>
+<tbody><tr><td class="epis">U-01</td><td>high</td><td>3 of 35 states carry no composite: HKG, SGP, TWN. Water stress is absent and coverage falls to 0.70 against the declared 0.75 threshold.</td></tr>
+<tr><td class="epis">U-02</td><td>high</td><td>The fsQCA HYPER condition was calibrated on the ordinal ODI proxy, which D-045 replaced with the continuous measure.</td></tr>
+<tr><td class="epis">U-03</td><td>medium</td><td>Fidelity is computed for 3 of 35 states (DEU, ESP, GBR).</td></tr>
+<tr><td class="epis">U-04</td><td>medium</td><td>Availability-zone counts are missing for 27 of 35 states, so the ODI Herfindahl is weighted one unit per active cloud region rather than by capacity.</td></tr>
+<tr><td class="epis">U-05</td><td>medium</td><td>FPE, ESE are published per state and enter no composite (D-044).</td></tr>
+<tr><td class="epis">U-06</td><td>medium</td><td>No semiconductor axis exists. The February roadmap named semiconductor capacity as the Infrastructure Pillar of the Macro-Systemic Sovereign Predictor; three vintages have shipped without it.</td></tr>
+<tr><td class="epis">U-07</td><td>low</td><td>The v8.0 ordinal ODI carried four manual overrides (NLD, HKG, KOR, SGP), each one step below its own stated rule, recorded in no export.</td></tr>
+<tr><td class="epis">U-08</td><td>low</td><td>CSE composes EMODnet and SubmarineMap at 0.6/0.4 for EU states and uses SubmarineMap alone elsewhere.</td></tr></tbody></table></div>
+<p class="src">Asset: qesis_v8.json uncertainty_ledger, 8 entries,
+vintage v8.2 (2026-07). Also served by
+<code>qesis_get_integrity</code>.</p>
 
 <h2>Connect it</h2>
 <p>The index is an MCP server, so any MCP-capable client can call it as a tool.
@@ -186,7 +204,7 @@ worse than no form. Nothing you do here is logged, and no cookie is set.</p>
 <footer>
 <p>QESIS+ v8.2 (2026-07). Batista Silva, R. (2026). Liquid Sovereignty.
 ESIC/LSE. Dataset: Sovereign_Infra_Intelligence.</p>
-<p>Generated 2026-07-29T13:33:20Z from v8_qesis_country_scores.csv, cloud_regions_master.csv. This page is built from the index,
+<p>Generated 2026-07-29T13:56:21Z from v8_qesis_country_scores.csv, cloud_regions_master.csv. This page is built from the index,
 never edited by hand.</p>
 </footer>
 </main></body></html>
