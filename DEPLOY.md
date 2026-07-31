@@ -47,6 +47,33 @@ failed`. A deployment whose checks fail is still built and still READY, and the
 production alias simply is not moved onto it. Promotion, not the build, is what
 publishes.
 
+**The cause, confirmed in the dashboard.** Vercel's built-in **Lint** and
+**Typecheck** code checks were enabled on this project. Both fail in two seconds
+with `No package.json was found in the project`, because they are JavaScript
+checks and this is a Python project that will never have one. Typecheck is
+marked **Required**, and the deployment page states the consequence plainly:
+
+> Aliasing to custom domains is blocked by failed deployment checks.
+
+So the block is permanent and applies to every future deployment, not just the
+v8.3 one. The API does not surface it: `get_deployment` reports `READY` and
+`target: production` with no hint, and the only machine-readable signal is the
+GitHub commit status string. Turn both checks off in Project Settings, or at
+minimum clear **Required** from Typecheck. Until that is done, every deploy to
+`main` needs a manual promote:
+
+```bash
+powershell -ExecutionPolicy Bypass -File .\scripts\setup_vercel_token.ps1
+```
+
+That lives in `sovereign-infra`, is stdlib only, and exists because there is no
+`node`, `npm` or `npx` on the build machine, so every CLI-shaped remedy in
+Vercel's own documentation is unusable here.
+
+Do not "fix" this by adding a `package.json`. It would make the checks pass by
+telling Vercel the project is something it is not, and `framework` is currently
+`null` on purpose.
+
 Two traps sit on top of that when you go to confirm it:
 
 - `/` is a static asset and is edge-cached. It answered `X-Vercel-Cache: HIT`
