@@ -70,7 +70,13 @@ def _allowed_hosts() -> list[str]:
     hosts = [h.strip() for h in os.environ.get("QESIS_ALLOWED_HOSTS", "").split(",")
              if h.strip()]
     if not hosts:
-        hosts = ["qesis-mcp.vercel.app", "localhost", "localhost:*",
+        # Both production names are allowed so the project can be renamed in
+        # Vercel without a code change and without a window where the landing
+        # page works and /mcp answers 421 to every client. An allowed host that
+        # nobody is serving costs nothing: the guard checks the inbound Host
+        # against this list, it does not advertise it.
+        hosts = ["qesis-mcp.vercel.app", "qesis.vercel.app",
+                 "localhost", "localhost:*",
                  "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"]
     for var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
         v = os.environ.get(var, "").strip()

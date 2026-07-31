@@ -55,7 +55,7 @@ jobs:
         # session manager never starting without lifespan events, and the
         # DNS-rebinding guard rejecting the production Host with 421.
         env:
-          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,localhost,localhost:*"
+          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,qesis.vercel.app,localhost,localhost:*"
         run: python scripts/test_http.py
 
       - name: Evaluation set is in sync with the index
