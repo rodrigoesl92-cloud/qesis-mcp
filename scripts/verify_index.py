@@ -17,7 +17,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
 TOL = 0.051                      # published to 1 decimal
 BANNED_CITATIONS = ["Ontological Blind-Spots"]
 
@@ -155,8 +154,13 @@ def main() -> int:
         check(bad not in blob, f"R1.16 superseded citation absent", f"found '{bad}'")
 
     # ── 9. soft checks ──────────────────────────────────────────────────
+    # Axes are derived from the declared model, never a literal list. A stale
+    # literal does not fail loudly here: `.get(a)` returns None for a renamed
+    # axis, so the range check silently stops covering it. That is how RGD
+    # went unvalidated after the v8.3 rename of CRD.
+    axes = list(W) + list(model.get("diagnostic_axes_excluded") or [])
     for iso, c in C.items():
-        for a in AXES:
+        for a in axes:
             v = c["axes"].get(a)
             if v is not None and not (0.0 <= v <= 100.0):
                 warnings.append(f"{iso}.{a}={v} outside 0-100")

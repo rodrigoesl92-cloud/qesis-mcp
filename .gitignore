@@ -4,8 +4,15 @@
 # machine paths and internal decisions. Both are backed up in the private
 # sovereign-infra repository.
 scripts/build_index.py
-data/qesis_v8.0_superseded.json
 HANDOFF.md
+
+# Superseded build inputs and unapproved candidates are operator-only: they
+# are frozen inputs and pre-approval drafts, not the published product. These
+# are globs on purpose. The v8.0 rule was a literal filename, so v8.2 and the
+# v8.3 candidate were not covered when the vintage advanced and were staged
+# for the public repo by accident. A rule's scope has to travel with it.
+data/qesis_v*_superseded.json
+data/qesis_v*_CANDIDATE.json
 
 # Never publishable on any channel
 .env
