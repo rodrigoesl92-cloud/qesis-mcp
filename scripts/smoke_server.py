@@ -13,7 +13,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
+# Deliberately a literal, not derived from the index: this is an independent
+# restatement of the published axis contract, so an index that renames an axis
+# has to be reconciled here on purpose. RGD was CRD until v8.3 (D-049).
+AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "RGD", "ESE"]
 EXPECTED_TOOLS = {
     "qesis_get_country", "qesis_rank_countries", "qesis_compare_countries",
     "qesis_get_coupling", "qesis_get_pathways", "qesis_get_component_audit",
@@ -64,6 +67,12 @@ try:
     names = {t.name for t in reg}
     missing = EXPECTED_TOOLS - names
     need(not missing, f"tools not registered: {sorted(missing)}")
+    # The server declares its own axis list and uses it to build comparisons.
+    # If it drifts from the index, compare_countries raises KeyError per state
+    # at request time rather than here. v8.3 renamed CRD to RGD and this is
+    # the check that would have caught the server being left behind.
+    need(set(server.AXES) == set(AXES),
+         f"server.AXES {sorted(server.AXES)} != index contract {sorted(AXES)}")
     print(f"runtime importable: {len(names)} tools registered")
 except ImportError as exc:
     print(f"runtime not importable ({exc.name}); ran data-contract checks only")
