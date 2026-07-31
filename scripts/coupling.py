@@ -14,7 +14,8 @@ from __future__ import annotations
 
 import math
 
-# Six coupling axes. CRD is excluded, per the canonical two-tier declaration.
+# Six coupling axes. RGD (CRD before v8.3) is excluded, per the canonical
+# two-tier declaration, and because it is algebraically coupled to ODI.
 COUPLING_AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "ESE"]
 CORE_EXCLUDED = ["ARE", "BHR", "IDN", "MYS", "QAT", "SAU"]
 
