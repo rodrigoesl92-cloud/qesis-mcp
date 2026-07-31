@@ -51,11 +51,13 @@ def m_singapore(d):
 
 def m_inversion(d):
     """Dominance inverted without breaking arithmetic elsewhere."""
-    for iso in ("GBR", "CHE"):
-        for a in ("WSE", "CSE", "REE", "ODI", "CRD"):
-            d["countries"]["GBR"]["axes"][a] = max(
-                d["countries"]["GBR"]["axes"][a], d["countries"]["CHE"]["axes"][a])
+    # Axes come from the declared model, never a hardcoded list: v8.3 renamed
+    # CRD to RGD and a literal list silently crashed this case instead of
+    # exercising it. A self-test that cannot run proves less than no self-test.
     W = d["composite_model"]["weights"]
+    for a in W:
+        d["countries"]["GBR"]["axes"][a] = max(
+            d["countries"]["GBR"]["axes"][a], d["countries"]["CHE"]["axes"][a])
     d["countries"]["GBR"]["composite"] = round(
         sum(W[a] * d["countries"]["GBR"]["axes"][a] for a in W), 1)
     d["countries"]["CHE"]["composite"] = d["countries"]["GBR"]["composite"] + 5.0

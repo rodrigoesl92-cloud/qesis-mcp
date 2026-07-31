@@ -50,11 +50,11 @@ def _refresh() -> dict:
 
 
 _refresh()
-AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
+AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "RGD", "ESE"]
 AXIS_NAMES = {
     "WSE": "Water Stress Exposure", "CSE": "Cable Stress Exposure",
     "REE": "Rare Earth Element Stress", "FPE": "Foreign Platform Exposure",
-    "ODI": "Operator Dependency Index", "CRD": "Cloud Risk Density",
+    "ODI": "Operator Dependency Index", "RGD": "Region Density",
     "ESE": "Electricity Stress Exposure",
 }
 
@@ -130,7 +130,7 @@ class RankInput(BaseModel):
     """Input for ranking countries."""
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     axis: str = Field(default="composite",
-                      description="What to rank by: 'composite' or one of WSE, CSE, REE, FPE, ODI, CRD, ESE")
+                      description="What to rank by: 'composite' or one of WSE, CSE, REE, FPE, ODI, RGD, ESE")
     top_n: int = Field(default=10, ge=1, le=35, description="How many countries to return")
     ascending: bool = Field(default=False, description="False = most exposed first (default)")
 
@@ -159,7 +159,9 @@ async def qesis_get_country(params: CountryInput) -> str:
 
     Returns JSON. Axis legend: WSE water, CSE submarine cable, REE rare
     earths, FPE foreign platform share, ODI hyperscaler operator
-    concentration, CRD cloud risk density, ESE electricity stress."""
+    concentration, RGD normalised cloud region count, ESE electricity
+    stress. RGD is algebraically coupled to ODI: see rgd_method.warning
+    before reporting any ODI-RGD relationship as empirical."""
     _refresh()
     c = _country_or_error(params.iso3)
     iso = params.iso3.upper()
