@@ -2854,12 +2854,20 @@
   "prior_art": "HHI-based cloud sovereignty measurement is not novel. Published Cloud Adoption Index constructions weight HHI supplier diversification at 40%; published EU cloud HHI estimates run 2500-3450. Any novelty claim must be narrowed to substrate-linked facility-level concentration and argued against this prior art."
  },
  "lineage": {
-  "generated_at_utc": "2026-07-30T23:57:00Z",
+  "generated_at_utc": "2026-08-01T11:57:11Z",
   "generator": "scripts/build_v8_4.py applied to v8.3; see sovereign-infra/ops/CITATION_CONCORDANCE.md",
   "formula_id": "QESIS_THEORY_v3",
   "derived_from": {
    "vintage": "v8.3 (2026-07-31)",
-   "note": "Provenance transform. No axis value, composite or coverage figure changed, so the v8.3 lineage source hashes above remain the provenance of every number served here.",
+   "generated_at_utc": "2026-07-30T23:57:00Z",
+   "generator": "v8.3 remediation transform T-1..T-5, F-11 applied to v8.2; see ops/VALIDATION_REPORT_CSOVE_AND_V83_2026-07-31.md",
+   "derived_from": {
+    "vintage": "v8.2 (2026-07)",
+    "sha256": "1911a13ae9fdb056020f7afbcad7eecf0849fa3af565df6c8482103555519538",
+    "generated_at_utc": "2026-07-29T13:56:21Z",
+    "generator": "scripts/build_index.py"
+   },
+   "note": "Provenance transform. No axis value, composite or coverage figure changed, so the source hashes carried here remain the provenance of every number served in v8.4.",
    "sources": {
     "v8_qesis_country_scores.csv": {
      "sha256": "022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121",
@@ -3288,6 +3296,51 @@
   ],
   "id_namespace": "D-001 to D-099 are ecosystem decisions. D-101 upward are defects found in the v6.6 to v8.0 lineage. The ranges are kept apart so a citation is unambiguous about whether it names something that was decided or something that was found."
  },
+ "served_contract": {
+  "note": "Fields each tool must return at this vintage. Declared here so a vintage cannot be announced by a process that implements only part of it. Enforced by scripts/verify_served_contract.py in CI and self-reported under `contract` on qesis_get_integrity.",
+  "authority": "G-01 code/data atomicity clause, 2026-08-01",
+  "tools": {
+   "qesis_get_integrity": [
+    "vintage",
+    "composite_model",
+    "lineage",
+    "self_check",
+    "chain",
+    "epis_findings",
+    "withholding_causes",
+    "uncertainty_ledger",
+    "citation_concordance",
+    "coupling_exclusions"
+   ],
+   "qesis_get_country": [
+    "iso3",
+    "vintage",
+    "axes",
+    "composite_exposure",
+    "coverage",
+    "big_flags"
+   ],
+   "qesis_get_methodology": [
+    "framework",
+    "axes",
+    "big_protocol",
+    "composite_model",
+    "vintage",
+    "citation"
+   ]
+  },
+  "conditional": {
+   "qesis_get_country": {
+    "when": "composite is withheld under BIG",
+    "probe_iso3": "TWN",
+    "fields": [
+     "epis_finding",
+     "withholding_cause",
+     "cause_statement"
+    ]
+   }
+  }
+ },
  "change_log_v8_4": [
   {
    "id": "C-01",
@@ -3312,6 +3365,14 @@
   {
    "id": "U-01",
    "change": "Scoped as permanently out of coverage against Aqueduct 4.0 with the C-02 causes attached, replacing a remedy that read as a pending sourcing task."
+  },
+  {
+   "id": "G-01",
+   "change": "served_contract declares the fields each tool must return at this vintage. v8.4 shipped its data ahead of its code and served a vintage it half-implemented; this is what makes that fail a build instead."
+  },
+  {
+   "id": "lineage",
+   "change": "generated_at_utc is regenerated rather than carried from the parent, and derived_from now nests v8.3's own lineage instead of replacing it."
   },
   {
    "id": "scope",

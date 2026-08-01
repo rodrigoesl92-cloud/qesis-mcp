@@ -25,6 +25,7 @@ import argparse
 import copy
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -80,6 +81,49 @@ U06 = {
     "contingent_on": "a 35-state fabrication-capacity source",
     "authority": "C-05, remediation spec 2026-08-01",
 }
+
+# ── G-01, code/data atomicity: what this vintage promises to serve ──────────
+# v8.4 shipped its data ahead of its code. `_refresh()` watches the index file
+# and reloads it; server.py is read once at process start. The resident
+# connector therefore advanced to v8.4 and served it without `chain` or
+# `citation_concordance`, which are the two things v8.4 exists to add. It
+# announced a vintage whose contract it half-implemented, publicly.
+#
+# The contract is declared in the data so the claim and the check cannot drift
+# apart. verify_served_contract.py calls each tool in a fresh process and fails
+# when a declared field is absent, which catches data-ahead-of-code before a
+# deploy. The runtime self-report in server.py catches a stale long-lived
+# process, and only from v8.4 forward: code that predates the contract cannot
+# report that it is failing one.
+SERVED_CONTRACT = {
+    "note": ("Fields each tool must return at this vintage. Declared here so a "
+             "vintage cannot be announced by a process that implements only part "
+             "of it. Enforced by scripts/verify_served_contract.py in CI and "
+             "self-reported under `contract` on qesis_get_integrity."),
+    "authority": "G-01 code/data atomicity clause, 2026-08-01",
+    "tools": {
+        "qesis_get_integrity": [
+            "vintage", "composite_model", "lineage", "self_check", "chain",
+            "epis_findings", "withholding_causes", "uncertainty_ledger",
+            "citation_concordance", "coupling_exclusions",
+        ],
+        "qesis_get_country": ["iso3", "vintage", "axes", "composite_exposure",
+                              "coverage", "big_flags"],
+        "qesis_get_methodology": ["framework", "axes", "big_protocol",
+                                  "composite_model", "vintage", "citation"],
+    },
+    # Fields that appear only on a state whose composite is withheld. Checking
+    # them against a fully covered state would fail for the right reason at the
+    # wrong time, so the probe state is named rather than assumed.
+    "conditional": {
+        "qesis_get_country": {
+            "when": "composite is withheld under BIG",
+            "probe_iso3": "TWN",
+            "fields": ["epis_finding", "withholding_cause", "cause_statement"],
+        },
+    },
+}
+
 
 # ── U-01 scoped rather than left as an open sourcing task ───────────────────
 # Phase 1 exit criterion 6 asks for this to be sourced or permanently scoped as
@@ -345,8 +389,9 @@ def errata() -> list[dict]:
     ]
 
 
-def transform(d: dict) -> dict:
+def transform(d: dict, stamp: str) -> dict:
     d = copy.deepcopy(d)
+    src_vintage = d.get("vintage", "")
 
     # ── C-02 ────────────────────────────────────────────────────────────
     for e in d.get("epis_findings", []):
@@ -386,17 +431,37 @@ def transform(d: dict) -> dict:
     d["citation_concordance"] = concordance()
 
     # ── vintage ─────────────────────────────────────────────────────────
+    # `generated_at_utc` is regenerated rather than carried. The first cut of
+    # this transform inherited v8.3's stamp, so v8.4 published a build time of
+    # 2026-07-30T23:57Z: a day before its own vintage date and earlier than the
+    # parent it derives from. On the one release whose entire subject is
+    # provenance, that is the wrong field to leave carried.
+    parent = d["lineage"]
+    if src_vintage.startswith("v8.3"):
+        # Capture the parent's own lineage rather than replacing it. The first
+        # cut wrote a fresh `derived_from` over v8.3's, which erased v8.2's
+        # sha256 and build stamp from the chain. A provenance transform that
+        # shortens the provenance chain is working against itself.
+        derived_from = {
+            "vintage": SUPERSEDES,
+            "generated_at_utc": parent.get("generated_at_utc"),
+            "generator": parent.get("generator"),
+            "derived_from": parent.get("derived_from"),
+            "note": ("Provenance transform. No axis value, composite or coverage "
+                     "figure changed, so the source hashes carried here remain the "
+                     "provenance of every number served in v8.4."),
+            "sources": parent.get("sources"),
+        }
+    else:
+        derived_from = parent.get("derived_from")
+
     d["vintage"] = VINTAGE
     d["supersedes"] = SUPERSEDES
+    d["lineage"]["generated_at_utc"] = stamp
     d["lineage"]["generator"] = ("scripts/build_v8_4.py applied to v8.3; see "
                                  "sovereign-infra/ops/CITATION_CONCORDANCE.md")
-    d["lineage"]["derived_from"] = {
-        "vintage": SUPERSEDES,
-        "note": ("Provenance transform. No axis value, composite or coverage figure "
-                 "changed, so the v8.3 lineage source hashes above remain the "
-                 "provenance of every number served here."),
-        "sources": d["lineage"].get("sources"),
-    }
+    d["lineage"]["derived_from"] = derived_from
+    d["served_contract"] = SERVED_CONTRACT
     d["change_log_v8_4"] = [
         {"id": "C-01", "change": "Hash chain exposed on the integrity endpoint from an "
                                  "independent verifier run, with the spine committed so "
@@ -415,6 +480,13 @@ def transform(d: dict) -> dict:
         {"id": "U-01", "change": "Scoped as permanently out of coverage against "
                                  "Aqueduct 4.0 with the C-02 causes attached, replacing "
                                  "a remedy that read as a pending sourcing task."},
+        {"id": "G-01", "change": "served_contract declares the fields each tool must "
+                                 "return at this vintage. v8.4 shipped its data ahead "
+                                 "of its code and served a vintage it half-implemented; "
+                                 "this is what makes that fail a build instead."},
+        {"id": "lineage", "change": "generated_at_utc is regenerated rather than carried "
+                                    "from the parent, and derived_from now nests v8.3's "
+                                    "own lineage instead of replacing it."},
         {"id": "scope", "change": "No axis, composite, coverage, coupling or fsQCA "
                                   "value changed. Every v8.3 number survives "
                                   "byte-identical."},
@@ -426,6 +498,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="src", default=str(ROOT / "data" / "qesis_v8.json"))
     ap.add_argument("--out", default=str(ROOT / "data" / "qesis_v8.json"))
+    ap.add_argument("--stamp", default=None,
+                    help="override the build time, ISO8601 Z. For reproducing a "
+                         "past build, not for routine use.")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -436,11 +511,15 @@ def main() -> int:
                  f"v8.3, and applying it to anything else would produce a document "
                  f"whose lineage does not describe it.")
 
-    out = transform(src)
+    stamp = args.stamp or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out = transform(src, stamp)
 
     # Idempotence is a property, not an intention: assert it here rather than
-    # trusting that every field above was assigned outright.
-    if transform(out) != out:
+    # trusting that every field above was assigned outright. The stamp is held
+    # fixed across the two runs, because a build time that differs between them
+    # is the transform working correctly rather than drifting. Everything else
+    # must agree byte for byte.
+    if transform(out, stamp) != out:
         sys.exit("FATAL: transform is not idempotent. Re-running it would keep "
                  "changing the served document, which makes the vintage a lie.")
 
