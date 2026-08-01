@@ -36,6 +36,19 @@ jobs:
       - name: Integrity gate
         run: python scripts/verify_index.py
 
+      - name: Hash chain reproduces from the committed spine
+        # C-01. The endpoint publishes a chain height and a link-break count.
+        # Before this step those came from the runtime that appends to the
+        # chain, so no reader could contradict them. This recomputes every link
+        # from the committed spine and fails if the attestation does not follow.
+        run: python scripts/verify_chain.py
+
+      - name: Vintage is paired across both repositories
+        # G-01. Neither repository may serve a vintage the other does not
+        # record. The public runner cannot read the private repo, so it checks
+        # the committed mirror of its lineage register.
+        run: python scripts/verify_vintage_pairing.py
+
       - name: Gate self-test (mutation)
         # A gate that only ever passes proves nothing. This injects each defect
         # class it must catch and fails the build if the gate misses one.
