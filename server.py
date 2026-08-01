@@ -22,6 +22,11 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
 DATA_PATH = Path(__file__).parent / "data" / "qesis_v8.json"
+# C-01. The chain attestation is a separate artefact on purpose. It is produced by
+# an independent verifier in sovereign-infra, never by the process that appends to
+# the chain and never by the process that writes the index. Keeping it out of the
+# index is what stops the index builder from becoming a second self-reporter.
+CHAIN_PATH = Path(__file__).parent / "data" / "chain_attestation.json"
 LICENSED = bool(os.environ.get("QESIS_LICENSE_KEY", "").strip())
 
 DATA: dict = {}
@@ -47,6 +52,25 @@ def _refresh() -> dict:
         print(f"[qesis] loaded {DATA.get('vintage')} "
               f"({len(DATA.get('countries', {}))} states)", file=sys.stderr)
     return DATA
+
+
+def _chain() -> dict:
+    """The verified chain state, or a statement that it is unverified.
+
+    Never fabricates a verdict. An absent attestation is reported as absent, because
+    the failure this exists to prevent is a chain figure nobody can contradict, and
+    a default of `0 link breaks` would recreate it in a worse form.
+    """
+    try:
+        return json.loads(CHAIN_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return {
+            "status": "UNVERIFIED",
+            "reason": f"no readable attestation at {CHAIN_PATH.name}: "
+                      f"{type(exc).__name__}",
+            "effect": "Do not cite a chain height or a link-break count from this "
+                      "deployment. None is being asserted.",
+        }
 
 
 _refresh()
@@ -191,6 +215,13 @@ async def qesis_get_country(params: CountryInput) -> str:
                         if e["iso3"] == iso), None)
         out["epis_finding"] = finding["finding"] if finding else (
             "Composite withheld under the BIG coverage gate.")
+        # C-02. The coverage arithmetic says the composite is withheld; the cause
+        # says why the coverage is missing. A caller who meets the gap here should
+        # not have to open the methodology to learn that Singapore and Taiwan are
+        # absent for entirely different reasons.
+        if finding and finding.get("withholding_cause"):
+            out["withholding_cause"] = finding["withholding_cause"]
+            out["cause_statement"] = finding["cause_statement"]
     return json.dumps(out, indent=1) + _tier_note()
 
 
@@ -336,7 +367,9 @@ async def qesis_get_component_audit(params: CountryInput) -> str:
     "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 async def qesis_get_integrity() -> str:
     """Which generation of the index is being served, how the composite is
-    derived, and every state whose composite is withheld under BIG. Query this
+    derived, every state whose composite is withheld under BIG and why, the
+    verified state of the EU AI Act Art. 12 hash chain, and the concordance
+    between published thesis figures and the numbers served here. Query this
     before citing any number: it answers 'is what I am reading reproducible'
     without requiring access to the build machine."""
     _refresh()
@@ -360,8 +393,18 @@ async def qesis_get_integrity() -> str:
             "composites_reproducing_from_axes": drift == [],
             "drift": drift or "none",
         },
+        # C-01. Read from an independent verifier's output, never written by the
+        # process that appends to the chain. The spine it was computed from is
+        # committed, so a reader can recompute every link rather than trust this.
+        "chain": _chain(),
         "epis_findings": DATA.get("epis_findings"),
+        # C-02. Two distinct causes sit behind three withholdings, and the codes
+        # are published beside the findings so the difference is legible.
+        "withholding_causes": DATA.get("withholding_causes"),
         "uncertainty_ledger": DATA.get("uncertainty_ledger"),
+        # C-04. Served before anyone concludes a thesis figure and this index
+        # disagree because one of them is wrong.
+        "citation_concordance": DATA.get("citation_concordance"),
         "coupling_exclusions": {
             "excluded_from_global": DATA["coupling"].get("excluded_from_global"),
             "excluded_from_core": DATA["coupling"].get("excluded_from_core"),
