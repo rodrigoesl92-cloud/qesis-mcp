@@ -50,3 +50,12 @@ REPORT_EXECUTIVE.md
 
 # Local MCP wiring: absolute machine paths, never published
 .mcp.json
+
+# Same rule, same reason, second directory. `.claude/settings.local.json` holds
+# 257 permission rules carrying this machine's home path, and `.claude/` was
+# neither tracked nor ignored, so one `git add -A` would have published all of
+# it. `.claude/launch.json` is deliberately NOT ignored: it names relative
+# commands and ports, describes the project rather than the host, and is worth
+# sharing with anyone cloning this.
+.claude/settings.local.json
+.claude/*.local.json
