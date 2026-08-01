@@ -2854,7 +2854,7 @@
   "prior_art": "HHI-based cloud sovereignty measurement is not novel. Published Cloud Adoption Index constructions weight HHI supplier diversification at 40%; published EU cloud HHI estimates run 2500-3450. Any novelty claim must be narrowed to substrate-linked facility-level concentration and argued against this prior art."
  },
  "lineage": {
-  "generated_at_utc": "2026-08-01T11:57:11Z",
+  "generated_at_utc": "2026-08-01T12:20:25Z",
   "generator": "scripts/build_v8_4.py applied to v8.3; see sovereign-infra/ops/CITATION_CONCORDANCE.md",
   "formula_id": "QESIS_THEORY_v3",
   "derived_from": {
@@ -3302,6 +3302,7 @@
   "tools": {
    "qesis_get_integrity": [
     "vintage",
+    "provenance",
     "composite_model",
     "lineage",
     "self_check",
