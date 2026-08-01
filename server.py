@@ -11,6 +11,7 @@ audit locked). Any non-empty key unlocks the institutional vintage.
 Run (local stdio):      python server.py
 Run (remote, HTTP):     python server.py --http   (streamable HTTP on :8000)
 """
+import hashlib
 import json
 import os
 import sys
@@ -30,7 +31,7 @@ CHAIN_PATH = Path(__file__).parent / "data" / "chain_attestation.json"
 LICENSED = bool(os.environ.get("QESIS_LICENSE_KEY", "").strip())
 
 DATA: dict = {}
-_LOADED_MTIME: float | None = None
+_INDEX_SHA256: str | None = None
 
 
 def _refresh() -> dict:
@@ -40,17 +41,31 @@ def _refresh() -> dict:
     session. Without this, regenerating the index leaves every client reading
     the previous generation from memory while the corrected file sits on disk,
     which is the hardest class of drift to notice because both look right.
+
+    The reload is also the reason G-01b exists. Any process that writes this
+    file changes what is served, immediately, with no release event in between.
+    That is convenient locally and it means `served` and `committed` can differ
+    in either direction, so the hash below is taken on every load and published:
+    a reader identifies the served bytes rather than trusting a vintage label.
     """
-    global DATA, _LOADED_MTIME
+    global DATA, _INDEX_SHA256
     try:
-        m = DATA_PATH.stat().st_mtime
+        raw = DATA_PATH.read_bytes()
     except OSError:
         return DATA
-    if m != _LOADED_MTIME:
-        DATA = json.loads(DATA_PATH.read_text(encoding="utf-8"))
-        _LOADED_MTIME = m
+    # Keyed on content, not on mtime. The mtime version missed a change: two
+    # writes landing inside one filesystem timestamp tick left this process
+    # serving the first while publishing a hash computed from it, which under
+    # G-01b is worse than publishing no hash at all. Hashing 76 KB costs a
+    # fraction of a millisecond and the JSON parse is still skipped when the
+    # bytes are unchanged, so the fast path stays fast.
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != _INDEX_SHA256:
+        DATA = json.loads(raw.decode("utf-8"))
+        _INDEX_SHA256 = digest
         print(f"[qesis] loaded {DATA.get('vintage')} "
-              f"({len(DATA.get('countries', {}))} states)", file=sys.stderr)
+              f"({len(DATA.get('countries', {}))} states) "
+              f"sha256 {digest[:12]}", file=sys.stderr)
     return DATA
 
 
@@ -71,6 +86,41 @@ def _chain() -> dict:
             "effect": "Do not cite a chain height or a link-break count from this "
                       "deployment. None is being asserted.",
         }
+
+
+def _provenance() -> dict:
+    """Which bytes are being served, and whether they are pinned to a release.
+
+    G-01b. A vintage string is a label, not a fingerprint: two different builds
+    of v8.4 shipped on 2026-08-01, one with a flattened lineage and one with it
+    repaired, and both answered `v8.4 (2026-08-01)`. Anything comparing vintage
+    strings to decide whether a promotion took effect would have seen no
+    difference. The sha256 of the served file is the thing that distinguishes
+    them, so it is published.
+
+    On a Vercel deployment the commit is known from the build environment, so a
+    reader can check out that commit, hash `data/qesis_v8.json` and get this
+    number. On the local stdio plane there is no commit: the file comes from a
+    working tree that any process may have written since. That case says so
+    rather than leaving the reader to assume a release happened.
+    """
+    commit = (os.environ.get("VERCEL_GIT_COMMIT_SHA") or "").strip()
+    if commit:
+        return {
+            "plane": "deployment",
+            "index_sha256": _INDEX_SHA256,
+            "deployment_commit": commit,
+            "verify": ("git checkout <deployment_commit> && sha256sum "
+                       "data/qesis_v8.json must equal index_sha256"),
+        }
+    return {
+        "plane": "working tree",
+        "index_sha256": _INDEX_SHA256,
+        "deployment_commit": None,
+        "warning": ("Served from a working tree, not from a promoted commit. "
+                    "These bytes may be uncommitted. Match index_sha256 against "
+                    "a commit before citing anything from this process."),
+    }
 
 
 def _contract(tool: str, served: dict) -> dict:
@@ -417,6 +467,8 @@ async def qesis_get_integrity() -> str:
             drift.append({"iso3": iso, "served": c["composite"], "recomputed": calc})
     out = {
         "vintage": DATA["vintage"], "supersedes": DATA.get("supersedes"),
+        # G-01b. The vintage names a generation; this identifies the bytes.
+        "provenance": _provenance(),
         "composite_model": DATA.get("composite_model"),
         "lineage": DATA.get("lineage"),
         "self_check": {
