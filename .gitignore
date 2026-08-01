@@ -21,6 +21,12 @@ data/qesis_v*_CANDIDATE.json
 *.pem
 credentials*.json
 service-account*.json
+# INC-20260731-01, G-03. The rules above did not cover a file called
+# "ENTSO-E API KEY.txt": `*.key` matches an extension, not a name. A credential
+# reached a synced folder with nothing standing in its way, and the only reason
+# it never reached this repository is that nobody happened to copy it here.
+_SCHEMA/
+*API*KEY*
 
 # Local noise
 __pycache__/
