@@ -1,0 +1,35 @@
+{
+ "register": "QESIS+ vintage lineage",
+ "authority": "G-01, ops/GOVERNANCE.md",
+ "note": "One row per vintage the public index has ever served. `vintage` is copied exactly as data/qesis_v8.json spells it. Mirrored into qesis-mcp as data/vintage_lineage.json so the public CI runner can check the pairing without reading a private repository.",
+ "entries": [
+  {
+   "vintage": "v8.0 (2026-06)",
+   "qesis_mcp_commit": null,
+   "sovereign_infra_commit": null,
+   "single_repo_reason": "Predates both repositories. Retained as data/qesis_v8.0_superseded.json.",
+   "summary": "Frozen baseline. Served the spreadsheet column `QESIS Theory` as the composite; retired under D-101."
+  },
+  {
+   "vintage": "v8.2 (2026-07)",
+   "qesis_mcp_commit": "b224161",
+   "sovereign_infra_commit": null,
+   "single_repo_reason": "sovereign-infra carried no generated surface reading the index at that date, so there was nothing to pair.",
+   "summary": "Composite derived at build time rather than carried. BIG binds at aggregate level. ODI becomes the continuous Herfindahl measure (D-045)."
+  },
+  {
+   "vintage": "v8.3 (2026-07-31)",
+   "qesis_mcp_commit": "6088303",
+   "sovereign_infra_commit": "1e5918e",
+   "single_repo_reason": null,
+   "summary": "CRD renamed RGD and recomputed. FPE and ODI method blocks. CSovE gated as diagnostic. Effective weights by bootstrap."
+  },
+  {
+   "vintage": "v8.4 (2026-08-01)",
+   "qesis_mcp_commit": "pending",
+   "sovereign_infra_commit": "pending",
+   "single_repo_reason": null,
+   "summary": "Provenance vintage. No axis value and no composite changes. Adds the verified chain attestation (C-01), separated BIG withholding causes (C-02), the citation concordance and the v6.6 errata D-101 to D-106 (C-04), and the dated semiconductor scope (C-05)."
+  }
+ ]
+}
