@@ -2,6 +2,7 @@
  "register": "QESIS+ vintage lineage",
  "authority": "G-01, ops/GOVERNANCE.md",
  "note": "One row per vintage the public index has ever served. `vintage` is copied exactly as data/qesis_v8.json spells it. Mirrored into qesis-mcp as data/vintage_lineage.json so the public CI runner can check the pairing without reading a private repository.",
+ "commit_reference_rule": "Every commit hash here must be reachable from the default branch of the repository it names. Record the hash AFTER the merge, never the pre-merge branch hash. GitHub rewrites commit hashes on both squash and rebase merges, so a hash copied from a feature branch names a commit that ceases to exist the moment the pull request lands. This rule exists because that is exactly what happened on 2026-08-01: the v8.3 and v8.4 rows cited b318855, ed76c2f and 1e5918e, all four pull requests merged, and all three references became dangling. verify_vintage_pairing.py now resolves each hash with --resolve rather than only checking that the field is populated.",
  "entries": [
   {
    "vintage": "v8.0 (2026-06)",
@@ -20,14 +21,16 @@
   {
    "vintage": "v8.3 (2026-07-31)",
    "qesis_mcp_commit": "6088303",
-   "sovereign_infra_commit": "1e5918e",
+   "sovereign_infra_commit": "f679013",
+   "superseded_hashes": {"sovereign_infra_commit": "1e5918e (pre-merge branch hash, rewritten by the 2026-08-01 rebase merge of sovereign-infra#7)"},
    "single_repo_reason": null,
    "summary": "CRD renamed RGD and recomputed. FPE and ODI method blocks. CSovE gated as diagnostic. Effective weights by bootstrap."
   },
   {
    "vintage": "v8.4 (2026-08-01)",
-   "qesis_mcp_commit": "b318855",
-   "sovereign_infra_commit": "ed76c2f",
+   "qesis_mcp_commit": "5753e56",
+   "sovereign_infra_commit": "5d4363a",
+   "superseded_hashes": {"qesis_mcp_commit": "b318855", "sovereign_infra_commit": "ed76c2f", "note": "pre-merge branch hashes, rewritten when qesis-mcp#8 and sovereign-infra#7 were rebase-merged on 2026-08-01"},
    "single_repo_reason": null,
    "summary": "Provenance vintage. No axis value and no composite changes. Adds the verified chain attestation (C-01), separated BIG withholding causes (C-02), the citation concordance and the v6.6 errata D-101 to D-106 (C-04), and the dated semiconductor scope (C-05)."
   }

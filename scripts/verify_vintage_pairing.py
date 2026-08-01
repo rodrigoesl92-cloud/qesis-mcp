@@ -20,10 +20,39 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def _resolves(repo: Path, sha: str) -> bool | None:
+    """Is `sha` a commit reachable from this repository's HEAD?
+
+    None means the question could not be asked here, which is not the same as
+    False and must never be reported as a failure. A public CI runner has no
+    copy of the private repository, so only one column is ever checkable from
+    either side.
+    """
+    if not (repo / ".git").exists():
+        return None
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(repo), "merge-base", "--is-ancestor", sha, "HEAD"],
+            capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if r.returncode in (0, 1):
+        # 1 is a definite "not an ancestor"; anything else is git failing to
+        # answer, most often because the object is absent from a shallow clone.
+        cat = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "-e", f"{sha}^{{commit}}"],
+            capture_output=True, text=True)
+        if cat.returncode != 0:
+            return False
+        return r.returncode == 0
+    return None
 
 
 def main() -> int:
@@ -32,6 +61,9 @@ def main() -> int:
     ap.add_argument("--register", default=str(ROOT / "data" / "vintage_lineage.json"),
                     help="the lineage register, or its committed mirror")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--resolve", action="store_true",
+                    help="also require that this repository's own commit hashes "
+                         "resolve to commits reachable from HEAD")
     args = ap.parse_args()
     say = (lambda *a: None) if args.quiet else print
 
@@ -81,6 +113,32 @@ def main() -> int:
             failures.append(f"G1.2 {vin!r} is recorded on one repository only "
                             f"({pair}) with no single_repo_reason. Declare the "
                             f"exemption or land the paired commit.")
+
+    # A populated field is not a resolvable reference. Both squash and rebase
+    # merges mint new commit hashes, so a hash copied from a feature branch
+    # names a commit that stops existing the moment the pull request lands.
+    # On 2026-08-01 three of the four recorded hashes went dangling in one
+    # afternoon and every field-presence check still passed, which is why this
+    # exists. Only this repository's own column is checkable here: the runner
+    # has no copy of the other side, and "cannot ask" is reported as such
+    # rather than counted as a pass or a failure.
+    if args.resolve:
+        unresolved = unknown = 0
+        for e in entries:
+            sha = e.get("qesis_mcp_commit")
+            if not sha or str(sha).strip().lower() == "pending":
+                continue
+            verdict = _resolves(ROOT, str(sha))
+            if verdict is False:
+                unresolved += 1
+                failures.append(
+                    f"G1.5 {e.get('vintage')!r} cites qesis_mcp_commit {sha}, which "
+                    f"is not reachable from HEAD. Record the hash after the merge: "
+                    f"a pre-merge branch hash does not survive the merge.")
+            elif verdict is None:
+                unknown += 1
+        say(f"resolve: {len(entries) - unresolved - unknown} of this repository's "
+            f"hashes reachable, {unresolved} dangling, {unknown} not checkable here")
 
     # Duplicate rows would let two different change sets both claim to be the
     # record of one vintage, which is the ambiguity the register exists to end.
