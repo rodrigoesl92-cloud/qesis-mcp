@@ -26,8 +26,8 @@
   },
   {
    "vintage": "v8.4 (2026-08-01)",
-   "qesis_mcp_commit": "pending",
-   "sovereign_infra_commit": "pending",
+   "qesis_mcp_commit": "b318855",
+   "sovereign_infra_commit": "ed76c2f",
    "single_repo_reason": null,
    "summary": "Provenance vintage. No axis value and no composite changes. Adds the verified chain attestation (C-01), separated BIG withholding causes (C-02), the citation concordance and the v6.6 errata D-101 to D-106 (C-04), and the dated semiconductor scope (C-05)."
   }
