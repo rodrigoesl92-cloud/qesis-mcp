@@ -33,6 +33,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install runtime
+        # Before the gates, not after them. The self-test now exercises the
+        # served contract, which imports server.py, which needs mcp and
+        # pydantic. With this step further down the file the contract cases
+        # could not run at all, and one of them passed anyway because an
+        # unimportable runtime and a removed declaration both exit 2. A gate
+        # that passes for the wrong reason is the failure this repository
+        # exists to keep catching.
+        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
       - name: Integrity gate
         run: python scripts/verify_index.py
 
@@ -53,9 +63,6 @@ jobs:
         # A gate that only ever passes proves nothing. This injects each defect
         # class it must catch and fails the build if the gate misses one.
         run: python scripts/test_gate.py
-
-      - name: Install runtime
-        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
 
       - name: Server contract smoke test
         run: python scripts/smoke_server.py
