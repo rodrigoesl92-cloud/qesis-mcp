@@ -103,8 +103,8 @@ SERVED_CONTRACT = {
     "authority": "G-01 code/data atomicity clause, 2026-08-01",
     "tools": {
         "qesis_get_integrity": [
-            "vintage", "composite_model", "lineage", "self_check", "chain",
-            "epis_findings", "withholding_causes", "uncertainty_ledger",
+            "vintage", "provenance", "composite_model", "lineage", "self_check",
+            "chain", "epis_findings", "withholding_causes", "uncertainty_ledger",
             "citation_concordance", "coupling_exclusions",
         ],
         "qesis_get_country": ["iso3", "vintage", "axes", "composite_exposure",
