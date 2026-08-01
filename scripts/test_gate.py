@@ -254,6 +254,48 @@ def check_pairing(results: list[tuple[str, bool]]) -> None:
         results.append((f"caught: {name}", rc != 0 and expect in out))
 
 
+CONTRACT_GATE = ROOT / "scripts" / "verify_served_contract.py"
+INDEX = ROOT / "data" / "qesis_v8.json"
+
+
+def check_contract(results: list[tuple[str, bool]]) -> None:
+    """Replay the v8.4 incident: data announcing a vintage the code half-serves.
+
+    The index reloads on file change and the module does not, so a resident
+    process can advance its vintage string while running older code. That is
+    not hypothetical; it is what happened, on a public endpoint, and nothing
+    failed. This is the check that makes it fail.
+    """
+    original = INDEX.read_text(encoding="utf-8")
+
+    def run() -> tuple[int, str]:
+        r = subprocess.run([sys.executable, str(CONTRACT_GATE), "--quiet"],
+                           capture_output=True, text=True, cwd=str(ROOT))
+        return r.returncode, (r.stdout + r.stderr)
+
+    try:
+        rc, _ = run()
+        results.append(("contract baseline: every declared field served", rc == 0))
+
+        d = json.loads(original)
+        d["served_contract"]["tools"]["qesis_get_integrity"].append("field_no_code_builds")
+        INDEX.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n",
+                         encoding="utf-8", newline="\n")
+        rc, out = run()
+        results.append(("caught: contract: data ahead of code", rc == 1 and "K3" in out))
+
+        d = json.loads(original)
+        d.pop("served_contract", None)
+        INDEX.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n",
+                         encoding="utf-8", newline="\n")
+        rc, _ = run()
+        # A vintage that promises nothing must not read as a vintage that keeps
+        # every promise. Exit 2, not 0.
+        results.append(("caught: contract: declaration removed", rc == 2))
+    finally:
+        INDEX.write_text(original, encoding="utf-8", newline="")
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -305,6 +347,7 @@ def main() -> int:
     extra: list[tuple[str, bool]] = []
     check_chain(extra)
     check_pairing(extra)
+    check_contract(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)
