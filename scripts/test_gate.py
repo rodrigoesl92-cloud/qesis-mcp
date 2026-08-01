@@ -274,7 +274,20 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
         return r.returncode, (r.stdout + r.stderr)
 
     try:
-        rc, _ = run()
+        rc, out = run()
+        if rc == 2:
+            # Exit 2 is "could not check", and it must never be mistaken for a
+            # caught defect. CI proved that the hard way: the runtime was
+            # installed after this suite ran, server.py would not import, and
+            # the removed-declaration case passed anyway because an unimportable
+            # runtime and a removed declaration both exit 2. Two of three cases
+            # failed loudly and the third passed for the wrong reason, which is
+            # the more dangerous half. Refuse to run the mutations at all rather
+            # than report results that mean nothing.
+            results.append((f"contract: NOT CHECKED, verifier cannot run "
+                            f"({out.strip().splitlines()[-1][:70] if out.strip() else 'no output'})",
+                            False))
+            return
         results.append(("contract baseline: every declared field served", rc == 0))
 
         d = json.loads(original)
@@ -288,10 +301,12 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
         d.pop("served_contract", None)
         INDEX.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n",
                          encoding="utf-8", newline="\n")
-        rc, _ = run()
+        rc, out = run()
         # A vintage that promises nothing must not read as a vintage that keeps
-        # every promise. Exit 2, not 0.
-        results.append(("caught: contract: declaration removed", rc == 2))
+        # every promise. Exit 2, and it must be 2 for the declared reason rather
+        # than because the verifier fell over on the way in.
+        results.append(("caught: contract: declaration removed",
+                        rc == 2 and "declares no served_contract" in out))
     finally:
         INDEX.write_text(original, encoding="utf-8", newline="")
 
