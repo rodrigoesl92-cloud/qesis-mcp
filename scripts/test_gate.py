@@ -88,15 +88,170 @@ def m_citation(d):
     return d
 
 
+def m_generic_withholding(d):
+    """The v8.3 defect: three withholdings, one label, two real causes.
+
+    Reverting to the generic string is the exact regression C-02 exists to
+    prevent, and it is invisible in every other check because the arithmetic
+    it reports is correct.
+    """
+    for e in d["epis_findings"]:
+        e.pop("withholding_cause", None)
+        e.pop("cause_statement", None)
+    return d
+
+
+def m_undeclared_cause(d):
+    """A cause code appears that the codebook never declared."""
+    d["epis_findings"][0]["withholding_cause"] = "GEOPOLITICAL"
+    return d
+
+
+def m_dangling_erratum(d):
+    """A concordance row points at an erratum that does not exist."""
+    d["citation_concordance"]["rows"][0]["erratum"] = "D-999"
+    return d
+
+
+def m_silent_concordance_row(d):
+    """A row is present but says nothing about the figure's standing."""
+    d["citation_concordance"]["rows"][0]["status"] = ""
+    return d
+
+
+def m_undated_roadmap(d):
+    """A scoped roadmap item loses its date and becomes an open promise again."""
+    for u in d["uncertainty_ledger"]["entries"]:
+        if u.get("target_vintage"):
+            u.pop("target_date", None)
+    return d
+
+
 CASES = [
-    ("composite drift (DEU)",        m_drift,            "R1.4"),
-    ("Singapore: number over gap",   m_singapore,        "R1.5"),
-    ("dominance inversion",          m_inversion,        "R1.7"),
-    ("weights stop summing to 1",    m_weights,          "R1.3"),
-    ("lineage sources removed",      m_lineage,          "R1.8"),
-    ("unnamed coupling exclusions",  m_silent_exclusion, "R1.12"),
-    ("superseded citation returns",  m_citation,         "R1.16"),
+    ("composite drift (DEU)",        m_drift,               "R1.4"),
+    ("Singapore: number over gap",   m_singapore,           "R1.5"),
+    ("dominance inversion",          m_inversion,           "R1.7"),
+    ("weights stop summing to 1",    m_weights,             "R1.3"),
+    ("lineage sources removed",      m_lineage,             "R1.8"),
+    ("unnamed coupling exclusions",  m_silent_exclusion,    "R1.12"),
+    ("superseded citation returns",  m_citation,            "R1.16"),
+    ("withholding loses its cause",  m_generic_withholding, "R1.17"),
+    ("undeclared cause code",        m_undeclared_cause,    "R1.17"),
+    ("concordance row dangles",      m_dangling_erratum,    "R1.19"),
+    ("concordance row says nothing", m_silent_concordance_row, "R1.20"),
+    ("roadmap item loses its date",  m_undated_roadmap,     "R1.21"),
 ]
+
+
+CHAIN_GATE = ROOT / "scripts" / "verify_chain.py"
+SPINE = ROOT / "data" / "chain_spine.jsonl"
+ATTESTATION = ROOT / "data" / "chain_attestation.json"
+
+
+def run_chain_gate(rows, att) -> tuple[int, str]:
+    d = Path(tempfile.mkdtemp())
+    (d / "s.jsonl").write_text(
+        "\n".join(json.dumps(r, sort_keys=True) for r in rows) + "\n", encoding="utf-8")
+    (d / "a.json").write_text(json.dumps(att), encoding="utf-8")
+    r = subprocess.run([sys.executable, str(CHAIN_GATE), "--spine", str(d / "s.jsonl"),
+                        "--attestation", str(d / "a.json"), "--quiet"],
+                       capture_output=True, text=True)
+    return r.returncode, (r.stdout + r.stderr)
+
+
+def check_chain(results: list[tuple[str, bool]]) -> None:
+    """The chain figure must be contradictable, or C-01 changed nothing.
+
+    Before C-01 the served `604 entries, 0 link breaks` came from the runtime
+    that appends to the chain. Moving it to an attestation only helps if the
+    attestation can be caught disagreeing with the spine it claims to summarise.
+    """
+    if not (SPINE.exists() and ATTESTATION.exists()):
+        results.append(("chain artefacts present", False))
+        return
+    spine = [json.loads(l) for l in SPINE.read_text(encoding="utf-8").splitlines() if l.strip()]
+    att = json.loads(ATTESTATION.read_text(encoding="utf-8"))
+
+    rc, _ = run_chain_gate(spine, att)
+    results.append(("chain baseline reproduces", rc == 0))
+
+    mid = len(spine) // 2
+    tampered = [dict(r) for r in spine]
+    tampered[mid]["entry_hash"] = "0" * 64
+    removed = [dict(r) for r in spine[:mid] + spine[mid + 1:]]
+    for name, rows, a, expect in [
+        ("chain: entry count edited", spine, {**att, "entries": 999}, "C3"),
+        ("chain: head rewritten", spine, {**att, "head_sha256": "f" * 64}, "C3"),
+        ("chain: a link tampered", tampered, att, "C2"),
+        ("chain: an entry removed", removed, att, "C1"),
+    ]:
+        rc, out = run_chain_gate(rows, a)
+        results.append((f"caught: {name}", rc != 0 and expect in out))
+
+
+PAIRING_GATE = ROOT / "scripts" / "verify_vintage_pairing.py"
+REGISTER = ROOT / "data" / "vintage_lineage.json"
+
+
+def check_pairing(results: list[tuple[str, bool]]) -> None:
+    """G-01 is a rule about two repositories, so its check must refuse silence.
+
+    The interesting failure is not a missing register. It is a register that
+    carries a row for the served vintage and says nothing in it, which reads as
+    compliance while recording none.
+    """
+    if not REGISTER.exists():
+        results.append(("vintage register present", False))
+        return
+    reg = json.loads(REGISTER.read_text(encoding="utf-8"))
+    served = BASE["vintage"]
+
+    def run(r) -> tuple[int, str]:
+        d = Path(tempfile.mkdtemp())
+        (d / "r.json").write_text(json.dumps(r), encoding="utf-8")
+        p = subprocess.run([sys.executable, str(PAIRING_GATE), "--register",
+                            str(d / "r.json"), "--quiet"], capture_output=True, text=True)
+        return p.returncode, (p.stdout + p.stderr)
+
+    rc, _ = run(reg)
+    results.append(("pairing baseline passes", rc == 0))
+
+    dropped = {**reg, "entries": [e for e in reg["entries"] if e["vintage"] != served]}
+    unpaired, silent, duped = (json.loads(json.dumps(reg)) for _ in range(3))
+    for r, mut in ((unpaired, "pair"), (silent, "summary"), (duped, "dupe")):
+        row = next(e for e in r["entries"] if e["vintage"] == served)
+        if mut == "pair":
+            row["sovereign_infra_commit"] = None
+            row["single_repo_reason"] = None
+        elif mut == "summary":
+            row["summary"] = ""
+        else:
+            r["entries"].append(dict(row))
+
+    # `pending` expires when the vintage stops being the served one. Without
+    # this case the placeholder satisfies the pairing check forever, which is
+    # how a temporary hole becomes the permanent state of a register.
+    stale = json.loads(json.dumps(reg))
+    stale["entries"].append({
+        "vintage": "v8.9 (2099-01-01)", "qesis_mcp_commit": "pending",
+        "sovereign_infra_commit": "pending", "single_repo_reason": None,
+        "summary": "a later vintage, so the served one is not this row"})
+    old_pending = json.loads(json.dumps(reg))
+    for e in old_pending["entries"]:
+        if e["vintage"] != served:
+            e["qesis_mcp_commit"] = "pending"
+            e["sovereign_infra_commit"] = "pending"
+            break
+
+    for name, r, expect in [
+        ("pairing: vintage unrecorded", dropped, "G1.1"),
+        ("pairing: one repo, no reason", unpaired, "G1.2"),
+        ("pairing: row says nothing", silent, "G1.3"),
+        ("pairing: duplicate rows", duped, "G1.4"),
+        ("pairing: pending outlives its vintage", old_pending, "G1.2"),
+    ]:
+        rc, out = run(r)
+        results.append((f"caught: {name}", rc != 0 and expect in out))
 
 
 def check_idempotent() -> bool | None:
@@ -147,8 +302,15 @@ def main() -> int:
             f"{' (gate passed!)' if rc == 0 else ''}")
         print(f"  {status} caught: {name:<30} [{expect}]{why}")
 
+    extra: list[tuple[str, bool]] = []
+    check_chain(extra)
+    check_pairing(extra)
+    for name, ok in extra:
+        print(f"  {'ok ' if ok else 'X  '} {name}")
+    passed += sum(1 for _, ok in extra if ok)
+
     idem = check_idempotent()
-    total = len(CASES) + 1
+    total = len(CASES) + 1 + len(extra)
     if idem is None:
         print("  ..  skipped: build idempotence "
               "(canonical sources unreachable from here)")
