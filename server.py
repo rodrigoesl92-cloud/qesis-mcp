@@ -73,6 +73,39 @@ def _chain() -> dict:
         }
 
 
+def _contract(tool: str, served: dict) -> dict:
+    """Does this process actually serve the vintage it is announcing?
+
+    `_refresh()` reloads the index when the file changes; this module is read
+    once at process start. A resident host therefore advances its vintage string
+    the moment the data lands and keeps running whatever code it started with.
+    That is how v8.4 was announced by a process serving neither `chain` nor
+    `citation_concordance`, which are the two things v8.4 adds.
+
+    A stale process now says so in its own payload rather than answering as
+    though nothing were missing. The limit is worth stating plainly: this can
+    only report a contract it knows about, so it protects every vintage after
+    the one that introduced it and could not have caught the incident that
+    prompted it.
+    """
+    declared = ((DATA.get("served_contract") or {}).get("tools") or {}).get(tool)
+    if not declared:
+        return {"status": "UNDECLARED",
+                "note": f"the index declares no contract for {tool}"}
+    missing = [f for f in declared if f not in served]
+    if not missing:
+        return {"status": "SATISFIED", "declared": len(declared)}
+    return {
+        "status": "STALE_RUNTIME",
+        "declared": len(declared),
+        "missing": missing,
+        "effect": (f"This process loaded {DATA.get('vintage')} from disk but is "
+                   f"running older code, so it is announcing a vintage it only "
+                   f"partly implements. Restart the server before citing anything "
+                   f"that depends on the missing fields."),
+    }
+
+
 _refresh()
 AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "RGD", "ESE"]
 AXIS_NAMES = {
@@ -382,7 +415,7 @@ async def qesis_get_integrity() -> str:
         calc = round(sum(W[a] * c["axes"][a] for a in W), 1)
         if abs(calc - c["composite"]) > 0.051:
             drift.append({"iso3": iso, "served": c["composite"], "recomputed": calc})
-    return json.dumps({
+    out = {
         "vintage": DATA["vintage"], "supersedes": DATA.get("supersedes"),
         "composite_model": DATA.get("composite_model"),
         "lineage": DATA.get("lineage"),
@@ -410,7 +443,11 @@ async def qesis_get_integrity() -> str:
             "excluded_from_core": DATA["coupling"].get("excluded_from_core"),
             "rule": DATA["coupling"].get("exclusion_rule"),
         },
-    }, indent=1) + _tier_note()
+    }
+    # Reported last, over the response that was actually built, so it describes
+    # what this process serves rather than what the source says it should.
+    out["contract"] = _contract("qesis_get_integrity", out)
+    return json.dumps(out, indent=1) + _tier_note()
 
 
 @mcp.tool(name="qesis_get_methodology", annotations={

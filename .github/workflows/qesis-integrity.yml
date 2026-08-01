@@ -60,6 +60,15 @@ jobs:
       - name: Server contract smoke test
         run: python scripts/smoke_server.py
 
+      - name: Served contract is fully implemented by this code
+        # G-01 code/data atomicity. The index reloads on file change and
+        # server.py does not, so a resident process can advance its vintage
+        # string while running older code. v8.4 did exactly that in public.
+        # CI always starts fresh, so a failure here means the data has genuinely
+        # moved past the code and the deploy that would publish the mismatch is
+        # stopped before it happens.
+        run: python scripts/verify_served_contract.py
+
       - name: Coupling reproduces the published values
         run: python scripts/coupling.py
 
