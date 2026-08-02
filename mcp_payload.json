@@ -1,0 +1,11 @@
+﻿{
+    "method":  "tools/call",
+    "params":  {
+                   "arguments":  {
+
+                                 },
+                   "name":  "qesis_get_integrity"
+               },
+    "id":  1,
+    "jsonrpc":  "2.0"
+}
