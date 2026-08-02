@@ -1,14 +1,14 @@
-﻿name: QESIS-MCP CI
+﻿name: CI - fsQCA & Python Gates
 
 on:
   push:
-    branches: [ main ]
+    branches: [ phase2/ci-fsqca, main ]
   pull_request:
-    branches: [ main ]
+    branches: [ phase2/ci-fsqca, main ]
 
 jobs:
-  test:
-    runs-on: windows-latest
+  build-and-test:
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
@@ -17,23 +17,27 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-
-    - name: Install Python Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
+        python-version: '3.10'
 
     - name: Set up R
       uses: r-lib/actions/setup-r@v2
       with:
-        r-version: '4.3.0'
+        r-version: '4.3.2'
 
-    - name: Install R Dependencies
+    - name: Install System Dependencies for R QCA
       run: |
-        Rscript -e "install.packages(c('jsonlite', 'QCA'), repos='https://cloud.r-project.org')"
+        sudo apt-get update
+        sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libgmp3-dev
 
-    - name: Run Integration Tests
+    - name: Install R Packages
       run: |
-        python -m pytest -v
+        Rscript -e "install.packages(c('QCA', 'jsonlite', 'readr'), repos='https://cloud.r-project.org/')"
+
+    - name: Run Python Index Integrity Gate
+      run: python scripts/verify_index.py
+
+    - name: Run Python Mutation Gate Tests
+      run: python scripts/test_gate.py
+
+    - name: Run DAG Engine Test
+      run: python scripts/dag_engine.py
