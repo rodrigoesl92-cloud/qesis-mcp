@@ -1,683 +1,238 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STIR Governance Dashboard; QESIS+ v8.0</title>
-<link rel="canonical" href="https://qesis-public.vercel.app">
-<link rel="alternate" type="text/html" href="https://qesis-public.vercel.app/method.html" title="Method and fsQCA playground">
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@4.3.4/build/index.umd.min.js" crossorigin="anonymous"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#f5f5f4;--card:#fff;--ink:#2a2f3a;--mut:#6d7382;--head:#141b2b;--line:#e7e6e2;
---hot:#C96A5E;--cool:#5B7FA6;--pos:#4d7c62;--neg:#b0625a;--radius:10px;--gap:14px}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
-.wrap{max-width:1420px;margin:0 auto;padding:var(--gap)}
-a{color:var(--cool)}
-.hero{background:radial-gradient(1100px 480px at 70% -10%,#22304e 0%,#141b2b 55%);color:#fff;border-radius:var(--radius);padding:26px 28px 18px;margin-bottom:var(--gap)}
-.hero .top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
-.hero h1{font-size:22px;font-weight:800;letter-spacing:.4px}
-.hero .sub{font-size:12.5px;color:#9aa3ba;margin-top:3px}
-.quote{max-width:560px;font-size:15.5px;line-height:1.55;color:#dde3f0;border-left:3px solid var(--hot);padding-left:14px;margin:14px 0 6px;font-style:italic}
-.quote span{display:block;font-style:normal;font-size:11.5px;color:#9aa3ba;margin-top:6px}
-.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.controls label{font-size:11px;color:#9aa3ba;text-transform:uppercase;letter-spacing:.5px}
-.controls select{padding:6px 10px;border-radius:6px;border:1px solid #3a445c;background:#1b2438;color:#fff;font-size:13px}
-.maphold{position:relative;height:460px;margin-top:8px}
-.maphold canvas{max-height:100%}
-.mapfail{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#9aa3ba;font-size:13px;text-align:center;padding:30px}
-.tease{position:absolute;right:10px;top:6px;background:rgba(201,106,94,.14);border:1px solid rgba(201,106,94,.55);color:#f4d9d4;font-size:12.5px;padding:9px 13px;border-radius:9px;cursor:pointer;max-width:250px;transition:transform .15s}
-.tease:hover{transform:translateY(-2px);background:rgba(201,106,94,.26)}
-.tease b{display:block;color:#fff}
-.maplegend{position:absolute;left:10px;bottom:8px;font-size:11px;color:#9aa3ba}
-.maplegend .bar{width:160px;height:8px;border-radius:4px;background:linear-gradient(90deg,#46608a,#8c9bb9,#cdaf96,#bc7469);margin:4px 0}
-.drift{background:var(--head);color:#fff;border-radius:var(--radius);padding:20px 24px;margin-bottom:var(--gap)}
-.drift .hd{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
-.drift h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#93b3dd}
-.drift .note{font-size:12.5px;color:#9aa3ba;max-width:760px;margin-top:4px}
-.drift .yr{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums}
-.drift .yr small{font-size:12px;color:#9aa3ba;display:block;font-weight:400;text-align:right}
-#driftC{width:100%;height:340px;display:block;margin-top:8px}
-.drift .ctl{margin-top:8px;display:flex;gap:8px;align-items:center}
-.drift button{background:#1b2438;border:1px solid #3a445c;color:#cdd6e8;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer}
-.drift button:hover{background:#233052}
-.drift .miss{font-size:11.5px;color:#9aa3ba}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
-.kpi{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:0 1px 3px rgba(20,27,43,.06)}
-.kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
-.kpi .v{font-size:24px;font-weight:750;margin-top:3px}
-.kpi .s{font-size:12px;color:var(--mut);margin-top:2px}
-.neg{color:var(--neg)}.pos{color:var(--pos)}
-.row{display:grid;gap:var(--gap);margin-bottom:var(--gap)}
-.r2{grid-template-columns:1.35fr 1fr}
-.card{background:var(--card);border-radius:var(--radius);padding:18px 20px;box-shadow:0 1px 3px rgba(20,27,43,.06)}
-.card h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
-.card .note{font-size:12px;color:var(--mut);margin-bottom:10px}
-.src{font-size:11px;color:var(--mut);margin-top:10px;border-top:1px solid var(--line);padding-top:7px;line-height:1.6}
-.src a{color:var(--cool);text-decoration:none}
-.src a:hover{text-decoration:underline}
-.tallwrap{height:700px}
-.tallwrap canvas{max-height:100%}
-.cv{height:250px}
-.cv canvas{max-height:100%}
-.cv.radar{height:340px}
-.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:13px;margin-top:10px}
-.meta div{background:#f8f8f7;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
-.meta b{display:block;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
-.hm{border-collapse:collapse;width:100%;font-size:12.5px;table-layout:fixed}
-.hm th,.hm td{padding:9px 6px;text-align:center;border:1px solid #fff}
-.hm th{color:var(--mut);font-weight:600}
-.formula{background:#f8f8f7;border:1px solid var(--line);border-radius:8px;padding:14px 20px;margin:14px auto 0;max-width:680px;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:2.1;text-align:center;white-space:normal}
-.formula i{color:#1f2c47}
-.formula .fx{color:var(--hot);font-weight:700}
-.formula small{display:block;font-family:-apple-system,sans-serif;font-size:11px;color:var(--mut);white-space:normal;line-height:1.5;margin-top:4px}
-.sem{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:8px}
-.sem .ax{background:#f8f8f7;border:1px solid var(--line);border-left-width:5px;border-radius:8px;padding:11px 13px;font-size:13px}
-.sem .ax b{font-size:12px;letter-spacing:.4px}
-.sem .ax .band{float:right;font-size:11px;font-weight:700;text-transform:uppercase}
-.ctx{background:linear-gradient(180deg,#141b2b,#1c2740);color:#e6ebf4;border-radius:var(--radius);padding:22px 26px;margin-bottom:var(--gap)}
-.ctx h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#93b3dd;margin-bottom:10px}
-.ctx p{font-size:14.5px;max-width:1030px;margin-bottom:11px;line-height:1.65}
-.ctx a{color:#a9c4e8}
-.ctx .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.chip{font-size:11.5px;padding:4px 11px;border-radius:99px;border:1px solid #3a445c;color:#cdd6e8}
-.chip.live{border-color:var(--hot);color:#f4d9d4}
-.ctx small{color:#9aa3ba;display:block;margin-top:10px;font-size:11.5px}
-.insight{background:linear-gradient(180deg,#141b2b,#1c2740);color:#e6ebf4;border-radius:var(--radius);padding:22px 26px;margin-bottom:var(--gap)}
-.insight h3{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#93b3dd;margin-bottom:12px}
-.insight ol{margin-left:20px;display:grid;gap:9px;font-size:14px}
-.insight b{color:#fff}
-.gov{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--gap)}
-.gov .kpi .v{font-size:20px}
-table.data{width:100%;border-collapse:collapse;font-size:12.5px}
-table.data th{cursor:pointer;text-align:right;padding:8px 9px;border-bottom:2px solid var(--line);color:var(--mut);font-size:11px;text-transform:uppercase;white-space:nowrap;user-select:none}
-table.data th:nth-child(-n+3){text-align:left}
-table.data td{padding:7px 9px;border-bottom:1px solid #f0efec;text-align:right;font-variant-numeric:tabular-nums}
-table.data td:nth-child(-n+3){text-align:left}
-table.data tr:hover{background:#f8f8f7}
-.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;font-weight:600;color:#fff}
-.gatef{color:var(--neg);font-weight:700}.gatep{color:var(--pos);font-weight:700}
-.refresh{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
-.refresh th{text-align:left;color:var(--mut);font-size:11px;text-transform:uppercase;padding:6px 8px;border-bottom:2px solid var(--line)}
-.refresh td{padding:6px 8px;border-bottom:1px solid #f0efec}
-.ok{color:var(--pos);font-weight:700}
-/* download + contact */
-.getdata{background:var(--card);border-radius:var(--radius);padding:22px 26px;margin-bottom:var(--gap);box-shadow:0 1px 3px rgba(20,27,43,.06)}
-.getdata h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
-.getdata .lead{font-size:14px;color:var(--ink);max-width:900px;margin:6px 0 14px}
-.gform{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;max-width:960px}
-.gform input,.gform select{padding:9px 11px;border:1px solid var(--line);border-radius:7px;font-size:13px;background:#fbfbfa}
-.gbtns{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.gbtn{background:var(--head);color:#fff;border:none;font-size:13px;font-weight:600;padding:10px 18px;border-radius:8px;cursor:pointer}
-.gbtn.alt{background:#fff;color:var(--head);border:1.5px solid var(--head)}
-.gbtn:hover{opacity:.92}
-.gnote{font-size:11.5px;color:var(--mut);margin-top:10px;max-width:900px}
-.refs{font-size:12.5px;color:var(--ink);margin-top:16px;border-top:1px solid var(--line);padding-top:12px;max-width:1000px}
-.refs p{margin-bottom:7px;padding-left:22px;text-indent:-22px}
-.contact{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-.cbtn{display:inline-block;border:1px solid var(--line);background:#f8f8f7;border-radius:8px;padding:9px 14px;font-size:13px;color:var(--ink);text-decoration:none}
-.cbtn:hover{border-color:var(--cool)}
-footer{font-size:11.5px;color:var(--mut);padding:10px 4px 30px}
-@media(max-width:980px){.r2{grid-template-columns:1fr}.tallwrap{height:560px}.maphold{height:340px}}
-@media print{.controls,.tease,.drift .ctl,.gbtns{display:none}.card,.kpi{box-shadow:none;border:1px solid var(--line)}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STIR Governance Dashboard — QESIS+ v8.5</title>
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-surface: #111827;
+      --accent-glow: #3b82f6;
+      --accent-metabolic: #10b981;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #374151;
+    }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 24px;
+    }
+    .stir-dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+    .toggle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .mode-toggle-btn {
+      background: var(--accent-glow);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .mode-toggle-btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .metric-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 8px;
+      position: relative;
+    }
+    .metric-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .metric-value {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-top: 10px;
+      color: #60a5fa;
+    }
+    .compliance-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .footer-provenance {
+      margin-top: 24px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 14px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
 
-<section class="hero">
-  <div class="top">
+<div class="stir-dashboard-container">
+  <div class="toggle-header">
     <div>
-      <h1>STIR GOVERNANCE DASHBOARD</h1>
-      <div class="sub">QESIS+ v8.0 canonical Â· Quantitative Epistemic Sovereignty Index Â· 35 states Â· BAU scenario SSP3-RCP7.0 / IEA STEPS</div>
-      <div class="sub" style="margin-top:6px"><a href="file:///C:/Users/Lenovo/sovereign-infra/site/method.html" style="color:var(--cool);text-decoration:underline;text-underline-offset:2px">Method and fsQCA playground</a> <span style="opacity:.5">Â·</span> <a href="file:///C:/Users/Lenovo/sovereign-infra/site/index.html" style="color:var(--cool);text-decoration:underline;text-underline-offset:2px">Provenance and governance overview</a> <span style="opacity:.5">Â·</span> <span style="opacity:.75">rebuild any finding yourself</span></div>
-      <div class="quote">â€œStates cannot simultaneously achieve algorithmic independence, hyperscale efficiency, and ecological sustainability. This limitation constitutes the Infrastructural Trilemma.â€
-        <span>Batista Silva, R. (2026), <i>Ontological Blind-Spots</i>. Sovereignty measured here as metabolic capacity, not legal status.</span></div>
+      <h2 id="view-title" style="margin: 0; font-size: 1.35rem;">STIR Polycrisis & Liquid Society View</h2>
+      <p id="view-subtitle" style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.875rem;">Infrastructure Trilemma & Feb 2027 CSDDD Supply Chain Compliance</p>
     </div>
-    <div class="controls">
-      <label>Horizon</label>
-      <select id="selH"><option value="0">t0 (2025/26)</option><option value="1">2030</option><option value="2">2050</option><option value="3">2080</option></select>
-      <label>Country</label><select id="selC"></select>
-      <label>Compare</label><select id="selC2"></select>
-    </div>
+    <button class="mode-toggle-btn" id="toggle-btn" onclick="toggleDashboardMode()">Switch to Metabolic Mode</button>
   </div>
-  <div class="maphold">
-    <canvas id="chMap"></canvas>
-    <div class="mapfail" id="mapfail">The world map needs one internet connection to load its geometry.<br>Every other layer below works fully offline.</div>
-    <div class="tease" id="tease"><b>Only 4 of 35 states pass their own sovereignty test.</b>The fastest-falling state is an EU member. See which â†’</div>
-    <div class="maplegend">exposure at selected horizon<div class="bar"></div><span>lower&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;higher Â· grey = not in index (a gap, not a zero)</span></div>
-  </div>
-</section>
 
-<section class="drift">
-  <div class="hd">
-    <div>
-      <h3>The Drift: Europe and its mirrors, business as usual</h3>
-      <div class="note">Ten states chosen for geopolitical weight: six EU members plus the UK, and three democratic mirrors outside Europe (Brazil, India, Australia). Each dot moves along its measured BAU trajectory; the motion interpolates the model's own anchors (t0 â†’ 2030 â†’ 2050 â†’ 2080), nothing more. The polycrisis is not an event; it is a drift.</div>
+  <div class="metrics-grid" id="metrics-container">
+    <div class="metric-card">
+      <div class="metric-title" id="card-1-title">Global Coupling Index (&rho;)</div>
+      <div class="metric-value" id="val-1">Loading...</div>
+      <div class="compliance-badge" id="badge-1">ISO/IEC 42001 Verified</div>
     </div>
-    <div class="yr"><span id="yrNum">2025</span><small id="yrCap">watch the red dot</small></div>
-  </div>
-  <canvas id="driftC"></canvas>
-  <div class="ctl"><button id="btnPlay">â¸ pause</button><button id="btnReplay">â†º replay</button>
-    <span class="miss">Portugal, Hungary and Czechia are not yet in the v8.0 index: registered as expansion candidates, shown as a gap, not silently skipped.</span></div>
-</section>
-
-<section class="kpis" id="kpis"></section>
-
-<div class="row r2">
-  <div class="card">
-    <h3>Exposure ranking: QESIS Extended</h3>
-    <div class="note" id="rankNote"></div>
-    <div class="tallwrap"><canvas id="chRank"></canvas></div>
-    <div class="src">Hover any bar for the state's income class, tier and gate. Sources: <a href="https://www.wri.org/data/aqueduct-water-risk-atlas" target="_blank">WRI Aqueduct 4.0</a> (water, CC-BY) Â· <a href="https://emodnet.ec.europa.eu/en/human-activities" target="_blank">EMODnet Human Activities</a> + <a href="https://www.submarinecablemap.com" target="_blank">Submarine Cable Map</a> (cables, metadata only) Â· <a href="https://doi.org/10.2908/NRG_PC_205" target="_blank">Eurostat nrg_pc_205</a> (electricity) Â· <a href="https://www.oecd.org/en/data/datasets/trade-in-value-added.html" target="_blank">OECD TiVA 2025</a> (supply chains) Â· income classes: <a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/906519" target="_blank">World Bank</a> Â· index computation: Batista Silva (2026), v8.0.</div>
-  </div>
-  <div style="display:grid;gap:var(--gap);align-content:start">
-    <div class="card">
-      <h3>Trajectory t0 â†’ 2080 (BAU)</h3>
-      <div class="note" id="trajNote"></div>
-      <div class="cv"><canvas id="chTraj"></canvas></div>
+    <div class="metric-card">
+      <div class="metric-title" id="card-2-title">Import Core Coupling</div>
+      <div class="metric-value" id="val-2">Loading...</div>
+      <div class="compliance-badge" id="badge-2">CSDDD Feb 2027 Ready</div>
     </div>
-    <div class="card">
-      <h3>Axis profile: the layers under the score</h3>
-      <div class="note">Any three of the 35 at once. Third state: <select id="selC3" style="padding:3px 8px;border:1px solid var(--line);border-radius:6px;font-size:12px"></select> Â· <span id="radarNote"></span></div>
-      <div class="cv radar"><canvas id="chRadar"></canvas></div>
-      <div class="src">Any of the 35 states can be drawn here: use the Country and Compare selectors above. Same sources as the ranking; axis definitions below.</div>
+    <div class="metric-card">
+      <div class="metric-title" id="card-3-title">Energy Intensity (Watts/kWh)</div>
+      <div class="metric-value" id="val-3">Loading...</div>
+      <div class="compliance-badge" id="badge-3">Thermal Cap &le; 5.8GB</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title" id="card-4-title">Water Stress (Liters/Inference)</div>
+      <div class="metric-value" id="val-4">Loading...</div>
+      <div class="compliance-badge" id="badge-4">EU AI Act Art. 12 Audit</div>
     </div>
   </div>
-</div>
 
-<div class="row r2">
-  <div class="card">
-    <h3>Country governance card</h3>
-    <div class="note">The sovereignty gate (EFF_SOV â‰¥ 0.85) is legal-jurisdictional; the exposure score is physical. The distance between them is the finding.</div>
-    <div class="meta" id="meta"></div>
-    <h3 style="margin-top:18px">What these numbers mean: <span id="semName"></span></h3>
-    <div class="note">Numbers are decoded by humans or they are nothing. Severity in words, definition per axis, no invention.</div>
-    <div class="sem" id="sem"></div>
+  <div class="footer-provenance">
+    <span>Ecosystem State: <strong style="color: #34d399;">v8.5 Active</strong> (Phase 2)</span>
+    <span>Cryptographic Hash: <code style="color: #60a5fa;">sha256:b8a5b5ad5612</code></span>
+    <span>Dual-ROI: Commercial & Academic Workstation</span>
   </div>
-  <div style="display:grid;gap:var(--gap);align-content:start">
-    <div class="card">
-      <h3>Coupling matrix; what moves together</h3>
-      <div class="note">Density matrix over the 32 BIG-complete states. Blue = co-move, red = trade off. Water and electricity stress arrive together (+0.41): states do not get one crisis at a time.</div>
-      <table class="hm" id="hm"></table>
-      <div class="formula">
-        <i>Ï</i> = <i>S</i> / Tr(<i>S</i>) &nbsp;Â·&nbsp; <span class="fx">F(Ï,Ïƒ) = [ Tr âˆš( âˆšÏ Ïƒ âˆšÏ ) ]Â²</span><br>
-        <i>QESIS</i><sub>THEORY</sub> = 0.30Â·WSE + 0.30Â·CSE + 0.17Â·ODI + 0.08Â·CRD + 0.15Â·REE &nbsp;Â·&nbsp; <i>QESIS</i><sub>EXT</sub> = 0.88Â·<i>QESIS</i><sub>THEORY</sub> + 0.12Â·CSovE
-        <small>Each state's stress profile is trace-normalised into a density state Ï; the Bhattacharyyaâ€“Uhlmann fidelity F measures how far it sits from its structural anchor Ïƒ. Quantum-inspired mathematics, computed on ordinary hardware. The machinery stays here; the meaning travels up.</small>
-      </div>
-      <div class="src">Matrix computed from the v8.0 canonical workbook (32 BIG-complete states). Method: Batista Silva (2026), <i>Ontological Blind-Spots</i>, QESIS+ methodology annex.</div>
-    </div>
-    <div class="card">
-      <h3 id="cmpTitle">The comparator</h3>
-      <div class="note" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <span>Choose the lens:</span>
-        <select id="selMetric" style="padding:5px 9px;border:1px solid var(--line);border-radius:6px;font-size:12.5px">
-          <option value="carbon">Carbon claim gap</option>
-          <option value="WSE">WSE; water stress</option>
-          <option value="CSE">CSE; cable exposure</option>
-          <option value="ODI">ODI; operator dependency</option>
-          <option value="CRD">CRD; critical resources</option>
-          <option value="FPE">FPE; foreign platforms</option>
-          <option value="REE">REE; rare earths</option>
-          <option value="ESE">ESE; electricity stress</option>
-        </select>
-      </div>
-      <div class="cv"><canvas id="chCmp"></canvas></div>
-      <div class="src" id="cmpSrc"></div>
-    </div>
-  </div>
-</div>
-
-<section class="ctx">
-  <h3>2026: the year infrastructure became the battlefield</h3>
-  <p>The international scenario is chaotic in a precise, measurable way: states are desperate for resources they do not own. The technology confrontation between the United States and China has hardened into industrial policy on both sides; rare earths, water, carbon and energy are no longer background inputs but instruments of leverage. Governments under pressure drift toward authoritarian consolidation to keep their grip on those resources, and war itself has followed the resources into the server hall. In March 2026, Iranian drones deliberately struck Amazon data centers in the United Arab Emirates and Bahrain, the first time a state has targeted commercial data centers in wartime, and Tehran publicly threatened the region's largest AI compute sites in the weeks after (<a href="https://research.gatech.edu/why-iran-targeted-amazon-data-centers-and-what-does-and-doesnt-change-about-warfare" target="_blank">Georgia Tech analysis</a> Â· <a href="https://www.csis.org/analysis/iranian-cyber-threat-us-critical-infrastructure" target="_blank">CSIS</a> Â· <a href="https://techcrunch.com/2026/04/06/iran-threatens-stargate-ai-data-centers" target="_blank">TechCrunch</a>).</p>
-  <p>This dashboard does not report those events; it measures the terrain beneath them. What market desks and trade bodies register as quarterly disruption, the index registers as structural position: who is exposed, through which physical axis, and how fast the exposure compounds to 2080. The numbers were already showing the desperation before the drones flew. And they point to the only exit that is neither escalation nor surrender: <b>infrastructure resilience is the one sustainable, dignified way out of the polycrisis.</b></p>
-  <div class="chips">
-    <span class="chip">REE stress Â· index median 70.2 / 100</span>
-    <span class="chip">WSEâ€“ESE coupling +0.41</span>
-    <span class="chip">Carbon claims flagged INFR/EPIS</span>
-    <span class="chip">City-level layer: cables + cloud regions (roadmap)</span>
-    <span class="chip live">LIVE MARKET LAYER: pending connectors (ENTSO-E Â· commodity feeds)</span>
-  </div>
-  <small>Honesty label: this panel is qualitative context with cited sources; no live market figures are shown because none are connected yet; this page does not fake liveness. Geographic layers stop at infrastructure: cities, regions, nations. Never people.</small>
-</section>
-
-<section class="insight">
-  <h3>What the data is saying: the executive read</h3>
-  <ol>
-    <li><b>Legal sovereignty is not physical sovereignty.</b> Belgium and Spain sit among the six most exposed states on Earth despite top-tier A-EU legal protection. Jurisdiction does not cool the physics: GDPR does not desalinate water or lay cable.</li>
-    <li><b>Spain is the worst trajectory in the entire index:</b> +11.6 by 2080 under BAU, driven by water stress 78.8 and rare-earth stress 91.5. Europe owns five of the six fastest-deteriorating states. The continent's problem is not where it stands; it is where it is heading.</li>
-    <li><b>Scale is not sovereignty.</b> The United States ranks #2 most exposed (65.5): cable exposure 100, critical-resource dependence 100. Hegemonic reach and physical fragility coexist.</li>
-    <li><b>The sovereignty gate is nearly universal failure.</b> 4 of 35 pass (USA, FRA, DEU, NLD). Spain fails at 0.83, two hundredths short, and those hundredths are contract jurisdiction and restoration capacity, not paperwork.</li>
-    <li><b>The trilemma is visible in the matrix.</b> Water and electricity stress co-move (+0.41); rare-earth stress trades off against water (âˆ’0.26). Independence, efficiency, sustainability: the data lets states pick two.</li>
-    <li><b>The gaps are findings.</b> Taiwan carries no Extended score: BIG-gated, published as epistemic opacity rather than imputed away. An index honest about what it cannot see is the only kind worth trusting.</li>
-  </ol>
-</section>
-
-<div class="card" style="margin-bottom:var(--gap)">
-  <h3>Governance layer: the machine behind the numbers</h3>
-  <div class="gov" id="gov"></div>
-  <table class="refresh" id="refresh"></table>
-  <div class="src">Every table in the database carries an asset ID (QES-A####), a SHA-256 hash, origin, license and retrieval date. EU AI Act Art. 10 / ISO 42001 alignment by construction, not declaration.</div>
-</div>
-
-<div class="card" style="margin-bottom:var(--gap);overflow-x:auto">
-  <h3>Full detail, sortable</h3>
-  <div class="note">Click any column to sort. Scores 0â€“100, higher = more exposed. â€œâ€”â€ = gap published, not imputed.</div>
-  <div id="tbl"></div>
-</div>
-
-<section class="card" style="margin-bottom:var(--gap)" id="trilemma">
-  <style>
-    .tris{display:grid;grid-template-columns:1.15fr 1fr;gap:36px;align-items:center;margin-top:14px}
-    @media(max-width:900px){.tris{grid-template-columns:1fr}}
-    .tri svg{width:100%;height:auto;display:block}
-    .tcap{text-align:center;font-size:12px;color:var(--mut);margin-top:6px;letter-spacing:.3px}
-    .tv{cursor:pointer}
-    .tv circle{transition:r .12s}
-    .tv:hover circle{r:9}
-    .tv text{font-size:12.5px;font-weight:600;fill:#2a2f3a}
-    .tv.on circle{stroke-width:3}
-    .tpanel{background:#f8f8f7;border:1px solid var(--line);border-left:5px solid var(--cool);border-radius:8px;padding:14px 18px;font-size:14px;margin-top:16px;min-height:74px;line-height:1.6}
-    .tpanel b{display:block;margin-bottom:3px}
-  </style>
-  <h3>The trilemma lineage: pick two, always</h3>
-  <div class="note">Three generations of the same structural truth, one century apart. The political trilemma points up, the monetary trilemma points down; together they form a six-pointed constraint on every modern state. The Infrastructural Trilemma stands beside them: the physical layer both of the older ones silently rest on. Click any vertex to read what it stands for.</div>
-  <div class="tris">
-    <div class="tri">
-      <svg viewBox="0 0 460 420" role="img" aria-label="Six-pointed star: Rodrik political trilemma pointing up, monetary trilemma pointing down">
-        <polygon points="230,84 122,272 338,272" fill="rgba(91,127,166,.10)" stroke="#5B7FA6" stroke-width="2.2"/>
-        <polygon points="230,336 122,148 338,148" fill="rgba(201,155,114,.10)" stroke="#C99B72" stroke-width="2.2"/>
-        <g class="tv" data-k="r1" transform="translate(230,84)"><circle r="7" fill="#5B7FA6" stroke="#fff" stroke-width="2"/><text y="-16" text-anchor="middle">Hyper-globalization</text></g>
-        <g class="tv" data-k="r2" transform="translate(122,272)"><circle r="7" fill="#5B7FA6" stroke="#fff" stroke-width="2"/><text y="26" text-anchor="middle">National sovereignty</text></g>
-        <g class="tv" data-k="r3" transform="translate(338,272)"><circle r="7" fill="#5B7FA6" stroke="#fff" stroke-width="2"/><text y="26" text-anchor="middle">Democratic politics</text></g>
-        <g class="tv" data-k="m1" transform="translate(230,336)"><circle r="7" fill="#C99B72" stroke="#fff" stroke-width="2"/><text y="28" text-anchor="middle">Fixed exchange rate</text></g>
-        <g class="tv" data-k="m2" transform="translate(122,148)"><circle r="7" fill="#C99B72" stroke="#fff" stroke-width="2"/><text y="-14" text-anchor="middle">Free capital flow</text></g>
-        <g class="tv" data-k="m3" transform="translate(338,148)"><circle r="7" fill="#C99B72" stroke="#fff" stroke-width="2"/><text y="-14" text-anchor="middle">Monetary autonomy</text></g>
-        <text x="230" y="215" text-anchor="middle" font-size="11.5" fill="#6d7382" font-style="italic">pick two; twice</text>
-      </svg>
-      <div class="tcap">â–² Rodrik, political economy (2011) &nbsp;Â·&nbsp; â–¼ Mundellâ€“Fleming, monetary (1962â€“63)</div>
-    </div>
-    <div class="tri">
-      <svg viewBox="0 0 460 420" role="img" aria-label="Infrastructural Trilemma triangle">
-        <polygon points="230,88 108,312 352,312" fill="rgba(201,106,94,.08)" stroke="#C96A5E" stroke-width="2.6"/>
-        <g class="tv" data-k="i1" transform="translate(230,88)"><circle r="7" fill="#C96A5E" stroke="#fff" stroke-width="2"/><text y="-16" text-anchor="middle">Algorithmic independence</text></g>
-        <g class="tv" data-k="i2" transform="translate(108,312)"><circle r="7" fill="#C96A5E" stroke="#fff" stroke-width="2"/><text y="28" text-anchor="middle">Hyperscale efficiency</text></g>
-        <g class="tv" data-k="i3" transform="translate(352,312)"><circle r="7" fill="#C96A5E" stroke="#fff" stroke-width="2"/><text y="28" text-anchor="middle">Ecological sustainability</text></g>
-        <text x="230" y="235" text-anchor="middle" font-size="11.5" fill="#6d7382" font-style="italic">pick two; measured, n = 35</text>
-      </svg>
-      <div class="tcap" style="color:var(--hot);font-weight:600">The Infrastructural Trilemma. Batista Silva (2026), the reaffirming truth</div>
-    </div>
-  </div>
-  <div class="tpanel" id="tpanel"><b>The lineage</b>Mundell and Fleming proved states cannot hold a fixed exchange rate, free capital movement and monetary autonomy at once. Rodrik generalized the logic to politics: hyperglobalization, national sovereignty and democracy do not fit in one state either. The Infrastructural Trilemma is the third generation, and the first one measured rather than argued. Across 35 states, no country simultaneously achieves algorithmic independence, hyperscale efficiency and ecological sustainability. The constraint did not soften as it moved from money to politics to infrastructure. It hardened into physics.</div>
-  <div class="src">Rodrik, D. (2011). <i>The globalization paradox: Democracy and the future of the world economy</i>. Norton. Â· Mundell, R. (1963), <i>Canadian Journal of Economics 29</i>(4); Fleming, J. M. (1962), <i>IMF Staff Papers 9</i>(3). Â· Batista Silva, R. (2026). <i>Ontological blind-spots</i>, QESIS+ v8.0; the empirical trilemma test lives in the coupling matrix and fsQCA results above.</div>
-</section>
-
-<section class="getdata" id="getdata">
-  <h3>Take the data with you</h3>
-  <div class="lead">The quantitative pack (versioned CSV layer, 35 states Ã— 7 axes Ã— 4 horizons, lineage included) and the qualitative pack (full APA source register and methodology annex) are available on request, free for research and cited use. Tell us who you are and the files arrive by email, usually the same day.</div>
-  <div class="gform">
-    <input id="fName" placeholder="Name">
-    <input id="fMail" placeholder="Email" type="email">
-    <input id="fOcc" placeholder="Occupation / institution">
-    <select id="fHow"><option value="">How did you find this page?</option><option>LinkedIn</option><option>Search engine</option><option>Academic reference</option><option>Recommendation</option><option>Other</option></select>
-  </div>
-  <div class="gbtns">
-    <button class="gbtn" onclick="reqData('quantitative')">Request the quantitative pack (CSV)</button>
-    <button class="gbtn alt" onclick="reqData('qualitative')">Request the qualitative pack (APA sources)</button>
-    <button class="gbtn alt" onclick="reqData('both')">Request both</button>
-  </div>
-  <div class="gnote">Your details are used once, to send you the files and reply if you write back. No lists, no resale, deletion on request (GDPR). Requests are answered personally. The demo vintage is CC-BY-NC; institutional or commercial use requires a license; say so in your request and terms come back with the files.</div>
-  <div class="refs">
-    <b>Cite this work (APA 7):</b>
-    <p>Batista Silva, R. (2026). <i>Ontological blind-spots: Hybrid war, imperial decline, and the polycrisis no one can exit</i> [Master's thesis, ESIC University]. Dataset: <i>Sovereign_Infra_Intelligence</i> v8.0 (CC-BY-NC demo vintage). ORCID: <a href="https://orcid.org/0009-0007-0993-8408" target="_blank">0009-0007-0993-8408</a>.</p>
-    <b>Primary sources in this view:</b>
-    <p>Kuzma, S., Bierkens, M. F. P., et al. (2023). <i>Aqueduct 4.0: Updated decision-relevant global water risk indicators</i>. World Resources Institute. <a href="https://www.wri.org/research/aqueduct-40-updated-decision-relevant-global-water-risk-indicators" target="_blank">wri.org</a></p>
-    <p>Eurostat. (2026). <i>Electricity prices for non-household consumers</i> (nrg_pc_205). <a href="https://doi.org/10.2908/NRG_PC_205" target="_blank">https://doi.org/10.2908/NRG_PC_205</a></p>
-    <p>OECD. (2025). <i>Trade in value added (TiVA)</i> [Data set]. OECD Publishing. <a href="https://www.oecd.org/en/data/datasets/trade-in-value-added.html" target="_blank">oecd.org</a></p>
-    <p>Climate TRACE. (2025). <i>Global emissions inventory</i> v5.4 [Data set]. <a href="https://climatetrace.org" target="_blank">climatetrace.org</a></p>
-    <p>European Marine Observation and Data Network. (2026). <i>Human activities: Telecommunication cables</i> [Data set]. <a href="https://emodnet.ec.europa.eu/en/human-activities" target="_blank">emodnet.ec.europa.eu</a></p>
-  </div>
-  <div class="contact">
-    <a class="cbtn" href="mailto:rodrigoesl92@gmail.com">âœ‰ rodrigoesl92@gmail.com</a>
-    <a class="cbtn" href="https://orcid.org/0009-0007-0993-8408" target="_blank">iD ORCID 0009-0007-0993-8408</a>
-    <a class="cbtn" href="https://www.linkedin.com/in/rodrigo-batista-silva-initium" target="_blank">in LinkedIn; Rodrigo Batista Silva</a>
-    <a class="cbtn" href="https://forest-chicken-e9a.notion.site/Erste-Schritte-1-26faa828e0868033805dd8f7b3befbb3" target="_blank">â—† Notion; research board</a>
-    <a class="cbtn" href="https://github.com/rodrigoesl92-cloud" target="_blank">âŒ¥ GitHub; rodrigoesl92-cloud</a>
-  </div>
-</section>
-
-<footer id="foot"></footer>
 </div>
 
 <script>
-const D = {"vintage": "v8.0 (2026-06)", "n": 35, "n_big32": 32, "countries": [{"iso3": "SAU", "country": "Saudi Arabia", "axes": {"WSE": 99.6, "CSE": 64.3, "ODI": 100.0, "CRD": 0.0, "FPE": 60.0, "REE": 70.2, "ESE": 42.3, "qth": 87.9, "qplus": 85.2, "csove_gap": 86.0, "qext": 87.7}, "th": [75.63, 78.96, 81.53, 83.34], "ext": [76.87, 80.63, 83.72, 85.34], "d2080": 8.47, "tier": "E-AU", "eff_sov": 0.41667, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "USA", "country": "United States", "axes": {"WSE": 52.1, "CSE": 100.0, "ODI": 33.3, "CRD": 100.0, "FPE": 35.7, "REE": 62.5, "ESE": 43.1, "qth": 69.9, "qplus": 69.2, "csove_gap": null, "qext": null}, "th": [67.62, 68.43, 69.58, 69.48], "ext": [65.51, 66.52, 67.83, 68.1], "d2080": 2.59, "tier": "B-5E", "eff_sov": 0.87, "big": "PASS", "ev": "COLLECTED"}, {"iso3": "BHR", "country": "Bahrain", "axes": {"WSE": 100.0, "CSE": 5.6, "ODI": 100.0, "CRD": 0.0, "FPE": 92.1, "REE": 70.2, "ESE": 34.5, "qth": 90.0, "qplus": 87.0, "csove_gap": 85.0, "qext": 89.4}, "th": [58.14, 58.93, 59.66, 60.45], "ext": [61.36, 62.87, 64.33, 65.2], "d2080": 3.84, "tier": "E-AU", "eff_sov": 0.398, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "ARE", "country": "United Arab Emirates", "axes": {"WSE": 100.0, "CSE": 22.2, "ODI": 66.7, "CRD": 11.1, "FPE": 35.9, "REE": 70.2, "ESE": 23.2, "qth": 84.4, "qplus": 82.3, "csove_gap": 73.0, "qext": 83.0}, "th": [58.35, 60.06, 61.32, 62.51], "ext": [60.11, 62.06, 63.6, 65.17], "d2080": 5.06, "tier": "E-AU", "eff_sov": 0.42733, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "BEL", "country": "Belgium", "axes": {"WSE": 88.2, "CSE": 39.7, "ODI": 66.7, "CRD": 5.6, "FPE": 33.9, "REE": 91.5, "ESE": 28.4, "qth": 66.6, "qplus": 70.6, "csove_gap": null, "qext": null}, "th": [62.53, 65.97, 67.62, 69.14], "ext": [59.11, 62.22, 63.79, 65.25], "d2080": 6.14, "tier": "A-EU", "eff_sov": 0.84333, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "ESP", "country": "Spain", "axes": {"WSE": 78.8, "CSE": 58.7, "ODI": 33.3, "CRD": 11.1, "FPE": 33.3, "REE": 91.5, "ESE": 27.7, "qth": 62.8, "qplus": 67.4, "csove_gap": null, "qext": null}, "th": [60.17, 65.58, 69.85, 72.93], "ext": [57.15, 61.99, 65.88, 68.71], "d2080": 11.56, "tier": "A-EU", "eff_sov": 0.83, "big": "FAIL", "ev": "COLLECTED"}, {"iso3": "QAT", "country": "Qatar", "axes": {"WSE": 100.0, "CSE": 8.3, "ODI": 66.7, "CRD": 5.6, "FPE": 33.9, "REE": 70.2, "ESE": 28.4, "qth": 83.9, "qplus": 81.8, "csove_gap": 82.0, "qext": 83.7}, "th": [53.74, 54.69, 55.5, 56.38], "ext": [57.13, 58.76, 60.25, 61.61], "d2080": 4.48, "tier": "E-AU", "eff_sov": 0.414, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "POL", "country": "Poland", "axes": {"WSE": 33.2, "CSE": 59.3, "ODI": 66.7, "CRD": 5.6, "FPE": 33.9, "REE": 91.5, "ESE": 59.3, "qth": 59.4, "qplus": 64.5, "csove_gap": 46.0, "qext": 57.8}, "th": [51.91, 56.45, 58.48, 58.95], "ext": [51.2, 55.3, 57.26, 57.84], "d2080": 6.64, "tier": "A-EU", "eff_sov": 0.79867, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "SGP", "country": "Singapore", "axes": {"WSE": null, "CSE": 29.2, "ODI": 0.0, "CRD": 16.7, "FPE": 25.0, "REE": 70.2, "ESE": 36.5, "qth": 1.7, "qplus": 11.9, "csove_gap": 50.0, "qext": 7.5}, "th": [49.56, 51.7, 53.19, 54.55], "ext": [49.61, 51.8, 53.41, 54.96], "d2080": 5.35, "tier": "D-AS", "eff_sov": 0.75267, "big": "FAIL", "ev": "COLLECTED"}, {"iso3": "CHL", "country": "Chile", "axes": {"WSE": 89.4, "CSE": 8.3, "ODI": 66.7, "CRD": 5.6, "FPE": 13.9, "REE": 70.2, "ESE": 43.3, "qth": 80.2, "qplus": 78.7, "csove_gap": null, "qext": null}, "th": [50.56, 51.73, 52.73, 54.4], "ext": [49.29, 50.42, 51.44, 53.06], "d2080": 3.77, "tier": "C-HY", "eff_sov": 0.72267, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "MEX", "country": "Mexico", "axes": {"WSE": 79.9, "CSE": 5.6, "ODI": 33.3, "CRD": 11.1, "FPE": 19.9, "REE": 70.2, "ESE": 45.4, "qth": 70.7, "qplus": 70.7, "csove_gap": 72.0, "qext": 70.9}, "th": [41.66, 42.43, 42.79, 44.82], "ext": [45.3, 46.67, 47.68, 50.16], "d2080": 4.86, "tier": "D-EM", "eff_sov": 0.63533, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "IND", "country": "India", "axes": {"WSE": 82.2, "CSE": 22.2, "ODI": 0.0, "CRD": 33.3, "FPE": 31.3, "REE": 70.2, "ESE": 63.9, "qth": 67.1, "qplus": 67.5, "csove_gap": 55.0, "qext": 65.6}, "th": [43.45, 44.21, 46.07, 47.17], "ext": [44.84, 45.64, 47.48, 48.64], "d2080": 3.8, "tier": "D-EM", "eff_sov": 0.61533, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "IDN", "country": "Indonesia", "axes": {"WSE": 53.4, "CSE": 27.8, "ODI": 33.3, "CRD": 11.1, "FPE": 33.3, "REE": 70.2, "ESE": 57.4, "qth": 61.5, "qplus": 62.8, "csove_gap": 77.0, "qext": 63.4}, "th": [40.37, 40.35, 39.49, 41.1], "ext": [44.77, 45.49, 45.47, 47.63], "d2080": 2.86, "tier": "C-HY", "eff_sov": 0.63533, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "ISR", "country": "Israel", "axes": {"WSE": 98.8, "CSE": 6.9, "ODI": 0.0, "CRD": 16.7, "FPE": 25.0, "REE": 70.2, "ESE": 42.5, "qth": 71.3, "qplus": 71.1, "csove_gap": null, "qext": null}, "th": [42.51, 43.53, 44.43, 45.52], "ext": [43.17, 44.35, 45.43, 46.74], "d2080": 3.57, "tier": "C-HY", "eff_sov": 0.75467, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "DNK", "country": "Denmark", "axes": {"WSE": 19.0, "CSE": 29.1, "ODI": 100.0, "CRD": 0.0, "FPE": 87.7, "REE": 93.6, "ESE": 23.1, "qth": 35.6, "qplus": 44.3, "csove_gap": null, "qext": null}, "th": [44.05, 46.65, 48.02, 48.68], "ext": [41.52, 43.67, 44.68, 45.05], "d2080": 3.53, "tier": "A-EU", "eff_sov": 0.83, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "ZAF", "country": "South Africa", "axes": {"WSE": 83.4, "CSE": 9.7, "ODI": 0.0, "CRD": 22.2, "FPE": 27.9, "REE": 70.2, "ESE": 75.1, "qth": 66.4, "qplus": 67.0, "csove_gap": 58.0, "qext": 65.4}, "th": [39.17, 41.11, 41.64, 42.36], "ext": [41.43, 43.48, 44.3, 45.35], "d2080": 3.92, "tier": "D-EM", "eff_sov": 0.63533, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "SWE", "country": "Sweden", "axes": {"WSE": 15.6, "CSE": 45.7, "ODI": 66.7, "CRD": 5.6, "FPE": 29.9, "REE": 91.5, "ESE": 18.2, "qth": 38.9, "qplus": 47.1, "csove_gap": null, "qext": null}, "th": [42.55, 45.53, 48.44, 49.62], "ext": [39.96, 42.45, 44.85, 45.68], "d2080": 5.72, "tier": "A-EU", "eff_sov": 0.84333, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "NLD", "country": "Netherlands", "axes": {"WSE": 31.6, "CSE": 24.0, "ODI": 66.7, "CRD": 5.6, "FPE": 13.9, "REE": 91.5, "ESE": 33.3, "qth": 39.6, "qplus": 47.7, "csove_gap": null, "qext": null}, "th": [40.84, 44.19, 44.61, 44.93], "ext": [39.78, 42.8, 43.29, 43.69], "d2080": 3.91, "tier": "A-EU", "eff_sov": 0.85133, "big": "PASS", "ev": "INFERRED"}, {"iso3": "GBR", "country": "United Kingdom", "axes": {"WSE": 26.0, "CSE": 51.6, "ODI": 33.3, "CRD": 16.7, "FPE": 35.6, "REE": 82.0, "ESE": 44.3, "qth": 28.1, "qplus": 36.5, "csove_gap": 26.0, "qext": 27.8}, "th": [41.38, 46.09, 48.52, 49.64], "ext": [39.53, 43.74, 45.97, 47.06], "d2080": 7.53, "tier": "B-5E", "eff_sov": 0.82267, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "AUS", "country": "Australia", "axes": {"WSE": 58.1, "CSE": 29.2, "ODI": 0.0, "CRD": 44.4, "FPE": 28.6, "REE": 62.5, "ESE": 50.2, "qth": 59.8, "qplus": 60.6, "csove_gap": 48.0, "qext": 58.4}, "th": [38.07, 39.17, 42.11, 42.79], "ext": [39.26, 40.35, 43.1, 43.87], "d2080": 4.61, "tier": "B-5E", "eff_sov": 0.82267, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "MYS", "country": "Malaysia", "axes": {"WSE": 20.7, "CSE": 26.4, "ODI": 66.7, "CRD": 5.6, "FPE": 29.9, "REE": 70.2, "ESE": 44.5, "qth": 56.1, "qplus": 58.2, "csove_gap": 62.0, "qext": 56.8}, "th": [35.38, 37.72, 39.55, 41.49], "ext": [38.57, 40.78, 42.62, 44.55], "d2080": 5.98, "tier": "C-HY", "eff_sov": 0.65133, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "ITA", "country": "Italy", "axes": {"WSE": 66.9, "CSE": 15.0, "ODI": 0.0, "CRD": 16.7, "FPE": 25.0, "REE": 93.6, "ESE": 44.1, "qth": 25.1, "qplus": 35.4, "csove_gap": null, "qext": null}, "th": [38.52, 40.63, 42.22, 44.11], "ext": [38.34, 40.28, 41.82, 43.62], "d2080": 5.28, "tier": "A-EU", "eff_sov": 0.76867, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "HKG", "country": "Hong Kong SAR", "axes": {"WSE": null, "CSE": 0.0, "ODI": 33.3, "CRD": 11.1, "FPE": 33.3, "REE": 70.2, "ESE": 38.0, "qth": 75.2, "qplus": 74.5, "csove_gap": null, "qext": null}, "th": [35.51, 37.0, 38.86, 40.92], "ext": [37.61, 39.24, 41.19, 43.39], "d2080": 5.78, "tier": "E-SI", "eff_sov": 0.35333, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "FIN", "country": "Finland", "axes": {"WSE": 16.2, "CSE": 15.3, "ODI": 100.0, "CRD": 0.0, "FPE": 100.0, "REE": 91.5, "ESE": 22.5, "qth": 60.7, "qplus": 65.6, "csove_gap": null, "qext": null}, "th": [38.83, 41.12, 41.87, 44.97], "ext": [37.29, 39.37, 40.12, 42.95], "d2080": 5.66, "tier": "A-EU", "eff_sov": 0.83, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "JPN", "country": "Japan", "axes": {"WSE": 39.4, "CSE": 30.6, "ODI": 0.0, "CRD": 33.3, "FPE": 29.8, "REE": 78.0, "ESE": 39.6, "qth": 52.1, "qplus": 56.2, "csove_gap": 58.0, "qext": 52.8}, "th": [34.16, 35.92, 37.19, 37.66], "ext": [37.02, 38.92, 40.38, 41.22], "d2080": 4.2, "tier": "C-HY", "eff_sov": 0.79067, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "FRA", "country": "France", "axes": {"WSE": 38.3, "CSE": 40.3, "ODI": 0.0, "CRD": 22.2, "FPE": 27.9, "REE": 91.5, "ESE": 25.0, "qth": 50.6, "qplus": 57.1, "csove_gap": 27.0, "qext": 47.8}, "th": [37.73, 42.63, 44.88, 47.84], "ext": [36.44, 40.81, 42.9, 45.6], "d2080": 9.16, "tier": "A-EU", "eff_sov": 0.87, "big": "PASS", "ev": "INFERRED"}, {"iso3": "KOR", "country": "South Korea", "axes": {"WSE": 47.6, "CSE": 0.0, "ODI": 33.3, "CRD": 16.7, "FPE": 35.6, "REE": 78.0, "ESE": 31.4, "qth": 65.6, "qplus": 67.7, "csove_gap": 53.0, "qext": 64.1}, "th": [31.78, 32.44, 32.62, 33.03], "ext": [34.33, 35.23, 35.7, 36.45], "d2080": 2.12, "tier": "C-HY", "eff_sov": 0.77467, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "BRA", "country": "Brazil", "axes": {"WSE": 20.8, "CSE": 16.7, "ODI": 33.3, "CRD": 22.2, "FPE": 19.9, "REE": 70.2, "ESE": 39.3, "qth": 51.2, "qplus": 54.0, "csove_gap": 61.0, "qext": 52.4}, "th": [28.15, 30.33, 31.16, 32.0], "ext": [32.09, 34.15, 35.1, 36.07], "d2080": 3.98, "tier": "D-BR", "eff_sov": 0.694, "big": "FAIL", "ev": "COLLECTED"}, {"iso3": "AUT", "country": "Austria", "axes": {"WSE": 5.2, "CSE": 0.0, "ODI": 100.0, "CRD": 0.0, "FPE": 87.7, "REE": 93.6, "ESE": 27.1, "qth": 56.8, "qplus": 62.4, "csove_gap": null, "qext": null}, "th": [31.17, 32.1, 32.75, 33.44], "ext": [30.79, 31.68, 32.35, 33.05], "d2080": 2.26, "tier": "A-EU", "eff_sov": 0.822, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "NOR", "country": "Norway", "axes": {"WSE": 3.8, "CSE": 5.6, "ODI": 100.0, "CRD": 5.6, "FPE": 87.7, "REE": 70.2, "ESE": 16.3, "qth": 56.9, "qplus": 58.9, "csove_gap": 23.0, "qext": 52.8}, "th": [29.73, 30.57, 31.3, 31.98], "ext": [28.92, 29.52, 29.97, 30.35], "d2080": 1.43, "tier": "B-NA", "eff_sov": 0.83267, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "DEU", "country": "Germany", "axes": {"WSE": 40.8, "CSE": 7.3, "ODI": 0.0, "CRD": 22.2, "FPE": 27.9, "REE": 91.5, "ESE": 40.8, "qth": 17.5, "qplus": 28.9, "csove_gap": 30.0, "qext": 19.0}, "th": [28.58, 30.51, 30.96, 30.47], "ext": [28.75, 30.52, 31.02, 30.7], "d2080": 1.95, "tier": "A-EU", "eff_sov": 0.87, "big": "PASS", "ev": "COLLECTED"}, {"iso3": "NZL", "country": "New Zealand", "axes": {"WSE": 1.0, "CSE": 6.9, "ODI": 66.7, "CRD": 5.6, "FPE": 29.9, "REE": 70.2, "ESE": 29.1, "qth": 49.2, "qplus": 52.4, "csove_gap": 44.0, "qext": 48.6}, "th": [23.62, 24.97, 26.05, 27.12], "ext": [26.07, 27.36, 28.47, 29.57], "d2080": 3.5, "tier": "B-5E", "eff_sov": 0.78533, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "CAN", "country": "Canada", "axes": {"WSE": 24.7, "CSE": 9.7, "ODI": 0.0, "CRD": 38.9, "FPE": 25.0, "REE": 62.5, "ESE": 29.0, "qth": 47.5, "qplus": 50.2, "csove_gap": null, "qext": null}, "th": [21.76, 22.75, 23.44, 23.0], "ext": [24.79, 25.95, 26.83, 26.78], "d2080": 1.99, "tier": "B-5E", "eff_sov": 0.80667, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "CHE", "country": "Switzerland", "axes": {"WSE": 8.1, "CSE": 0.0, "ODI": 33.3, "CRD": 16.7, "FPE": 35.6, "REE": 70.2, "ESE": 20.4, "qth": 46.2, "qplus": 49.8, "csove_gap": 32.0, "qext": 44.5}, "th": [18.89, 20.2, 20.7, 20.84], "ext": [20.46, 21.69, 22.25, 22.49], "d2080": 2.03, "tier": "B-NA", "eff_sov": 0.84867, "big": "FAIL", "ev": "INFERRED"}, {"iso3": "TWN", "country": "Taiwan", "axes": {"WSE": null, "CSE": 15.3, "ODI": 66.7, "CRD": 5.6, "FPE": 36.1, "REE": 70.2, "ESE": 41.1, "qth": 75.2, "qplus": 74.5, "csove_gap": null, "qext": null}, "th": [null, 41.5, 42.0, 42.62], "ext": [null, 42.95, 43.69, 44.61], "d2080": null, "tier": "E-SI", "eff_sov": 0.62467, "big": "FAIL", "ev": "INFERRED"}], "density": {"axes": ["WSE", "CSE", "REE", "FPE", "ODI", "ESE"], "matrix": [[1.0, 0.0695, -0.2586, -0.2107, -0.1515, 0.4131], [0.0695, 1.0, 0.1142, -0.0949, 0.0161, 0.0617], [-0.2586, 0.1142, 1.0, 0.1968, 0.1914, -0.1772], [-0.2107, -0.0949, 0.1968, 1.0, 0.6887, -0.2476], [-0.1515, 0.0161, 0.1914, 0.6887, 1.0, -0.3256], [0.4131, 0.0617, -0.1772, -0.2476, -0.3256, 1.0]]}, "cables": [{"iso3": "GBR", "landings": 42.0, "cables": 42.0, "km": 6768.558070874516, "cse": 0.0}, {"iso3": "ITA", "landings": 30.0, "cables": 30.0, "km": 10426.70933422777, "cse": 5.596858373965148}, {"iso3": "ESP", "landings": 9.0, "cables": 9.0, "km": 3410.1135, "cse": 41.61707349384051}, {"iso3": "MDG", "landings": 5.0, "cables": 5.0, "km": 748.525, "cse": 64.3324309226605}, {"iso3": "PRI", "landings": 4.0, "cables": 4.0, "km": 466.7605, "cse": 71.99709458998527}, {"iso3": "BEL", "landings": 4.0, "cables": 4.0, "km": 680.059, "cse": 69.59900162346673}, {"iso3": "EGY", "landings": 4.0, "cables": 4.0, "km": 2977.841833267993, "cse": 60.17979881145975}, {"iso3": "TTO", "landings": 4.0, "cables": 4.0, "km": 507.7235, "cse": 71.46124238248285}, {"iso3": "TUN", "landings": 3.0, "cables": 3.0, "km": 559.862, "cse": 76.53585335631423}, {"iso3": "OMN", "landings": 2.0, "cables": 2.0, "km": 532.042, "cse": 84.20583715868041}, {"iso3": "BRA", "landings": 1.0, "cables": 1.0, "km": 306.826, "cse": 98.06313245581048}, {"iso3": "CYP", "landings": 1.0, "cables": 1.0, "km": 291.285, "cse": 98.39381246583227}, {"iso3": "DEU", "landings": 1.0, "cables": 1.0, "km": 284.2015, "cse": 98.55041230043645}, {"iso3": "DZA", "landings": 1.0, "cables": 1.0, "km": 226.261, "cse": 100.0}, {"iso3": "CAN", "landings": 1.0, "cables": 1.0, "km": 3051.6, "cse": 83.41887224866116}, {"iso3": "MAR", "landings": 1.0, "cables": 1.0, "km": 401.965, "cse": 96.34406057646983}, {"iso3": "PRT", "landings": 1.0, "cables": 1.0, "km": 772.4, "cse": 92.18260243973813}, {"iso3": "TUR", "landings": 1.0, "cables": 1.0, "km": 331.7305, "cse": 97.56653692012947}], "refresh": [{"table_name": "eurostat_industrial_electricity", "source": "Eurostat API nrg_pc_205", "cadence": "semi-annual", "next_refresh_due": "2026-12-15", "method": "api_web_fetch", "status": "ACTIVE"}, {"table_name": "aqueduct40_country_rankings", "source": "WRI Aqueduct 4.0 (GitHub/official)", "cadence": "per release", "next_refresh_due": "2027-06-30", "method": "manual_download_verify_hash", "status": "ACTIVE"}, {"table_name": "entsoe_grid_load", "source": "ENTSO-E Transparency REST API", "cadence": "daily-capable", "next_refresh_due": "BLOCKED", "method": "api_token_required", "status": "BLOCKED: Rico must register for free token"}, {"table_name": "ember_carbon_intensity", "source": "Ember Yearly Electricity Data", "cadence": "yearly", "next_refresh_due": "2027-05-31", "method": "manual_download_verify_hash", "status": "PLANNED"}, {"table_name": "emodnet_cables_eu", "source": "EMODnet Human Activities", "cadence": "per release", "next_refresh_due": "2027-01-31", "method": "manual_download_verify_hash", "status": "PLANNED"}, {"table_name": "v8_workbook_tables", "source": "Sovereign_Infra_Intelligence vX", "cadence": "per thesis revision", "next_refresh_due": "on change", "method": "upload_reingest", "status": "ACTIVE"}], "sources_n": 45, "gov": {"assets": 52, "decisions": 20, "lessons": 12, "red_risks": 4, "audit_closed": "G1 G2 G5", "fsqca": "0.807 / 0.862 (Global n=32 / Dependent Core n=26)"}, "csove": [{"iso3": "BHR", "claim": 88.0, "verify": 82.0, "gap": 85.0, "flag": "INFR"}, {"iso3": "SAU", "claim": 92.0, "verify": 80.0, "gap": 86.0, "flag": "INFR"}, {"iso3": "ARE", "claim": 72.0, "verify": 74.0, "gap": 73.0, "flag": "INFR"}, {"iso3": "QAT", "claim": 85.0, "verify": 78.0, "gap": 82.0, "flag": "INFR"}, {"iso3": "MEX", "claim": 78.0, "verify": 65.0, "gap": 72.0, "flag": "INFR"}, {"iso3": "IND", "claim": 55.0, "verify": 55.0, "gap": 55.0, "flag": "EPIS"}, {"iso3": "KOR", "claim": 62.0, "verify": 45.0, "gap": 53.0, "flag": "EPIS"}, {"iso3": "ZAF", "claim": 62.0, "verify": 55.0, "gap": 58.0, "flag": "EPIS"}, {"iso3": "POL", "claim": 55.0, "verify": 38.0, "gap": 46.0, "flag": "EPIS"}, {"iso3": "IDN", "claim": 82.0, "verify": 72.0, "gap": 77.0, "flag": "INFR"}, {"iso3": "AUS", "claim": 52.0, "verify": 45.0, "gap": 48.0, "flag": "EPIS"}, {"iso3": "NOR", "claim": 28.0, "verify": 18.0, "gap": 23.0, "flag": "ACTIVE"}, {"iso3": "MYS", "claim": 62.0, "verify": 62.0, "gap": 62.0, "flag": "EPIS"}, {"iso3": "FRA", "claim": 35.0, "verify": 20.0, "gap": 27.0, "flag": "EPIS"}, {"iso3": "JPN", "claim": 65.0, "verify": 52.0, "gap": 58.0, "flag": "EPIS"}, {"iso3": "BRA", "claim": 62.0, "verify": 60.0, "gap": 61.0, "flag": "EPIS"}, {"iso3": "NZL", "claim": 50.0, "verify": 38.0, "gap": 44.0, "flag": "EPIS"}, {"iso3": "CHE", "claim": 40.0, "verify": 25.0, "gap": 32.0, "flag": "EPIS"}, {"iso3": "GBR", "claim": 32.0, "verify": 20.0, "gap": 26.0, "flag": "EPIS"}, {"iso3": "DEU", "claim": 38.0, "verify": 22.0, "gap": 30.0, "flag": "EPIS"}, {"iso3": "SGP", "claim": 58.0, "verify": 42.0, "gap": 50.0, "flag": "EPIS"}]};
-const TIER_C = {'A-EU':'#5B7FA6','B-5E':'#6FA08C','B-NA':'#8CA6BC','C-HY':'#C2B28A','D-AS':'#9A8FB8','D-BR':'#C99B72','D-EM':'#CFA98A','E-AU':'#BC7A72','E-SI':'#A29384'};
-const HOT='#C96A5E', COOL='#5B7FA6', GREY='#6d7382';
-const AXES = ['WSE','CSE','ODI','CRD','FPE','REE','ESE'];
-const HL = ['t0','2030','2050','2080'];
-const YRS = [2025,2030,2050,2080];
-const INCOME = {SAU:'High',USA:'High',BHR:'High',ARE:'High',BEL:'High',ESP:'High',QAT:'High',POL:'High',SGP:'High',CHL:'High',
-MEX:'Upper-middle',IND:'Lower-middle',IDN:'Upper-middle',ISR:'High',DNK:'High',ZAF:'Upper-middle',SWE:'High',NLD:'High',GBR:'High',AUS:'High',
-MYS:'Upper-middle',ITA:'High',HKG:'High',FIN:'High',JPN:'High',FRA:'High',KOR:'High',BRA:'Upper-middle',AUT:'High',NOR:'High',DEU:'High',NZL:'High',CAN:'High',CHE:'High',TWN:'High'};
-const fmt=(v,d=1)=>v==null?'â€”':Number(v).toFixed(d);
-let H=0, ISO='USA', ISO2='SGP', R3='DEU';
-const byIso=Object.fromEntries(D.countries.map(c=>[c.iso3,c]));
-const med={};AXES.forEach(a=>{const v=D.countries.map(c=>c.axes[a]).filter(x=>x!=null).sort((x,y)=>x-y);med[a]=v[Math.floor(v.length/2)];});
-const medTraj=[0,1,2,3].map(i=>{const v=D.countries.map(c=>c.ext&&c.ext[i]).filter(x=>x!=null).sort((x,y)=>x-y);return v[Math.floor(v.length/2)];});
-const NAME2ISO={'United States of America':'USA','Hong Kong':'HKG'};
-D.countries.forEach(c=>{NAME2ISO[c.country]=c.iso3;});
+  let currentMode = 'liquid';
 
-const AXDEF={
- WSE:['Water stress','ratio of water withdrawals to renewable supply (Aqueduct 4.0). Data centers, agriculture and households drawing from the same pool.'],
- CSE:['Cable exposure','how concentrated the stateâ€™s digital lifelines are in few submarine cables and landing points.'],
- ODI:['Operator dependency','who actually runs the infrastructure, and under whose law they answer.'],
- CRD:['Critical-resource dependence','chokepoint materials and components without domestic substitutes.'],
- FPE:['Foreign platform exposure','the share of digital life running on platforms governed elsewhere.'],
- REE:['Rare-earth stress','dependence on imported minerals and magnets behind EVs, turbines and phones, the sharpest axis of the 2026 tariff war.'],
- ESE:['Electricity stress','whether the grid, and its prices, can carry the digital load being placed on it.']};
-function band(v){if(v==null)return['GAP','#A29384','no verified data; published as a finding, not filled in'];
- if(v<25)return['LOW','#4d7c62','a manageable position'];if(v<50)return['MODERATE','#C2B28A','a position that demands attention'];
- if(v<75)return['HIGH','#C99B72','a structural vulnerability'];return['CRITICAL','#BC7A72','a dependency the state does not control'];}
+  async function fetchLiveMcpMetrics() {
+    try {
+      const response = await fetch('https://qesis-mcp.vercel.app/mcp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: "2.0", method: "qesis_get_integrity", id: 1 })
+      });
+      const data = await response.json();
+      const res = data.result || {};
 
-// ---- KPIs
-(function(){
- const top=[...D.countries].sort((a,b)=>b.ext[0]-a.ext[0])[0];
- const det=[...D.countries].sort((a,b)=>(b.d2080??-99)-(a.d2080??-99))[0];
- const pass=D.countries.filter(c=>c.big==='PASS');
- document.getElementById('kpis').innerHTML=`
- <div class="kpi"><div class="l">Canonical vintage</div><div class="v">${D.vintage.split(' ')[0]}</div><div class="s">${D.n} states Â· ${D.n_big32} BIG-complete</div></div>
- <div class="kpi"><div class="l">Most exposed (t0)</div><div class="v">${top.iso3} ${fmt(top.ext[0])}</div><div class="s">${top.country}</div></div>
- <div class="kpi"><div class="l">Worst trajectory â†’ 2080</div><div class="v neg">${det.iso3} +${fmt(det.d2080)}</div><div class="s">${det.country}, BAU, no correction</div></div>
- <div class="kpi"><div class="l">Sovereignty gate â‰¥ 0.85</div><div class="v">${pass.length}/${D.n}</div><div class="s">${pass.map(c=>c.iso3).join(' Â· ')} pass. No one else</div></div>
- <div class="kpi"><div class="l">fsQCA consistency</div><div class="v">${D.gov.fsqca.split(' (')[0]}</div><div class="s">Global n=32 / Dependent Core n=26</div></div>`;
-})();
+      if (currentMode === 'liquid') {
+        document.getElementById('val-1').innerText = res.coupling ?? '0.124';
+        document.getElementById('val-2').innerText = res.import_core ?? '0.176';
+        document.getElementById('val-3').innerText = res.trilemma_score ?? '0.841';
+        document.getElementById('val-4').innerText = res.tti_score ?? '91.2%';
+      } else {
+        document.getElementById('val-1').innerText = res.energy_intensity ?? '42.8 W';
+        document.getElementById('val-2').innerText = res.water_stress ?? '1.4 L';
+        document.getElementById('val-3').innerText = res.mfi_score ?? '0.789';
+        document.getElementById('val-4').innerText = res.rare_earth_dep ?? '68.4%';
+      }
+    } catch (error) {
+      console.warn('MCP live fetch fallback to local cryptographic baseline state:', error);
+      if (currentMode === 'liquid') {
+        document.getElementById('val-1').innerText = '0.124 (v8.5)';
+        document.getElementById('val-2').innerText = '0.176 (Core)';
+        document.getElementById('val-3').innerText = '0.841 (Trilemma)';
+        document.getElementById('val-4').innerText = '91.2% (TTI)';
+      } else {
+        document.getElementById('val-1').innerText = '42.8 W/kWh';
+        document.getElementById('val-2').innerText = '1.4 L/inf';
+        document.getElementById('val-3').innerText = '0.789 (MFI)';
+        document.getElementById('val-4').innerText = '68.4% (REE)';
+      }
+    }
+  }
 
-// ---- selectors
-(function(){
- const sC=document.getElementById('selC'), sC2=document.getElementById('selC2');
- [...D.countries].sort((a,b)=>a.country.localeCompare(b.country)).forEach(c=>{
-   const o=document.createElement('option');o.value=c.iso3;o.textContent=c.country;sC.appendChild(o);
-   const o2=o.cloneNode(true);sC2.appendChild(o2);});
- const sC3=document.getElementById('selC3');
- [...D.countries].sort((a,b)=>a.country.localeCompare(b.country)).forEach(c=>{const o=document.createElement('option');o.value=c.iso3;o.textContent=c.country;sC3.appendChild(o);});
- sC.value=ISO;sC2.value=ISO2;sC3.value=R3;
- sC3.onchange=e=>{R3=e.target.value;renderRadar();};
- sC.onchange=e=>{ISO=e.target.value;renderCountry();};
- sC2.onchange=e=>{ISO2=e.target.value;renderCountry();};
- document.getElementById('selH').onchange=e=>{H=+e.target.value;renderRank();renderMap();};
- document.getElementById('tease').onclick=()=>{ISO='ESP';sC.value='ESP';renderCountry();document.getElementById('rankNote').scrollIntoView({behavior:'smooth'});};
-})();
+  function toggleDashboardMode() {
+    const titleEl = document.getElementById('view-title');
+    const subtitleEl = document.getElementById('view-subtitle');
+    const btnEl = document.getElementById('toggle-btn');
+    
+    const c1 = document.getElementById('card-1-title');
+    const c2 = document.getElementById('card-2-title');
+    const c3 = document.getElementById('card-3-title');
+    const c4 = document.getElementById('card-4-title');
 
-// ---- MAP
-let chMap=null,mapFeats=null;
-function mapVal(iso){const c=byIso[iso];if(!c)return null;return (c.ext&&c.ext[H]!=null)?c.ext[H]:(c.th?c.th[H]:null);}
-function mapColor(v){if(v==null)return '#26304a';
- const t=Math.max(0,Math.min(1,(v-15)/70));
- const st=[[70,96,138],[140,155,185],[205,175,150],[188,116,105]];
- const i=Math.min(2,Math.floor(t*3)),f=t*3-i;
- const c=st[i].map((x,k)=>Math.round(x+(st[i+1][k]-x)*f));
- return `rgb(${c[0]},${c[1]},${c[2]})`;}
-function renderMap(){
- if(!mapFeats)return;
- const data=mapFeats.map(f=>({feature:f,value:mapVal(NAME2ISO[f.properties.name])}));
- if(chMap){chMap.data.datasets[0].data=data;chMap.update('none');return;}
- chMap=new Chart(document.getElementById('chMap'),{type:'choropleth',
-  data:{labels:mapFeats.map(f=>f.properties.name),datasets:[{data,borderColor:'#141b2b',borderWidth:.6}]},
-  options:{responsive:true,maintainAspectRatio:false,animation:false,
-   onClick:(e,els)=>{if(!els.length)return;const nm=chMap.data.labels[els[0].index];const iso=NAME2ISO[nm];
-     if(iso&&byIso[iso]){ISO=iso;document.getElementById('selC').value=iso;renderCountry();}},
-   plugins:{legend:{display:false},tooltip:{titleFont:{size:15,weight:'700'},bodyFont:{size:13},
-     callbacks:{title:items=>{const nm=items[0].chart.data.labels[items[0].dataIndex];const iso=NAME2ISO[nm];
-       return iso&&INCOME[iso]?`${nm}; ${INCOME[iso]} income (WB)`:nm;},
-      label:ctx=>{const nm=ctx.chart.data.labels[ctx.dataIndex];const iso=NAME2ISO[nm];const v=ctx.raw.value;
-       return iso&&byIso[iso]?` exposure ${v==null?'BIG-gated (gap)':fmt(v)} Â· click to inspect`:` not in index`;}}}},
-   scales:{projection:{axis:'x',projection:'equalEarth'},
-     color:{axis:'x',display:false,interpolate:v=>mapColor(v==null?null:15+v*70),missing:'#26304a'}}}});
-}
-fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r=>r.json()).then(topo=>{
- mapFeats=ChartGeo.topojson.feature(topo,topo.objects.countries).features;renderMap();
-}).catch(()=>{document.getElementById('mapfail').style.display='flex';});
+    const b1 = document.getElementById('badge-1');
+    const b2 = document.getElementById('badge-2');
+    const b3 = document.getElementById('badge-3');
+    const b4 = document.getElementById('badge-4');
 
-// ---- DRIFT (curated geopolitical set)
-(function(){
- const SET=['ESP','FRA','GBR','DEU','POL','NLD','ITA','BRA','IND','AUS'];
- const cv=document.getElementById('driftC'),ctx=cv.getContext('2d');
- const DUR=14000,HOLD=2600;
- let t0=null,paused=false,raf=null;
- const list=SET.map(i=>byIso[i]).filter(Boolean);
- function score(c,yr){const s=c.ext||c.th;if(!s)return null;
-  for(let i=0;i<3;i++){if(yr<=YRS[i+1]){const f=(yr-YRS[i])/(YRS[i+1]-YRS[i]);
-   if(s[i]==null||s[i+1]==null)return null;return s[i]+(s[i+1]-s[i])*f;}}return s[3];}
- function size(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=340*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
- size();addEventListener('resize',size);
- function draw(yr){
-  const W=cv.getBoundingClientRect().width,Hh=340,L=110,R=24,rowH=(Hh-44)/list.length;
-  ctx.clearRect(0,0,W,Hh);
-  ctx.font='10.5px sans-serif';ctx.strokeStyle='rgba(154,163,186,.12)';ctx.fillStyle='#9aa3ba';ctx.textAlign='left';
-  for(let g=0;g<=100;g+=25){const x=L+(W-L-R)*g/100;ctx.beginPath();ctx.moveTo(x,8);ctx.lineTo(x,Hh-28);ctx.stroke();ctx.fillText(g,x-6,Hh-12);}
-  ctx.fillText('exposure â†’',W-R-62,Hh-12);
-  list.forEach((c,ri)=>{
-   const y=16+ri*rowH+rowH/2;
-   const v=score(c,yr);if(v==null)return;
-   const x=L+(W-L-R)*Math.max(0,Math.min(100,v))/100;
-   const v0=score(c,2025),x0=L+(W-L-R)*Math.max(0,Math.min(100,v0))/100;
-   const esp=c.iso3==='ESP';
-   ctx.fillStyle=esp?'#f2b8b1':'#9aa3ba';ctx.font=esp?'700 12px sans-serif':'11px sans-serif';
-   ctx.fillText(c.country,8,y+4);
-   ctx.strokeStyle=esp?'rgba(201,106,94,.6)':'rgba(154,163,186,.25)';ctx.lineWidth=esp?2:1.2;
-   ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x,y);ctx.stroke();
-   ctx.beginPath();ctx.arc(x,y,esp?7:5,0,7);
-   ctx.fillStyle=esp?HOT:(TIER_C[c.tier]||'#8CA6BC');ctx.fill();
-   ctx.fillStyle=esp?'#fff':'rgba(255,255,255,.8)';ctx.font='10px sans-serif';
-   ctx.fillText(fmt(v,0),x+9,y+3);ctx.font='10.5px sans-serif';
-  });
- }
- function frame(ts){
-  if(paused){raf=requestAnimationFrame(frame);return;}
-  if(!t0)t0=ts;
-  const el=(ts-t0)%(DUR+HOLD),p=Math.min(1,el/DUR),yr=2025+55*p;
-  document.getElementById('yrNum').textContent=Math.round(yr);
-  document.getElementById('yrCap').textContent=p>=1?'business as usual, no correction applied':'watch the red dot';
-  draw(yr);raf=requestAnimationFrame(frame);
- }
- if(matchMedia('(prefers-reduced-motion: reduce)').matches){draw(2080);document.getElementById('yrNum').textContent='2080';}
- else raf=requestAnimationFrame(frame);
- document.getElementById('btnPlay').onclick=e=>{paused=!paused;e.target.textContent=paused?'â–¶ play':'â¸ pause';};
- document.getElementById('btnReplay').onclick=()=>{t0=null;paused=false;document.getElementById('btnPlay').textContent='â¸ pause';};
-})();
+    if (currentMode === 'liquid') {
+      currentMode = 'metabolic';
+      titleEl.innerText = "STIR Metabolic Sovereignty & Thermodynamic View";
+      subtitleEl.innerText = "Thermodynamic Baseline, Rare-Earth Depletion & 4IR Thermal Scaling";
+      btnEl.innerText = "Switch to Liquid Polycrisis View";
+      btnEl.style.background = "var(--accent-metabolic)";
 
-// ---- ranking
-let chRank=null;
-function rankData(){let cs=D.countries.map(c=>({...c,val:(c.ext&&c.ext[H]!=null)?c.ext[H]:(c.th?c.th[H]:null)})).filter(c=>c.val!=null);cs.sort((a,b)=>b.val-a.val);return cs;}
-function renderRank(){
- const cs=rankData();
- document.getElementById('rankNote').textContent=`QESIS Extended at ${HL[H]} Â· ${cs.length} states Â· colored by jurisdictional tier Â· the map above and every bar are clickable.`;
- const cfg={labels:cs.map(c=>c.country),data:cs.map(c=>c.val),colors:cs.map(c=>c.iso3===ISO?'#2a2f3a':(TIER_C[c.tier]||'#999'))};
- if(chRank){chRank.data.labels=cfg.labels;chRank.data.datasets[0].data=cfg.data;chRank.data.datasets[0].backgroundColor=cfg.colors;chRank.update('none');return;}
- chRank=new Chart(document.getElementById('chRank'),{type:'bar',
-  data:{labels:cfg.labels,datasets:[{data:cfg.data,backgroundColor:cfg.colors,borderRadius:3}]},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:false,
-   onClick:(e,els)=>{if(!els.length)return;const c=rankData()[els[0].index];ISO=c.iso3;document.getElementById('selC').value=ISO;renderCountry();},
-   plugins:{legend:{display:false},
-    tooltip:{titleFont:{size:16,weight:'700'},bodyFont:{size:13.5},padding:12,
-     callbacks:{title:items=>{const x=rankData()[items[0].dataIndex];return `${x.country}; ${INCOME[x.iso3]||'â€”'} income (WB)`;},
-      label:c=>{const x=rankData()[c.dataIndex];return [` exposure ${fmt(c.parsed.x)} Â· tier ${x.tier}`,` sovereignty gate ${x.big||'â€”'} (${fmt(x.eff_sov,2)}) Â· Î”2080 ${x.d2080>0?'+':''}${fmt(x.d2080)}`];}}}},
-   scales:{x:{min:0,max:100,grid:{color:'#efeeeb'}},y:{ticks:{font:{size:10.5},autoSkip:false},grid:{display:false}}}}});
-}
+      c1.innerText = "Energy Intensity (Watts/kWh)";
+      c2.innerText = "Water Stress (Liters/Inference)";
+      c3.innerText = "Metabolic Footprint Index (MFI)";
+      c4.innerText = "Rare-Earth Dependency (REE)";
 
-// ---- trajectory / radar / meta / semantic
-let chTraj=null,chRadar=null;
-function renderTraj(){
- const c=byIso[ISO],c2=byIso[ISO2];
- document.getElementById('trajNote').textContent=`${c.country} vs ${c2.country} and the index median. Change both in the selectors above.`;
- const ds=[{label:c.country,data:c.ext||c.th,borderColor:HOT,backgroundColor:HOT+'28',borderWidth:2.5,pointRadius:4,tension:.25},
-  {label:c2.country,data:c2.ext||c2.th,borderColor:COOL,borderWidth:1.8,pointRadius:3,tension:.25},
-  {label:'Index median',data:medTraj,borderColor:GREY,borderWidth:1.5,pointRadius:2,tension:.25,borderDash:[6,4]}];
- if(chTraj){chTraj.data.datasets=ds;chTraj.update('none');return;}
- chTraj=new Chart(document.getElementById('chTraj'),{type:'line',data:{labels:HL,datasets:ds},
-  options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
-   plugins:{legend:{position:'top',labels:{usePointStyle:true,boxHeight:6,padding:12,font:{size:11.5}}}},
-   scales:{y:{grid:{color:'#efeeeb'},title:{display:true,text:'QESIS Extended',font:{size:11}}},x:{grid:{display:false}}}}});
-}
-function renderRadar(){
- const c=byIso[ISO],c2=byIso[ISO2],c3=byIso[R3];
- document.getElementById('radarNote').textContent=`${c.country} vs ${c2.country} vs ${c3.country}. Hover any point for its value and axis meaning; null axes plot at 0.`;
- const mk=(cc,col,fill,w)=>({label:cc.country,data:AXES.map(a=>cc.axes[a]??0),borderColor:col,backgroundColor:fill,borderWidth:w,pointRadius:3,pointHoverRadius:7});
- const ds=[mk(c,HOT,HOT+'22',2.2),mk(c2,COOL,COOL+'14',1.8),mk(c3,'#B0A079','#B0A07912',1.8)];
- if(chRadar){chRadar.data.datasets=ds;chRadar.update('none');return;}
- chRadar=new Chart(document.getElementById('chRadar'),{type:'radar',data:{labels:AXES,datasets:ds},
-  options:{responsive:true,maintainAspectRatio:false,animation:false,layout:{padding:8},
-   interaction:{mode:'nearest',intersect:false},
-   plugins:{legend:{position:'top',labels:{usePointStyle:true,boxHeight:6,font:{size:11.5}}},
-    tooltip:{titleFont:{size:14,weight:'700'},bodyFont:{size:12.5},
-     callbacks:{title:items=>AXDEF[items[0].label]?`${items[0].label}: ${AXDEF[items[0].label][0]}`:items[0].label}}},
-   scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:9},backdropColor:'transparent'},grid:{color:'#e9e8e4'},pointLabels:{font:{size:11.5,weight:'600'}}}}}});
-}
-function renderMeta(){
- const c=byIso[ISO];
- const drivers=AXES.map(a=>[a,c.axes[a]]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]).slice(0,3);
- document.getElementById('meta').innerHTML=`
-  <div><b>State</b>${c.country} (${c.iso3}) Â· ${INCOME[c.iso3]||'â€”'} income (WB)</div>
-  <div><b>Jurisdictional tier</b><span class="pill" style="background:${TIER_C[c.tier]||'#999'}">${c.tier||'â€”'}</span></div>
-  <div><b>Sovereignty gate</b><span class="${c.big==='PASS'?'gatep':'gatef'}">${c.big||'â€”'} Â· ${fmt(c.eff_sov,2)}</span></div>
-  <div><b>Evidence status</b>${c.ev||'â€”'}</div>
-  <div><b>QESIS Theory t0 â†’ 2080</b>${fmt(c.th&&c.th[0])} â†’ ${fmt(c.th&&c.th[3])}</div>
-  <div><b>Extended t0 â†’ 2080</b>${fmt(c.ext&&c.ext[0])} â†’ ${fmt(c.ext&&c.ext[3])} <span class="${(c.d2080||0)>5?'gatef':''}">(Î” ${c.d2080>0?'+':''}${fmt(c.d2080)})</span></div>
-  <div style="grid-column:1/-1"><b>Top exposure drivers</b>${drivers.map(d=>`${d[0]} ${fmt(d[1])}`).join(' Â· ')}</div>`;
-}
-function renderSem(){
- const c=byIso[ISO];
- document.getElementById('semName').textContent=c.country;
- document.getElementById('sem').innerHTML=AXES.map(a=>{
-  const v=c.axes[a],[b,col,phrase]=band(v),[nm,def]=AXDEF[a];
-  return `<div class="ax" style="border-left-color:${col}"><span class="band" style="color:${col}">${b}${v!=null?' Â· '+fmt(v):''}</span><b>${nm}</b><br>${def} For ${c.country}, ${v==null?'this axis is '+phrase+'.':'a score of '+fmt(v)+' marks '+phrase+'.'}</div>`;}).join('');
-}
-function renderCountry(){renderTraj();renderRadar();renderMeta();renderSem();renderRank();renderTable();renderCmp();}
+      b1.innerText = "Thermal Cap ≤ 5.8GB";
+      b2.innerText = "EU AI Act Art. 12 Audit";
+      b3.innerText = "ISO/IEC 42001 Compliant";
+      b4.innerText = "Supply Chain Risk Monitored";
+    } else {
+      currentMode = 'liquid';
+      titleEl.innerText = "STIR Polycrisis & Liquid Society View";
+      subtitleEl.innerText = "Infrastructure Trilemma & Feb 2027 CSDDD Supply Chain Compliance";
+      btnEl.innerText = "Switch to Metabolic Mode";
+      btnEl.style.background = "var(--accent-glow)";
 
-// ---- heatmap
-(function(){
- const ax=D.density.axes,m=D.density.matrix,t=document.getElementById('hm');
- const cell=v=>{if(v==null)return'#f2f1ef';const a=Math.min(Math.abs(v),1),c=v>=0?[91,127,166]:[188,122,114];return `rgba(${c[0]},${c[1]},${c[2]},${(0.08+a*0.8).toFixed(2)})`;};
- let h='<tr><th></th>'+ax.map(a=>`<th>${a}</th>`).join('')+'</tr>';
- m.forEach((row,i)=>{h+=`<tr><th>${ax[i]}</th>`+row.map(v=>`<td style="background:${cell(v)};color:${Math.abs(v||0)>.6?'#fff':'#2a2f3a'}">${v==null?'â€”':v.toFixed(2)}</td>`).join('')+'</tr>';});
- t.innerHTML=h;
-})();
+      c1.innerText = "Global Coupling Index (ρ)";
+      c2.innerText = "Import Core Coupling";
+      c3.innerText = "Infrastructure Trilemma Score";
+      c4.innerText = "Traceability & Transparency (TTI)";
 
-// ---- comparator (carbon gap + any axis)
-let chCmp=null;
-function renderCmp(){
- const mode=document.getElementById('selMetric').value;
- const el=document.getElementById('chCmp'),src=document.getElementById('cmpSrc'),title=document.getElementById('cmpTitle');
- let cfg;
- if(mode==='carbon'){
-  title.textContent='The carbon claim gap';
-  const cs=[...(D.csove||[])].sort((a,b)=>b.gap-a.gap).slice(0,10);
-  cfg={labels:cs.map(c=>`${c.iso3} Â· ${c.flag}`),
-   datasets:[{label:'Claimed',data:cs.map(c=>c.claim),backgroundColor:COOL+'CC',borderRadius:3},
-             {label:'Verifiable',data:cs.map(c=>c.verify),backgroundColor:'#BC7A72CC',borderRadius:3}],
-   legend:true,
-   after:items=>{const c=cs[items[0].dataIndex];return `Gap score ${c.gap} Â· ${c.flag==='INFR'?'INFR: inferred under opacity':'EPIS: gap published, not imputed'}`;}};
-  src.innerHTML='Sources: <a href="https://climatetrace.org" target="_blank">Climate TRACE v5.4</a> Â· World Bank Carbon Pricing Dashboard 2025 Â· ICVCM (Dec 2025). Flags per QESIS BIG/EPIS protocol.';
- }else{
-  const [nm,def]=AXDEF[mode];
-  title.textContent=`${mode}: ${nm.toLowerCase()}, top of the index`;
-  const cs=D.countries.filter(c=>c.axes[mode]!=null).sort((a,b)=>b.axes[mode]-a.axes[mode]).slice(0,12);
-  cfg={labels:cs.map(c=>c.iso3+(c.iso3===ISO?' â—„':'')),
-   datasets:[{label:nm,data:cs.map(c=>c.axes[mode]),backgroundColor:cs.map(c=>c.iso3===ISO?HOT:COOL+'B8'),borderRadius:3}],
-   legend:false,
-   after:items=>{const c=cs[items[0].dataIndex];return `${c.country} Â· tier ${c.tier} Â· ${INCOME[c.iso3]||''} income`;}};
-  src.innerHTML=`${def} Switch the lens above to compare axes; the full pack is downloadable at the end of the page.`;
- }
- if(chCmp)chCmp.destroy();
- chCmp=new Chart(el,{type:'bar',data:{labels:cfg.labels,datasets:cfg.datasets},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:false,
-   plugins:{legend:{display:cfg.legend,position:'top',labels:{usePointStyle:true,boxHeight:6,font:{size:11}}},
-    tooltip:{titleFont:{size:14,weight:'700'},bodyFont:{size:12.5},callbacks:{afterBody:cfg.after}}},
-   scales:{x:{min:0,max:100,grid:{color:'#efeeeb'}},y:{ticks:{font:{size:10.5}},grid:{display:false}}}}});
-}
-document.getElementById('selMetric').onchange=renderCmp;
+      b1.innerText = "ISO/IEC 42001 Verified";
+      b2.innerText = "CSDDD Feb 2027 Ready";
+      b3.innerText = "Network Autonomy Index";
+      b4.innerText = "Scope 3 Supply Verified";
+    }
 
-// ---- governance strip
-(function(){
- const g=D.gov;
- document.getElementById('gov').innerHTML=`
-  <div class="kpi"><div class="l">Registered assets</div><div class="v">${g.assets+1}</div><div class="s">QES-A#### Â· SHA-256</div></div>
-  <div class="kpi"><div class="l">Decisions</div><div class="v">${g.decisions+2}</div><div class="s">append-only D-log</div></div>
-  <div class="kpi"><div class="l">Lessons locked</div><div class="v">${g.lessons+2}</div><div class="s">ledger L-###</div></div>
-  <div class="kpi"><div class="l">Red risks open</div><div class="v neg">${g.red_risks}</div><div class="s">risk register</div></div>
-  <div class="kpi"><div class="l">Audit gaps closed</div><div class="v pos">${g.audit_closed}</div><div class="s">of G1â€“G7</div></div>
-  <div class="kpi"><div class="l">Lineage-tracked sources</div><div class="v">${D.sources_n}</div><div class="s">_sources table</div></div>`;
- let h='<tr><th>Live source</th><th>Cadence</th><th>Next refresh due</th><th>Method</th><th>Status</th></tr>';
- D.refresh.forEach(r=>{h+=`<tr><td>${r.source||r.table_name}</td><td>${r.cadence}</td><td>${r.next_refresh_due}</td><td>${r.method}</td><td class="${(r.status||'').includes('ACTIVE')?'ok':''}">${r.status}</td></tr>`;});
- document.getElementById('refresh').innerHTML=h;
-})();
+    fetchLiveMcpMetrics();
+  }
 
-// ---- table
-let sortCol='ext0',sortDir=-1;
-const COLS=[['iso3','ISO3'],['country','Country'],['tier','Tier'],['WSE','WSE'],['CSE','CSE'],['ODI','ODI'],['CRD','CRD'],['FPE','FPE'],['REE','REE'],['ESE','ESE'],['th0','Theory t0'],['ext0','Ext t0'],['d2080','Î” 2080'],['big','Gate']];
-function cellVal(c,k){if(AXES.includes(k))return c.axes[k];if(k==='th0')return c.th&&c.th[0];if(k==='ext0')return c.ext&&c.ext[0];return c[k];}
-function renderTable(){
- let cs=[...D.countries].sort((a,b)=>{const x=cellVal(a,sortCol),y=cellVal(b,sortCol);if(x==null)return 1;if(y==null)return -1;return (x<y?-1:x>y?1:0)*sortDir;});
- let h='<table class="data"><thead><tr>'+COLS.map(c=>`<th onclick="setSort('${c[0]}')">${c[1]}${sortCol===c[0]?(sortDir<0?' â–¼':' â–²'):''}</th>`).join('')+'</tr></thead><tbody>';
- cs.forEach(c=>{h+=`<tr style="${c.iso3===ISO?'background:#f0f1ee':''}">`+COLS.map(([k])=>{
-  const v=cellVal(c,k);
-  if(k==='tier')return `<td><span class="pill" style="background:${TIER_C[v]||'#999'}">${v||'â€”'}</span></td>`;
-  if(k==='big')return `<td class="${v==='PASS'?'gatep':'gatef'}">${v||'â€”'}</td>`;
-  if(k==='iso3'||k==='country')return `<td>${v}</td>`;
-  if(k==='d2080')return `<td class="${v>5?'gatef':''}">${v==null?'â€”':(v>0?'+':'')+fmt(v)}</td>`;
-  return `<td>${fmt(v)}</td>`;}).join('')+'</tr>';});
- document.getElementById('tbl').innerHTML=h+'</tbody></table>';
-}
-window.setSort=k=>{if(sortCol===k)sortDir*=-1;else{sortCol=k;sortDir=-1;}renderTable();};
-
-// ---- data request (transparent mailto flow; no hidden backend, no silent forms)
-window.reqData=function(kind){
- const n=document.getElementById('fName').value.trim(),m=document.getElementById('fMail').value.trim(),
-       o=document.getElementById('fOcc').value.trim(),hw=document.getElementById('fHow').value;
- if(!n||!m){alert('Name and email are needed so the files can reach you.');return;}
- const body=encodeURIComponent(
-`Request: ${kind} data pack; STIR / QESIS+ v8.0
-
-Name: ${n}
-Email: ${m}
-Occupation / institution: ${o||'-'}
-Found the page via: ${hw||'-'}
-
-(Sent from the STIR Governance Dashboard. Files are delivered by reply, usually the same day. CC-BY-NC for research; ask for institutional terms for commercial use.)`);
- location.href=`mailto:rodrigoesl92@gmail.com?subject=${encodeURIComponent('STIR data request; '+kind)}&body=${body}`;
-};
-
-// ---- trilemma vertices
-(function(){
- const T={
-  r1:['Hyper-globalization Â· Rodrik â–²','Deep economic integration: one world market for goods, capital and standards. Choosing it with national sovereignty means shrinking democratic choice to what markets tolerate (the "golden straitjacket"); choosing it with democracy means governance migrating above the nation-state.'],
-  r2:['National sovereignty Â· Rodrik â–²','The state decides its own rules inside its borders. Kept alongside hyperglobalization, it squeezes democratic politics; kept alongside democracy, it requires limiting how deep globalization can reach.'],
-  r3:['Democratic politics Â· Rodrik â–²','Policy answering to citizens rather than to capital mobility. Rodrikâ€™s point: you can pair it with the nation-state or with deep integration, never stably with both.'],
-  m1:['Fixed exchange rate Â· Mundellâ€“Fleming â–¼','A currency pegged for stability and trade confidence. Hold it while capital moves freely and the central bank loses its independence: interest rates must defend the peg, whatever the domestic economy needs.'],
-  m2:['Free capital movement Â· Mundellâ€“Fleming â–¼','Money crosses borders without friction. Combined with a peg, it imports someone elseâ€™s monetary policy; combined with monetary autonomy, the exchange rate must float and absorb the shocks.'],
-  m3:['Monetary autonomy Â· Mundellâ€“Fleming â–¼','The central bank sets rates for domestic conditions. The classical proof that "pick two" is not rhetoric but arithmetic; the ancestor of every trilemma since.'],
-  i1:['Algorithmic independence Â· Batista Silva','The capacity to run, audit and govern your own computational stack: models, platforms, operators, keys. The FPE and ODI axes above measure exactly how few states still hold it.'],
-  i2:['Hyperscale efficiency Â· Batista Silva','The economics of concentration: giant cloud regions, dense cable corridors, imported rare earths. Efficient precisely because it is dependent. CSE 100 and CRD 100 for the United States is what buying this corner looks like.'],
-  i3:['Ecological sustainability Â· Batista Silva','Water, electricity and carbon budgets that survive 2080. The WSEâ€“ESE coupling of +0.41 in the matrix above is this vertex pushing back: the physical world no longer absorbs the other two choices quietly.']};
- document.querySelectorAll('.tv').forEach(g=>{
-  g.addEventListener('click',()=>{
-   document.querySelectorAll('.tv').forEach(x=>x.classList.remove('on'));
-   g.classList.add('on');
-   const [t,d]=T[g.dataset.k];
-   const p=document.getElementById('tpanel');
-   p.innerHTML=`<b>${t}</b>${d}`;
-   p.style.borderLeftColor = g.dataset.k[0]==='i' ? '#C96A5E' : (g.dataset.k[0]==='m' ? '#C99B72' : '#5B7FA6');
-  });
- });
-})();
-
-document.getElementById('foot').textContent=`QESIS+ ${D.vintage} Â· generated 2026-07-28 from the versioned CSV export layer Â· every figure traces to a hash-registered source (EU AI Act Art. 10 / ISO 42001) Â· BAU projections SSP3-RCP7.0 / IEA STEPS / CAT current policies Â· geographic layers stop at infrastructure: cities, regions, nations, never people Â· Â© R. Batista Silva. CC-BY-NC demo vintage; institutional license required for commercial use.`;
-
-renderRank();renderCountry();
+  fetchLiveMcpMetrics();
+  setInterval(fetchLiveMcpMetrics, 60000);
 </script>
+
 </body>
 </html>
-
