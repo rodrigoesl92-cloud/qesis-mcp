@@ -38,6 +38,7 @@ venv/
 Thumbs.db
 *.sqlite
 *.sqlite3
+node_modules/
 
 # Large binaries do not belong in a product repo
 *.pdf
