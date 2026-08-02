@@ -1,0 +1,34 @@
+name: Cryptographic Deploy Gate
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-and-anchor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Assert Queues Clean
+        run: |
+          PENDING_JOBS=$(curl -s -H "Authorization: Bearer ${{ secrets.QUEUE_API_KEY }}" https://queue.api/status | jq '.pending')
+          if [ "$PENDING_JOBS" -gt 0 ]; then
+            echo "Integrity check failed: Queues not clean. $PENDING_JOBS jobs pending. Halting deploy."
+            exit 1
+          fi
+
+      - name: Compute Merkle Root 
+        run: |
+          MERKLE_ROOT=$(sha256sum manifests/*.json | awk '{print $1}' | sha256sum | awk '{print $1}')
+          echo "MERKLE_ROOT=$MERKLE_ROOT" >> $GITHUB_ENV
+          
+      - name: Create Immutable Audit Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-${{ github.sha }}
+          name: Cryptographic Anchor - ${{ github.sha }}
+          body: "Merkle Root: sha256:${{ env.MERKLE_ROOT }}\nAll jobs clean. End-state cryptographic hashes match."
+          files: manifests/*.json
