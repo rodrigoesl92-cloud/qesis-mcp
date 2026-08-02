@@ -1,0 +1,26 @@
+﻿{
+  "vintage": "v8.5",
+  "timestamp": "2026-08-02T13:46:12.773912",
+  "steps": [
+    {
+      "node": "ingest_un_oecd",
+      "status": "SUCCESS",
+      "hash": "f3e8bd5a298a"
+    },
+    {
+      "node": "normalize_axes",
+      "status": "SUCCESS",
+      "hash": "a3b2c9ce67a5"
+    },
+    {
+      "node": "fsqca_calibrate",
+      "status": "SUCCESS",
+      "hash": "ac565310b3af"
+    },
+    {
+      "node": "verify_cryptographic_chain",
+      "status": "SUCCESS",
+      "hash": "a2bf7ced8e3f"
+    }
+  ]
+}
