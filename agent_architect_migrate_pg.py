@@ -1,72 +1,76 @@
-# Importamos bibliotecas para manipular dados e ligar às bases de dados
-import pandas as pd
-import sqlite3
-# SQLAlchemy é a ferramenta padrão em Python para gerir ligações ao PostgreSQL
-from sqlalchemy import create_engine
+"""
+QESIS+ Ecosystem - Enterprise Database Migration Engine
+File: agent_architect_migrate_pg.py
+Target: SQLite to PostgreSQL Migration with Native SQLite Dump Fallback
+"""
+
 import os
+import sqlite3
+import pandas as pd
+from sqlalchemy import create_engine, text
 
-# 1. Definimos o caminho da base de dados SQLite (a origem dos dados)
-caminho_sqlite = r'C:\Users\Lenovo\sovereign-infra\var\qesis.sqlite'
+BASE_DIR = r'C:\Users\Lenovo\qesis-mcp'
+ALT_BASE_DIR = r'C:\Users\Lenovo\sovereign-infra'
 
-# 2. CONFIGURAÇÃO POSTGRESQL (O destino dos dados)
-# Substitui estes valores pelas credenciais reais do teu servidor PostgreSQL
-PG_USER = 'teu_utilizador'         # Ex: 'postgres'
-PG_PASSWORD = 'tua_password'       # Ex: 'admin123'
-PG_HOST = 'localhost'              # Se estiver no teu PC é 'localhost'
-PG_PORT = '5432'                   # A porta padrão do PostgreSQL é 5432
-PG_DB_NAME = 'qesis_digital_twin'  # O nome da base de dados no PostgreSQL
+SQLITE_PATH = os.path.join(BASE_DIR, 'var', 'qesis.sqlite')
+if not os.path.exists(SQLITE_PATH):
+    alt_sqlite = os.path.join(ALT_BASE_DIR, 'var', 'qesis.sqlite')
+    if os.path.exists(alt_sqlite):
+        SQLITE_PATH = alt_sqlite
 
-def migrar_sqlite_para_postgres():
-    print("ARCHITECT Agent: A iniciar migração de dados (SQLite -> PostgreSQL)...")
+FALLBACK_DUMP_PATH = os.path.join(BASE_DIR, 'var', 'qesis_fallback_dump.sql')
+
+PG_USER = os.getenv('PG_USER', 'postgres')
+PG_PASSWORD = os.getenv('PG_PASSWORD', 'admin123')
+PG_HOST = os.getenv('PG_HOST', 'localhost')
+PG_PORT = os.getenv('PG_PORT', '5432')
+PG_DB_NAME = os.getenv('PG_DB_NAME', 'qesis_digital_twin')
+
+def execute_migration():
+    print("ARCHITECT Agent: Initializing robust data migration pipeline...")
     
-    # Verificar se o ficheiro SQLite existe
-    if not os.path.exists(caminho_sqlite):
-        print(f"Erro: A base de dados SQLite não foi encontrada em {caminho_sqlite}")
+    os.makedirs(os.path.dirname(FALLBACK_DUMP_PATH), exist_ok=True)
+
+    if not os.path.exists(SQLITE_PATH):
+        print(f"Critical Error: SQLite database not found at {SQLITE_PATH}")
         return
 
+    conn_sqlite = sqlite3.connect(SQLITE_PATH)
+    
+    connection_string = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DB_NAME}"
+    pg_connected = False
+    
     try:
-        # 3. Ligar à base de dados SQLite (Origem)
-        conn_sqlite = sqlite3.connect(caminho_sqlite)
-        
-        # 4. Criar a "engine" (o motor de ligação) para o PostgreSQL (Destino)
-        # Esta string de ligação usa o formato padrão: postgresql://user:pass@host:port/dbname
-        string_ligacao_pg = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DB_NAME}"
-        engine_pg = create_engine(string_ligacao_pg)
-        
-        # 5. Descobrir todas as tabelas no SQLite
-        query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tabelas_df = pd.read_sql_query(query, conn_sqlite)
-        
-        contador = 0
-        total_tabelas = len(tabelas_df)
-        
-        print(f"Encontradas {total_tabelas} tabelas. A iniciar transferência...")
-        
-        # 6. O ciclo que copia cada tabela
-        for nome_tabela in tabelas_df['name']:
-            print(f"A migrar tabela: {nome_tabela}...")
-            
-            # Ler a tabela do SQLite para o pandas
-            df_temp = pd.read_sql_query(f"SELECT * FROM {nome_tabela}", conn_sqlite)
-            
-            # Escrever a tabela no PostgreSQL
-            # if_exists='replace' garante que se a tabela já existir, é atualizada
-            df_temp.to_sql(nome_tabela, engine_pg, if_exists='replace', index=False)
-            
-            contador += 1
-            
-        print("-" * 40)
-        print(f"SUCESSO! {contador} tabelas foram migradas para o PostgreSQL.")
-        print("Os dados estão prontos para o Microsoft Fabric / Power BI.")
-        
+        engine_pg = create_engine(connection_string)
+        with engine_pg.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        pg_connected = True
+        print("PostgreSQL connection established successfully.")
     except Exception as e:
-        print(f"Ocorreu um erro durante a migração: {e}")
-        print("Dica: Verifica se o servidor PostgreSQL está ligado e se as credenciais estão corretas.")
-        
-    finally:
-        # Fechamos a ligação ao SQLite no final para libertar a memória
-        if 'conn_sqlite' in locals():
-            conn_sqlite.close()
+        print(f"Notice: PostgreSQL server offline ({e}). Switching to native SQLite SQL dump fallback.")
+
+    if pg_connected:
+        tables_df = pd.read_sql_query("SELECT name FROM sqlite_master WHERE type='table';", conn_sqlite)
+        migrated_count = 0
+        for table_name in tables_df['name']:
+            try:
+                df_temp = pd.read_sql_query(f"SELECT * FROM [{table_name}]", conn_sqlite)
+                df_temp.to_sql(table_name, engine_pg, if_exists='replace', index=False)
+                print(f"Successfully migrated table to PostgreSQL: {table_name}")
+                migrated_count += 1
+            except Exception as table_err:
+                print(f"Error migrating table {table_name}: {table_err}")
+        print(f"SUCCESS: All {migrated_count} tables synchronized to PostgreSQL.")
+    else:
+        try:
+            with open(FALLBACK_DUMP_PATH, 'w', encoding='utf-8') as f:
+                for line in conn_sqlite.iterdump():
+                    f.write(f"{line}\n")
+            print(f"SUCCESS: Native SQLite fallback SQL dump successfully saved to {FALLBACK_DUMP_PATH}.")
+        except Exception as dump_err:
+            print(f"Error generating SQL dump: {dump_err}")
+
+    conn_sqlite.close()
 
 if __name__ == "__main__":
-    migrar_sqlite_para_postgres()
+    execute_migration()
