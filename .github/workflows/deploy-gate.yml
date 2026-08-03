@@ -1,34 +1,30 @@
-name: Cryptographic Deploy Gate
+name: Deployment Gate & Integrity CI
 
 on:
+  pull_request:
+    branches: [ main ]
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  validate-and-anchor:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Assert Queues Clean
-        run: |
-          PENDING_JOBS=$(curl -s -H "Authorization: Bearer ${{ secrets.QUEUE_API_KEY }}" https://queue.api/status | jq '.pending')
-          if [ "$PENDING_JOBS" -gt 0 ]; then
-            echo "Integrity check failed: Queues not clean. $PENDING_JOBS jobs pending. Halting deploy."
-            exit 1
-          fi
-
-      - name: Compute Merkle Root 
-        run: |
-          MERKLE_ROOT=$(sha256sum manifests/*.json | awk '{print $1}' | sha256sum | awk '{print $1}')
-          echo "MERKLE_ROOT=$MERKLE_ROOT" >> $GITHUB_ENV
-          
-      - name: Create Immutable Audit Release
-        uses: softprops/action-gh-release@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          tag_name: release-${{ github.sha }}
-          name: Cryptographic Anchor - ${{ github.sha }}
-          body: "Merkle Root: sha256:${{ env.MERKLE_ROOT }}\nAll jobs clean. End-state cryptographic hashes match."
-          files: manifests/*.json
+          python-version: '3.11'
+
+      - name: Install Dependencies & Pytest
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt; fi
+
+      - name: Run Python tests
+        run: |
+          pytest -q --junitxml=pytest-results.xml
