@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "rewrites": [
     { "source": "/mcp", "destination": "/api/index" },
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css|map|png|jpg|jpeg|svg|webp|woff2|woff|ttf))",
+      "source": "^/(.*\\.(js|css|map|png|jpg|jpeg|svg|webp|woff2|woff|ttf))$",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable, s-maxage=31536000" }
       ]
