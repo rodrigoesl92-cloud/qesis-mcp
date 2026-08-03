@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import logging
 
-# Instantiate FastAPI app
+# Instantiate app so serverless/ASGI picks it up
 app = FastAPI()
 logger = logging.getLogger("uvicorn.error")
 
@@ -18,7 +18,7 @@ class TelemetryPayload(BaseModel):
 @app.post("/api/telemetry")
 async def receive_telemetry(payload: TelemetryPayload):
     try:
-        # Structured logging for downstream ingestion
+        # Structured log; easy to parse by log aggregators
         logger.info(
             "[TELEMETRY_EVENT] event=%s localHash=%s data=%s ts=%s",
             payload.event,
@@ -26,6 +26,7 @@ async def receive_telemetry(payload: TelemetryPayload):
             payload.data,
             payload.ts,
         )
+        # TODO: enqueue/persist to analytics store (async) here
         return JSONResponse(content={"status": "logged", "received": True}, status_code=200)
     except Exception:
         logger.exception("Failed to process telemetry payload")
