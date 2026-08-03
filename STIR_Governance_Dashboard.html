@@ -152,93 +152,89 @@
 <script>
   let currentMode = 'liquid';
 
-  async function fetchLiveMcpMetrics() {
+  async function checkOnce() {
     try {
-      const response = await fetch('https://qesis-mcp.vercel.app/mcp', {
+      const resp = await fetch('/mcp', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type':'application/json' },
         body: JSON.stringify({ jsonrpc: "2.0", method: "qesis_get_integrity", id: 1 })
       });
-      const data = await response.json();
-      const res = data.result || {};
-
-      if (currentMode === 'liquid') {
-        document.getElementById('val-1').innerText = res.coupling ?? '0.124';
-        document.getElementById('val-2').innerText = res.import_core ?? '0.176';
-        document.getElementById('val-3').innerText = res.trilemma_score ?? '0.841';
-        document.getElementById('val-4').innerText = res.tti_score ?? '91.2%';
-      } else {
-        document.getElementById('val-1').innerText = res.energy_intensity ?? '42.8 W';
-        document.getElementById('val-2').innerText = res.water_stress ?? '1.4 L';
-        document.getElementById('val-3').innerText = res.mfi_score ?? '0.789';
-        document.getElementById('val-4').innerText = res.rare_earth_dep ?? '68.4%';
+      if (!resp.ok) {
+        pollMs = Math.min(pollMs * 1.2, SLOW_POLL_MS);
+        return;
       }
-    } catch (error) {
-      console.warn('MCP live fetch fallback to local cryptographic baseline state:', error);
-      if (currentMode === 'liquid') {
-        document.getElementById('val-1').innerText = '0.124 (v8.5)';
-        document.getElementById('val-2').innerText = '0.176 (Core)';
-        document.getElementById('val-3').innerText = '0.841 (Trilemma)';
-        document.getElementById('val-4').innerText = '91.2% (TTI)';
+      const json = await resp.json();
+      const remoteHash = json?.result?.hash || json?.result?.generation || '';
+      
+      if (remoteHash && remoteHash !== localHash) {
+        mismatchCount++;
+        sendTelemetry('stale_detected', { remoteHash, mismatchCount });
+        pollMs = FAST_POLL_MS;
+        if (mismatchCount >= 1) {
+          showBannerAndReload(remoteHash);
+        }
       } else {
-        document.getElementById('val-1').innerText = '42.8 W/kWh';
-        document.getElementById('val-2').innerText = '1.4 L/inf';
-        document.getElementById('val-3').innerText = '0.789 (MFI)';
-        document.getElementById('val-4').innerText = '68.4% (REE)';
+        mismatchCount = Math.max(0, mismatchCount - 1);
+        pollMs = Math.min(Math.max(INITIAL_POLL_MS, pollMs * 1.25), SLOW_POLL_MS);
       }
+    } catch (e) {
+      pollMs = Math.min(pollMs * 1.2, SLOW_POLL_MS);
+    } finally {
+      scheduleNext();
     }
   }
 
-  function toggleDashboardMode() {
-    const titleEl = document.getElementById('view-title');
-    const subtitleEl = document.getElementById('view-subtitle');
-    const btnEl = document.getElementById('toggle-btn');
+  let timer = null;
+  function scheduleNext() {
+    clearTimeout(timer);
+    timer = setTimeout(checkOnce, pollMs);
+  }
+
+  function showBannerAndReload(remoteHash) {
+    if (document.getElementById('qesis-version-banner')) return;
+    sendTelemetry('stale_confirmed', { remoteHash });
     
-    const c1 = document.getElementById('card-1-title');
-    const c2 = document.getElementById('card-2-title');
-    const c3 = document.getElementById('card-3-title');
-    const c4 = document.getElementById('card-4-title');
+    const banner = document.createElement('div');
+    banner.id = 'qesis-version-banner';
+    banner.style = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:10000;background:#081426;color:#fff;padding:14px 20px;border-radius:8px;display:flex;gap:16px;align-items:center;box-shadow:0 6px 18px rgba(2,6,23,0.8);font-family:sans-serif;font-size:14px;border:1px solid #1e293b;';
+    
+    const txt = document.createElement('div'); 
+    txt.style.flex = '1'; 
+    txt.innerHTML = '<strong>System Update Available:</strong> A new governance kernel hash has been deployed.';
+    
+    const refreshBtn = document.createElement('button'); 
+    refreshBtn.textContent = 'Refresh Now'; 
+    refreshBtn.style = 'background:#2563eb;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:600;';
+    refreshBtn.onclick = () => hardReload();
+    
+    const countdown = document.createElement('span'); 
+    countdown.style.color = '#94a3b8';
+    
+    const dismissBtn = document.createElement('button'); 
+    dismissBtn.textContent = 'Dismiss'; 
+    dismissBtn.style = 'background:transparent;color:#94a3b8;border:none;cursor:pointer;';
+    dismissBtn.onclick = () => { banner.remove(); sendTelemetry('stale_dismissed', { remoteHash }); };
+    
+    banner.appendChild(txt); 
+    banner.appendChild(refreshBtn); 
+    banner.appendChild(countdown); 
+    banner.appendChild(dismissBtn);
+    document.body.appendChild(banner);
 
-    const b1 = document.getElementById('badge-1');
-    const b2 = document.getElementById('badge-2');
-    const b3 = document.getElementById('badge-3');
-    const b4 = document.getElementById('badge-4');
-
-    if (currentMode === 'liquid') {
-      currentMode = 'metabolic';
-      titleEl.innerText = "STIR Metabolic Sovereignty & Thermodynamic View";
-      subtitleEl.innerText = "Thermodynamic Baseline, Rare-Earth Depletion & 4IR Thermal Scaling";
-      btnEl.innerText = "Switch to Liquid Polycrisis View";
-      btnEl.style.background = "var(--accent-metabolic)";
-
-      c1.innerText = "Energy Intensity (Watts/kWh)";
-      c2.innerText = "Water Stress (Liters/Inference)";
-      c3.innerText = "Metabolic Footprint Index (MFI)";
-      c4.innerText = "Rare-Earth Dependency (REE)";
-
-      b1.innerText = "Thermal Cap ≤ 5.8GB";
-      b2.innerText = "EU AI Act Art. 12 Audit";
-      b3.innerText = "ISO/IEC 42001 Compliant";
-      b4.innerText = "Supply Chain Risk Monitored";
-    } else {
-      currentMode = 'liquid';
-      titleEl.innerText = "STIR Polycrisis & Liquid Society View";
-      subtitleEl.innerText = "Infrastructure Trilemma & Feb 2027 CSDDD Supply Chain Compliance";
-      btnEl.innerText = "Switch to Metabolic Mode";
-      btnEl.style.background = "var(--accent-glow)";
-
-      c1.innerText = "Global Coupling Index (ρ)";
-      c2.innerText = "Import Core Coupling";
-      c3.innerText = "Infrastructure Trilemma Score";
-      c4.innerText = "Traceability & Transparency (TTI)";
-
-      b1.innerText = "ISO/IEC 42001 Verified";
-      b2.innerText = "CSDDD Feb 2027 Ready";
-      b3.innerText = "Network Autonomy Index";
-      b4.innerText = "Scope 3 Supply Verified";
+    if (AUTO_RELOAD) {
+      let remaining = Math.ceil(RELOAD_COUNTDOWN_MS / 1000);
+      countdown.innerText = `Auto-refresh in ${remaining}s`;
+      sendTelemetry('stale_auto_reload_scheduled', { remoteHash, countdown_s: remaining });
+      const t = setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) { 
+          clearInterval(t); 
+          hardReload(); 
+        } else {
+          countdown.innerText = `Auto-refresh in ${remaining}s`;
+        }
+      }, 1000);
     }
-
-    fetchLiveMcpMetrics();
   }
 
   fetchLiveMcpMetrics();
