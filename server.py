@@ -11,6 +11,7 @@ audit locked). Any non-empty key unlocks the institutional vintage.
 Run (local stdio):      python server.py
 Run (remote, HTTP):     python server.py --http   (streamable HTTP on :8000)
 """
+import hashlib
 import json
 import os
 import sys
@@ -22,10 +23,15 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
 DATA_PATH = Path(__file__).parent / "data" / "qesis_v8.json"
+# C-01. The chain attestation is a separate artefact on purpose. It is produced by
+# an independent verifier in sovereign-infra, never by the process that appends to
+# the chain and never by the process that writes the index. Keeping it out of the
+# index is what stops the index builder from becoming a second self-reporter.
+CHAIN_PATH = Path(__file__).parent / "data" / "chain_attestation.json"
 LICENSED = bool(os.environ.get("QESIS_LICENSE_KEY", "").strip())
 
 DATA: dict = {}
-_LOADED_MTIME: float | None = None
+_INDEX_SHA256: str | None = None
 
 
 def _refresh() -> dict:
@@ -35,26 +41,127 @@ def _refresh() -> dict:
     session. Without this, regenerating the index leaves every client reading
     the previous generation from memory while the corrected file sits on disk,
     which is the hardest class of drift to notice because both look right.
+
+    The reload is also the reason G-01b exists. Any process that writes this
+    file changes what is served, immediately, with no release event in between.
+    That is convenient locally and it means `served` and `committed` can differ
+    in either direction, so the hash below is taken on every load and published:
+    a reader identifies the served bytes rather than trusting a vintage label.
     """
-    global DATA, _LOADED_MTIME
+    global DATA, _INDEX_SHA256
     try:
-        m = DATA_PATH.stat().st_mtime
+        raw = DATA_PATH.read_bytes()
     except OSError:
         return DATA
-    if m != _LOADED_MTIME:
-        DATA = json.loads(DATA_PATH.read_text(encoding="utf-8"))
-        _LOADED_MTIME = m
+    # Keyed on content, not on mtime. The mtime version missed a change: two
+    # writes landing inside one filesystem timestamp tick left this process
+    # serving the first while publishing a hash computed from it, which under
+    # G-01b is worse than publishing no hash at all. Hashing 76 KB costs a
+    # fraction of a millisecond and the JSON parse is still skipped when the
+    # bytes are unchanged, so the fast path stays fast.
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != _INDEX_SHA256:
+        DATA = json.loads(raw.decode("utf-8"))
+        _INDEX_SHA256 = digest
         print(f"[qesis] loaded {DATA.get('vintage')} "
-              f"({len(DATA.get('countries', {}))} states)", file=sys.stderr)
+              f"({len(DATA.get('countries', {}))} states) "
+              f"sha256 {digest[:12]}", file=sys.stderr)
     return DATA
 
 
+def _chain() -> dict:
+    """The verified chain state, or a statement that it is unverified.
+
+    Never fabricates a verdict. An absent attestation is reported as absent, because
+    the failure this exists to prevent is a chain figure nobody can contradict, and
+    a default of `0 link breaks` would recreate it in a worse form.
+    """
+    try:
+        return json.loads(CHAIN_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return {
+            "status": "UNVERIFIED",
+            "reason": f"no readable attestation at {CHAIN_PATH.name}: "
+                      f"{type(exc).__name__}",
+            "effect": "Do not cite a chain height or a link-break count from this "
+                      "deployment. None is being asserted.",
+        }
+
+
+def _provenance() -> dict:
+    """Which bytes are being served, and whether they are pinned to a release.
+
+    G-01b. A vintage string is a label, not a fingerprint: two different builds
+    of v8.4 shipped on 2026-08-01, one with a flattened lineage and one with it
+    repaired, and both answered `v8.4 (2026-08-01)`. Anything comparing vintage
+    strings to decide whether a promotion took effect would have seen no
+    difference. The sha256 of the served file is the thing that distinguishes
+    them, so it is published.
+
+    On a Vercel deployment the commit is known from the build environment, so a
+    reader can check out that commit, hash `data/qesis_v8.json` and get this
+    number. On the local stdio plane there is no commit: the file comes from a
+    working tree that any process may have written since. That case says so
+    rather than leaving the reader to assume a release happened.
+    """
+    commit = (os.environ.get("VERCEL_GIT_COMMIT_SHA") or "").strip()
+    if commit:
+        return {
+            "plane": "deployment",
+            "index_sha256": _INDEX_SHA256,
+            "deployment_commit": commit,
+            "verify": ("git checkout <deployment_commit> && sha256sum "
+                       "data/qesis_v8.json must equal index_sha256"),
+        }
+    return {
+        "plane": "working tree",
+        "index_sha256": _INDEX_SHA256,
+        "deployment_commit": None,
+        "warning": ("Served from a working tree, not from a promoted commit. "
+                    "These bytes may be uncommitted. Match index_sha256 against "
+                    "a commit before citing anything from this process."),
+    }
+
+
+def _contract(tool: str, served: dict) -> dict:
+    """Does this process actually serve the vintage it is announcing?
+
+    `_refresh()` reloads the index when the file changes; this module is read
+    once at process start. A resident host therefore advances its vintage string
+    the moment the data lands and keeps running whatever code it started with.
+    That is how v8.4 was announced by a process serving neither `chain` nor
+    `citation_concordance`, which are the two things v8.4 adds.
+
+    A stale process now says so in its own payload rather than answering as
+    though nothing were missing. The limit is worth stating plainly: this can
+    only report a contract it knows about, so it protects every vintage after
+    the one that introduced it and could not have caught the incident that
+    prompted it.
+    """
+    declared = ((DATA.get("served_contract") or {}).get("tools") or {}).get(tool)
+    if not declared:
+        return {"status": "UNDECLARED",
+                "note": f"the index declares no contract for {tool}"}
+    missing = [f for f in declared if f not in served]
+    if not missing:
+        return {"status": "SATISFIED", "declared": len(declared)}
+    return {
+        "status": "STALE_RUNTIME",
+        "declared": len(declared),
+        "missing": missing,
+        "effect": (f"This process loaded {DATA.get('vintage')} from disk but is "
+                   f"running older code, so it is announcing a vintage it only "
+                   f"partly implements. Restart the server before citing anything "
+                   f"that depends on the missing fields."),
+    }
+
+
 _refresh()
-AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
+AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "RGD", "ESE"]
 AXIS_NAMES = {
     "WSE": "Water Stress Exposure", "CSE": "Cable Stress Exposure",
     "REE": "Rare Earth Element Stress", "FPE": "Foreign Platform Exposure",
-    "ODI": "Operator Dependency Index", "CRD": "Cloud Risk Density",
+    "ODI": "Operator Dependency Index", "RGD": "Region Density",
     "ESE": "Electricity Stress Exposure",
 }
 
@@ -70,7 +177,13 @@ def _allowed_hosts() -> list[str]:
     hosts = [h.strip() for h in os.environ.get("QESIS_ALLOWED_HOSTS", "").split(",")
              if h.strip()]
     if not hosts:
-        hosts = ["qesis-mcp.vercel.app", "localhost", "localhost:*",
+        # Both production names are allowed so the project can be renamed in
+        # Vercel without a code change and without a window where the landing
+        # page works and /mcp answers 421 to every client. An allowed host that
+        # nobody is serving costs nothing: the guard checks the inbound Host
+        # against this list, it does not advertise it.
+        hosts = ["qesis-mcp.vercel.app", "qesis.vercel.app",
+                 "localhost", "localhost:*",
                  "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"]
     for var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
         v = os.environ.get(var, "").strip()
@@ -130,7 +243,7 @@ class RankInput(BaseModel):
     """Input for ranking countries."""
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     axis: str = Field(default="composite",
-                      description="What to rank by: 'composite' or one of WSE, CSE, REE, FPE, ODI, CRD, ESE")
+                      description="What to rank by: 'composite' or one of WSE, CSE, REE, FPE, ODI, RGD, ESE")
     top_n: int = Field(default=10, ge=1, le=35, description="How many countries to return")
     ascending: bool = Field(default=False, description="False = most exposed first (default)")
 
@@ -159,7 +272,9 @@ async def qesis_get_country(params: CountryInput) -> str:
 
     Returns JSON. Axis legend: WSE water, CSE submarine cable, REE rare
     earths, FPE foreign platform share, ODI hyperscaler operator
-    concentration, CRD cloud risk density, ESE electricity stress."""
+    concentration, RGD normalised cloud region count, ESE electricity
+    stress. RGD is algebraically coupled to ODI: see rgd_method.warning
+    before reporting any ODI-RGD relationship as empirical."""
     _refresh()
     c = _country_or_error(params.iso3)
     iso = params.iso3.upper()
@@ -183,6 +298,13 @@ async def qesis_get_country(params: CountryInput) -> str:
                         if e["iso3"] == iso), None)
         out["epis_finding"] = finding["finding"] if finding else (
             "Composite withheld under the BIG coverage gate.")
+        # C-02. The coverage arithmetic says the composite is withheld; the cause
+        # says why the coverage is missing. A caller who meets the gap here should
+        # not have to open the methodology to learn that Singapore and Taiwan are
+        # absent for entirely different reasons.
+        if finding and finding.get("withholding_cause"):
+            out["withholding_cause"] = finding["withholding_cause"]
+            out["cause_statement"] = finding["cause_statement"]
     return json.dumps(out, indent=1) + _tier_note()
 
 
@@ -328,7 +450,9 @@ async def qesis_get_component_audit(params: CountryInput) -> str:
     "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 async def qesis_get_integrity() -> str:
     """Which generation of the index is being served, how the composite is
-    derived, and every state whose composite is withheld under BIG. Query this
+    derived, every state whose composite is withheld under BIG and why, the
+    verified state of the EU AI Act Art. 12 hash chain, and the concordance
+    between published thesis figures and the numbers served here. Query this
     before citing any number: it answers 'is what I am reading reproducible'
     without requiring access to the build machine."""
     _refresh()
@@ -341,8 +465,10 @@ async def qesis_get_integrity() -> str:
         calc = round(sum(W[a] * c["axes"][a] for a in W), 1)
         if abs(calc - c["composite"]) > 0.051:
             drift.append({"iso3": iso, "served": c["composite"], "recomputed": calc})
-    return json.dumps({
+    out = {
         "vintage": DATA["vintage"], "supersedes": DATA.get("supersedes"),
+        # G-01b. The vintage names a generation; this identifies the bytes.
+        "provenance": _provenance(),
         "composite_model": DATA.get("composite_model"),
         "lineage": DATA.get("lineage"),
         "self_check": {
@@ -352,14 +478,28 @@ async def qesis_get_integrity() -> str:
             "composites_reproducing_from_axes": drift == [],
             "drift": drift or "none",
         },
+        # C-01. Read from an independent verifier's output, never written by the
+        # process that appends to the chain. The spine it was computed from is
+        # committed, so a reader can recompute every link rather than trust this.
+        "chain": _chain(),
         "epis_findings": DATA.get("epis_findings"),
+        # C-02. Two distinct causes sit behind three withholdings, and the codes
+        # are published beside the findings so the difference is legible.
+        "withholding_causes": DATA.get("withholding_causes"),
         "uncertainty_ledger": DATA.get("uncertainty_ledger"),
+        # C-04. Served before anyone concludes a thesis figure and this index
+        # disagree because one of them is wrong.
+        "citation_concordance": DATA.get("citation_concordance"),
         "coupling_exclusions": {
             "excluded_from_global": DATA["coupling"].get("excluded_from_global"),
             "excluded_from_core": DATA["coupling"].get("excluded_from_core"),
             "rule": DATA["coupling"].get("exclusion_rule"),
         },
-    }, indent=1) + _tier_note()
+    }
+    # Reported last, over the response that was actually built, so it describes
+    # what this process serves rather than what the source says it should.
+    out["contract"] = _contract("qesis_get_integrity", out)
+    return json.dumps(out, indent=1) + _tier_note()
 
 
 @mcp.tool(name="qesis_get_methodology", annotations={

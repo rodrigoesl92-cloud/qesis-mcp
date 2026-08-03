@@ -4,8 +4,15 @@
 # machine paths and internal decisions. Both are backed up in the private
 # sovereign-infra repository.
 scripts/build_index.py
-data/qesis_v8.0_superseded.json
 HANDOFF.md
+
+# Superseded build inputs and unapproved candidates are operator-only: they
+# are frozen inputs and pre-approval drafts, not the published product. These
+# are globs on purpose. The v8.0 rule was a literal filename, so v8.2 and the
+# v8.3 candidate were not covered when the vintage advanced and were staged
+# for the public repo by accident. A rule's scope has to travel with it.
+data/qesis_v*_superseded.json
+data/qesis_v*_CANDIDATE.json
 
 # Never publishable on any channel
 .env
@@ -14,6 +21,12 @@ HANDOFF.md
 *.pem
 credentials*.json
 service-account*.json
+# INC-20260731-01, G-03. The rules above did not cover a file called
+# "ENTSO-E API KEY.txt": `*.key` matches an extension, not a name. A credential
+# reached a synced folder with nothing standing in its way, and the only reason
+# it never reached this repository is that nobody happened to copy it here.
+_SCHEMA/
+*API*KEY*
 
 # Local noise
 __pycache__/
@@ -25,6 +38,7 @@ venv/
 Thumbs.db
 *.sqlite
 *.sqlite3
+node_modules/
 
 # Large binaries do not belong in a product repo
 *.pdf
@@ -37,3 +51,12 @@ REPORT_EXECUTIVE.md
 
 # Local MCP wiring: absolute machine paths, never published
 .mcp.json
+
+# Same rule, same reason, second directory. `.claude/settings.local.json` holds
+# 257 permission rules carrying this machine's home path, and `.claude/` was
+# neither tracked nor ignored, so one `git add -A` would have published all of
+# it. `.claude/launch.json` is deliberately NOT ignored: it names relative
+# commands and ports, describes the project rather than the host, and is worth
+# sharing with anyone cloning this.
+.claude/settings.local.json
+.claude/*.local.json

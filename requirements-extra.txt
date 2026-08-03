@@ -1,0 +1,3 @@
+# Phase 2: extra python requirements for fsQCA signing
+# Install these in the environment used to run qesis-mcp for Phase 2 features
+cryptography>=40.0

@@ -17,7 +17,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-AXES = ["WSE", "CSE", "REE", "FPE", "ODI", "CRD", "ESE"]
 TOL = 0.051                      # published to 1 decimal
 BANNED_CITATIONS = ["Ontological Blind-Spots"]
 
@@ -154,9 +153,58 @@ def main() -> int:
     for bad in BANNED_CITATIONS:
         check(bad not in blob, f"R1.16 superseded citation absent", f"found '{bad}'")
 
+    # ── 9. every withholding states its cause (C-02) ────────────────────
+    # The generic string told a reviewer that Singapore and Taiwan are missing
+    # for the same reason. They are not: one is a catchment-resolution limit and
+    # the other is the source's territorial schema. A single label over two
+    # causes is checked once and then distrusted throughout.
+    causes = (d.get("withholding_causes") or {}).get("codes") or {}
+    bad_cause = []
+    for e in d.get("epis_findings", []):
+        code = e.get("withholding_cause")
+        if not code:
+            bad_cause.append(f"{e['iso3']} withheld with no stated cause")
+        elif code not in causes:
+            bad_cause.append(f"{e['iso3']} cites cause {code} that is not declared")
+        if not (e.get("cause_statement") or "").strip():
+            bad_cause.append(f"{e['iso3']} has no cause statement")
+    check(not bad_cause, "R1.17 every BIG withholding states a declared cause",
+          "; ".join(bad_cause[:6]))
+
+    # ── 10. the citation concordance is present and points somewhere ────
+    cc = d.get("citation_concordance") or {}
+    rows, errata = cc.get("rows") or [], cc.get("errata") or []
+    check(bool(rows) and bool(errata),
+          "R1.18 citation concordance carries rows and errata",
+          f"{len(rows)} rows, {len(errata)} errata")
+    known = {e.get("id") for e in errata} | {"D-045", "U-08", None}
+    dangling = [r.get("figure") for r in rows if r.get("erratum") not in known]
+    check(not dangling, "R1.19 every concordance row resolves to a known erratum",
+          "; ".join(str(x) for x in dangling[:4]))
+    # A row that carries no status is a row that says nothing, and a concordance
+    # of rows that say nothing reads as diligence while providing none.
+    unstated = [r.get("figure") for r in rows if not (r.get("status") or "").strip()]
+    check(not unstated, "R1.20 every concordance row states a status",
+          "; ".join(str(x) for x in unstated[:4]))
+
+    # ── 11. a scoped roadmap item carries its date (C-05) ───────────────
+    # An undated roadmap item is indistinguishable from an abandoned one, which
+    # is what U-06 was through three vintages.
+    for u in (d.get("uncertainty_ledger") or {}).get("entries") or []:
+        if u.get("status") == "PENDING" or u.get("target_vintage"):
+            check(bool(u.get("target_date")) and bool(u.get("target_vintage")),
+                  f"R1.21 scoped ledger item {u.get('id')} carries a date and a "
+                  f"target vintage",
+                  f"date={u.get('target_date')} vintage={u.get('target_vintage')}")
+
     # ── 9. soft checks ──────────────────────────────────────────────────
+    # Axes are derived from the declared model, never a literal list. A stale
+    # literal does not fail loudly here: `.get(a)` returns None for a renamed
+    # axis, so the range check silently stops covering it. That is how RGD
+    # went unvalidated after the v8.3 rename of CRD.
+    axes = list(W) + list(model.get("diagnostic_axes_excluded") or [])
     for iso, c in C.items():
-        for a in AXES:
+        for a in axes:
             v = c["axes"].get(a)
             if v is not None and not (0.0 <= v <= 100.0):
                 warnings.append(f"{iso}.{a}={v} outside 0-100")

@@ -24,20 +24,66 @@ rejection surfaces on the pull request as three separate "Deployment failed"
 checks linking to the project-configuration docs, with no build log, which is
 why this note exists rather than a comment in the file.
 
-## Three projects are attached to this repository
+## One project is attached to this repository
 
-Only one should be. As of 2026-07-29 the Vercel dashboard shows:
+This was three until 2026-07-31. `rodrigoesl92-cloud-qesis-mcp` and `site` are
+gone, and the API now returns a single project, `qesis-mcp`
+(`prj_qp1c8sgZNJi2XUGcbVfzLN5QVT2r`), holding `qesis-mcp.vercel.app`. That is
+the canonical address. Each attached project used to build every push, so one
+commit produced three deployments and three status checks.
 
-| project | domain | verdict |
-|---|---|---|
-| `qesis-mcp` | `qesis-mcp.vercel.app` | **keep**, this is the canonical address |
-| `rodrigoesl92-cloud-qesis-mcp` | auto-generated | delete, duplicate of the same repo |
-| `site` | `site-nine-eta-99.vercel.app` | delete, no production deployment, never finished |
+Deleting a project cannot be done from the repository: it is Vercel dashboard
+only, under Project Settings, Advanced, Delete Project.
 
-Each attached project builds every push, so one commit produced three
-deployments and three status checks. Deleting a project cannot be done from the
-repository: it is Vercel dashboard only, under Project Settings, Advanced,
-Delete Project.
+## A READY production deployment is not necessarily the live one
+
+Observed on 2026-07-31 and worth stating, because every obvious signal said the
+release had shipped. The v8.3 merge to `main` built clean in three seconds, the
+deployment reported `state: READY` and `target: production`, and it was the
+project's `latestDeployment`. `qesis-mcp.vercel.app` went on serving v8.2.
+
+The GitHub commit status carried the only hint: `Checks for Deployment have
+failed`. A deployment whose checks fail is still built and still READY, and the
+production alias simply is not moved onto it. Promotion, not the build, is what
+publishes.
+
+**The cause, confirmed in the dashboard.** Vercel's built-in **Lint** and
+**Typecheck** code checks were enabled on this project. Both fail in two seconds
+with `No package.json was found in the project`, because they are JavaScript
+checks and this is a Python project that will never have one. Typecheck is
+marked **Required**, and the deployment page states the consequence plainly:
+
+> Aliasing to custom domains is blocked by failed deployment checks.
+
+So the block is permanent and applies to every future deployment, not just the
+v8.3 one. The API does not surface it: `get_deployment` reports `READY` and
+`target: production` with no hint, and the only machine-readable signal is the
+GitHub commit status string. Turn both checks off in Project Settings, or at
+minimum clear **Required** from Typecheck. Until that is done, every deploy to
+`main` needs a manual promote:
+
+```bash
+powershell -ExecutionPolicy Bypass -File .\scripts\setup_vercel_token.ps1
+```
+
+That lives in `sovereign-infra`, is stdlib only, and exists because there is no
+`node`, `npm` or `npx` on the build machine, so every CLI-shaped remedy in
+Vercel's own documentation is unusable here.
+
+Do not "fix" this by adding a `package.json`. It would make the checks pass by
+telling Vercel the project is something it is not, and `framework` is currently
+`null` on purpose.
+
+Two traps sit on top of that when you go to confirm it:
+
+- `/` is a static asset and is edge-cached. It answered `X-Vercel-Cache: HIT`
+  with `Age` near 29 hours, and a cache-busting query string does not vary the
+  key for static files, so it kept answering v8.2 from the edge regardless.
+  Check `/mcp` instead: it is `no-store`, so a response there is the origin.
+- Read the `vintage` field specifically. `qesis_get_integrity` embeds the
+  uncertainty ledger and change log, which quote older vintages in prose, so a
+  loose search for `v8.x` matches text that has nothing to do with what is
+  being served.
 
 ## Deployment protection
 
@@ -58,6 +104,15 @@ deployment and matching is exact apart from a `:*` port wildcard.
 
 To serve a custom domain, set `QESIS_ALLOWED_HOSTS` in the Vercel project
 environment as a comma-separated list. It replaces the defaults entirely.
+
+That replacement has a consequence worth knowing before you debug the wrong
+thing. On 2026-07-31, `qesis-mcp.vercel.app/mcp` answered normally while
+`qesis-mcp-rodrigoesl92s-projects.vercel.app/mcp` answered `421`. Both are
+aliases of the same project and the same deployment. `_allowed_hosts()` falls
+back to `VERCEL_URL`, `VERCEL_BRANCH_URL` and `VERCEL_PROJECT_PRODUCTION_URL`
+only when `QESIS_ALLOWED_HOSTS` is empty, so setting it in the project
+environment silently drops every alias not named in it. A `421` on one alias
+and `200` on another is that variable, not a broken deployment.
 
 ## Verify a deployment
 

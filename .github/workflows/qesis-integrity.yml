@@ -33,19 +33,48 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install runtime
+        # Before the gates, not after them. The self-test now exercises the
+        # served contract, which imports server.py, which needs mcp and
+        # pydantic. With this step further down the file the contract cases
+        # could not run at all, and one of them passed anyway because an
+        # unimportable runtime and a removed declaration both exit 2. A gate
+        # that passes for the wrong reason is the failure this repository
+        # exists to keep catching.
+        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
       - name: Integrity gate
         run: python scripts/verify_index.py
+
+      - name: Hash chain reproduces from the committed spine
+        # C-01. The endpoint publishes a chain height and a link-break count.
+        # Before this step those came from the runtime that appends to the
+        # chain, so no reader could contradict them. This recomputes every link
+        # from the committed spine and fails if the attestation does not follow.
+        run: python scripts/verify_chain.py
+
+      - name: Vintage is paired across both repositories
+        # G-01. Neither repository may serve a vintage the other does not
+        # record. The public runner cannot read the private repo, so it checks
+        # the committed mirror of its lineage register.
+        run: python scripts/verify_vintage_pairing.py
 
       - name: Gate self-test (mutation)
         # A gate that only ever passes proves nothing. This injects each defect
         # class it must catch and fails the build if the gate misses one.
         run: python scripts/test_gate.py
 
-      - name: Install runtime
-        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
-
       - name: Server contract smoke test
         run: python scripts/smoke_server.py
+
+      - name: Served contract is fully implemented by this code
+        # G-01 code/data atomicity. The index reloads on file change and
+        # server.py does not, so a resident process can advance its vintage
+        # string while running older code. v8.4 did exactly that in public.
+        # CI always starts fresh, so a failure here means the data has genuinely
+        # moved past the code and the deploy that would publish the mismatch is
+        # stopped before it happens.
+        run: python scripts/verify_served_contract.py
 
       - name: Coupling reproduces the published values
         run: python scripts/coupling.py
@@ -55,7 +84,7 @@ jobs:
         # session manager never starting without lifespan events, and the
         # DNS-rebinding guard rejecting the production Host with 421.
         env:
-          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,localhost,localhost:*"
+          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,qesis.vercel.app,localhost,localhost:*"
         run: python scripts/test_http.py
 
       - name: Evaluation set is in sync with the index
