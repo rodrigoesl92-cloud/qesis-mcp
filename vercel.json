@@ -2,6 +2,7 @@
   "version": 2,
   "rewrites": [
     { "source": "/mcp", "destination": "/api/index" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/api/telemetry", "destination": "/api/telemetry" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/STIR_Governance_Dashboard.html" }
@@ -10,6 +11,8 @@
     {
       "source": "/STIR_Governance_Dashboard.html",
       "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
+        { "key": "X-Frame-Options", "value": "DENY" }
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" },
