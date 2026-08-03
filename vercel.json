@@ -1,30 +1,15 @@
 ﻿{
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/**/*.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "api/**/*.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "STIR_Governance_Dashboard.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/mcp",
+      "source": "/mcp",
       "destination": "/api/index"
     },
     {
-      "src": "/api/(.*)",
+      "source": "/api/(.*)",
       "destination": "/api/$1"
     },
     {
-      "src": "/(.*)",
+      "source": "/(.*)",
       "destination": "/STIR_Governance_Dashboard.html"
     }
   ],
