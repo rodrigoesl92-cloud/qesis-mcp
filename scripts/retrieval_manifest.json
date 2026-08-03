@@ -1,0 +1,18 @@
+{
+  "index_version": "v9.0.0",
+  "embedding_model": {
+    "artifact_id": "bge-m3-quantized-onnx",
+    "seed": 42,
+    "hardware_target": "cpu-bound-strict"
+  },
+  "retrieval": {
+    "algorithm": "hnsw",
+    "similarity_metric": "cosine",
+    "k_fixed": 5
+  },
+  "sources": [
+    "ENTSO-E",
+    "Ember",
+    "EMODnet"
+  ]
+}
