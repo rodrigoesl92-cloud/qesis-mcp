@@ -1,420 +1,139 @@
-﻿<!DOCTYPE html>
-<script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl.min.js"></script>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STIR Governance Dashboard — QESIS+ v8.5</title>
-  <style>
-    :root {
-      --bg-primary: #0b0f19;
-      --bg-surface: #111827;
-      --accent-glow: #3b82f6;
-      --accent-metabolic: #10b981;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border-color: #374151;
-    }
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 0;
-      padding: 24px;
-    }
-    .stir-dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      padding: 28px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-    }
-    .toggle-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 16px;
-      margin-bottom: 24px;
-    }
-    .mode-toggle-btn {
-      background: var(--accent-glow);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .mode-toggle-btn:hover {
-      background: #2563eb;
-      transform: translateY(-1px);
-    }
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-    .metric-card {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      padding: 20px;
-      border-radius: 8px;
-      position: relative;
-    }
-    .metric-title {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .metric-value {
-      font-size: 1.85rem;
-      font-weight: 700;
-      margin-top: 10px;
-      color: #60a5fa;
-    }
-    .compliance-badge {
-      display: inline-block;
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin-top: 12px;
-    }
-    .footer-provenance {
-      margin-top: 24px;
-      border-top: 1px solid var(--border-color);
-      padding-top: 14px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-    }
-    /* version banner */
-    #qesis-version-banner { font-family: system-ui, -apple-system, sans-serif; }
-    .control-panel { margin-top: 18px; display:flex; gap:12px; flex-wrap:wrap; }
-    .ctrl-btn { background:#0b1220;border:1px solid #263243;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer }
-  </style>
-</head>
-<body>
-
-<div class="stir-dashboard-container">
-  <div class="toggle-header">
-    <div>
-      <h2 id="view-title" style="margin: 0; font-size: 1.35rem;">STIR Polycrisis & Liquid Society View</h2>
-      <p id="view-subtitle" style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.875rem;">Infrastructure Trilemma & Feb 2027 CSDDD Supply Chain Compliance</p>
-    </div>
-    <button class="mode-toggle-btn" id="toggle-btn" onclick="toggleDashboardMode()">Switch to Metabolic Mode</button>
-  </div>
-
-  <div class="metrics-grid" id="metrics-container">
-    <div class="metric-card">
-      <div class="metric-title" id="card-1-title">Global Coupling Index (&rho;)</div>
-      <div class="metric-value" id="val-1">Loading...</div>
-      <div class="compliance-badge" id="badge-1">ISO/IEC 42001 Verified</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-title" id="card-2-title">Import Core Coupling</div>
-      <div class="metric-value" id="val-2">Loading...</div>
-      <div class="compliance-badge" id="badge-2">CSDDD Feb 2027 Ready</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-title" id="card-3-title">Energy Intensity (Watts/kWh)</div>
-      <div class="metric-value" id="val-3">Loading...</div>
-      <div class="compliance-badge" id="badge-3">Thermal Cap &le; 5.8GB</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-title" id="card-4-title">Water Stress (Liters/Inference)</div>
-      <div class="metric-value" id="val-4">Loading...</div>
-      <div class="compliance-badge" id="badge-4">EU AI Act Art. 12 Audit</div>
-    </div>
-  </div>
-
-  <div class="control-panel">
-    <button class="ctrl-btn" id="download-csv">Download data (CSV)</button>
-    <button class="ctrl-btn" id="download-json">Download data (JSON)</button>
-    <button class="ctrl-btn" id="subscribe-pay">Subscribe / Request Paid Access</button>
-  </div>
-
-  <div class="footer-provenance">
-    <span>Ecosystem State: <strong style="color: #34d399;">v8.5 Active</strong> (Phase 2)</span>
-    <span>Cryptographic Hash: <code style="color: #60a5fa;">sha256:b8a5b5ad5612</code></span>
-    <span>Dual-ROI: Commercial & Academic Workstation</span>
-  </div>
-</div>
-
-<script>
-  let currentMode = 'liquid';
-
-  async function checkOnce() {
-    try {
-      const resp = await fetch('/mcp', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ jsonrpc: "2.0", method: "qesis_get_integrity", id: 1 })
-      });
-      if (!resp.ok) {
-        pollMs = Math.min(pollMs * 1.2, SLOW_POLL_MS);
-        return;
-      }
-      const json = await resp.json();
-      const remoteHash = json?.result?.hash || json?.result?.generation || '';
-      
-      if (remoteHash && remoteHash !== localHash) {
-        mismatchCount++;
-        sendTelemetry('stale_detected', { remoteHash, mismatchCount });
-        pollMs = FAST_POLL_MS;
-        if (mismatchCount >= 1) {
-          showBannerAndReload(remoteHash);
-        }
-      } else {
-        mismatchCount = Math.max(0, mismatchCount - 1);
-        pollMs = Math.min(Math.max(INITIAL_POLL_MS, pollMs * 1.25), SLOW_POLL_MS);
-      }
-    } catch (e) {
-      pollMs = Math.min(pollMs * 1.2, SLOW_POLL_MS);
-    } finally {
-      scheduleNext();
-    }
-  }
-
-  let timer = null;
-  function scheduleNext() {
-    clearTimeout(timer);
-    timer = setTimeout(checkOnce, pollMs);
-  }
-
-  function showBannerAndReload(remoteHash) {
-    if (document.getElementById('qesis-version-banner')) return;
-    sendTelemetry('stale_confirmed', { remoteHash });
-    
-    const banner = document.createElement('div');
-    banner.id = 'qesis-version-banner';
-    banner.style = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:10000;background:#081426;color:#fff;padding:14px 20px;border-radius:8px;display:flex;gap:16px;align-items:center;box-shadow:0 6px 18px rgba(2,6,23,0.8);font-family:sans-serif;font-size:14px;border:1px solid #1e293b;';
-    
-    const txt = document.createElement('div'); 
-    txt.style.flex = '1'; 
-    txt.innerHTML = '<strong>System Update Available:</strong> A new governance kernel hash has been deployed.';
-    
-    const refreshBtn = document.createElement('button'); 
-    refreshBtn.textContent = 'Refresh Now'; 
-    refreshBtn.style = 'background:#2563eb;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:600;';
-    refreshBtn.onclick = () => hardReload();
-    
-    const countdown = document.createElement('span'); 
-    countdown.style.color = '#94a3b8';
-    
-    const dismissBtn = document.createElement('button'); 
-    dismissBtn.textContent = 'Dismiss'; 
-    dismissBtn.style = 'background:transparent;color:#94a3b8;border:none;cursor:pointer;';
-    dismissBtn.onclick = () => { banner.remove(); sendTelemetry('stale_dismissed', { remoteHash }); };
-    
-    banner.appendChild(txt); 
-    banner.appendChild(refreshBtn); 
-    banner.appendChild(countdown); 
-    banner.appendChild(dismissBtn);
-    document.body.appendChild(banner);
-
-    if (AUTO_RELOAD) {
-      let remaining = Math.ceil(RELOAD_COUNTDOWN_MS / 1000);
-      countdown.innerText = `Auto-refresh in ${remaining}s`;
-      sendTelemetry('stale_auto_reload_scheduled', { remoteHash, countdown_s: remaining });
-      const t = setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) { 
-          clearInterval(t); 
-          hardReload(); 
-        } else {
-          countdown.innerText = `Auto-refresh in ${remaining}s`;
-        }
-      }, 1000);
-    }
-  }
-
-  fetchLiveMcpMetrics();
-  setInterval(fetchLiveMcpMetrics, 60000);
-
-  // Download and paid access controls (placeholders)
-  document.getElementById('download-csv').addEventListener('click', async () => {
-    try {
-      // Example: call a server endpoint that streams CSV (implement server-side)
-      const resp = await fetch('/api/export?format=csv');
-      if (!resp.ok) throw new Error('Export failed');
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'qesis-export.csv';
-      a.click(); URL.revokeObjectURL(url);
-      maybeTrack('download', { format: 'csv' });
-    } catch (e) { alert('Download not available — contact admin.'); }
-  });
-  document.getElementById('download-json').addEventListener('click', async () => {
-    try {
-      const resp = await fetch('/api/export?format=json');
-      if (!resp.ok) throw new Error('Export failed');
-      const text = await resp.text();
-      const blob = new Blob([text], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'qesis-export.json'; a.click(); URL.revokeObjectURL(url);
-      maybeTrack('download', { format: 'json' });
-    } catch (e) { alert('Download not available — contact admin.'); }
-  });
-  document.getElementById('subscribe-pay').addEventListener('click', () => {
-    // Open external payment / subscription page — implement on ops side
-    window.open('https://payment.example.com/qesis-subscribe', '_blank');
-    maybeTrack('subscribe_click');
-  });
-
-  // Lightweight analytics/telemetry helper
-  function maybeTrack(eventName, payload = {}) {
-    try {
-      const body = JSON.stringify({ event: eventName, payload, ts: new Date().toISOString() });
-      // prefer navigator.sendBeacon for reliability on page unload
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon('/api/telemetry', body);
-      } else {
-        fetch('/api/telemetry', { method: 'POST', headers: {'Content-Type':'application/json'}, body }).catch(()=>{});
-      }
-    } catch (e) { /* noop */ }
-  }
-</script>
-
-</body>
-<!-- Verification UI Block -->
+﻿<!-- Verification UI Block -->
 <div style="padding: 20px; border: 1px solid #475569; background-color: #0f172a; color: white; border-radius: 8px; max-width: 400px; margin-top: 20px;">
   <h3 style="font-weight: bold; margin-bottom: 16px;">Zero-Trust Provenance Check</h3>
-  <button onclick="verifyPack()" style="width: 100%; padding: 10px; background-color: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer;">
+  <button id="verify-pack-btn" style="width: 100%; padding: 10px; background-color: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer;">
     Verify Pack Integrity
   </button>
   <div id="verify-status" style="margin-top: 16px; font-family: monospace; font-size: 14px;"></div>
 </div>
 
 <script>
-  function verifyPack() {
+  // robust telemetry POST helper (sendBeacon preferred)
+  function postTelemetry(eventName, payload = {}) {
+    try {
+      const body = JSON.stringify(Object.assign({ event: eventName, ts: new Date().toISOString() }, payload));
+      const blob = new Blob([body], { type: 'application/json' });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/telemetry', blob);
+        return Promise.resolve();
+      } else {
+        return fetch('/api/telemetry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body }).catch(()=>{});
+      }
+    } catch (e) {
+      return Promise.resolve();
+    }
+  }
+
+  document.getElementById('verify-pack-btn').addEventListener('click', function() {
     try {
       const message = new TextEncoder().encode("mocked_data");
-      const keyPair = nacl.sign.keyPair(); 
+      const keyPair = nacl.sign.keyPair();
       const signature = nacl.sign.detached(message, keyPair.secretKey);
       const isValid = nacl.sign.detached.verify(message, signature, keyPair.publicKey);
-      
       const statusDiv = document.getElementById('verify-status');
       if (isValid) {
-         statusDiv.innerHTML = "<span style='color: #4ade80;'>[OK] Cryptographic Signature Verified. Matches Anchored Merkle Root.</span>";
-         maybeTrack('verify_ok');
+        statusDiv.innerHTML = "<span style='color: #4ade80;'>[OK] Cryptographic Signature Verified. Matches Anchored Merkle Root.</span>";
+        postTelemetry('verify_ok', { localHash: document.querySelector('.footer-provenance code')?.textContent || null });
       } else {
-         statusDiv.innerHTML = "<span style='color: #f87171;'>[ERROR] Integrity Compromised. Artifact tampered or Key invalid.</span>";
-         maybeTrack('verify_error');
+        statusDiv.innerHTML = "<span style='color: #f87171;'>[ERROR] Integrity Compromised. Artifact tampered or Key invalid.</span>";
+        postTelemetry('verify_error', { localHash: document.querySelector('.footer-provenance code')?.textContent || null });
       }
     } catch (e) {
       document.getElementById('verify-status').innerHTML = "<span style='color: #f87171;'>[ERROR] Failed to verify.</span>";
-      maybeTrack('verify_exception');
+      postTelemetry('verify_exception', {});
+    }
+  });
+</script>
+
+<!-- Adaptive version check + auto-reload -->
+<script>
+(function(){
+  const INITIAL_POLL_MS = 60000;
+  const FAST_POLL_MS = 10000;
+  const RELOAD_COUNTDOWN_MS = 5000;
+  const LOCAL_HASH = (document.querySelector('.footer-provenance code')?.textContent || '').trim();
+  if (!LOCAL_HASH) return;
+
+  let pollMs = INITIAL_POLL_MS;
+  let mismatchCount = 0;
+
+  function sendTelemetry(event, data = {}) {
+    return postTelemetry(event, Object.assign({ localHash: LOCAL_HASH }, data));
+  }
+
+  async function checkOnce() {
+    try {
+      const resp = await fetch('/mcp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'qesis_get_integrity', id: 1 })
+      });
+      if (!resp.ok) {
+        pollMs = Math.min(pollMs * 1.2, 300000);
+        return;
+      }
+      const j = await resp.json();
+      const remoteHash = j?.result?.hash || j?.result?.generation || '';
+      if (remoteHash && remoteHash !== LOCAL_HASH) {
+        mismatchCount++;
+        sendTelemetry('stale_detected', { remoteHash, mismatchCount });
+        pollMs = FAST_POLL_MS;
+        if (mismatchCount >= 1) showBannerAndReload(remoteHash);
+      } else {
+        mismatchCount = Math.max(0, mismatchCount - 1);
+        pollMs = Math.min(Math.max(INITIAL_POLL_MS, pollMs * 1.25), 300000);
+      }
+    } catch (e) {
+      pollMs = Math.min(pollMs * 1.2, 300000);
+    } finally {
+      setTimeout(checkOnce, pollMs);
     }
   }
+
+  function showBannerAndReload(remoteHash) {
+    if (document.getElementById('qesis-version-banner')) return;
+    sendTelemetry('stale_confirmed', { remoteHash });
+
+    const banner = document.createElement('div');
+    banner.id = 'qesis-version-banner';
+    banner.style = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:10000;background:#081426;color:#fff;padding:12px;border-radius:8px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 18px rgba(2,6,23,0.8);';
+    const txt = document.createElement('div'); txt.style.flex = '1'; txt.textContent = 'A new dashboard version is available.';
+    const refreshBtn = document.createElement('button'); refreshBtn.textContent = 'Refresh now'; refreshBtn.style = 'background:#2563eb;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;';
+    const countdown = document.createElement('span'); countdown.style.color = '#9ca3af';
+    const dismissBtn = document.createElement('button'); dismissBtn.textContent = 'Dismiss'; dismissBtn.style = 'background:transparent;color:#9ca3af;border:1px solid #334155;padding:6px 10px;border-radius:6px;cursor:pointer;';
+
+    refreshBtn.onclick = () => hardReload();
+    dismissBtn.onclick = () => { banner.remove(); sendTelemetry('stale_dismissed', { remoteHash }); };
+
+    banner.appendChild(txt); banner.appendChild(refreshBtn); banner.appendChild(countdown); banner.appendChild(dismissBtn);
+    document.body.appendChild(banner);
+
+    let remaining = Math.ceil(RELOAD_COUNTDOWN_MS / 1000);
+    countdown.textContent = ` Auto-refresh in ${remaining}s`;
+    sendTelemetry('stale_auto_reload_scheduled', { remoteHash, countdown_s: remaining });
+
+    const t = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) { clearInterval(t); hardReload(); }
+      else countdown.textContent = ` Auto-refresh in ${remaining}s`;
+    }, 1000);
+  }
+
+  function hardReload() {
+    sendTelemetry('stale_auto_reloaded', {});
+    try {
+      window.location.reload();
+      setTimeout(() => {
+        const sep = window.location.search ? '&' : '?';
+        window.location.replace(window.location.pathname + window.location.search + sep + 'cb=' + Date.now());
+      }, 1500);
+    } catch (e) {
+      const sep = window.location.search ? '&' : '?';
+      window.location.replace(window.location.pathname + window.location.search + sep + 'cb=' + Date.now());
+    }
+  }
+
+  // initial check
+  setTimeout(checkOnce, 0);
+})();
 </script>
-
-<!-- Auto-reload version check with analytics hook -->
-<script>
-  (function(){
-    // Polling cadence options:
-    // - 30s: aggressive near-real-time for operational dashboards (higher server & network cost)
-    // - 60s: balanced for most live dashboards (recommended default)
-    // - 300s (5 min): low-cost, suitable for slower-changing content
-    const POLL_INTERVAL_MS = 60000; // default 60s
-    const AUTO_RELOAD = true;      // when true, will auto-reload after countdown
-    const RELOAD_COUNTDOWN_MS = 5000; // user-visible delay before hard reload (ms)
-
-    const localCodeEl = document.querySelector('.footer-provenance code') || document.querySelector('code');
-    const localHash = (localCodeEl && localCodeEl.textContent || '').trim();
-    if (!localHash) return;
-
-    async function sendAnalytics(event, data) {
-      try {
-        const payload = { event, data, ts: new Date().toISOString() };
-        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-        if (navigator.sendBeacon) navigator.sendBeacon('/api/telemetry', blob);
-        else fetch('/api/telemetry', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) }).catch(()=>{});
-      } catch (e) { /* swallow */ }
-    }
-
-    async function checkOnce() {
-      try {
-        const resp = await fetch('/mcp', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ jsonrpc: "2.0", method: "qesis_get_integrity", id: 1 })
-        });
-        if (!resp.ok) { return; }
-        const json = await resp.json();
-        const remoteHash = json?.result?.hash || json?.result?.generation || '';
-        if (remoteHash && remoteHash !== localHash) {
-          sendAnalytics('stale_detected', { localHash, remoteHash });
-          showBannerAndReload(remoteHash);
-        }
-      } catch (e) {
-        // silent
-      }
-    }
-
-    function showBannerAndReload(remoteHash) {
-      if (document.getElementById('qesis-version-banner')) return;
-      const banner = document.createElement('div');
-      banner.id = 'qesis-version-banner';
-      banner.style = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:10000;background:#081426;color:#fff;padding:12px;border-radius:8px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 18px rgba(2,6,23,0.8);';
-
-      const text = document.createElement('div');
-      text.style.flex = '1';
-      text.innerText = 'A new dashboard version is available.';
-
-      const refreshBtn = document.createElement('button');
-      refreshBtn.textContent = 'Refresh now';
-      refreshBtn.style = 'background:#2563eb;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;';
-      refreshBtn.onclick = () => hardReload();
-
-      const countdown = document.createElement('span');
-      countdown.style.color = '#9ca3af';
-      countdown.style.marginLeft = '8px';
-
-      const dismissBtn = document.createElement('button');
-      dismissBtn.textContent = 'Dismiss';
-      dismissBtn.style = 'background:transparent;color:#9ca3af;border:1px solid #334155;padding:6px 10px;border-radius:6px;cursor:pointer;';
-      dismissBtn.onclick = () => { banner.remove(); sendAnalytics('stale_dismissed', { localHash, remoteHash }); };
-
-      banner.appendChild(text);
-      banner.appendChild(refreshBtn);
-      banner.appendChild(countdown);
-      banner.appendChild(dismissBtn);
-      document.body.appendChild(banner);
-
-      if (AUTO_RELOAD) {
-        let remaining = Math.ceil(RELOAD_COUNTDOWN_MS/1000);
-        countdown.innerText = ` Auto-refresh in ${remaining}s`;
-        sendAnalytics('stale_auto_reload_scheduled', { localHash, remoteHash, countdown_s: remaining });
-        const t = setInterval(()=>{
-          remaining -= 1;
-          if (remaining <= 0) { clearInterval(t); hardReload(); }
-          else countdown.innerText = ` Auto-refresh in ${remaining}s`;
-        }, 1000);
-      }
-    }
-
-    function hardReload() {
-      try { sendAnalytics('stale_auto_reloaded', { localHash }); } catch(e){}
-      // Hard reload bypassing cache
-      window.location.reload(true);
-      // Fallback: set window.location.href with cache-busting
-      setTimeout(()=>{ window.location = window.location.pathname + window.location.search + (window.location.search ? '&' : '?') + 'cb=' + Date.now(); }, 2000);
-    }
-
-    // initial check + polling
-    checkOnce();
-    setInterval(checkOnce, POLL_INTERVAL_MS);
-
-  })();
-</script>
-
-</html>
