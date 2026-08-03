@@ -1,9 +1,11 @@
+# api/index.py
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import logging
 
+# Instantiate FastAPI app
 # Instantiate FastAPI app so the serverless/ASGI environment picks it up
 app = FastAPI()
 logger = logging.getLogger("uvicorn.error")
@@ -17,6 +19,7 @@ class TelemetryPayload(BaseModel):
 @app.post("/api/telemetry")
 async def receive_telemetry(payload: TelemetryPayload):
     try:
+        # Structured logging for downstream ingestion
         # Structured logging for easier ingestion
         logger.info(
             "[TELEMETRY_EVENT] event=%s localHash=%s data=%s ts=%s",
@@ -25,6 +28,10 @@ async def receive_telemetry(payload: TelemetryPayload):
             payload.data,
             payload.ts,
         )
+        return JSONResponse(content={"status": "logged", "received": True}, status_code=200)
+    except Exception:
+        logger.exception("Failed to process telemetry payload")
+        raise HTTPException(status_code=500, detail="telemetry processing failed")
         # TODO: enqueue/persist to analytics store asynchronously
         return JSONResponse(content={"status": "logged", "received": True}, status_code=200)
     except Exception:
