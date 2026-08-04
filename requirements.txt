@@ -4,3 +4,7 @@
 mcp>=1.9,<2
 pydantic>=2.7,<3
 starlette>=0.37
+fastapi>=0.95
+pytest>=7.0
+httpx>=0.24
+uvicorn>=0.22
