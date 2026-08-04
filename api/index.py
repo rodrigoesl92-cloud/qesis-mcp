@@ -126,3 +126,14 @@ except NameError:
     from fastapi import FastAPI
     app = FastAPI(title='qesis-mcp (test fallback)')
 # ------------------------------------------------------------------
+ 
+
+# ---- BEGIN TEST-FALLBACK (auto) ----
+# Ensure tests importing rom api.index import app always succeed.
+# Do not overwrite an existing app variable.
+try:
+    app  # type: ignore[name-defined]
+except NameError:
+    from fastapi import FastAPI
+    app = FastAPI(title='qesis-mcp (test fallback)')
+# ---- END TEST-FALLBACK (auto) ----
