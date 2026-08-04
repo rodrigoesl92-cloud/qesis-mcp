@@ -2,8 +2,12 @@
   "name": "qesis-mcp",
   "version": "0.0.0",
   "private": true,
-  "engines": { "node": ">=18 <21" },
-  "scripts": { "build": "next build" },
+  "engines": {
+    "node": ">=18 <21"
+  },
+  "scripts": {
+    "build": "next build"
+  },
   "dependencies": {
     "next": "^14.0.0",
     "react": "^18.2.0",
