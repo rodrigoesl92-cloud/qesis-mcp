@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     zip.file(`manifest_${jobId}.json`, mockManifest);
     zip.file(`merkle_proof.txt`, "Anchored to Git Release: fc5424e");
 
-    const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
+    const zipBuffer = await zip.generateAsync({ type: 'uint8array' });
 
     return new NextResponse(zipBuffer, {
       status: 200,
