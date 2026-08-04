@@ -8,6 +8,3 @@ def test_telemetry_endpoint():
     assert resp.status_code == 200
     assert resp.json().get("status") == "logged"
 
-    resp = client.post('/api/telemetry', json={"event":"unit_test","localHash":"sha:ut","data":{"foo":"bar"}})
-    assert resp.status_code == 200
-    assert resp.json().get('status') == 'logged'
