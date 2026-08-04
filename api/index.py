@@ -89,7 +89,7 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
 
             response_data = {
-                "status": "success",
+                "status": "logged",
                 "message": "Telemetry payload received and processed.",
                 "received_data": body
             }
@@ -163,7 +163,7 @@ async def telemetry_endpoint(req: Request):
         body = {}
     db_status = await _compute_db_status()
     resp = {
-        "status": "success",
+        "status": "logged",
         "message": "Telemetry payload received and processed.",
         "received_data": body,
         "database_status": db_status,
@@ -171,3 +171,4 @@ async def telemetry_endpoint(req: Request):
     }
     return resp
 # ---- END TEST-ROUTES (auto) ----
+
