@@ -1,0 +1,15 @@
+{
+  "name": "qesis-mcp",
+  "version": "8.4.0",
+  "description": "Sovereign substrate intelligence (MCP server)",
+  "main": "server.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["mcp", "sovereignty", "analytics"],
+  "author": "Rodrigo Batista Silva",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
