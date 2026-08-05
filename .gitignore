@@ -67,3 +67,4 @@ REPORT_EXECUTIVE.md
 # sharing with anyone cloning this.
 .claude/settings.local.json
 .claude/*.local.json
+.env*
