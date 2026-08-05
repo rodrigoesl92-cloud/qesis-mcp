@@ -28,10 +28,57 @@ DATA_PATH = Path(__file__).parent / "data" / "qesis_v8.json"
 # the chain and never by the process that writes the index. Keeping it out of the
 # index is what stops the index builder from becoming a second self-reporter.
 CHAIN_PATH = Path(__file__).parent / "data" / "chain_attestation.json"
+# The spine is the evidence; the attestation is a second opinion about it. Both
+# are committed, so this process can recompute the first and check the second
+# against it rather than repeating either.
+SPINE_PATH = Path(__file__).parent / "data" / "chain_spine.jsonl"
 LICENSED = bool(os.environ.get("QESIS_LICENSE_KEY", "").strip())
 
 DATA: dict = {}
 _INDEX_SHA256: str | None = None
+_CHAIN_CACHE: tuple[str, dict] | None = None
+
+GENESIS = "0" * 64
+# Restated from the documented definition, not imported from
+# scripts/verify_chain.py. That verifier restates it rather than importing from
+# the producer for the same reason: two independent restatements that agree are
+# evidence, one shared import that agrees with itself is not. This is the third
+# restatement and it is held to the same rule.
+LINK_RULE = "sha256(prev_hash | input_hash | output_hash | timestamp)"
+
+
+def _link(prev: str, input_hash: str, output_hash: str, timestamp: str) -> str:
+    return hashlib.sha256(
+        f"{prev}|{input_hash}|{output_hash}|{timestamp}".encode("utf-8")
+    ).hexdigest()
+
+
+def _recompute_chain(raw: bytes) -> dict:
+    """Recompute every link from the committed spine. Raises if it cannot."""
+    rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+    if not rows:
+        raise ValueError("the committed spine is empty")
+    # A chain with a hole in it can still have every remaining link recompute,
+    # so the sequence is checked separately from the hashes. Deleting an entry
+    # and repointing its neighbour is only visible here.
+    expected_seq = list(range(rows[0]["seq"], rows[0]["seq"] + len(rows)))
+    dense = [r["seq"] for r in rows] == expected_seq
+    breaks: list[int] = []
+    prev = GENESIS
+    for r in rows:
+        if r["prev_hash"] != prev:
+            breaks.append(r["seq"])
+        if r["entry_hash"] != _link(prev, r["input_hash"], r["output_hash"], r["timestamp"]):
+            breaks.append(r["seq"])
+        prev = r["entry_hash"]
+    return {
+        "entries": len(rows),
+        "link_breaks": len(breaks),
+        "head_sha256": rows[-1]["entry_hash"],
+        "genesis_sha256": rows[0]["entry_hash"],
+        "sequence_dense": dense,
+        "broken_at": breaks[:8] or None,
+    }
 
 
 def _refresh() -> dict:
@@ -70,22 +117,97 @@ def _refresh() -> dict:
 
 
 def _chain() -> dict:
-    """The verified chain state, or a statement that it is unverified.
+    """The chain state, recomputed in this process from the committed spine.
 
-    Never fabricates a verdict. An absent attestation is reported as absent, because
+    Never fabricates a verdict. An unreadable spine is reported as unverified, because
     the failure this exists to prevent is a chain figure nobody can contradict, and
     a default of `0 link breaks` would recreate it in a worse form.
+
+    This used to return the attestation file verbatim. That was still a number the
+    reader had to take on trust: a deployment serving a stale or hand-edited
+    attestation would answer `604 entries, 0 link breaks` just as confidently as a
+    correct one, and nothing reachable over HTTP would disagree. The links are now
+    recomputed from `chain_spine.jsonl` on the deployment that is answering, and the
+    independent attestation is checked against that result rather than reported in
+    place of it. Disagreement is published under `attestation.agrees`; it is never
+    resolved silently in favour of either side.
+
+    C-01 still holds. This process neither appends to the chain nor writes the index,
+    so recomputing here is not self-reporting: it reads a committed artefact any
+    reader can recompute with `python scripts/verify_chain.py`.
     """
+    global _CHAIN_CACHE
     try:
-        return json.loads(CHAIN_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError) as exc:
+        raw = SPINE_PATH.read_bytes()
+    except OSError as exc:
         return {
             "status": "UNVERIFIED",
-            "reason": f"no readable attestation at {CHAIN_PATH.name}: "
-                      f"{type(exc).__name__}",
+            "reason": f"no readable spine at {SPINE_PATH.name}: {type(exc).__name__}",
             "effect": "Do not cite a chain height or a link-break count from this "
                       "deployment. None is being asserted.",
         }
+    # Keyed on content for the same reason as the index: two writes inside one
+    # filesystem timestamp tick would otherwise leave a cached verdict describing
+    # bytes that are no longer there.
+    digest = hashlib.sha256(raw).hexdigest()
+    if _CHAIN_CACHE is not None and _CHAIN_CACHE[0] == digest:
+        return _CHAIN_CACHE[1]
+
+    try:
+        computed = _recompute_chain(raw)
+    except (ValueError, KeyError, TypeError, UnicodeDecodeError) as exc:
+        return {
+            "status": "UNVERIFIED",
+            "reason": f"the spine did not parse: {type(exc).__name__}: {exc}",
+            "effect": "Do not cite a chain height or a link-break count from this "
+                      "deployment. None is being asserted.",
+        }
+
+    intact = computed["link_breaks"] == 0 and computed["sequence_dense"]
+    out = {
+        "status": "VERIFIED" if intact else "BROKEN",
+        **computed,
+        "spine_sha256": digest,
+        "link_rule": LINK_RULE,
+        "computed": ("Recomputed from data/chain_spine.jsonl by the process answering "
+                     "this request, not read from a stored figure."),
+        "reproduce": ("python scripts/verify_chain.py recomputes the same links from "
+                      "the same committed spine and exits non-zero if they disagree."),
+    }
+
+    # The second opinion, kept separate and never merged into the numbers above.
+    try:
+        att = json.loads(CHAIN_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        out["attestation"] = {
+            "present": False,
+            "reason": f"no readable attestation at {CHAIN_PATH.name}: {type(exc).__name__}",
+            "effect": "The recomputation above stands on its own; the independent "
+                      "cross-check does not.",
+        }
+    else:
+        disagreements = {
+            k: {"attestation": att.get(k), "spine": computed[k]}
+            for k in ("entries", "link_breaks", "head_sha256", "genesis_sha256")
+            if att.get(k) != computed[k]
+        }
+        out["attestation"] = {
+            "present": True,
+            "agrees": not disagreements,
+            "verifier": att.get("verifier"),
+            "verified_at_utc": att.get("verified_at_utc"),
+            "verified_from": att.get("verified_from"),
+            "independence": att.get("independence"),
+        }
+        if disagreements:
+            out["status"] = "DISPUTED"
+            out["attestation"]["disagreements"] = disagreements
+            out["attestation"]["effect"] = (
+                "The committed attestation does not follow from the committed spine. "
+                "Cite neither until that is resolved; one of the two artefacts is wrong.")
+
+    _CHAIN_CACHE = (digest, out)
+    return out
 
 
 def _provenance() -> dict:
@@ -182,7 +304,16 @@ def _allowed_hosts() -> list[str]:
         # page works and /mcp answers 421 to every client. An allowed host that
         # nobody is serving costs nothing: the guard checks the inbound Host
         # against this list, it does not advertise it.
-        hosts = ["qesis-mcp.vercel.app", "qesis.vercel.app",
+        #
+        # The custom domains are named explicitly and not left to VERCEL_*.
+        # VERCEL_PROJECT_PRODUCTION_URL resolves to the SHORTEST production
+        # domain, which is `qesis.eu`, while the domain that actually serves
+        # traffic is `www.qesis.eu` (qesis.eu answers 308 to it). Relying on that
+        # variable alone would have left every real request arriving on a Host
+        # the guard had never been told about, so /mcp would have answered 421
+        # from a deployment whose build, routes and tools were all correct.
+        hosts = ["qesis.eu", "www.qesis.eu",
+                 "qesis-mcp.vercel.app", "qesis.vercel.app",
                  "localhost", "localhost:*",
                  "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"]
     for var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):

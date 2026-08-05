@@ -1,1 +1,19 @@
-{"name":"qesis-mcp","version":"0.0.7","private":true,"engines":{"node":">=18.0.0"},"scripts":{"build":"next build","typecheck":"tsc --noEmit","lint":"next lint"},"dependencies":{"next":"^14.0.0","react":"^18.2.0","react-dom":"^18.2.0","jszip":"^3.10.1"},"devDependencies":{"typescript":"^5.3.3","@types/node":"^20.11.0","@types/jszip":"^3.4.1"}}
+{
+  "name": "qesis-mcp",
+  "version": "0.0.7",
+  "private": true,
+  "comment": "Python is the canonical runtime; see requirements.txt. This manifest exists only for the one remaining Node function, api/pack/download.ts, which needs jszip. There is deliberately no `build` script: declaring one made Vercel run `next build` against a repository that has no app/, pages/ or src/ directory, which failed every deployment from 9b9d0bb onward. Zero-config detection builds the Python and Node functions correctly on its own.",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.0"
+  }
+}

@@ -1,6 +1,11 @@
 # Runtime for both transports: stdio locally, streamable HTTP on Vercel.
 # starlette and pydantic arrive with mcp; pinned as direct deps because
 # server.py and api/index.py import them by name.
+#
+# There is exactly one web framework here. api/fsqca.py imported Flask, which was
+# never declared and so failed on import wherever it was touched; it is Starlette
+# now. Nothing in this repository requires Flask -- do not add it back to make an
+# import work, port the import instead.
 mcp>=1.9,<2
 pydantic>=2.7,<3
 starlette>=0.37
@@ -8,3 +13,8 @@ fastapi>=0.95
 pytest>=7.0
 httpx>=0.24
 uvicorn>=0.22
+# Ed25519 provenance signing in api/fsqca.py. It arrives transitively with mcp's
+# auth extras today; declared because a module imports it by name, and a
+# transitive dependency that disappears in a minor release takes the endpoint
+# with it.
+cryptography>=42
