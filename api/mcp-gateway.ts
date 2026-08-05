@@ -1,6 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   res.setHeader('Content-Type', 'application/json');
 
   if (req.method !== 'POST') {
@@ -9,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const body = req.body || {};
-    const { id = null, method, params } = body;
+    const { id = null, method } = body;
 
     if (method === 'initialize') {
       return res.status(200).json({
