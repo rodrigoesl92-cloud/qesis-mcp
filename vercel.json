@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     { "source": "/mcp", "destination": "/api/index" },
-    { "source": "/mcp/_diag", "destination": "/api/index" }
+    { "source": "/mcp/_diag", "destination": "/api/index" },
+    { "source": "/api/health", "destination": "/api/index" }
   ],
   "headers": [
     {

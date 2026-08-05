@@ -158,16 +158,21 @@ async def telemetry(request: Request) -> JSONResponse:
 async def route_diagnostic(request: Request) -> JSONResponse:
     """Report which path Vercel actually hands to this ASGI app.
 
-    Vercel rewrites /mcp to /api/index. Whether the function then receives the
-    ORIGINAL path or the REWRITTEN one is not something to assume: the Starlette
-    route the MCP library installs is an exact match on "/mcp", so guessing wrong
-    means a 404 from a deployment that built and imported perfectly. Both paths
-    are bound, so the answer does not change what works -- it just makes the
-    routing legible instead of folkloric.
+    ANSWERED, on dpl_H9x1RJ (preview, commit c47d418): Vercel forwards the
+    ORIGINAL path. A request to /mcp/_diag, rewritten in vercel.json to
+    /api/index, arrived at this app as "/mcp/_diag" and was answered by this
+    handler rather than by the MCP one. So the Starlette route must mount at
+    "/mcp", which is the library default, and every public path served by this
+    function needs both a rewrite in vercel.json AND a route here that matches
+    the ORIGINAL path. /api/health 404'd on that same deployment for exactly the
+    missing half: a route with no rewrite is never reached, because Vercel's
+    filesystem router looks for api/health.py first and there isn't one.
 
-    /mcp/_diag is rewritten to the same function. Reaching THIS handler proves
-    the original path is forwarded; being answered by the MCP handler instead
-    proves the rewritten path is.
+    The /api/index alias stays bound anyway. It costs one route, it makes the
+    function directly addressable without a rewrite, and it means a future change
+    to Vercel's forwarding behaviour degrades into a working deployment rather
+    than a 404. This endpoint stays so the next person reads the answer instead
+    of rediscovering it in production.
     """
     return JSONResponse({
         "asgi_path": request.url.path,
