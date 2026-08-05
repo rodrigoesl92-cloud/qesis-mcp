@@ -14,9 +14,16 @@ HANDOFF.md
 data/qesis_v*_superseded.json
 data/qesis_v*_CANDIDATE.json
 
-# Never publishable on any channel
-.env
-.env.*
+# Never publishable on any channel.
+# INC-20260805-01. The rule was `.env` plus `.env.*`, which matches `.env` and
+# `.env.local` but NOT `.env2` -- `.env.*` requires the dot. A file called
+# `.env2` holding ENTSOE_API_KEY was therefore not ignored, was committed in
+# 5dfd876, and reached a public repository. That is the second time this exact
+# credential has escaped through a naming gap: INC-20260731-01 was
+# "ENTSO-E API KEY.txt" slipping past `*.key`, which matches an extension and
+# not a name. A prefix rule is used here so the next `.env` variant is covered
+# before anyone invents it.
+.env*
 *.key
 *.pem
 credentials*.json
