@@ -1,0 +1,22 @@
+name: Sync Vercel Production Ref
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    sync:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+            token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Force sync fix/python-canonical-runtime to main
+          run: |
+            git config --global user.name "QESIS CI Bot"
+            git config --global user.email "ci@qesis.eu"
+            git checkout main
+            git push origin main:fix/python-canonical-runtime --force
