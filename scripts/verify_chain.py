@@ -44,6 +44,10 @@ def main() -> int:
     ap.add_argument("--spine", type=Path, default=ROOT / "data" / "chain_spine.jsonl")
     ap.add_argument("--attestation", type=Path,
                     default=ROOT / "data" / "chain_attestation.json")
+    ap.add_argument("--index", type=Path, default=ROOT / "data" / "qesis_v8.json",
+                    help="the served index, which must be attested by the spine. "
+                         "Point it at a copy to exercise C5 without touching the "
+                         "published artifact.")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
     say = (lambda *a: None) if args.quiet else print
@@ -103,6 +107,24 @@ def main() -> int:
                         f"this check implements {LINK_RULE!r}")
     if not att.get("verified_at_utc"):
         failures.append("C4 attestation carries no verification timestamp")
+
+    # ── 5. the served index must be attested by the chain (norm N2) ─────
+    # Until 2026-08-06 the chain recorded that actions happened and never which
+    # bytes were published, so a release could be entirely unattested and every
+    # gate would still be green. Matched as a parsed field rather than as a
+    # substring of the file: a substring match would also be satisfied by the
+    # hash appearing in any other position, which is a weaker claim than the one
+    # being made here.
+    if args.index.exists():
+        served = hashlib.sha256(args.index.read_bytes()).hexdigest()
+        bound = {r["artifact_sha"] for r in rows if r.get("artifact_sha")}
+        if served not in bound:
+            failures.append(
+                f"C5 the served index is not attested: {served[:12]}... is absent "
+                f"from the {len(bound)} artifact binding(s) in the spine. Bind it "
+                f"with sovereign-infra/scripts/bind_release.py, then re-export.")
+    else:
+        failures.append(f"C5 cannot check attestation: {args.index.name} is missing")
 
     say(f"chain spine: {len(rows)} entries, {len(breaks)} link breaks")
     say(f"  genesis {recomputed['genesis_sha256'][:16]}  "
