@@ -103,6 +103,19 @@ this vintage until it is re-derived.
 See [CODEBOOK.md](CODEBOOK.md) for axis construction, BIG thresholds, coupling and fsQCA
 specification.
 
+## Branches
+
+`main` is canonical. It is the only branch anyone should push to.
+
+`.github/workflows/mirror-production-ref.yml` keeps `fix/python-canonical-runtime`
+alive and current, because that is the ref Vercel's production branch setting names and
+that setting is not reachable from this repository. The mirror skips when the refs already
+match, and refuses when the target carries commits `main` does not, rather than deleting
+them.
+
+**Never delete `fix/python-canonical-runtime`.** Deleting it takes production dark until
+the branch is recreated, and no gate in this repository can catch that.
+
 ## Licence
 
 Engine MIT, index CC-BY-NC 4.0, upstream sources keep their own terms. See
