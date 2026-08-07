@@ -1,0 +1,83 @@
+{
+ "id": "SFC",
+ "name": "Semiconductor Fabrication Capacity",
+ "status": "WITHHELD",
+ "target_vintage": "v9.0",
+ "target_date": "2026-12-31",
+ "ledger_entry": "U-06",
+ "definition": "Installed wafer fabrication capacity located within the state's territory, normalised to a 0-100 stress scale where 100 is maximum dependency, that is minimum domestic capacity per unit of domestic compute demand. The axis measures fabrication located in the state, not corporate nationality of the operator: a foreign-owned fab on domestic soil is domestic capacity for substrate purposes, because the question is where the wafers can physically be made.",
+ "why_not_derivable": "There is no arithmetic route to this axis from the axes already published. WSE, CSE, REE, FPE, ODI, ESE and RGD measure water, cable, rare earth, platform, operator, electricity and region density. None of them is a proxy for fabrication capacity, and deriving one from them would produce a number that varies with inputs it has no causal relation to.",
+ "big_gate": {
+  "coverage_min": 0.75,
+  "rule": "The axis is publishable only when at least 75 percent of the sample carries a value from a citable source. Below that it is withheld with the cause stated per state, never imputed, per D-007.",
+  "on_failure": "WITHHELD WITH CAUSE. The axis is absent from the composite and the cause is published per state."
+ },
+ "ingestion_contract": {
+  "required_fields_per_state": [
+   "iso3",
+   "installed_capacity_wspm",
+   "capacity_unit",
+   "reference_year",
+   "process_nodes_covered"
+  ],
+  "required_provenance": [
+   "origin_url",
+   "publisher",
+   "license",
+   "retrieved_at"
+  ],
+  "rejected_publishers": "Aggregators are rejected per D-015 and L-007: Statista, Wikipedia, Medium, Substack. A capacity figure must come from the body that measures it or from the operator that reports it.",
+  "unit": "Wafer starts per month, 200mm-equivalent, so states running different node mixes are comparable. A source reporting only revenue, only fab count, or only announced-but-unbuilt capacity does not satisfy this contract: fab count is the RGD mistake repeated, a normalised count named as a measure.",
+  "announced_capacity": "Announced or under-construction capacity is recorded separately and never summed into installed capacity. A fab that does not yet make wafers makes no wafers.",
+  "minimum_to_publish": "A source covering at least 26 of the 35 states (0.75) on a single consistent definition. Stitching several partial sources with different units is how a coverage gate gets cleared on paper while the axis measures nothing."
+ },
+ "candidate_sources_unverified": [
+  "SEMI World Fab Forecast (licensed, coverage unverified)",
+  "WSTS billings by region (revenue, not capacity: fails the unit contract)",
+  "national statistical offices, per state (fails the single-definition contract)"
+ ],
+ "coverage": {
+  "n": 35,
+  "cited": 0,
+  "ratio": 0.0,
+  "cited_states": [],
+  "uncited_states": [
+   "ARE",
+   "AUS",
+   "AUT",
+   "BEL",
+   "BHR",
+   "BRA",
+   "CAN",
+   "CHE",
+   "CHL",
+   "DEU",
+   "DNK",
+   "ESP",
+   "FIN",
+   "FRA",
+   "GBR",
+   "HKG",
+   "IDN",
+   "IND",
+   "ISR",
+   "ITA",
+   "JPN",
+   "KOR",
+   "MEX",
+   "MYS",
+   "NLD",
+   "NOR",
+   "NZL",
+   "POL",
+   "QAT",
+   "SAU",
+   "SGP",
+   "SWE",
+   "TWN",
+   "USA",
+   "ZAF"
+  ]
+ },
+ "measured_against": "v8.5 (2026-08-01)"
+}
