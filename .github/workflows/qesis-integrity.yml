@@ -67,6 +67,13 @@ jobs:
       - name: Server contract smoke test
         run: python scripts/smoke_server.py
 
+      - name: Public routes are reachable (route AND rewrite)
+        # Every public surface needs two halves: a Starlette route matching the
+        # ORIGINAL path, and a vercel.json rewrite. /health had a route and no
+        # rewrite and 404'd in production for four days while every other check
+        # was green. This fails when either half is missing.
+        run: python scripts/test_routes.py
+
       - name: Served contract is fully implemented by this code
         # G-01 code/data atomicity. The index reloads on file change and
         # server.py does not, so a resident process can advance its vintage
@@ -83,8 +90,12 @@ jobs:
         # Catches the two failures that broke the first Vercel wiring: the
         # session manager never starting without lifespan events, and the
         # DNS-rebinding guard rejecting the production Host with 421.
-        env:
-          QESIS_ALLOWED_HOSTS: "qesis-mcp.vercel.app,qesis.vercel.app,localhost,localhost:*"
+        # No QESIS_ALLOWED_HOSTS override. That variable REPLACES the defaults
+        # rather than extending them, and the value set here omitted qesis.eu, so
+        # CI was exercising a narrower allowlist than production runs on. A guard
+        # tested against a list that is not the shipped list can pass while the
+        # apex domain is refused with 421. The defaults in server.py are the
+        # thing under test.
         run: python scripts/test_http.py
 
       - name: Evaluation set is in sync with the index

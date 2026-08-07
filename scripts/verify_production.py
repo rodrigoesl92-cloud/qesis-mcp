@@ -34,10 +34,16 @@ except Exception as e:                                             # noqa: BLE00
     print("      Without it there is no independent figure to hold production to.")
     sys.exit(1)
 
+# /health, not /api/health. Vercel's filesystem router owns /api/* and preempts
+# vercel.json rewrites, so a route under that namespace with no matching file is
+# unreachable however correctly it is registered. /mcp works for the same reason
+# in reverse: it sits outside /api/.
+HEALTH = "https://www.qesis.eu/health"
+
 try:
-    h = json.load(urllib.request.urlopen("https://www.qesis.eu/api/health", timeout=25))
+    h = json.load(urllib.request.urlopen(HEALTH, timeout=25))
 except Exception as e:                                             # noqa: BLE001
-    print(f"FAIL  production unreachable: {e}")
+    print(f"FAIL  production unreachable at {HEALTH}: {e}")
     sys.exit(1)
 
 chain = h.get("chain", {}) or {}

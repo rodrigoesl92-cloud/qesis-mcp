@@ -3,11 +3,21 @@
   "rewrites": [
     { "source": "/mcp", "destination": "/api/index" },
     { "source": "/mcp/_diag", "destination": "/api/index" },
+    { "source": "/health", "destination": "/api/index" },
+    { "source": "/diag", "destination": "/api/index" },
     { "source": "/api/health", "destination": "/api/index" }
   ],
   "headers": [
     {
       "source": "/mcp",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    },
+    {
+      "source": "/health",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    },
+    {
+      "source": "/diag",
       "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     },
     {

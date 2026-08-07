@@ -25,6 +25,13 @@ sys.path.insert(0, str(ROOT / "api"))
 
 fails: list[str] = []
 
+# Read from the committed attestation, never written here as a literal. This
+# said 604 while the chain stood at 652, so the check asserted a number that had
+# stopped being true and would have failed a correct deployment. A gate that
+# hardcodes the value it is checking is a stored claim, not a measurement.
+EXPECTED_ENTRIES = json.loads(
+    (ROOT / "data" / "chain_attestation.json").read_text(encoding="utf-8"))["entries"]
+
 
 def need(cond, msg):
     if not cond:
@@ -194,8 +201,8 @@ async def main() -> int:
             need(chain.get("status") == "VERIFIED",
                  f"chain did not verify at runtime: {chain.get('status')} "
                  f"{chain.get('reason', '')}")
-            need(chain.get("entries") == 604,
-                 f"chain entries={chain.get('entries')}, expected 604")
+            need(chain.get("entries") == EXPECTED_ENTRIES,
+                 f"chain entries={chain.get('entries')}, expected {EXPECTED_ENTRIES}")
             need(chain.get("link_breaks") == 0,
                  f"chain link_breaks={chain.get('link_breaks')}, expected 0")
             need((chain.get("attestation") or {}).get("agrees") is True,
@@ -208,14 +215,20 @@ async def main() -> int:
                   f"{chain.get('link_breaks')} link breaks, "
                   f"attestation agrees={(chain.get('attestation') or {}).get('agrees')}")
 
-        status, _, raw = await request(app, "GET", "/api/health", accept="application/json")
+        # /health, not /api/health. Vercel's filesystem router owns /api/* and
+        # preempts vercel.json rewrites, so a route registered under that
+        # namespace with no matching file is unreachable however correct it is.
+        # This probed /api/health while production 404'd on it, and agreed with
+        # production for the wrong reason.
+        status, _, raw = await request(app, "GET", "/health", accept="application/json")
         health = parse(raw)
-        need(status == 200, f"/api/health returned HTTP {status}: {str(health)[:200]}")
+        need(status == 200, f"/health returned HTTP {status}: {str(health)[:200]}")
         need(health.get("tool_count") == 8,
-             f"/api/health reports {health.get('tool_count')} tools")
-        need(health.get("chain", {}).get("entries") == 604,
-             f"/api/health chain entries={health.get('chain', {}).get('entries')}")
-        print(f"  /api/health: HTTP {status}, vintage {health.get('vintage')}, "
+             f"/health reports {health.get('tool_count')} tools")
+        need(health.get("chain", {}).get("entries") == EXPECTED_ENTRIES,
+             f"/health chain entries={health.get('chain', {}).get('entries')}, "
+             f"expected {EXPECTED_ENTRIES}")
+        print(f"  /health: HTTP {status}, vintage {health.get('vintage')}, "
               f"index {str(health.get('index_sha256'))[:12]}, "
               f"chain head {str(health.get('chain', {}).get('head_sha256'))[:12]}")
 

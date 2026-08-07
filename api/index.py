@@ -73,7 +73,7 @@ def _commit() -> str | None:
 # library reads _custom_starlette_routes.
 
 
-@mcp.custom_route("/api/health", methods=["GET"])
+@mcp.custom_route("/health", methods=["GET"])
 async def health(request: Request) -> JSONResponse:
     """What this process is serving, computed now.
 
@@ -131,8 +131,8 @@ async def health(request: Request) -> JSONResponse:
     return JSONResponse(body, status_code=200 if verified else 501)
 
 
-@mcp.custom_route("/api/telemetry", methods=["POST", "OPTIONS"])
-@mcp.custom_route("/api/ingest", methods=["POST", "OPTIONS"])
+@mcp.custom_route("/telemetry", methods=["POST", "OPTIONS"])
+@mcp.custom_route("/ingest", methods=["POST", "OPTIONS"])
 async def telemetry(request: Request) -> JSONResponse:
     """Compatibility shim for the dashboard's beacon.
 
@@ -155,6 +155,7 @@ async def telemetry(request: Request) -> JSONResponse:
 
 
 @mcp.custom_route("/mcp/_diag", methods=["GET"])
+@mcp.custom_route("/diag", methods=["GET"])
 async def route_diagnostic(request: Request) -> JSONResponse:
     """Report which path Vercel actually hands to this ASGI app.
 
@@ -167,6 +168,15 @@ async def route_diagnostic(request: Request) -> JSONResponse:
     the ORIGINAL path. /api/health 404'd on that same deployment for exactly the
     missing half: a route with no rewrite is never reached, because Vercel's
     filesystem router looks for api/health.py first and there isn't one.
+
+    Resolved 2026-08-07 by moving the health surface out of /api/ entirely. The
+    route was already mounted at "/health"; what was missing was the rewrite, so
+    /health had a handler nothing could route to and /api/health had a rewrite
+    the filesystem router preempted. Both halves now exist for /health and /diag,
+    which are outside the namespace Vercel owns and therefore reachable. The
+    /api/health rewrite is left in place because it is harmless, but nothing
+    depends on it: no api/health.py shim was added, because a shim that has not
+    been exercised against production is an assumption wearing a route.
 
     The /api/index alias stays bound anyway. It costs one route, it makes the
     function directly addressable without a rewrite, and it means a future change
