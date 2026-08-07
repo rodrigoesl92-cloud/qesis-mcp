@@ -54,10 +54,19 @@ need(all(C[i]["composite"] is not None for i in ranked), "ranked set impure")
 need(len(ranked) + len(d["epis_findings"]) == len(C),
      "ranked + EPIS does not account for the sample")
 
-# Pathway members must exist in the sample.
-for p in d["fsqca"]["pathways"]:
-    for m in p["members"]:
-        need(m in C, f"pathway {p['id']} names unknown state {m}")
+# Pathway members must exist in the sample. Pathways may also be absent: v8.5
+# withdrew the five v8.4 paths rather than amending them, because they were
+# carried from the v6.6 calibration D-103 proved to be an artefact. Absence is
+# permitted only when it is declared, so a block that simply loses its pathways
+# still fails here. Silence and withdrawal must not look alike to a reader.
+fsqca = d["fsqca"]
+if "pathways" in fsqca:
+    for p in fsqca["pathways"]:
+        for m in p["members"]:
+            need(m in C, f"pathway {p['id']} names unknown state {m}")
+else:
+    need(bool(fsqca.get("supersedes_pathways")),
+         "fsqca has no pathways and no supersedes_pathways statement explaining why")
 
 # Optional: assert the live tool surface if the runtime is importable.
 try:

@@ -266,7 +266,14 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
     not hypothetical; it is what happened, on a public endpoint, and nothing
     failed. This is the check that makes it fail.
     """
-    original = INDEX.read_text(encoding="utf-8")
+    # Bytes, not text, and this is not a detail. read_text applies universal
+    # newlines, so a file written with CRLF came back as LF and the restore
+    # below wrote LF over it. Running this suite therefore rewrote the published
+    # artefact: on 2026-08-07 it silently moved the v8.5 index from d423c9e9 to
+    # f2a29747 after the label had already been bound, breaking N1 by way of the
+    # test that exists to protect it. A check that mutates the artefact it is
+    # checking must restore it byte for byte or it is a defect wearing a gate.
+    original = INDEX.read_bytes()
 
     def run() -> tuple[int, str]:
         r = subprocess.run([sys.executable, str(CONTRACT_GATE), "--quiet"],
@@ -292,15 +299,15 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
 
         d = json.loads(original)
         d["served_contract"]["tools"]["qesis_get_integrity"].append("field_no_code_builds")
-        INDEX.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n",
-                         encoding="utf-8", newline="\n")
+        INDEX.write_bytes((json.dumps(d, indent=1, ensure_ascii=False) + "\n")
+                          .encode("utf-8"))
         rc, out = run()
         results.append(("caught: contract: data ahead of code", rc == 1 and "K3" in out))
 
         d = json.loads(original)
         d.pop("served_contract", None)
-        INDEX.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n",
-                         encoding="utf-8", newline="\n")
+        INDEX.write_bytes((json.dumps(d, indent=1, ensure_ascii=False) + "\n")
+                          .encode("utf-8"))
         rc, out = run()
         # A vintage that promises nothing must not read as a vintage that keeps
         # every promise. Exit 2, and it must be 2 for the declared reason rather
@@ -308,7 +315,12 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
         results.append(("caught: contract: declaration removed",
                         rc == 2 and "declares no served_contract" in out))
     finally:
-        INDEX.write_text(original, encoding="utf-8", newline="")
+        INDEX.write_bytes(original)
+        # Assert the restore, rather than trust it. This is the line that would
+        # have caught the lossy restore the moment it was introduced.
+        results.append((
+            "contract: the published index is restored byte for byte",
+            INDEX.read_bytes() == original))
 
 
 def check_idempotent() -> bool | None:

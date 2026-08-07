@@ -22,7 +22,9 @@
    "vintage": "v8.3 (2026-07-31)",
    "qesis_mcp_commit": "6088303",
    "sovereign_infra_commit": "f679013",
-   "superseded_hashes": {"sovereign_infra_commit": "1e5918e (pre-merge branch hash, rewritten by the 2026-08-01 rebase merge of sovereign-infra#7)"},
+   "superseded_hashes": {
+    "sovereign_infra_commit": "1e5918e (pre-merge branch hash, rewritten by the 2026-08-01 rebase merge of sovereign-infra#7)"
+   },
    "single_repo_reason": null,
    "summary": "CRD renamed RGD and recomputed. FPE and ODI method blocks. CSovE gated as diagnostic. Effective weights by bootstrap."
   },
@@ -30,9 +32,20 @@
    "vintage": "v8.4 (2026-08-01)",
    "qesis_mcp_commit": "5753e56",
    "sovereign_infra_commit": "5d4363a",
-   "superseded_hashes": {"qesis_mcp_commit": "b318855", "sovereign_infra_commit": "ed76c2f", "note": "pre-merge branch hashes, rewritten when qesis-mcp#8 and sovereign-infra#7 were rebase-merged on 2026-08-01"},
+   "superseded_hashes": {
+    "qesis_mcp_commit": "b318855",
+    "sovereign_infra_commit": "ed76c2f",
+    "note": "pre-merge branch hashes, rewritten when qesis-mcp#8 and sovereign-infra#7 were rebase-merged on 2026-08-01"
+   },
    "single_repo_reason": null,
    "summary": "Provenance vintage. No axis value and no composite changes. Adds the verified chain attestation (C-01), separated BIG withholding causes (C-02), the citation concordance and the v6.6 errata D-101 to D-106 (C-04), and the dated semiconductor scope (C-05)."
+  },
+  {
+   "vintage": "v8.5 (2026-08-01)",
+   "qesis_mcp_commit": "pending",
+   "sovereign_infra_commit": "pending",
+   "single_repo_reason": null,
+   "summary": "fsQCA block replaced wholesale from the D-103 re-run. Conditions calibrated from the published axes, outcome derived from the composite; all five D-103 violations resolved. Solution consistency 0.9048, coverage 0.5807, n=32. The REE necessity claim of 0.916 is withdrawn on triviality grounds, not threshold failure: RoN 0.5766 primary and 0.195 under the sensitivity anchors, and REE tracks the negated outcome at least as closely as the outcome. The five v8.4 pathways are withdrawn rather than amended. No axis, composite, coverage, coupling, CSovE or withholding value changed."
   }
  ]
 }

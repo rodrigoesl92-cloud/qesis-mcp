@@ -409,7 +409,13 @@ async def qesis_get_country(params: CountryInput) -> str:
     _refresh()
     c = _country_or_error(params.iso3)
     iso = params.iso3.upper()
-    paths = [p["id"] for p in DATA["fsqca"]["pathways"] if iso in p["members"]]
+    # v8.5 withdrew the five v8.4 pathways rather than amending them: they were
+    # carried from the v6.6 calibration D-103 proved to be an artefact. An empty
+    # list is the honest answer for a vintage that publishes none, and the
+    # withdrawal statement travels with it so a caller reading zero memberships
+    # can tell "none published" from "none matched".
+    paths = [p["id"] for p in (DATA["fsqca"].get("pathways") or [])
+             if iso in p["members"]]
     out = {
         "iso3": iso, "name": c["name"], "vintage": DATA["vintage"],
         "axes": {k: _score(v) for k, v in c["axes"].items()},
@@ -527,7 +533,9 @@ async def qesis_get_pathways(params: PathwayInput) -> str:
     if params.iso3:
         iso = params.iso3.upper()
         _country_or_error(iso)
-        fs = {**fs, "pathways": [p for p in fs["pathways"] if iso in p["members"]],
+        fs = {**fs,
+              "pathways": [p for p in (fs.get("pathways") or [])
+                           if iso in p["members"]],
               "filtered_for": iso}
     return json.dumps(fs, indent=1) + _tier_note()
 

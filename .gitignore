@@ -14,6 +14,12 @@ HANDOFF.md
 data/qesis_v*_superseded.json
 data/qesis_v*_CANDIDATE.json
 
+# Release backups written by the staging scripts, e.g. qesis_v8.json.pre-v8.5.bak.
+# Git history is the real backup; a stray copy of the index in the tree is a
+# second artefact with the same name and no binding, which is how a reader ends
+# up citing bytes nothing published.
+data/*.bak
+
 # Never publishable on any channel.
 # INC-20260805-01. The rule was `.env` plus `.env.*`, which matches `.env` and
 # `.env.local` but NOT `.env2` -- `.env.*` requires the dot. A file called
@@ -68,3 +74,10 @@ REPORT_EXECUTIVE.md
 .claude/settings.local.json
 .claude/*.local.json
 .env*
+*.env
+*secret*
+*SECRET*
+*credential*
+sk_test_*
+sk_live_*
+github-mcp-server/

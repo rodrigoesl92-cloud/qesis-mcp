@@ -1,5 +1,5 @@
 {
- "vintage": "v8.4 (2026-08-01)",
+ "vintage": "v8.5 (2026-08-01)",
  "supersedes": "v8.3 (2026-07-31)",
  "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
  "composite_model": {
@@ -2486,10 +2486,10 @@
     "severity": "high",
     "domain": "configurational",
     "statement": "The published fsQCA is not a calibration of the published axes. Five independent violations are recorded as D-103: identical raw values with divergent fuzzy membership, an inverted order between GBR and DEU on WSE, a near-constant condition present in every sufficient path, solution statistics that are internally inconsistent, and an outcome variable that contradicts the index it is meant to explain.",
-    "effect": "Pathway memberships, solution statistics and necessity results in this vintage are not derived from the axes published beside them. The reported consistency of 1.000 on all three paths is an artefact of the near-constant condition, not a result.",
-    "remedy": "Re-run the fsQCA pipeline against the published axes and re-derive every anchor, or mark the chapter withdrawn pending re-run. This is not citable as it stands.",
-    "supersedes_note": "Through v8.3 this entry read as affecting only the HYPER condition's calibration against the ordinal ODI. That understated it: HYPER is one of five violations and not the most serious. See errata D-103.",
-    "authority": "D-103, remediation spec 2026-08-01"
+    "effect": "Pathway memberships, solution statistics and necessity results in vintages through v8.4 are not derived from the axes published beside them. The reported consistency of 1.000 on all three paths is an artefact of the near-constant condition, not a result.",
+    "remedy": "Re-run complete, and the necessity claim is no longer withheld pending a computation. The computation was run and the claim did not survive it. REE returns necessity consistency 0.7033 with Relevance of Necessity 0.5766 and coverage of necessity 0.5763, holds above 0.5 in 29 of 32 cases, and scores 0.7268 against the negated outcome, which is higher than it scores against the outcome itself. The gate returns TRIVIAL. Publish the four measures rather than a bare consistency figure, and withdraw the necessity claim rather than restating it at a lower number.",
+    "supersedes_note": "Through v8.3 this entry read as affecting only the HYPER condition's calibration against the ordinal ODI. That understated it: HYPER is one of five violations and not the most serious. Through v8.4 the claim was described as withheld pending a re-run, which invited the reading that a number was still owed. No number is owed. See errata D-103.",
+    "authority": "D-103, remediation spec 2026-08-01; necessity gate added 2026-08-01 (Relevance of Necessity, coverage of necessity, prevalence, negated outcome)"
    },
    {
     "id": "U-03",
@@ -2698,108 +2698,739 @@
   "construct_validity_warning": "The FPE-ODI cell is definitional (FPE is 0.6*HHI, ODI is 100*HHI). Independent-measurement axes are WSE, CSE, REE and ESE only; their intercorrelations are the interpretable structure."
  },
  "fsqca": {
-  "model": "WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -> HIGH_SOV_VULN (n=35; freq>=1; incl>=0.80; conservative; Quine-McCluskey)",
-  "necessity": {
-   "REE": 0.916
-  },
-  "solution": {
-   "consistency": 0.807,
-   "coverage": 0.862
-  },
-  "robustness_7cond": {
-   "consistency": 0.809,
-   "coverage": 0.86
-  },
-  "outcome_anchors": {
-   "full_membership": 80,
-   "crossover": 55,
-   "full_exclusion": 30,
-   "anticircularity": "variant outcome deflates solution to 0.708 — published solution not condition-derived"
-  },
-  "pathways": [
-   {
-    "id": "P1",
-    "term": "CABLE*REE*esc_inv*gci_inv",
-    "label": "connectivity-mineral, strong institutions",
-    "consistency": 0.837,
-    "coverage": 0.664,
-    "members": [
-     "GBR",
-     "ESP",
-     "BEL",
-     "POL",
-     "SAU"
-    ]
-   },
-   {
-    "id": "P2",
-    "term": "REE*~HYPER*esc_inv*gci_inv",
-    "label": "mineral path without hyperscaler density",
-    "consistency": 0.849,
-    "coverage": 0.423,
-    "members": [
-     "ISR",
-     "FRA",
-     "ITA"
-    ]
-   },
-   {
-    "id": "P3",
-    "term": "WSE*~CABLE*REE*HYPER*gci_inv",
-    "label": "water-mineral-hyperscaler",
-    "consistency": 0.938,
-    "coverage": 0.488,
-    "members": [
-     "DEU",
-     "KOR",
-     "CHL"
-    ]
-   },
-   {
-    "id": "P4",
-    "term": "WSE*CABLE*HYPER*esc_inv*gci_inv",
-    "label": "full exposure",
-    "consistency": 0.951,
-    "coverage": 0.541,
-    "members": [
-     "ESP",
-     "USA",
-     "AUS",
-     "IDN"
-    ]
-   },
-   {
-    "id": "P5",
-    "term": "ESE*REE",
-    "label": "energy-mineral (sufficiency, not necessity)",
-    "consistency": 0.953,
-    "coverage": 0.3,
-    "members": [
-     "ZAF",
-     "IND",
-     "POL",
-     "IDN"
-    ],
-    "note": "necessity 0.481 rejected; near-perfect sufficiency"
-   }
-  ],
-  "recalibration_required": {
-   "condition": "HYPER",
-   "reason": "Calibrated on the ordinal ODI proxy. The axis is now the continuous Herfindahl measure, so the fuzzy-set membership thresholds no longer correspond to the published anchors.",
-   "status": "PENDING",
-   "affects": [
-    "pathways",
-    "solution",
-    "necessity"
-   ],
-   "instruction": "Re-run the fsQCA pipeline against the v8.2 ODI and re-derive the HYPER anchors before citing any pathway membership from this vintage."
-  },
+  "model": "WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -> HIGH_SOV_VULN (n=32; freq>=1; incl>=0.80; conservative; one absorption pass)",
   "conditions_source": {
    "WSE/CABLE/REE/HYPER": "axes WSE, CSE, REE, ODI",
    "ESC_inv": "100*(1 - EFF_SOV_EXT); per country under fsqca_conditions",
    "GCI_inv": "100 - GCI_2024; per country under fsqca_conditions",
    "note": "Both previously unqueryable (gap G2); exposed from v8.1."
-  }
+  },
+  "outcome_derivation": "Calibrated from the published composite. The v6.6 outcome was not derived from the index it was meant to explain and gave DEU, ESP and GBR one shared value of 0.99 (D-103 violation E).",
+  "calibration": {
+   "rule": "Ragin direct method, two-sided logistic, sample percentiles 80/50/20",
+   "anchors": {
+    "WSE": {
+     "x_in": 83.4,
+     "x_cross": 44.2,
+     "x_out": 19.0
+    },
+    "CABLE": {
+     "x_in": 39.7,
+     "x_cross": 19.45,
+     "x_out": 6.9
+    },
+    "REE": {
+     "x_in": 84.1,
+     "x_cross": 63.1,
+     "x_out": 55.5
+    },
+    "HYPER": {
+     "x_in": 55.6,
+     "x_cross": 43.75,
+     "x_out": 28.0
+    },
+    "ESC_inv": {
+     "x_in": 36.5,
+     "x_cross": 20.5,
+     "x_out": 15.7
+    },
+    "GCI_inv": {
+     "x_in": 6.5,
+     "x_cross": 1.8,
+     "x_out": 0.0
+    },
+    "HIGH_SOV_VULN": {
+     "x_in": 49.1,
+     "x_cross": 42.65,
+     "x_out": 32.5
+    }
+   },
+   "declared_because": "The terms are anchor-sensitive. A sensitivity run at fixed 75/50/25 reproduces the v6.6 trivial-driver failure through REE, so anchors are part of the result rather than a setting."
+  },
+  "sample": {
+   "n": 32,
+   "excluded": [
+    "HKG",
+    "SGP",
+    "TWN"
+   ],
+   "exclusion_rule": "States withheld under BIG carry no composite and are excluded, never imputed (D-007). Causes are published under withholding_causes."
+  },
+  "solution": {
+   "type": "conservative",
+   "sufficient_configurations": 10,
+   "consistency": 0.9048,
+   "coverage": 0.5807,
+   "terms": [
+    "CABLE * REE * HYPER * ~ESC_inv * GCI_inv",
+    "WSE * REE * ~HYPER * ESC_inv * ~GCI_inv",
+    "WSE * ~CABLE * REE * ESC_inv * GCI_inv",
+    "WSE * ~CABLE * REE * ~HYPER * ESC_inv",
+    "WSE * CABLE * ~HYPER * ~ESC_inv * ~GCI_inv",
+    "WSE * CABLE * ~REE * ~HYPER * ~ESC_inv",
+    "WSE * CABLE * REE * ESC_inv * ~GCI_inv",
+    "WSE * CABLE * REE * ~HYPER * ~GCI_inv"
+   ],
+   "per_path": [
+    {
+     "expression": "~WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv",
+     "raw_consistency": 0.8841,
+     "pri": 0.6587,
+     "raw_coverage": 0.1043,
+     "n_cases": 1,
+     "pri_flag": "below the 0.75 working convention",
+     "consistency_pri_gap": 0.2254
+    },
+    {
+     "expression": "WSE * ~CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv",
+     "raw_consistency": 0.8613,
+     "pri": 0.5804,
+     "raw_coverage": 0.1143,
+     "n_cases": 1,
+     "pri_flag": "below the 0.75 working convention",
+     "consistency_pri_gap": 0.2809
+    },
+    {
+     "expression": "WSE * ~CABLE * REE * ~HYPER * ESC_inv * GCI_inv",
+     "raw_consistency": 0.9347,
+     "pri": 0.8234,
+     "raw_coverage": 0.1586,
+     "n_cases": 3,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.1113
+    },
+    {
+     "expression": "WSE * ~CABLE * REE * HYPER * ESC_inv * GCI_inv",
+     "raw_consistency": 0.9535,
+     "pri": 0.9115,
+     "raw_coverage": 0.1157,
+     "n_cases": 2,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.042
+    },
+    {
+     "expression": "WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * ~GCI_inv",
+     "raw_consistency": 0.9322,
+     "pri": 0.8282,
+     "raw_coverage": 0.109,
+     "n_cases": 1,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.104
+    },
+    {
+     "expression": "WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * GCI_inv",
+     "raw_consistency": 0.8273,
+     "pri": 0.3032,
+     "raw_coverage": 0.1016,
+     "n_cases": 1,
+     "pri_flag": "DISQUALIFYING: PRI below 0.50",
+     "consistency_pri_gap": 0.5241
+    },
+    {
+     "expression": "WSE * CABLE * REE * ~HYPER * ~ESC_inv * ~GCI_inv",
+     "raw_consistency": 0.9179,
+     "pri": 0.8001,
+     "raw_coverage": 0.1477,
+     "n_cases": 1,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.1178
+    },
+    {
+     "expression": "WSE * CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv",
+     "raw_consistency": 0.8426,
+     "pri": 0.4587,
+     "raw_coverage": 0.1218,
+     "n_cases": 2,
+     "pri_flag": "DISQUALIFYING: PRI below 0.50",
+     "consistency_pri_gap": 0.3839
+    },
+    {
+     "expression": "WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv",
+     "raw_consistency": 0.9568,
+     "pri": 0.9106,
+     "raw_coverage": 0.1193,
+     "n_cases": 1,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.0462
+    },
+    {
+     "expression": "WSE * CABLE * REE * HYPER * ESC_inv * ~GCI_inv",
+     "raw_consistency": 0.9602,
+     "pri": 0.9328,
+     "raw_coverage": 0.1232,
+     "n_cases": 2,
+     "pri_flag": "clears the 0.75 working convention",
+     "consistency_pri_gap": 0.0274
+    }
+   ],
+   "pri_note": "PRI is published beside raw consistency per path because the two diverge exactly where the result is weakest. A large gap means the path is consistent with the outcome and with its negation at once, which is a simultaneous subset relation rather than a finding. PRI below 0.50 disqualifies a path; 0.75 is the working convention.",
+   "suite": {
+    "complex": {
+     "solution_type": "complex",
+     "terms": [
+      "-11101",
+      "1-1010",
+      "101-11",
+      "11-000",
+      "11000-",
+      "111-10"
+     ],
+     "expressions": [
+      "CABLE * REE * HYPER * ~ESC_inv * GCI_inv",
+      "WSE * REE * ~HYPER * ESC_inv * ~GCI_inv",
+      "WSE * ~CABLE * REE * ESC_inv * GCI_inv",
+      "WSE * CABLE * ~HYPER * ~ESC_inv * ~GCI_inv",
+      "WSE * CABLE * ~REE * ~HYPER * ~ESC_inv",
+      "WSE * CABLE * REE * ESC_inv * ~GCI_inv"
+     ],
+     "per_term": [
+      {
+       "term": "-11101",
+       "expression": "CABLE * REE * HYPER * ~ESC_inv * GCI_inv",
+       "consistency": 0.9155,
+       "coverage": 0.1481,
+       "pri": 0.8312
+      },
+      {
+       "term": "1-1010",
+       "expression": "WSE * REE * ~HYPER * ESC_inv * ~GCI_inv",
+       "consistency": 0.8072,
+       "coverage": 0.1478,
+       "pri": 0.3759
+      },
+      {
+       "term": "101-11",
+       "expression": "WSE * ~CABLE * REE * ESC_inv * GCI_inv",
+       "consistency": 0.9514,
+       "coverage": 0.2167,
+       "pri": 0.9016
+      },
+      {
+       "term": "11-000",
+       "expression": "WSE * CABLE * ~HYPER * ~ESC_inv * ~GCI_inv",
+       "consistency": 0.9361,
+       "coverage": 0.1938,
+       "pri": 0.8702
+      },
+      {
+       "term": "11000-",
+       "expression": "WSE * CABLE * ~REE * ~HYPER * ~ESC_inv",
+       "consistency": 0.8686,
+       "coverage": 0.1403,
+       "pri": 0.6769
+      },
+      {
+       "term": "111-10",
+       "expression": "WSE * CABLE * REE * ESC_inv * ~GCI_inv",
+       "consistency": 0.8926,
+       "coverage": 0.1891,
+       "pri": 0.7758
+      }
+     ],
+     "consistency": 0.9048,
+     "coverage": 0.5807,
+     "pri": 0.836,
+     "remainders_used": 0
+    },
+    "intermediate": {
+     "solution_type": "intermediate",
+     "produced": false,
+     "reason": "No directional expectations declared. An intermediate solution is the complex solution plus the logical remainders that theory says are plausible, so it cannot be computed without that theory. Declare directional_expectations per condition to produce it.",
+     "coverage": null,
+     "consistency": null
+    },
+    "parsimonious": {
+     "solution_type": "parsimonious",
+     "terms": [
+      "---010",
+      "-1--01",
+      "1----1",
+      "11----"
+     ],
+     "expressions": [
+      "~HYPER * ESC_inv * ~GCI_inv",
+      "CABLE * ~ESC_inv * GCI_inv",
+      "WSE * GCI_inv",
+      "WSE * CABLE"
+     ],
+     "per_term": [
+      {
+       "term": "---010",
+       "expression": "~HYPER * ESC_inv * ~GCI_inv",
+       "consistency": 0.6757,
+       "coverage": 0.1648,
+       "pri": 0.0
+      },
+      {
+       "term": "-1--01",
+       "expression": "CABLE * ~ESC_inv * GCI_inv",
+       "consistency": 0.8226,
+       "coverage": 0.2049,
+       "pri": 0.5694
+      },
+      {
+       "term": "1----1",
+       "expression": "WSE * GCI_inv",
+       "consistency": 0.7937,
+       "coverage": 0.4003,
+       "pri": 0.651
+      },
+      {
+       "term": "11----",
+       "expression": "WSE * CABLE",
+       "consistency": 0.9086,
+       "coverage": 0.4573,
+       "pri": 0.8538
+      }
+     ],
+     "consistency": 0.7961,
+     "coverage": 0.7032,
+     "pri": 0.6759,
+     "remainders_used": 43
+    },
+    "directional_expectations": null,
+    "coverage_ordering": {
+     "parsimonious": 0.7032,
+     "intermediate": null,
+     "complex": 0.5807,
+     "assertion": "coverage(parsimonious) >= coverage(complex)",
+     "holds": true,
+     "note": "Two-term check only: no intermediate solution was produced, because no directional expectations were declared."
+    }
+   },
+   "limit": "The complex and parsimonious solutions are computed. The intermediate solution is not, because it requires declared directional expectations, which are a theoretical input rather than a computed one. Defaulting them would publish a theoretical claim as a result.",
+   "v6_6_reporting_error": "v6.6 reported intermediate 0.920 against parsimonious 0.76. Coverage cannot fall as logical remainders are added, because each solution is a superset of the one below it, so no single truth table can produce that pair. It is a reporting error. The assertion that catches it is now in the pipeline and holds on this run: parsimonious 0.7032 against complex 0.5807."
+  },
+  "necessity": {
+   "WSE": {
+    "necessity_consistency": 0.7896,
+    "necessity_coverage": 0.8174
+   },
+   "~WSE": {
+    "necessity_consistency": 0.3449,
+    "necessity_coverage": 0.3598
+   },
+   "CABLE": {
+    "necessity_consistency": 0.6521,
+    "necessity_coverage": 0.7149
+   },
+   "~CABLE": {
+    "necessity_consistency": 0.4714,
+    "necessity_coverage": 0.4656
+   },
+   "REE": {
+    "necessity_consistency": 0.7033,
+    "necessity_coverage": 0.5763,
+    "erratum": {
+     "withdrawn_value": 0.916,
+     "withdrawn_from": [
+      "data/qesis_v8.json fsqca.necessity.REE, vintages through v8.4 (2026-08-01)",
+      "thesis section 4.5",
+      "ops/VINTAGE_LINEAGE.md and its JSON mirror",
+      "uncertainty ledger entry U-02"
+     ],
+     "superseding_value": 0.7033,
+     "verdict": "TRIVIAL",
+     "ground": "triviality, not threshold failure",
+     "why_not_threshold": "Under the sensitivity anchors REE returns consistency_N 0.9672, which is above 0.90. A withdrawal grounded on the 0.90 bar would be reversible by citing that regime. The disqualifying measure is Relevance of Necessity, below the 0.60 publishable bar under both regimes: 0.5766 primary and 0.195 sensitivity.",
+     "counterproof_negated_outcome": "REE returns necessity consistency 0.727 against the negated outcome against 0.703 against the outcome, so it tracks the absence of the result more closely than the result. Under the sensitivity anchors it is necessary for the outcome and its negation alike, which discriminates nothing.",
+     "prevalence": "Above the crossover in 29 of 32 cases under the primary anchors and 32 of 32 under the sensitivity anchors: a near-universal baseline state.",
+     "authority": "Schneider, C. Q., and Wagemann, C. (2012), ch. 5.",
+     "note": "PRI is a sufficiency measure and is not evidence for or against necessity. It appears in this block only under solution.per_path."
+    }
+   },
+   "~REE": {
+    "necessity_consistency": 0.4516,
+    "necessity_coverage": 0.6412
+   },
+   "HYPER": {
+    "necessity_consistency": 0.584,
+    "necessity_coverage": 0.5979
+   },
+   "~HYPER": {
+    "necessity_consistency": 0.4979,
+    "necessity_coverage": 0.5253
+   },
+   "ESC_inv": {
+    "necessity_consistency": 0.5999,
+    "necessity_coverage": 0.6573
+   },
+   "~ESC_inv": {
+    "necessity_consistency": 0.5146,
+    "necessity_coverage": 0.5085
+   },
+   "GCI_inv": {
+    "necessity_consistency": 0.454,
+    "necessity_coverage": 0.4972
+   },
+   "~GCI_inv": {
+    "necessity_consistency": 0.6447,
+    "necessity_coverage": 0.6374
+   }
+  },
+  "necessity_gate": {
+   "WSE": {
+    "condition": "WSE",
+    "consistency_N": 0.7896,
+    "coverage_N": 0.8174,
+    "relevance_of_necessity": 0.8446,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.3363,
+     "coverage_N": 0.3218,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "NECESSARY",
+    "reading": "Publishable as necessary, with the prevalence caveat: WSE holds above 0.5 in 16 of 32 cases (0.5)."
+   },
+   "~WSE": {
+    "condition": "~WSE",
+    "consistency_N": 0.3449,
+    "coverage_N": 0.3598,
+    "relevance_of_necessity": 0.6115,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.8092,
+     "coverage_N": 0.7805,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "~WSE scores 0.8092 against the negated outcome against 0.3449 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "CABLE": {
+    "condition": "CABLE",
+    "consistency_N": 0.6521,
+    "coverage_N": 0.7149,
+    "relevance_of_necessity": 0.7956,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.4148,
+     "coverage_N": 0.4205,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "NECESSARY",
+    "reading": "Publishable as necessary, with the prevalence caveat: CABLE holds above 0.5 in 16 of 32 cases (0.5)."
+   },
+   "~CABLE": {
+    "condition": "~CABLE",
+    "consistency_N": 0.4714,
+    "coverage_N": 0.4656,
+    "relevance_of_necessity": 0.6277,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.7187,
+     "coverage_N": 0.6564,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "~CABLE scores 0.7187 against the negated outcome against 0.4714 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "REE": {
+    "condition": "REE",
+    "consistency_N": 0.7033,
+    "coverage_N": 0.5763,
+    "relevance_of_necessity": 0.5766,
+    "cases_above_half": 29,
+    "n": 32,
+    "prevalence": 0.9062,
+    "negated_outcome": {
+     "consistency_N": 0.7268,
+     "coverage_N": 0.5506,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "REE scores 0.7268 against the negated outcome against 0.7033 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "~REE": {
+    "condition": "~REE",
+    "consistency_N": 0.4516,
+    "coverage_N": 0.6412,
+    "relevance_of_necessity": 0.8285,
+    "cases_above_half": 3,
+    "n": 32,
+    "prevalence": 0.0938,
+    "negated_outcome": {
+     "consistency_N": 0.4407,
+     "coverage_N": 0.5787,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "NECESSARY",
+    "reading": "Publishable as necessary, with the prevalence caveat: ~REE holds above 0.5 in 3 of 32 cases (0.0938)."
+   },
+   "HYPER": {
+    "condition": "HYPER",
+    "consistency_N": 0.584,
+    "coverage_N": 0.5979,
+    "relevance_of_necessity": 0.707,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.5134,
+     "coverage_N": 0.486,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "LABEL-DECLINED",
+    "reading": "RoN 0.707 clears the bar but coverage of necessity 0.5979 is below 0.6. Report the value and decline the necessity label."
+   },
+   "~HYPER": {
+    "condition": "~HYPER",
+    "consistency_N": 0.4979,
+    "coverage_N": 0.5253,
+    "relevance_of_necessity": 0.6847,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.5752,
+     "coverage_N": 0.5611,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "~HYPER scores 0.5752 against the negated outcome against 0.4979 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "ESC_inv": {
+    "condition": "ESC_inv",
+    "consistency_N": 0.5999,
+    "coverage_N": 0.6573,
+    "relevance_of_necessity": 0.7639,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.4621,
+     "coverage_N": 0.4681,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "NECESSARY",
+    "reading": "Publishable as necessary, with the prevalence caveat: ESC_inv holds above 0.5 in 16 of 32 cases (0.5)."
+   },
+   "~ESC_inv": {
+    "condition": "~ESC_inv",
+    "consistency_N": 0.5146,
+    "coverage_N": 0.5085,
+    "relevance_of_necessity": 0.6473,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.6617,
+     "coverage_N": 0.6046,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "~ESC_inv scores 0.6617 against the negated outcome against 0.5146 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "GCI_inv": {
+    "condition": "GCI_inv",
+    "consistency_N": 0.454,
+    "coverage_N": 0.4972,
+    "relevance_of_necessity": 0.6878,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.6033,
+     "coverage_N": 0.6109,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": true
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "TRIVIAL",
+    "reading": "GCI_inv scores 0.6033 against the negated outcome against 0.454 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+   },
+   "~GCI_inv": {
+    "condition": "~GCI_inv",
+    "consistency_N": 0.6447,
+    "coverage_N": 0.6374,
+    "relevance_of_necessity": 0.7134,
+    "cases_above_half": 16,
+    "n": 32,
+    "prevalence": 0.5,
+    "negated_outcome": {
+     "consistency_N": 0.5035,
+     "coverage_N": 0.4602,
+     "also_necessary_for_negation": false,
+     "no_better_than_negation": false
+    },
+    "thresholds": {
+     "RoN_publishable": 0.6,
+     "RoN_trivial_below": 0.5,
+     "coverage_N_publishable": 0.6
+    },
+    "verdict": "NECESSARY",
+    "reading": "Publishable as necessary, with the prevalence caveat: ~GCI_inv holds above 0.5 in 16 of 32 cases (0.5)."
+   }
+  },
+  "necessity_gate_method": "Consistency alone cannot establish necessity: a condition held by almost every case is a superset of almost every outcome and scores high without carrying information. Four measures are published per condition and per negation: consistency_N, coverage_N as sum(min(X,Y))/sum(X), Relevance of Necessity as sum(1-X)/sum(1-min(X,Y)), and the count of cases holding the condition above 0.5. Necessity is re-run against the negated outcome, because a condition that tracks a result and its absence equally well discriminates nothing. Decision rule: RoN at or above 0.60 with coverage_N at or above 0.60 is publishable as necessary with the prevalence caveat; RoN below 0.50 is reported as non-necessary or trivial; between the two the value is reported and the necessity label declined.",
+  "necessity_verdict": "No condition or negation is publishable as necessary. REE, published at 0.916 in thesis section 4.5, returns consistency 0.703 under the primary anchors with RoN 0.577 and coverage_N 0.576, and it holds above 0.5 in 29 of 32 cases. It also scores 0.727 against the negated outcome, higher than the 0.703 it scores against the outcome, so it tracks the absence of the result more closely than the result. The gate returns TRIVIAL. The sensitivity run is the demonstration: under fixed 75/50/25 anchors REE's necessity consistency rises to 0.967, close to the published 0.916, while RoN falls to 0.195 and coverage_N to 0.389. The consistency figure rises precisely because the condition becomes near-constant, which is the artefact the bare number cannot show.",
+  "diagnostics": {
+   "near_constancy": {
+    "WSE": {
+     "stdev": 0.4012,
+     "min": 0.0064,
+     "max": 0.9851,
+     "share_above_0.8": 0.375,
+     "near_constant": false
+    },
+    "CABLE": {
+     "stdev": 0.4001,
+     "min": 0.0103,
+     "max": 1.0,
+     "share_above_0.8": 0.344,
+     "near_constant": false
+    },
+    "REE": {
+     "stdev": 0.2727,
+     "min": 0.05,
+     "max": 0.95,
+     "share_above_0.8": 0.375,
+     "near_constant": false
+    },
+    "HYPER": {
+     "stdev": 0.4098,
+     "min": 0.0292,
+     "max": 1.0,
+     "share_above_0.8": 0.5,
+     "near_constant": false
+    },
+    "ESC_inv": {
+     "stdev": 0.3894,
+     "min": 0.0099,
+     "max": 0.9993,
+     "share_above_0.8": 0.312,
+     "near_constant": false
+    },
+    "GCI_inv": {
+     "stdev": 0.3904,
+     "min": 0.05,
+     "max": 1.0,
+     "share_above_0.8": 0.281,
+     "near_constant": false
+    }
+   },
+   "present_in_every_sufficient_path": [],
+   "why_published": "A condition that is high almost everywhere and present in every path yields consistency 1.000 trivially. Publishing the diagnostic is what lets a reader separate a result from an artefact."
+  },
+  "sensitivity": {
+   "anchors": "fixed substantive 75/50/25",
+   "sufficient_configurations": 6,
+   "consistency": 0.8954,
+   "coverage": 0.6528,
+   "check_failed": "C_no_trivial_constant_driver",
+   "finding": "REE becomes near-constant and appears in every sufficient path, which is structurally the v6.6 failure arriving through a different condition."
+  },
+  "robustness": {
+   "protocol": "Oana and Schneider (2021), SetMethods",
+   "status": "PARTIAL. Sensitivity ranges implemented; the two robustness families below are declared and not yet computed.",
+   "families": {
+    "sensitivity_ranges": {
+     "status": "IMPLEMENTED",
+     "what": "Vary the calibration anchors, the raw consistency threshold and the frequency threshold, and report the range over which the solution holds rather than one point estimate.",
+     "evidence": "Two anchor regimes are run: sample percentiles 80/50/20 as primary and fixed substantive 75/50/25 as sensitivity. They disagree, and the disagreement is the finding: REE becomes near-constant under the fixed anchors and its necessity consistency rises from 0.703 to 0.967 while RoN falls from 0.577 to 0.195."
+    },
+    "fit_oriented_robustness": {
+     "status": "DECLARED, NOT COMPUTED",
+     "what": "Compare parameters of fit across the test solutions: consistency, coverage and PRI under each perturbation, and report whether the solution's fit degrades gracefully or collapses."
+    },
+    "case_oriented_robustness": {
+     "status": "DECLARED, NOT COMPUTED",
+     "what": "Compare which cases are typical, deviant consistency and deviant coverage across the test solutions. A solution whose fit survives while its case membership churns is not robust in the sense that matters for interpretation."
+    }
+   },
+   "not_to_be_confused_with": {
+    "model_specification_robustness": "The 6-condition to 7-condition respecification, published in vintages through v8.4 as `robustness_7cond`, is MODEL-SPECIFICATION robustness: it asks whether the result survives a different condition set. The Oana and Schneider protocol asks whether the result survives different analytic choices on one specification. They answer different questions and neither substitutes for the other. Labelling the respecification as the robustness protocol would overstate what was tested."
+   }
+  },
+  "conceptual_independence_test": {
+   "renamed_from": "anticircularity",
+   "status": "AD HOC. Not an established named procedure and not to be cited as one.",
+   "what_it_does": "Re-runs the analysis against a variant outcome that is not derived from the composite, and reports how far the solution deflates. Through v8.3 this was recorded as `anticircularity: variant outcome deflates solution to 0.708`.",
+   "why_renamed": "The former name implied a standard test with an accepted specification and an accepted threshold. There is neither. It is a conceptual-independence probe devised for this study, it is useful, and it carries no external authority. Citing it as an established procedure would borrow authority it does not have.",
+   "standing_limitation": "The outcome is calibrated from the published composite, so the analysis explains the index using the axes the index is built from. That is coherent and it is circular, and the chapter states it plainly rather than resolving it with a test name."
+  },
+  "recalibration_required": {
+   "status": "RESOLVED_DECLINED",
+   "resolved_at": "2026-08-01",
+   "label_outcome": "The re-run completed and the necessity label is declined. HYPER returns RoN 0.707 with coverage_N 0.598 under the primary anchors and RoN 0.756 with coverage_N 0.547 under the sensitivity anchors: consistency_N 0.584 and 0.650 respectively, both far below any necessity bar. Executing the instruction is not the same as recovering the claim.",
+   "supersedes": "The v8.4 block scoped this to the HYPER condition alone, which understated D-103 exactly as ledger entry U-02 did.",
+   "scope_as_found": "All six conditions and the outcome, per D-103 violations A to E.",
+   "resolution": "Full re-run against the published axes with every anchor re-derived. Reproduce with scripts/rerun_fsqca_d103.py in sovereign-infra.",
+   "evidence": "ops/analysis/D-103_fsqca_rerun.json"
+  },
+  "supersedes_pathways": "The five v8.4 pathways were carried from the v6.6 calibration and are withdrawn. Pathway membership from any vintage at or before v8.4 is not citable."
  },
  "fidelity": {
   "anchors": {

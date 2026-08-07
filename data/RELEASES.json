@@ -1,0 +1,23 @@
+{
+  "v8.4 (2026-08-01)": {
+    "artifact_sha": "b8a5b5ad56129ada80421a0f952d6bb5fb8bfa8e5c35460fb95413f8fbca920c",
+    "bound_at": "2026-08-01T11:05:52Z",
+    "provenance": "provenance-only transformation of v8.3; no axis value changed",
+    "status": "superseded",
+    "superseded_by": "v8.5 (2026-08-01)",
+    "superseded_at": "2026-08-07T06:52:04Z"
+  },
+  "v8.5 (2026-08-01)": {
+    "artifact_sha": "f2a29747d6f269844b38369ae96120e2eb2bc5ba1441ef8b1022512a32693850",
+    "bound_at": "2026-08-07T07:03:30Z",
+    "provenance": "fsQCA block replaced wholesale from the D-103 re-run. No axis, composite, coverage, coupling, CSovE or withholding value changed. The REE necessity claim of 0.916 is withdrawn on triviality grounds and the five v8.4 pathways are withdrawn rather than amended.",
+    "status": "published",
+    "supersedes": [
+      "v8.4 (2026-08-01)"
+    ],
+    "binding_corrected": {
+      "superseded_artifact_sha": "d423c9e9780210b133538677881f26254e87e16b555201ce013b18ad8b9b370f",
+      "reason": "The first bind captured the CRLF form written under the platform default, making the artefact hash a function of the host. Corrected to the LF form before publication; the label was never committed or served under the superseded hash. Chain seq 653 records the superseded bind and is left in place, the chain being append-only."
+    }
+  }
+}
