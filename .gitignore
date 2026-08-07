@@ -81,3 +81,6 @@ REPORT_EXECUTIVE.md
 sk_test_*
 sk_live_*
 github-mcp-server/
+
+.env*
+!.env.example
