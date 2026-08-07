@@ -6,13 +6,18 @@
  "target_date": "2026-12-31",
  "ledger_entry": "U-06",
  "definition": "Installed wafer fabrication capacity located within the state's territory, normalised to a 0-100 stress scale where 100 is maximum dependency, that is minimum domestic capacity per unit of domestic compute demand. The axis measures fabrication located in the state, not corporate nationality of the operator: a foreign-owned fab on domestic soil is domestic capacity for substrate purposes, because the question is where the wafers can physically be made.",
- "why_not_derivable": "There is no arithmetic route to this axis from the axes already published. WSE, CSE, REE, FPE, ODI, ESE and RGD measure water, cable, rare earth, platform, operator, electricity and region density. None of them is a proxy for fabrication capacity, and deriving one from them would produce a number that varies with inputs it has no causal relation to.",
+ "why_not_derivable": "There is no arithmetic route to this axis from the axes already published. WSE, CSE, REE, FPE, ODI, ESE and RGD measure water, cable, rare earth, platform, operator, electricity and region density. None is a proxy for fabrication capacity, and deriving one from them would produce a number that varies with inputs it has no causal relation to.",
  "big_gate": {
   "coverage_min": 0.75,
-  "rule": "The axis is publishable only when at least 75 percent of the sample carries a value from a citable source. Below that it is withheld with the cause stated per state, never imputed, per D-007.",
+  "minimum_states": 27,
+  "minimum_states_derivation": "27 of 35 = 0.7714, which clears 0.75. 26 of 35 = 0.7429, which does not. The audit protocol was drafted against a 26-state bar and that figure is wrong: a source covering exactly 26 states would have been read as meeting the threshold and unlocked the axis below its own gate. Caught by scripts/prove_axis_sfc_contract.py, which checks the scaffold's stated minimum against the ratio it claims to implement. The ratio governs; the count is derived from it and never typed independently.",
+  "rule": "The axis is publishable only when at least 75 percent of the sample carries a value admitted by the ingestion contract. Below that it is withheld with the cause stated per state, never imputed, per D-007.",
   "on_failure": "WITHHELD WITH CAUSE. The axis is absent from the composite and the cause is published per state."
  },
  "ingestion_contract": {
+  "enforced_by": "scripts/verify_axis_sfc.py admit(), falsified by scripts/prove_axis_sfc_contract.py",
+  "note": "Every clause below is executable. The first version of this scaffold stated the unit, announced-capacity and publisher rules in prose and enforced only coverage, so a dataset measured in revenue would have counted toward the threshold and unlocked the axis on a number that measures something else.",
+  "canonical_unit": "wspm_200mm_equivalent",
   "required_fields_per_state": [
    "iso3",
    "installed_capacity_wspm",
@@ -26,16 +31,48 @@
    "license",
    "retrieved_at"
   ],
-  "rejected_publishers": "Aggregators are rejected per D-015 and L-007: Statista, Wikipedia, Medium, Substack. A capacity figure must come from the body that measures it or from the operator that reports it.",
-  "unit": "Wafer starts per month, 200mm-equivalent, so states running different node mixes are comparable. A source reporting only revenue, only fab count, or only announced-but-unbuilt capacity does not satisfy this contract: fab count is the RGD mistake repeated, a normalised count named as a measure.",
-  "announced_capacity": "Announced or under-construction capacity is recorded separately and never summed into installed capacity. A fab that does not yet make wafers makes no wafers.",
-  "minimum_to_publish": "A source covering at least 26 of the 35 states (0.75) on a single consistent definition. Stitching several partial sources with different units is how a coverage gate gets cleared on paper while the axis measures nothing."
+  "refused_units": [
+   "usd",
+   "usd_millions",
+   "revenue",
+   "market_share",
+   "market_share_pct",
+   "fab_count",
+   "fabs",
+   "n_fabs",
+   "wafer_starts_per_year"
+  ],
+  "refused_publishers": "Aggregators are refused per D-015 and L-007: Statista, Wikipedia, Medium, Substack. A capacity figure must come from the body that measures it or the operator that reports it.",
+  "aggregate_rows_refused": "A row naming anything that is not a state in the sample is refused. Rest of World, EU, Europe and Asia-Pacific cannot stand in for the states they contain: an aggregate admitted as one record would satisfy the coverage gate while leaving every state inside it unmeasured.",
+  "announced_capacity": "Recorded separately and never summed into installed capacity. A record flagged includes_announced_capacity is refused. A fab that does not yet make wafers makes no wafers.",
+  "baseline_identity": "Two sources may be merged only on proof that their 200mm-equivalent conversion is identical. A dataset for Asia on one baseline and a dataset for Europe on another produces a column that is not comparable across its own rows, and the gate cannot detect that from the values alone."
  },
- "candidate_sources_unverified": [
-  "SEMI World Fab Forecast (licensed, coverage unverified)",
-  "WSTS billings by region (revenue, not capacity: fails the unit contract)",
-  "national statistical offices, per state (fails the single-definition contract)"
- ],
+ "source_audit_protocol": {
+  "status": "PLANNED, NOT EXECUTED",
+  "provenance_of_this_plan": "Supplied by the operator 2026-08-07. The leads below are pointers to audit, not findings. None has been retrieved, opened or verified by this repository, and nothing here may be cited as evidence that such a dataset exists.",
+  "phase_1_policy_network": {
+   "vector": "Policy institutes synthesise capacity data; they do not count wafers. The objective is their appendices, bibliographies and data-licensing disclosures, to reach the primary source behind their charts.",
+   "target_unverified": "Interface, formerly Stiftung Neue Verantwortung (SNV), Berlin.",
+   "named_leads_unverified": [
+    "Jan-Peter Kleinhans and Julia Hess, 'Understanding the Global Chip Shortages' (2021)",
+    "Jan-Peter Kleinhans, testimony to the U.S.-China Economic and Security Review Commission (2022), reported to chart front-end capacity in wspm segmented by process node",
+    "Jan-Peter Kleinhans and John Lee, 'Europe's dependence on Chinese semiconductor manufacturing' (2022)"
+   ],
+   "what_to_extract": "Go to the methodology and data citations behind any chart measuring wspm, not the executive summary. Determine whether a slice of the SEMI World Fab Forecast was licensed, and whether a derived open dataset was published alongside. Check Zenodo and GitHub for a supplementary csv or an analytical pipeline.",
+   "go_no_go": "If the dataset aggregates states into Rest of World or Europe, it fails the aggregate-rows clause and cannot reach 27 states however complete it looks. Abandon Phase 1 and proceed to Phase 2."
+  },
+  "phase_2_industry_fallback": {
+   "vector": "Extract capacity from tier-one industry reporting, filtering strictly for the unit. The risk is marketing material stated as measurement.",
+   "targets_unverified": [
+    "SIA and BCG joint supply-chain reports, for methodology tables broken down by state rather than by region",
+    "TrendForce and IC Insights, scanned only for wafer starts per month in 200mm-equivalents"
+   ],
+   "reject_on_sight": "Any table measuring market share by revenue, tallying raw fab count, or listing announced but unbuilt capacity. These are the refused_units and the announced_capacity clause, and the gate enforces both.",
+   "baseline_check": "Verify each source's definition of a 200mm-equivalent before merging anything. Sources may not be combined without proving the conversion identical."
+  },
+  "outcome_rule": "The axis stays WITHHELD until a single source, on one consistent definition, is admitted for at least 27 of the 35 states. Stitching partial sources with different units is how a coverage gate is cleared on paper while the axis measures nothing."
+ },
+ "measured_against": "v8.5 (2026-08-01)",
  "coverage": {
   "n": 35,
   "cited": 0,
@@ -78,6 +115,5 @@
    "USA",
    "ZAF"
   ]
- },
- "measured_against": "v8.5 (2026-08-01)"
+ }
 }

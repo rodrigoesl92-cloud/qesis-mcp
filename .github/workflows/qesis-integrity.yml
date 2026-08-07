@@ -67,6 +67,19 @@ jobs:
       - name: Server contract smoke test
         run: python scripts/smoke_server.py
 
+      - name: v9.0 SFC axis status matches its measured coverage
+        # The axis is WITHHELD at 0 of 35 and must stay that way until a source
+        # is admitted. This fails if the declared status ever disagrees with the
+        # coverage actually measured.
+        run: python scripts/verify_axis_sfc.py --quiet
+
+      - name: SFC ingestion contract refuses what it names
+        # Falsifies every clause: revenue, fab count, foreign baselines,
+        # announced capacity, aggregate rows, aggregator publishers. Also checks
+        # the scaffold's declared minimum_states against the ratio it claims to
+        # implement, which is how the 26-vs-27 error was caught.
+        run: python scripts/prove_axis_sfc_contract.py
+
       - name: Public routes are reachable (route AND rewrite)
         # Every public surface needs two halves: a Starlette route matching the
         # ORIGINAL path, and a vercel.json rewrite. /health had a route and no

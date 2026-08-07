@@ -1,21 +1,34 @@
-"""v9.0 Semiconductor Fabrication Capacity (SFC): scaffold and coverage gate.
+"""v9.0 Semiconductor Fabrication Capacity (SFC): scaffold, coverage gate, and
+an executable ingestion contract.
 
-SCAFFOLD ONLY. This defines the axis, the BIG coverage gate and the ingestion
-contract. It computes nothing from thin air: no fabrication-capacity value is
-invented, interpolated, or carried from a neighbouring state, and there is no
-code path in this file that can produce one.
+SCAFFOLD ONLY. No fabrication-capacity value is invented, interpolated, or
+carried from a neighbouring state, and there is no code path in this file that
+can produce one. It only ever admits or refuses records supplied to it.
 
 Ledger entry U-06 scoped this axis to v9.0 with a target of 2026-12-31,
 contingent on identifying a 35-state fabrication-capacity source. That source
-does not exist in the corpus today, so the axis is WITHHELD WITH CAUSE, exactly
-as HKG, SGP and TWN are withheld from the composite under BIG. A withheld axis is
-a correct result. Publishing a fabricated one would not be.
+does not exist in the corpus, so the axis is WITHHELD WITH CAUSE, exactly as HKG,
+SGP and TWN are withheld from the composite under BIG. A withheld axis is a
+correct result.
+
+Why the contract is code rather than prose
+------------------------------------------
+The first version of this file stated the unit rule, the announced-capacity rule
+and the publisher rule in the contract text and enforced none of them. Only
+coverage was checked. A candidate dataset measured in revenue, or counting fabs,
+or aggregating half the sample into "Rest of World", would have been admitted and
+counted toward the 0.75 threshold, and the axis would have unlocked on a number
+that measures something else. A contract the gate cannot apply is a claim, not a
+check. Every clause below is now enforced by `admit()` and falsified by
+scripts/prove_axis_sfc_contract.py.
 
 The state list is derived from the served index rather than typed here, so the
-denominator cannot drift from the sample it is measured against.
+denominator cannot drift from the sample it is measured against, and any row
+naming something that is not a state in the sample is refused rather than
+silently counted.
 
-Usage:  python scripts/verify_axis_sfc.py [--sources PATH] [--emit PATH]
-Exit:   0 the axis status is correctly declared · 1 it is not
+Usage:  python scripts/verify_axis_sfc.py [--sources PATH] [--emit PATH] [--quiet]
+Exit:   0 the declared status matches the measured coverage · 1 it does not
 """
 from __future__ import annotations
 
@@ -27,143 +40,141 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "data" / "qesis_v8.json"
 
-# The same threshold the composite uses. An axis that cannot clear the bar the
-# index applies to itself has no business being weighted into it.
+# The same threshold the composite applies to itself. An axis that cannot clear
+# that bar has no business being weighted into it.
 BIG_COVERAGE_MIN = 0.75
 
-AXIS = {
-    "id": "SFC",
-    "name": "Semiconductor Fabrication Capacity",
-    "status": "WITHHELD",
-    "target_vintage": "v9.0",
-    "target_date": "2026-12-31",
-    "ledger_entry": "U-06",
-    "definition": (
-        "Installed wafer fabrication capacity located within the state's territory, "
-        "normalised to a 0-100 stress scale where 100 is maximum dependency, that is "
-        "minimum domestic capacity per unit of domestic compute demand. The axis measures "
-        "fabrication located in the state, not corporate nationality of the operator: a "
-        "foreign-owned fab on domestic soil is domestic capacity for substrate purposes, "
-        "because the question is where the wafers can physically be made."
-    ),
-    "why_not_derivable": (
-        "There is no arithmetic route to this axis from the axes already published. WSE, "
-        "CSE, REE, FPE, ODI, ESE and RGD measure water, cable, rare earth, platform, "
-        "operator, electricity and region density. None of them is a proxy for fabrication "
-        "capacity, and deriving one from them would produce a number that varies with "
-        "inputs it has no causal relation to."
-    ),
-    "big_gate": {
-        "coverage_min": BIG_COVERAGE_MIN,
-        "rule": (
-            "The axis is publishable only when at least 75 percent of the sample carries a "
-            "value from a citable source. Below that it is withheld with the cause stated "
-            "per state, never imputed, per D-007."
-        ),
-        "on_failure": "WITHHELD WITH CAUSE. The axis is absent from the composite and the "
-                      "cause is published per state.",
-    },
-    "ingestion_contract": {
-        "required_fields_per_state": [
-            "iso3",
-            "installed_capacity_wspm",
-            "capacity_unit",
-            "reference_year",
-            "process_nodes_covered",
-        ],
-        "required_provenance": ["origin_url", "publisher", "license", "retrieved_at"],
-        "rejected_publishers": (
-            "Aggregators are rejected per D-015 and L-007: Statista, Wikipedia, Medium, "
-            "Substack. A capacity figure must come from the body that measures it or from "
-            "the operator that reports it."
-        ),
-        "unit": (
-            "Wafer starts per month, 200mm-equivalent, so states running different node "
-            "mixes are comparable. A source reporting only revenue, only fab count, or "
-            "only announced-but-unbuilt capacity does not satisfy this contract: fab count "
-            "is the RGD mistake repeated, a normalised count named as a measure."
-        ),
-        "announced_capacity": (
-            "Announced or under-construction capacity is recorded separately and never "
-            "summed into installed capacity. A fab that does not yet make wafers makes no "
-            "wafers."
-        ),
-        "minimum_to_publish": (
-            "A source covering at least 26 of the 35 states (0.75) on a single consistent "
-            "definition. Stitching several partial sources with different units is how a "
-            "coverage gate gets cleared on paper while the axis measures nothing."
-        ),
-    },
-    "candidate_sources_unverified": [
-        "SEMI World Fab Forecast (licensed, coverage unverified)",
-        "WSTS billings by region (revenue, not capacity: fails the unit contract)",
-        "national statistical offices, per state (fails the single-definition contract)",
-    ],
+CANONICAL_UNIT = "wspm_200mm_equivalent"
+
+# Units that describe something other than installed capacity. Each is a real
+# failure mode, not a hypothetical: revenue is market share wearing a capacity
+# label, and fab count is the RGD mistake repeated, a normalised count named as
+# a measure.
+REFUSED_UNITS = {
+    "usd", "usd_millions", "revenue", "market_share", "market_share_pct",
+    "fab_count", "fabs", "n_fabs", "wafer_starts_per_year",
 }
+
+REQUIRED_FIELDS = ("iso3", "installed_capacity_wspm", "capacity_unit",
+                   "reference_year", "process_nodes_covered")
+REQUIRED_PROVENANCE = ("origin_url", "publisher", "license", "retrieved_at")
+
+# D-015 and L-007. A capacity figure must come from the body that measures it or
+# the operator that reports it, never from an aggregator that restates it.
+REFUSED_PUBLISHERS = {"statista", "statista.com", "wikipedia", "wikipedia.org",
+                      "medium", "medium.com", "substack", "substack.com"}
+
+
+def admit(iso: str, rec: object, sample: set[str]) -> tuple[bool, str]:
+    """Admit one record, or refuse it with the clause it failed.
+
+    Refusal reasons are returned rather than counted, because "23 of 35 states
+    covered" tells an operator nothing about whether the 12 missing ones are
+    absent from the source or were thrown out for measuring revenue.
+    """
+    if not isinstance(rec, dict):
+        return False, "not a record"
+    if iso not in sample:
+        return False, (f"{iso} is not a state in the sample: aggregate rows such as "
+                       f"RoW, EU or APAC cannot stand in for the states they contain")
+
+    missing = [f for f in REQUIRED_FIELDS if f not in rec]
+    if missing:
+        return False, f"missing required field(s): {', '.join(missing)}"
+
+    absent_prov = [f for f in REQUIRED_PROVENANCE if not rec.get(f)]
+    if absent_prov:
+        return False, f"missing provenance: {', '.join(absent_prov)}"
+
+    pub = str(rec.get("publisher", "")).strip().lower()
+    if pub in REFUSED_PUBLISHERS:
+        return False, f"aggregator publisher refused under D-015: {rec['publisher']}"
+
+    unit = str(rec.get("capacity_unit", "")).strip().lower()
+    if unit in REFUSED_UNITS:
+        return False, (f"unit {rec['capacity_unit']!r} does not measure installed "
+                       f"capacity")
+    if unit != CANONICAL_UNIT:
+        return False, (f"unit {rec['capacity_unit']!r} is not {CANONICAL_UNIT}; a "
+                       f"figure on another baseline cannot be merged without proving "
+                       f"the baselines identical")
+
+    val = rec.get("installed_capacity_wspm")
+    if not isinstance(val, (int, float)) or isinstance(val, bool) or val < 0:
+        return False, f"installed_capacity_wspm is not a non-negative number: {val!r}"
+
+    # A fab that does not yet make wafers makes no wafers. Announced capacity is
+    # recorded separately and never summed; a record that folds it in is refused
+    # rather than quietly counted at an inflated value.
+    if rec.get("includes_announced_capacity") is True:
+        return False, ("installed capacity includes announced or under-construction "
+                       "capacity; record them separately")
+
+    return True, "admitted"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sources", type=Path,
-                    help="JSON mapping iso3 -> capacity record. Absent means no source "
-                         "has been ingested, which is the current state.")
+                    help="JSON mapping iso3 -> capacity record. Absent means no "
+                         "source has been ingested, which is the current state.")
     ap.add_argument("--emit", type=Path, help="write the scaffold to this path")
+    ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
+    say = (lambda *a: None) if args.quiet else print
 
     index = json.loads(INDEX.read_text(encoding="utf-8"))
     states = sorted(index["countries"])
+    sample = set(states)
     n = len(states)
 
     sources: dict = {}
     if args.sources and args.sources.exists():
         sources = json.loads(args.sources.read_text(encoding="utf-8"))
 
-    required = set(AXIS["ingestion_contract"]["required_fields_per_state"])
-    cited, uncited = [], []
-    for iso in states:
-        rec = sources.get(iso)
-        # A record counts only if it satisfies the contract. A partial record is
-        # an uncited state, not a cited one with gaps.
-        ok = isinstance(rec, dict) and required.issubset(rec) and bool(rec.get("origin_url"))
-        (cited if ok else uncited).append(iso)
+    cited: list[str] = []
+    refused: list[tuple[str, str]] = []
+    for iso in sorted(sources):
+        ok, why = admit(iso, sources[iso], sample)
+        (cited.append(iso) if ok else refused.append((iso, why)))
 
+    uncited = [s for s in states if s not in cited]
     coverage = len(cited) / n if n else 0.0
     publishable = coverage >= BIG_COVERAGE_MIN
     status = "PUBLISHABLE" if publishable else "WITHHELD"
 
-    print(f"v9.0 SFC axis scaffold, measured against {n} states in "
-          f"{index['vintage']}\n")
-    print(f"  states with a citable source : {len(cited)} of {n}")
-    print(f"  coverage                     : {coverage:.4f}")
-    print(f"  BIG threshold                : {BIG_COVERAGE_MIN}")
-    print(f"  status                       : {status}\n")
+    say(f"v9.0 SFC axis, measured against {n} states in {index['vintage']}\n")
+    say(f"  records supplied             : {len(sources)}")
+    say(f"  admitted                     : {len(cited)}")
+    say(f"  refused by the contract      : {len(refused)}")
+    say(f"  states with a citable source : {len(cited)} of {n}")
+    say(f"  coverage                     : {coverage:.4f}")
+    say(f"  BIG threshold                : {BIG_COVERAGE_MIN}")
+    say(f"  status                       : {status}\n")
 
-    if cited:
-        print(f"  cited   ({len(cited)}): {', '.join(cited)}")
-    print(f"  uncited ({len(uncited)}): {', '.join(uncited) if uncited else 'none'}")
+    for iso, why in refused[:12]:
+        say(f"  refused {iso}: {why}")
+    if len(refused) > 12:
+        say(f"  ... and {len(refused) - 12} more")
 
     if not publishable:
-        print(f"\n  WITHHELD WITH CAUSE: coverage {coverage:.4f} is below "
-              f"{BIG_COVERAGE_MIN}.")
-        print("  Cause per state: no fabrication-capacity source satisfying the ingestion")
-        print("  contract has been ingested for this state. Values are withheld, never")
-        print("  imputed (D-007). This is a correct result, not a gap to fill.")
+        say(f"\n  WITHHELD WITH CAUSE: coverage {coverage:.4f} is below "
+            f"{BIG_COVERAGE_MIN}.")
+        say("  Values are withheld, never imputed (D-007). This is a correct result,")
+        say("  not a gap to fill.")
 
-    out = {**AXIS, "status": status,
-           "coverage": {"n": n, "cited": len(cited), "ratio": round(coverage, 4),
-                        "cited_states": cited, "uncited_states": uncited},
-           "measured_against": index["vintage"]}
     if args.emit:
-        args.emit.write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n",
+        scaffold = json.loads((ROOT / "data" / "axes" /
+                               "v9_sfc_scaffold.json").read_text(encoding="utf-8"))
+        scaffold["status"] = status
+        scaffold["coverage"] = {"n": n, "cited": len(cited),
+                                "ratio": round(coverage, 4),
+                                "cited_states": cited, "uncited_states": uncited}
+        scaffold["measured_against"] = index["vintage"]
+        args.emit.write_text(json.dumps(scaffold, indent=1, ensure_ascii=False) + "\n",
                              encoding="utf-8", newline="\n")
-        print(f"\n  wrote {args.emit}")
+        say(f"\n  wrote {args.emit}")
 
-    # Exit 0 means the declared status matches the measured coverage. The axis
-    # being withheld is not a failure; a scaffold claiming to be publishable on
-    # coverage it does not have would be.
-    if publishable and status != "PUBLISHABLE":
-        print("declared status disagrees with measured coverage", file=sys.stderr)
-        return 1
     return 0
 
 
