@@ -42,8 +42,8 @@
   },
   {
    "vintage": "v8.5 (2026-08-01)",
-   "qesis_mcp_commit": "pending",
-   "sovereign_infra_commit": "pending",
+   "qesis_mcp_commit": "df1472f",
+   "sovereign_infra_commit": "f67a824",
    "single_repo_reason": null,
    "summary": "fsQCA block replaced wholesale from the D-103 re-run. Conditions calibrated from the published axes, outcome derived from the composite; all five D-103 violations resolved. Solution consistency 0.9048, coverage 0.5807, n=32. The REE necessity claim of 0.916 is withdrawn on triviality grounds, not threshold failure: RoN 0.5766 primary and 0.195 under the sensitivity anchors, and REE tracks the negated outcome at least as closely as the outcome. The five v8.4 pathways are withdrawn rather than amended. No axis, composite, coverage, coupling, CSovE or withholding value changed."
   }
