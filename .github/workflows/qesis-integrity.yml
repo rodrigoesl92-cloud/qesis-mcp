@@ -1,0 +1,141 @@
+name: QESIS+ integrity gate
+
+# Runs in GitHub's cloud, not on the build machine. The gate reads only the
+# committed index, so it needs no OneDrive, no database and no local runtime.
+# This is the check whose absence let the v8.0 composite defect reach release.
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["data/**", "scripts/**", "server.py", ".github/workflows/**"]
+  pull_request:
+    paths: ["data/**", "scripts/**", "server.py"]
+  workflow_dispatch:
+  schedule:
+    # Ahead of the 08:30 local morning protocol, so a drift is already known.
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install runtime
+        # Before the gates, not after them. The self-test now exercises the
+        # served contract, which imports server.py, which needs mcp and
+        # pydantic. With this step further down the file the contract cases
+        # could not run at all, and one of them passed anyway because an
+        # unimportable runtime and a removed declaration both exit 2. A gate
+        # that passes for the wrong reason is the failure this repository
+        # exists to keep catching.
+        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
+      - name: Integrity gate
+        run: python scripts/verify_index.py
+
+      - name: Hash chain reproduces from the committed spine
+        # C-01. The endpoint publishes a chain height and a link-break count.
+        # Before this step those came from the runtime that appends to the
+        # chain, so no reader could contradict them. This recomputes every link
+        # from the committed spine and fails if the attestation does not follow.
+        run: python scripts/verify_chain.py
+
+      - name: Vintage is paired across both repositories
+        # G-01. Neither repository may serve a vintage the other does not
+        # record. The public runner cannot read the private repo, so it checks
+        # the committed mirror of its lineage register.
+        run: python scripts/verify_vintage_pairing.py
+
+      - name: Gate self-test (mutation)
+        # A gate that only ever passes proves nothing. This injects each defect
+        # class it must catch and fails the build if the gate misses one.
+        run: python scripts/test_gate.py
+
+      - name: Server contract smoke test
+        run: python scripts/smoke_server.py
+
+      - name: v9.0 SFC axis status matches its measured coverage
+        # The axis is WITHHELD at 0 of 35 and must stay that way until a source
+        # is admitted. This fails if the declared status ever disagrees with the
+        # coverage actually measured.
+        run: python scripts/verify_axis_sfc.py --quiet
+
+      - name: SFC ingestion contract refuses what it names
+        # Falsifies every clause: revenue, fab count, foreign baselines,
+        # announced capacity, aggregate rows, aggregator publishers. Also checks
+        # the scaffold's declared minimum_states against the ratio it claims to
+        # implement, which is how the 26-vs-27 error was caught.
+        run: python scripts/prove_axis_sfc_contract.py
+
+      - name: Public routes are reachable (route AND rewrite)
+        # Every public surface needs two halves: a Starlette route matching the
+        # ORIGINAL path, and a vercel.json rewrite. /health had a route and no
+        # rewrite and 404'd in production for four days while every other check
+        # was green. This fails when either half is missing.
+        run: python scripts/test_routes.py
+
+      - name: Served contract is fully implemented by this code
+        # G-01 code/data atomicity. The index reloads on file change and
+        # server.py does not, so a resident process can advance its vintage
+        # string while running older code. v8.4 did exactly that in public.
+        # CI always starts fresh, so a failure here means the data has genuinely
+        # moved past the code and the deploy that would publish the mismatch is
+        # stopped before it happens.
+        run: python scripts/verify_served_contract.py
+
+      - name: Coupling reproduces the published values
+        run: python scripts/coupling.py
+
+      - name: Serverless entry answers MCP over HTTP
+        # Catches the two failures that broke the first Vercel wiring: the
+        # session manager never starting without lifespan events, and the
+        # DNS-rebinding guard rejecting the production Host with 421.
+        # No QESIS_ALLOWED_HOSTS override. That variable REPLACES the defaults
+        # rather than extending them, and the value set here omitted qesis.eu, so
+        # CI was exercising a narrower allowlist than production runs on. A guard
+        # tested against a list that is not the shipped list can pass while the
+        # apex domain is refused with 421. The defaults in server.py are the
+        # thing under test.
+        run: python scripts/test_http.py
+
+      - name: Evaluation set is in sync with the index
+        # The v8.0 set was hand-written and began failing correct answers the
+        # moment the index was corrected. It is generated now, and this check
+        # is what keeps it honest.
+        run: python scripts/build_eval.py --check
+
+      - name: Landing page is in sync with the index
+        # The page is generated from the index, so it must not state a number
+        # the index no longer holds. Byte equality is the wrong test: the focus
+        # state rotates by day of year, so the numbers are what get compared.
+        run: python scripts/build_landing.py --check
+
+      - name: Summary
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          d = json.loads(pathlib.Path("data/qesis_v8.json").read_text(encoding="utf-8"))
+          lin, mdl = d.get("lineage", {}), d.get("composite_model", {})
+          print(f"## QESIS+ {d.get('vintage')}\n")
+          print(f"- formula `{mdl.get('formula_id')}`: `{mdl.get('expression')}`")
+          print(f"- states {lin.get('n_countries')}, ranked {lin.get('n_ranked')}, "
+                f"EPIS {lin.get('n_epis')}")
+          print(f"- generated {lin.get('generated_at_utc')}\n")
+          print("| source | sha256 |\n|---|---|")
+          for k, v in (lin.get("sources") or {}).items():
+              print(f"| `{k}` | `{v['sha256'][:16]}...` |")
+          PY

@@ -48,6 +48,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: This workflow must exist in the tree it is about to mirror
+        # A mirror that force-pushes a tree which no longer contains the mirror
+        # deletes itself, and does it on the run that also reports success. From
+        # then on nothing keeps the Vercel-watched ref alive and nothing says so.
+        # The merge of 2026-08-07 removed six workflow files from main in one
+        # commit; had this file been among them, the push that carried the
+        # deletion would have been the last one to happen.
+        run: |
+          SELF=".github/workflows/mirror-production-ref.yml"
+          if [ ! -f "$SELF" ]; then
+            echo "::error::$SELF is absent from the tree being mirrored."
+            echo "Pushing it would delete the mirror. Restore the file, then push again."
+            exit 1
+          fi
+          echo "$SELF present; safe to mirror."
+
       - name: Compare main with the Vercel-watched ref
         id: compare
         run: |
