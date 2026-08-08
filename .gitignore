@@ -84,3 +84,6 @@ github-mcp-server/
 
 .env*
 !.env.example
+
+.vercel
+.env*
