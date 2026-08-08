@@ -92,3 +92,7 @@ github-mcp-server/
 # data/axes/ and data/fsqca/ carries SHA-256 hashes pinning these inputs.
 data/electricity_yearly_*_EMBER.csv
 data/ember_electricity_data_methodology.pdf
+
+# Connection strings and local credential scratch. Never commit.
+database_string.txt
+*_connection_string.txt
