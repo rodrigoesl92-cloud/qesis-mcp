@@ -38,7 +38,7 @@ except Exception as e:                                             # noqa: BLE00
 # vercel.json rewrites, so a route under that namespace with no matching file is
 # unreachable however correctly it is registered. /mcp works for the same reason
 # in reverse: it sits outside /api/.
-HEALTH = "https://www.qesis.eu/health"
+HEALTH = "https://qesis-mcp.vercel.app/health"
 
 try:
     h = json.load(urllib.request.urlopen(HEALTH, timeout=25))
