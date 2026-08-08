@@ -1,0 +1,414 @@
+{
+  "generated_by": "scripts/ingest_emodnet.py",
+  "source_release": "EMODnet_HA_Cables_Telecommunication_20230628",
+  "source_crs": "WGS84 geographic (all 7 layers, verified from .prj)",
+  "attribution_method": "Segment midpoint to nearest of 912 verified landing cities within 150 km. Unmatched segments counted as unattributed, never forced.",
+  "totals": {
+    "layers": 7,
+    "features": 854,
+    "length_km": 269019.3,
+    "unattributed_km": 167917.5,
+    "unattributed_share": 0.6242
+  },
+  "layers": [
+    {
+      "layer": "DE_BSH_CONTIS_Data_CablesLine.shp",
+      "publisher_hint": "DE",
+      "features": 28,
+      "dbf_records": 28,
+      "length_km": 2830.2,
+      "unattributed_km": 128.3,
+      "countries_touched": [
+        "DEU",
+        "DNK",
+        "NOR",
+        "POL",
+        "SWE"
+      ]
+    },
+    {
+      "layer": "ES_CICA_Cables_Anadalucia.shp",
+      "publisher_hint": "ES",
+      "features": 29,
+      "dbf_records": 29,
+      "length_km": 4818.4,
+      "unattributed_km": 1949.0,
+      "countries_touched": [
+        "DZA",
+        "ESP",
+        "MAR"
+      ]
+    },
+    {
+      "layer": "FR_SHOM_C\u0192bles_t\u201al\u201acommunication.shp",
+      "publisher_hint": "FR",
+      "features": 603,
+      "dbf_records": 603,
+      "length_km": 212209.6,
+      "unattributed_km": 150317.3,
+      "countries_touched": [
+        "BEL",
+        "DZA",
+        "ESP",
+        "FRA",
+        "GBR",
+        "GRC",
+        "IRL",
+        "ITA",
+        "MAR",
+        "MLT",
+        "NLD",
+        "PRT",
+        "TUN",
+        "USA"
+      ]
+    },
+    {
+      "layer": "FR_SIGCables_Submarine_Cables_Routes.shp",
+      "publisher_hint": "FR",
+      "features": 60,
+      "dbf_records": 60,
+      "length_km": 23242.1,
+      "unattributed_km": 12388.0,
+      "countries_touched": [
+        "BEL",
+        "DEU",
+        "DZA",
+        "ESP",
+        "FRA",
+        "GBR",
+        "ITA",
+        "MAR",
+        "MLT",
+        "NLD",
+        "NOR",
+        "PRT",
+        "TUN"
+      ]
+    },
+    {
+      "layer": "MT_IOI_MOC_Telecommunication_Cables.shp",
+      "publisher_hint": "MT",
+      "features": 6,
+      "dbf_records": 6,
+      "length_km": 2678.2,
+      "unattributed_km": 1293.9,
+      "countries_touched": [
+        "GRC",
+        "ITA",
+        "MLT"
+      ]
+    },
+    {
+      "layer": "NL_Rijkswaterstaat_Telecom_kabels_noordzee.shp",
+      "publisher_hint": "NL",
+      "features": 98,
+      "dbf_records": 98,
+      "length_km": 22960.7,
+      "unattributed_km": 1687.2,
+      "countries_touched": [
+        "BEL",
+        "DEU",
+        "DNK",
+        "FRA",
+        "GBR",
+        "IRL",
+        "NLD",
+        "NOR"
+      ]
+    },
+    {
+      "layer": "UK_OGA_Fibre_Cables.shp",
+      "publisher_hint": "UK",
+      "features": 30,
+      "dbf_records": 30,
+      "length_km": 280.2,
+      "unattributed_km": 153.7,
+      "countries_touched": [
+        "GBR",
+        "NOR"
+      ]
+    }
+  ],
+  "qesis_rows": [
+    {
+      "iso3": "ARE",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "AUS",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "AUT",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": true
+    },
+    {
+      "iso3": "BEL",
+      "inherited_CSE_EMO": 62.4,
+      "emodnet_km_computed": 1784.8,
+      "emodnet_features": 42,
+      "landlocked": false
+    },
+    {
+      "iso3": "BHR",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "BRA",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "CAN",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "CHE",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": true
+    },
+    {
+      "iso3": "CHL",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "DEU",
+      "inherited_CSE_EMO": 2.9,
+      "emodnet_km_computed": 5960.1,
+      "emodnet_features": 48,
+      "landlocked": false
+    },
+    {
+      "iso3": "DNK",
+      "inherited_CSE_EMO": 25.4,
+      "emodnet_km_computed": 1588.5,
+      "emodnet_features": 23,
+      "landlocked": false
+    },
+    {
+      "iso3": "ESP",
+      "inherited_CSE_EMO": 78.3,
+      "emodnet_km_computed": 6694.7,
+      "emodnet_features": 40,
+      "landlocked": false
+    },
+    {
+      "iso3": "FIN",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "FRA",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": 28813.0,
+      "emodnet_features": 508,
+      "landlocked": false
+    },
+    {
+      "iso3": "GBR",
+      "inherited_CSE_EMO": 30.4,
+      "emodnet_km_computed": 22080.5,
+      "emodnet_features": 155,
+      "landlocked": false
+    },
+    {
+      "iso3": "HKG",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "IDN",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "IND",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "ISR",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "ITA",
+      "inherited_CSE_EMO": 0.0,
+      "emodnet_km_computed": 10825.9,
+      "emodnet_features": 39,
+      "landlocked": false
+    },
+    {
+      "iso3": "JPN",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "KOR",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "MEX",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "MYS",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "NLD",
+      "inherited_CSE_EMO": 24.3,
+      "emodnet_km_computed": 4805.2,
+      "emodnet_features": 64,
+      "landlocked": false
+    },
+    {
+      "iso3": "NOR",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": 3342.4,
+      "emodnet_features": 37,
+      "landlocked": false
+    },
+    {
+      "iso3": "NZL",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "POL",
+      "inherited_CSE_EMO": 96.9,
+      "emodnet_km_computed": 58.1,
+      "emodnet_features": 1,
+      "landlocked": false
+    },
+    {
+      "iso3": "QAT",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "SAU",
+      "inherited_CSE_EMO": 94.3,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "SGP",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "SWE",
+      "inherited_CSE_EMO": 55.7,
+      "emodnet_km_computed": 270.5,
+      "emodnet_features": 6,
+      "landlocked": false
+    },
+    {
+      "iso3": "TWN",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    },
+    {
+      "iso3": "USA",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": 2006.1,
+      "emodnet_features": 13,
+      "landlocked": false
+    },
+    {
+      "iso3": "ZAF",
+      "inherited_CSE_EMO": null,
+      "emodnet_km_computed": null,
+      "emodnet_features": 0,
+      "landlocked": false
+    }
+  ],
+  "reproduction_verdict": {
+    "qesis_states_sourced_by_emodnet": 12,
+    "coverage": 0.3429,
+    "big_gate": 0.75,
+    "passes_big_gate": false,
+    "inherited_column_filled_for": 10,
+    "inherited_values_with_no_emodnet_geometry": [
+      "SAU"
+    ],
+    "emodnet_sourced_but_inherited_null": [
+      "FRA",
+      "NOR",
+      "USA"
+    ],
+    "paired_states": [
+      "BEL",
+      "DEU",
+      "DNK",
+      "ESP",
+      "GBR",
+      "ITA",
+      "NLD",
+      "POL",
+      "SWE"
+    ],
+    "spearman_inherited_vs_computed_km": -0.467,
+    "pearson_inherited_vs_computed_km": -0.407,
+    "spearman_critical_005_n9": 0.683,
+    "verdict": "NOT REPRODUCIBLE. The inherited CSE_EMO column runs in the expected direction against EMODnet cable length but at rho -0.467 on n=9, below the 0.683 needed for significance. One published value, SAU 94.3, has zero EMODnet geometry and lies outside the EMODnet geographic remit under any of its products. France, which supplies the two largest layers in the release at 28,813 attributed km across 508 features, is published NULL."
+  },
+  "source_provenance": {
+    "release_dir": "EMODnet_HA_Cables_Telecommunication_20230628",
+    "sha256_shp_dbf_aggregate": "24f721a9bd046e6da98b680afb282290751c71ef12eaf1700fdb892fe7382606"
+  }
+}

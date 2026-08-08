@@ -1,0 +1,4043 @@
+{
+  "generated_by": "scripts/percolation_cse.py",
+  "closes": "ops/CONNECTIVITY_BATCH_AUDIT_2026-07-31.md:106",
+  "graph": {
+    "nodes": 1255,
+    "cities": 912,
+    "cables": 343,
+    "edges": 1489,
+    "components": 76,
+    "articulation_cities_recomputed": 88,
+    "articulation_cities_published": 88,
+    "articulation_overlap": 88
+  },
+  "campaigns": [
+    {
+      "label": "articulation_betweenness",
+      "curve": [
+        {
+          "step": 0,
+          "removed": null,
+          "lcc_cities": 625,
+          "lcc_share": 0.6853,
+          "n_components": 76,
+          "mean_component": 12.0,
+          "pair_connectivity": 0.4732
+        },
+        {
+          "step": 1,
+          "removed": "c3215",
+          "lcc_cities": 618,
+          "lcc_share": 0.6776,
+          "n_components": 79,
+          "mean_component": 11.53,
+          "pair_connectivity": 0.4638
+        },
+        {
+          "step": 2,
+          "removed": "c10397",
+          "lcc_cities": 577,
+          "lcc_share": 0.6327,
+          "n_components": 80,
+          "mean_component": 11.38,
+          "pair_connectivity": 0.4075
+        },
+        {
+          "step": 3,
+          "removed": "c5760",
+          "lcc_cities": 564,
+          "lcc_share": 0.6184,
+          "n_components": 81,
+          "mean_component": 11.22,
+          "pair_connectivity": 0.3906
+        },
+        {
+          "step": 4,
+          "removed": "c3522",
+          "lcc_cities": 548,
+          "lcc_share": 0.6009,
+          "n_components": 82,
+          "mean_component": 11.07,
+          "pair_connectivity": 0.3701
+        },
+        {
+          "step": 5,
+          "removed": "c3239",
+          "lcc_cities": 546,
+          "lcc_share": 0.5987,
+          "n_components": 83,
+          "mean_component": 10.93,
+          "pair_connectivity": 0.3683
+        },
+        {
+          "step": 6,
+          "removed": "c5745",
+          "lcc_cities": 544,
+          "lcc_share": 0.5965,
+          "n_components": 84,
+          "mean_component": 10.79,
+          "pair_connectivity": 0.3665
+        },
+        {
+          "step": 7,
+          "removed": "c3649",
+          "lcc_cities": 530,
+          "lcc_share": 0.5811,
+          "n_components": 85,
+          "mean_component": 10.65,
+          "pair_connectivity": 0.3491
+        },
+        {
+          "step": 8,
+          "removed": "c8360",
+          "lcc_cities": 514,
+          "lcc_share": 0.5636,
+          "n_components": 86,
+          "mean_component": 10.51,
+          "pair_connectivity": 0.3297
+        },
+        {
+          "step": 9,
+          "removed": "c9603",
+          "lcc_cities": 501,
+          "lcc_share": 0.5493,
+          "n_components": 87,
+          "mean_component": 10.38,
+          "pair_connectivity": 0.3144
+        },
+        {
+          "step": 10,
+          "removed": "c3030",
+          "lcc_cities": 495,
+          "lcc_share": 0.5428,
+          "n_components": 90,
+          "mean_component": 10.02,
+          "pair_connectivity": 0.3078
+        },
+        {
+          "step": 11,
+          "removed": "c4554",
+          "lcc_cities": 493,
+          "lcc_share": 0.5406,
+          "n_components": 91,
+          "mean_component": 9.9,
+          "pair_connectivity": 0.306
+        },
+        {
+          "step": 12,
+          "removed": "c5945",
+          "lcc_cities": 482,
+          "lcc_share": 0.5285,
+          "n_components": 93,
+          "mean_component": 9.68,
+          "pair_connectivity": 0.2935
+        },
+        {
+          "step": 13,
+          "removed": "c3640",
+          "lcc_cities": 482,
+          "lcc_share": 0.5285,
+          "n_components": 94,
+          "mean_component": 9.56,
+          "pair_connectivity": 0.294
+        },
+        {
+          "step": 14,
+          "removed": "c4190",
+          "lcc_cities": 474,
+          "lcc_share": 0.5197,
+          "n_components": 95,
+          "mean_component": 9.45,
+          "pair_connectivity": 0.2853
+        },
+        {
+          "step": 15,
+          "removed": "c4816",
+          "lcc_cities": 474,
+          "lcc_share": 0.5197,
+          "n_components": 97,
+          "mean_component": 9.25,
+          "pair_connectivity": 0.2858
+        },
+        {
+          "step": 16,
+          "removed": "c5779",
+          "lcc_cities": 466,
+          "lcc_share": 0.511,
+          "n_components": 98,
+          "mean_component": 9.14,
+          "pair_connectivity": 0.2771
+        },
+        {
+          "step": 17,
+          "removed": "c3160",
+          "lcc_cities": 458,
+          "lcc_share": 0.5022,
+          "n_components": 101,
+          "mean_component": 8.86,
+          "pair_connectivity": 0.2685
+        },
+        {
+          "step": 18,
+          "removed": "c5818",
+          "lcc_cities": 456,
+          "lcc_share": 0.5,
+          "n_components": 102,
+          "mean_component": 8.76,
+          "pair_connectivity": 0.2668
+        },
+        {
+          "step": 19,
+          "removed": "c5973",
+          "lcc_cities": 448,
+          "lcc_share": 0.4912,
+          "n_components": 105,
+          "mean_component": 8.5,
+          "pair_connectivity": 0.2584
+        },
+        {
+          "step": 20,
+          "removed": "c5862",
+          "lcc_cities": 444,
+          "lcc_share": 0.4868,
+          "n_components": 107,
+          "mean_component": 8.34,
+          "pair_connectivity": 0.2545
+        },
+        {
+          "step": 21,
+          "removed": "c3082",
+          "lcc_cities": 442,
+          "lcc_share": 0.4846,
+          "n_components": 108,
+          "mean_component": 8.25,
+          "pair_connectivity": 0.2528
+        },
+        {
+          "step": 22,
+          "removed": "c3319",
+          "lcc_cities": 442,
+          "lcc_share": 0.4846,
+          "n_components": 108,
+          "mean_component": 8.24,
+          "pair_connectivity": 0.2533
+        },
+        {
+          "step": 23,
+          "removed": "c14613",
+          "lcc_cities": 442,
+          "lcc_share": 0.4846,
+          "n_components": 109,
+          "mean_component": 8.16,
+          "pair_connectivity": 0.2538
+        },
+        {
+          "step": 24,
+          "removed": "c8973",
+          "lcc_cities": 442,
+          "lcc_share": 0.4846,
+          "n_components": 110,
+          "mean_component": 8.07,
+          "pair_connectivity": 0.2542
+        },
+        {
+          "step": 25,
+          "removed": "c3077",
+          "lcc_cities": 442,
+          "lcc_share": 0.4846,
+          "n_components": 112,
+          "mean_component": 7.92,
+          "pair_connectivity": 0.2547
+        },
+        {
+          "step": 26,
+          "removed": "c3251",
+          "lcc_cities": 438,
+          "lcc_share": 0.4803,
+          "n_components": 113,
+          "mean_component": 7.84,
+          "pair_connectivity": 0.2508
+        },
+        {
+          "step": 27,
+          "removed": "c5823",
+          "lcc_cities": 435,
+          "lcc_share": 0.477,
+          "n_components": 114,
+          "mean_component": 7.76,
+          "pair_connectivity": 0.248
+        },
+        {
+          "step": 28,
+          "removed": "c10374",
+          "lcc_cities": 430,
+          "lcc_share": 0.4715,
+          "n_components": 115,
+          "mean_component": 7.69,
+          "pair_connectivity": 0.2431
+        },
+        {
+          "step": 29,
+          "removed": "c6025",
+          "lcc_cities": 430,
+          "lcc_share": 0.4715,
+          "n_components": 115,
+          "mean_component": 7.68,
+          "pair_connectivity": 0.2436
+        },
+        {
+          "step": 30,
+          "removed": "c7713",
+          "lcc_cities": 428,
+          "lcc_share": 0.4693,
+          "n_components": 116,
+          "mean_component": 7.6,
+          "pair_connectivity": 0.242
+        },
+        {
+          "step": 31,
+          "removed": "c3867",
+          "lcc_cities": 424,
+          "lcc_share": 0.4649,
+          "n_components": 117,
+          "mean_component": 7.53,
+          "pair_connectivity": 0.2381
+        },
+        {
+          "step": 32,
+          "removed": "c3330",
+          "lcc_cities": 422,
+          "lcc_share": 0.4627,
+          "n_components": 118,
+          "mean_component": 7.46,
+          "pair_connectivity": 0.2365
+        },
+        {
+          "step": 33,
+          "removed": "c5885",
+          "lcc_cities": 420,
+          "lcc_share": 0.4605,
+          "n_components": 119,
+          "mean_component": 7.39,
+          "pair_connectivity": 0.2348
+        },
+        {
+          "step": 34,
+          "removed": "c3871",
+          "lcc_cities": 416,
+          "lcc_share": 0.4561,
+          "n_components": 120,
+          "mean_component": 7.32,
+          "pair_connectivity": 0.2311
+        },
+        {
+          "step": 35,
+          "removed": "c5736",
+          "lcc_cities": 416,
+          "lcc_share": 0.4561,
+          "n_components": 120,
+          "mean_component": 7.31,
+          "pair_connectivity": 0.2316
+        },
+        {
+          "step": 36,
+          "removed": "c10375",
+          "lcc_cities": 416,
+          "lcc_share": 0.4561,
+          "n_components": 120,
+          "mean_component": 7.3,
+          "pair_connectivity": 0.2321
+        },
+        {
+          "step": 37,
+          "removed": "c5776",
+          "lcc_cities": 412,
+          "lcc_share": 0.4518,
+          "n_components": 121,
+          "mean_component": 7.23,
+          "pair_connectivity": 0.2283
+        },
+        {
+          "step": 38,
+          "removed": "c3221",
+          "lcc_cities": 408,
+          "lcc_share": 0.4474,
+          "n_components": 122,
+          "mean_component": 7.16,
+          "pair_connectivity": 0.2245
+        },
+        {
+          "step": 39,
+          "removed": "c3214",
+          "lcc_cities": 405,
+          "lcc_share": 0.4441,
+          "n_components": 124,
+          "mean_component": 7.04,
+          "pair_connectivity": 0.2219
+        },
+        {
+          "step": 40,
+          "removed": "c5754",
+          "lcc_cities": 402,
+          "lcc_share": 0.4408,
+          "n_components": 125,
+          "mean_component": 6.98,
+          "pair_connectivity": 0.2192
+        },
+        {
+          "step": 41,
+          "removed": "c5793",
+          "lcc_cities": 400,
+          "lcc_share": 0.4386,
+          "n_components": 126,
+          "mean_component": 6.91,
+          "pair_connectivity": 0.2176
+        },
+        {
+          "step": 42,
+          "removed": "c8838",
+          "lcc_cities": 397,
+          "lcc_share": 0.4353,
+          "n_components": 127,
+          "mean_component": 6.85,
+          "pair_connectivity": 0.2149
+        },
+        {
+          "step": 43,
+          "removed": "c10729",
+          "lcc_cities": 397,
+          "lcc_share": 0.4353,
+          "n_components": 128,
+          "mean_component": 6.79,
+          "pair_connectivity": 0.2154
+        },
+        {
+          "step": 44,
+          "removed": "c6024",
+          "lcc_cities": 397,
+          "lcc_share": 0.4353,
+          "n_components": 130,
+          "mean_component": 6.68,
+          "pair_connectivity": 0.2159
+        },
+        {
+          "step": 45,
+          "removed": "c8408",
+          "lcc_cities": 397,
+          "lcc_share": 0.4353,
+          "n_components": 131,
+          "mean_component": 6.62,
+          "pair_connectivity": 0.2164
+        },
+        {
+          "step": 46,
+          "removed": "c3887",
+          "lcc_cities": 394,
+          "lcc_share": 0.432,
+          "n_components": 132,
+          "mean_component": 6.56,
+          "pair_connectivity": 0.2137
+        },
+        {
+          "step": 47,
+          "removed": "c8359",
+          "lcc_cities": 391,
+          "lcc_share": 0.4287,
+          "n_components": 133,
+          "mean_component": 6.5,
+          "pair_connectivity": 0.2111
+        },
+        {
+          "step": 48,
+          "removed": "c5799",
+          "lcc_cities": 388,
+          "lcc_share": 0.4254,
+          "n_components": 134,
+          "mean_component": 6.45,
+          "pair_connectivity": 0.2084
+        },
+        {
+          "step": 49,
+          "removed": "c3145",
+          "lcc_cities": 388,
+          "lcc_share": 0.4254,
+          "n_components": 134,
+          "mean_component": 6.44,
+          "pair_connectivity": 0.2089
+        },
+        {
+          "step": 50,
+          "removed": "c4268",
+          "lcc_cities": 380,
+          "lcc_share": 0.4167,
+          "n_components": 136,
+          "mean_component": 6.34,
+          "pair_connectivity": 0.2012
+        },
+        {
+          "step": 51,
+          "removed": "c5982",
+          "lcc_cities": 378,
+          "lcc_share": 0.4145,
+          "n_components": 137,
+          "mean_component": 6.28,
+          "pair_connectivity": 0.1996
+        },
+        {
+          "step": 52,
+          "removed": "c4221",
+          "lcc_cities": 376,
+          "lcc_share": 0.4123,
+          "n_components": 138,
+          "mean_component": 6.23,
+          "pair_connectivity": 0.198
+        },
+        {
+          "step": 53,
+          "removed": "c4182",
+          "lcc_cities": 374,
+          "lcc_share": 0.4101,
+          "n_components": 139,
+          "mean_component": 6.18,
+          "pair_connectivity": 0.1965
+        },
+        {
+          "step": 54,
+          "removed": "c5758",
+          "lcc_cities": 372,
+          "lcc_share": 0.4079,
+          "n_components": 140,
+          "mean_component": 6.13,
+          "pair_connectivity": 0.1949
+        },
+        {
+          "step": 55,
+          "removed": "c5949",
+          "lcc_cities": 370,
+          "lcc_share": 0.4057,
+          "n_components": 141,
+          "mean_component": 6.08,
+          "pair_connectivity": 0.1933
+        },
+        {
+          "step": 56,
+          "removed": "c10726",
+          "lcc_cities": 368,
+          "lcc_share": 0.4035,
+          "n_components": 142,
+          "mean_component": 6.03,
+          "pair_connectivity": 0.1918
+        },
+        {
+          "step": 57,
+          "removed": "c3783",
+          "lcc_cities": 366,
+          "lcc_share": 0.4013,
+          "n_components": 143,
+          "mean_component": 5.98,
+          "pair_connectivity": 0.1902
+        },
+        {
+          "step": 58,
+          "removed": "c5808",
+          "lcc_cities": 364,
+          "lcc_share": 0.3991,
+          "n_components": 144,
+          "mean_component": 5.93,
+          "pair_connectivity": 0.1886
+        },
+        {
+          "step": 59,
+          "removed": "c7874",
+          "lcc_cities": 362,
+          "lcc_share": 0.3969,
+          "n_components": 145,
+          "mean_component": 5.88,
+          "pair_connectivity": 0.1871
+        },
+        {
+          "step": 60,
+          "removed": "c5863",
+          "lcc_cities": 362,
+          "lcc_share": 0.3969,
+          "n_components": 145,
+          "mean_component": 5.88,
+          "pair_connectivity": 0.1875
+        },
+        {
+          "step": 61,
+          "removed": "c5789",
+          "lcc_cities": 360,
+          "lcc_share": 0.3947,
+          "n_components": 146,
+          "mean_component": 5.83,
+          "pair_connectivity": 0.186
+        },
+        {
+          "step": 62,
+          "removed": "c6035",
+          "lcc_cities": 360,
+          "lcc_share": 0.3947,
+          "n_components": 146,
+          "mean_component": 5.82,
+          "pair_connectivity": 0.1864
+        },
+        {
+          "step": 63,
+          "removed": "c5778",
+          "lcc_cities": 358,
+          "lcc_share": 0.3925,
+          "n_components": 147,
+          "mean_component": 5.78,
+          "pair_connectivity": 0.1849
+        },
+        {
+          "step": 64,
+          "removed": "c3066",
+          "lcc_cities": 358,
+          "lcc_share": 0.3925,
+          "n_components": 147,
+          "mean_component": 5.77,
+          "pair_connectivity": 0.1853
+        },
+        {
+          "step": 65,
+          "removed": "c3324",
+          "lcc_cities": 358,
+          "lcc_share": 0.3925,
+          "n_components": 148,
+          "mean_component": 5.72,
+          "pair_connectivity": 0.1857
+        },
+        {
+          "step": 66,
+          "removed": "c3292",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 149,
+          "mean_component": 5.68,
+          "pair_connectivity": 0.1842
+        },
+        {
+          "step": 67,
+          "removed": "c9070",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 149,
+          "mean_component": 5.67,
+          "pair_connectivity": 0.1846
+        },
+        {
+          "step": 68,
+          "removed": "c6015",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 149,
+          "mean_component": 5.66,
+          "pair_connectivity": 0.185
+        },
+        {
+          "step": 69,
+          "removed": "c3064",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 151,
+          "mean_component": 5.58,
+          "pair_connectivity": 0.185
+        },
+        {
+          "step": 70,
+          "removed": "c3089",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 152,
+          "mean_component": 5.54,
+          "pair_connectivity": 0.1853
+        },
+        {
+          "step": 71,
+          "removed": "c5952",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 153,
+          "mean_component": 5.5,
+          "pair_connectivity": 0.1857
+        },
+        {
+          "step": 72,
+          "removed": "c3130",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 153,
+          "mean_component": 5.49,
+          "pair_connectivity": 0.1861
+        },
+        {
+          "step": 73,
+          "removed": "c5820",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 155,
+          "mean_component": 5.41,
+          "pair_connectivity": 0.1866
+        },
+        {
+          "step": 74,
+          "removed": "c8392",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 156,
+          "mean_component": 5.37,
+          "pair_connectivity": 0.1867
+        },
+        {
+          "step": 75,
+          "removed": "c3084",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 158,
+          "mean_component": 5.3,
+          "pair_connectivity": 0.1869
+        },
+        {
+          "step": 76,
+          "removed": "c3063",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 159,
+          "mean_component": 5.26,
+          "pair_connectivity": 0.1873
+        },
+        {
+          "step": 77,
+          "removed": "c3141",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 159,
+          "mean_component": 5.25,
+          "pair_connectivity": 0.1878
+        },
+        {
+          "step": 78,
+          "removed": "c9103",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 160,
+          "mean_component": 5.21,
+          "pair_connectivity": 0.1882
+        },
+        {
+          "step": 79,
+          "removed": "c5897",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 161,
+          "mean_component": 5.17,
+          "pair_connectivity": 0.1886
+        },
+        {
+          "step": 80,
+          "removed": "c5830",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 162,
+          "mean_component": 5.14,
+          "pair_connectivity": 0.189
+        },
+        {
+          "step": 81,
+          "removed": "c5755",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 163,
+          "mean_component": 5.1,
+          "pair_connectivity": 0.1895
+        },
+        {
+          "step": 82,
+          "removed": "c13372",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 164,
+          "mean_component": 5.06,
+          "pair_connectivity": 0.1899
+        },
+        {
+          "step": 83,
+          "removed": "c14655",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 165,
+          "mean_component": 5.02,
+          "pair_connectivity": 0.1903
+        },
+        {
+          "step": 84,
+          "removed": "c5530",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 166,
+          "mean_component": 4.99,
+          "pair_connectivity": 0.1908
+        },
+        {
+          "step": 85,
+          "removed": "c5311",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 167,
+          "mean_component": 4.95,
+          "pair_connectivity": 0.1912
+        },
+        {
+          "step": 86,
+          "removed": "c5880",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 168,
+          "mean_component": 4.92,
+          "pair_connectivity": 0.1917
+        },
+        {
+          "step": 87,
+          "removed": "c10380",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 169,
+          "mean_component": 4.88,
+          "pair_connectivity": 0.1922
+        },
+        {
+          "step": 88,
+          "removed": "c5948",
+          "lcc_cities": 356,
+          "lcc_share": 0.3904,
+          "n_components": 170,
+          "mean_component": 4.85,
+          "pair_connectivity": 0.1926
+        }
+      ]
+    },
+    {
+      "label": "betweenness_static",
+      "curve": [
+        {
+          "step": 0,
+          "removed": null,
+          "lcc_cities": 625,
+          "lcc_share": 0.6853,
+          "n_components": 76,
+          "mean_component": 12.0,
+          "pair_connectivity": 0.4732
+        },
+        {
+          "step": 1,
+          "removed": "c3215",
+          "lcc_cities": 618,
+          "lcc_share": 0.6776,
+          "n_components": 79,
+          "mean_component": 11.53,
+          "pair_connectivity": 0.4638
+        },
+        {
+          "step": 2,
+          "removed": "c5884",
+          "lcc_cities": 617,
+          "lcc_share": 0.6765,
+          "n_components": 79,
+          "mean_component": 11.52,
+          "pair_connectivity": 0.4633
+        },
+        {
+          "step": 3,
+          "removed": "c3650",
+          "lcc_cities": 616,
+          "lcc_share": 0.6754,
+          "n_components": 79,
+          "mean_component": 11.51,
+          "pair_connectivity": 0.4628
+        },
+        {
+          "step": 4,
+          "removed": "c3347",
+          "lcc_cities": 615,
+          "lcc_share": 0.6743,
+          "n_components": 79,
+          "mean_component": 11.49,
+          "pair_connectivity": 0.4624
+        },
+        {
+          "step": 5,
+          "removed": "c10397",
+          "lcc_cities": 574,
+          "lcc_share": 0.6294,
+          "n_components": 80,
+          "mean_component": 11.34,
+          "pair_connectivity": 0.406
+        },
+        {
+          "step": 6,
+          "removed": "c5760",
+          "lcc_cities": 561,
+          "lcc_share": 0.6151,
+          "n_components": 81,
+          "mean_component": 11.19,
+          "pair_connectivity": 0.3891
+        },
+        {
+          "step": 7,
+          "removed": "c5883",
+          "lcc_cities": 560,
+          "lcc_share": 0.614,
+          "n_components": 81,
+          "mean_component": 11.17,
+          "pair_connectivity": 0.3886
+        },
+        {
+          "step": 8,
+          "removed": "c3522",
+          "lcc_cities": 544,
+          "lcc_share": 0.5965,
+          "n_components": 82,
+          "mean_component": 11.02,
+          "pair_connectivity": 0.3681
+        },
+        {
+          "step": 9,
+          "removed": "c5751",
+          "lcc_cities": 543,
+          "lcc_share": 0.5954,
+          "n_components": 82,
+          "mean_component": 11.01,
+          "pair_connectivity": 0.3676
+        },
+        {
+          "step": 10,
+          "removed": "c3239",
+          "lcc_cities": 541,
+          "lcc_share": 0.5932,
+          "n_components": 83,
+          "mean_component": 10.87,
+          "pair_connectivity": 0.3657
+        },
+        {
+          "step": 11,
+          "removed": "c5861",
+          "lcc_cities": 540,
+          "lcc_share": 0.5921,
+          "n_components": 83,
+          "mean_component": 10.86,
+          "pair_connectivity": 0.3652
+        },
+        {
+          "step": 12,
+          "removed": "c3119",
+          "lcc_cities": 539,
+          "lcc_share": 0.591,
+          "n_components": 83,
+          "mean_component": 10.84,
+          "pair_connectivity": 0.3647
+        },
+        {
+          "step": 13,
+          "removed": "c3212",
+          "lcc_cities": 538,
+          "lcc_share": 0.5899,
+          "n_components": 83,
+          "mean_component": 10.83,
+          "pair_connectivity": 0.3642
+        },
+        {
+          "step": 14,
+          "removed": "c5962",
+          "lcc_cities": 537,
+          "lcc_share": 0.5888,
+          "n_components": 83,
+          "mean_component": 10.82,
+          "pair_connectivity": 0.3636
+        },
+        {
+          "step": 15,
+          "removed": "c5745",
+          "lcc_cities": 532,
+          "lcc_share": 0.5833,
+          "n_components": 85,
+          "mean_component": 10.55,
+          "pair_connectivity": 0.3578
+        },
+        {
+          "step": 16,
+          "removed": "c3649",
+          "lcc_cities": 518,
+          "lcc_share": 0.568,
+          "n_components": 86,
+          "mean_component": 10.42,
+          "pair_connectivity": 0.3405
+        },
+        {
+          "step": 17,
+          "removed": "c5887",
+          "lcc_cities": 517,
+          "lcc_share": 0.5669,
+          "n_components": 86,
+          "mean_component": 10.41,
+          "pair_connectivity": 0.34
+        },
+        {
+          "step": 18,
+          "removed": "c3030",
+          "lcc_cities": 497,
+          "lcc_share": 0.545,
+          "n_components": 90,
+          "mean_component": 9.93,
+          "pair_connectivity": 0.3156
+        },
+        {
+          "step": 19,
+          "removed": "c4554",
+          "lcc_cities": 495,
+          "lcc_share": 0.5428,
+          "n_components": 91,
+          "mean_component": 9.81,
+          "pair_connectivity": 0.3138
+        },
+        {
+          "step": 20,
+          "removed": "c5840",
+          "lcc_cities": 494,
+          "lcc_share": 0.5417,
+          "n_components": 91,
+          "mean_component": 9.8,
+          "pair_connectivity": 0.3133
+        },
+        {
+          "step": 21,
+          "removed": "c5942",
+          "lcc_cities": 493,
+          "lcc_share": 0.5406,
+          "n_components": 91,
+          "mean_component": 9.79,
+          "pair_connectivity": 0.3127
+        },
+        {
+          "step": 22,
+          "removed": "c4361",
+          "lcc_cities": 492,
+          "lcc_share": 0.5395,
+          "n_components": 91,
+          "mean_component": 9.78,
+          "pair_connectivity": 0.3122
+        },
+        {
+          "step": 23,
+          "removed": "c3808",
+          "lcc_cities": 491,
+          "lcc_share": 0.5384,
+          "n_components": 91,
+          "mean_component": 9.77,
+          "pair_connectivity": 0.3116
+        },
+        {
+          "step": 24,
+          "removed": "c3640",
+          "lcc_cities": 491,
+          "lcc_share": 0.5384,
+          "n_components": 92,
+          "mean_component": 9.65,
+          "pair_connectivity": 0.3122
+        },
+        {
+          "step": 25,
+          "removed": "c8360",
+          "lcc_cities": 475,
+          "lcc_share": 0.5208,
+          "n_components": 93,
+          "mean_component": 9.54,
+          "pair_connectivity": 0.2935
+        },
+        {
+          "step": 26,
+          "removed": "c5750",
+          "lcc_cities": 474,
+          "lcc_share": 0.5197,
+          "n_components": 93,
+          "mean_component": 9.53,
+          "pair_connectivity": 0.293
+        },
+        {
+          "step": 27,
+          "removed": "c4177",
+          "lcc_cities": 472,
+          "lcc_share": 0.5175,
+          "n_components": 94,
+          "mean_component": 9.41,
+          "pair_connectivity": 0.2912
+        },
+        {
+          "step": 28,
+          "removed": "c5970",
+          "lcc_cities": 471,
+          "lcc_share": 0.5164,
+          "n_components": 94,
+          "mean_component": 9.4,
+          "pair_connectivity": 0.2907
+        },
+        {
+          "step": 29,
+          "removed": "c3246",
+          "lcc_cities": 470,
+          "lcc_share": 0.5154,
+          "n_components": 94,
+          "mean_component": 9.39,
+          "pair_connectivity": 0.2901
+        },
+        {
+          "step": 30,
+          "removed": "c4271",
+          "lcc_cities": 469,
+          "lcc_share": 0.5143,
+          "n_components": 94,
+          "mean_component": 9.38,
+          "pair_connectivity": 0.2896
+        },
+        {
+          "step": 31,
+          "removed": "c3160",
+          "lcc_cities": 461,
+          "lcc_share": 0.5055,
+          "n_components": 97,
+          "mean_component": 9.08,
+          "pair_connectivity": 0.2807
+        },
+        {
+          "step": 32,
+          "removed": "c5945",
+          "lcc_cities": 450,
+          "lcc_share": 0.4934,
+          "n_components": 99,
+          "mean_component": 8.89,
+          "pair_connectivity": 0.2685
+        },
+        {
+          "step": 33,
+          "removed": "c9603",
+          "lcc_cities": 437,
+          "lcc_share": 0.4792,
+          "n_components": 100,
+          "mean_component": 8.79,
+          "pair_connectivity": 0.2543
+        },
+        {
+          "step": 34,
+          "removed": "c5934",
+          "lcc_cities": 436,
+          "lcc_share": 0.4781,
+          "n_components": 100,
+          "mean_component": 8.78,
+          "pair_connectivity": 0.2538
+        },
+        {
+          "step": 35,
+          "removed": "c3218",
+          "lcc_cities": 435,
+          "lcc_share": 0.477,
+          "n_components": 100,
+          "mean_component": 8.77,
+          "pair_connectivity": 0.2532
+        },
+        {
+          "step": 36,
+          "removed": "c5902",
+          "lcc_cities": 434,
+          "lcc_share": 0.4759,
+          "n_components": 100,
+          "mean_component": 8.76,
+          "pair_connectivity": 0.2527
+        },
+        {
+          "step": 37,
+          "removed": "c3146",
+          "lcc_cities": 433,
+          "lcc_share": 0.4748,
+          "n_components": 100,
+          "mean_component": 8.75,
+          "pair_connectivity": 0.2521
+        },
+        {
+          "step": 38,
+          "removed": "c4265",
+          "lcc_cities": 432,
+          "lcc_share": 0.4737,
+          "n_components": 100,
+          "mean_component": 8.74,
+          "pair_connectivity": 0.2515
+        },
+        {
+          "step": 39,
+          "removed": "c3563",
+          "lcc_cities": 431,
+          "lcc_share": 0.4726,
+          "n_components": 100,
+          "mean_component": 8.73,
+          "pair_connectivity": 0.251
+        },
+        {
+          "step": 40,
+          "removed": "c5862",
+          "lcc_cities": 427,
+          "lcc_share": 0.4682,
+          "n_components": 102,
+          "mean_component": 8.55,
+          "pair_connectivity": 0.2471
+        },
+        {
+          "step": 41,
+          "removed": "c5980",
+          "lcc_cities": 426,
+          "lcc_share": 0.4671,
+          "n_components": 102,
+          "mean_component": 8.54,
+          "pair_connectivity": 0.2465
+        },
+        {
+          "step": 42,
+          "removed": "c5723",
+          "lcc_cities": 412,
+          "lcc_share": 0.4518,
+          "n_components": 103,
+          "mean_component": 8.45,
+          "pair_connectivity": 0.2318
+        },
+        {
+          "step": 43,
+          "removed": "c9844",
+          "lcc_cities": 409,
+          "lcc_share": 0.4485,
+          "n_components": 104,
+          "mean_component": 8.36,
+          "pair_connectivity": 0.2291
+        },
+        {
+          "step": 44,
+          "removed": "c5940",
+          "lcc_cities": 408,
+          "lcc_share": 0.4474,
+          "n_components": 104,
+          "mean_component": 8.35,
+          "pair_connectivity": 0.2285
+        },
+        {
+          "step": 45,
+          "removed": "c3283",
+          "lcc_cities": 407,
+          "lcc_share": 0.4463,
+          "n_components": 104,
+          "mean_component": 8.34,
+          "pair_connectivity": 0.2279
+        },
+        {
+          "step": 46,
+          "removed": "c3077",
+          "lcc_cities": 407,
+          "lcc_share": 0.4463,
+          "n_components": 106,
+          "mean_component": 8.17,
+          "pair_connectivity": 0.2284
+        },
+        {
+          "step": 47,
+          "removed": "c4816",
+          "lcc_cities": 407,
+          "lcc_share": 0.4463,
+          "n_components": 108,
+          "mean_component": 8.01,
+          "pair_connectivity": 0.2288
+        },
+        {
+          "step": 48,
+          "removed": "c5981",
+          "lcc_cities": 406,
+          "lcc_share": 0.4452,
+          "n_components": 108,
+          "mean_component": 8.0,
+          "pair_connectivity": 0.2282
+        },
+        {
+          "step": 49,
+          "removed": "c4190",
+          "lcc_cities": 398,
+          "lcc_share": 0.4364,
+          "n_components": 109,
+          "mean_component": 7.92,
+          "pair_connectivity": 0.2201
+        },
+        {
+          "step": 50,
+          "removed": "c5779",
+          "lcc_cities": 390,
+          "lcc_share": 0.4276,
+          "n_components": 110,
+          "mean_component": 7.84,
+          "pair_connectivity": 0.2122
+        },
+        {
+          "step": 51,
+          "removed": "c3082",
+          "lcc_cities": 388,
+          "lcc_share": 0.4254,
+          "n_components": 111,
+          "mean_component": 7.76,
+          "pair_connectivity": 0.2106
+        },
+        {
+          "step": 52,
+          "removed": "c3655",
+          "lcc_cities": 387,
+          "lcc_share": 0.4243,
+          "n_components": 111,
+          "mean_component": 7.75,
+          "pair_connectivity": 0.2101
+        },
+        {
+          "step": 53,
+          "removed": "c5905",
+          "lcc_cities": 386,
+          "lcc_share": 0.4232,
+          "n_components": 111,
+          "mean_component": 7.74,
+          "pair_connectivity": 0.2095
+        },
+        {
+          "step": 54,
+          "removed": "c3210",
+          "lcc_cities": 385,
+          "lcc_share": 0.4221,
+          "n_components": 111,
+          "mean_component": 7.73,
+          "pair_connectivity": 0.2089
+        },
+        {
+          "step": 55,
+          "removed": "c5938",
+          "lcc_cities": 384,
+          "lcc_share": 0.4211,
+          "n_components": 111,
+          "mean_component": 7.72,
+          "pair_connectivity": 0.2084
+        },
+        {
+          "step": 56,
+          "removed": "c6093",
+          "lcc_cities": 383,
+          "lcc_share": 0.42,
+          "n_components": 111,
+          "mean_component": 7.71,
+          "pair_connectivity": 0.2078
+        },
+        {
+          "step": 57,
+          "removed": "c5803",
+          "lcc_cities": 382,
+          "lcc_share": 0.4189,
+          "n_components": 111,
+          "mean_component": 7.7,
+          "pair_connectivity": 0.2073
+        },
+        {
+          "step": 58,
+          "removed": "c5973",
+          "lcc_cities": 374,
+          "lcc_share": 0.4101,
+          "n_components": 114,
+          "mean_component": 7.49,
+          "pair_connectivity": 0.1995
+        },
+        {
+          "step": 59,
+          "removed": "c5818",
+          "lcc_cities": 361,
+          "lcc_share": 0.3958,
+          "n_components": 116,
+          "mean_component": 7.35,
+          "pair_connectivity": 0.187
+        },
+        {
+          "step": 60,
+          "removed": "c5986",
+          "lcc_cities": 360,
+          "lcc_share": 0.3947,
+          "n_components": 116,
+          "mean_component": 7.34,
+          "pair_connectivity": 0.1864
+        },
+        {
+          "step": 61,
+          "removed": "c6044",
+          "lcc_cities": 359,
+          "lcc_share": 0.3936,
+          "n_components": 116,
+          "mean_component": 7.34,
+          "pair_connectivity": 0.1859
+        },
+        {
+          "step": 62,
+          "removed": "c3319",
+          "lcc_cities": 359,
+          "lcc_share": 0.3936,
+          "n_components": 116,
+          "mean_component": 7.33,
+          "pair_connectivity": 0.1863
+        },
+        {
+          "step": 63,
+          "removed": "c6025",
+          "lcc_cities": 359,
+          "lcc_share": 0.3936,
+          "n_components": 116,
+          "mean_component": 7.32,
+          "pair_connectivity": 0.1867
+        },
+        {
+          "step": 64,
+          "removed": "c5736",
+          "lcc_cities": 359,
+          "lcc_share": 0.3936,
+          "n_components": 116,
+          "mean_component": 7.31,
+          "pair_connectivity": 0.1871
+        },
+        {
+          "step": 65,
+          "removed": "c14613",
+          "lcc_cities": 359,
+          "lcc_share": 0.3936,
+          "n_components": 117,
+          "mean_component": 7.24,
+          "pair_connectivity": 0.1874
+        },
+        {
+          "step": 66,
+          "removed": "c5773",
+          "lcc_cities": 358,
+          "lcc_share": 0.3925,
+          "n_components": 117,
+          "mean_component": 7.23,
+          "pair_connectivity": 0.1869
+        },
+        {
+          "step": 67,
+          "removed": "c4275",
+          "lcc_cities": 357,
+          "lcc_share": 0.3914,
+          "n_components": 117,
+          "mean_component": 7.22,
+          "pair_connectivity": 0.1863
+        },
+        {
+          "step": 68,
+          "removed": "c8973",
+          "lcc_cities": 357,
+          "lcc_share": 0.3914,
+          "n_components": 118,
+          "mean_component": 7.15,
+          "pair_connectivity": 0.1866
+        },
+        {
+          "step": 69,
+          "removed": "c3251",
+          "lcc_cities": 353,
+          "lcc_share": 0.3871,
+          "n_components": 119,
+          "mean_component": 7.08,
+          "pair_connectivity": 0.1831
+        },
+        {
+          "step": 70,
+          "removed": "c4230",
+          "lcc_cities": 347,
+          "lcc_share": 0.3805,
+          "n_components": 120,
+          "mean_component": 7.02,
+          "pair_connectivity": 0.1776
+        },
+        {
+          "step": 71,
+          "removed": "c5764",
+          "lcc_cities": 347,
+          "lcc_share": 0.3805,
+          "n_components": 120,
+          "mean_component": 7.01,
+          "pair_connectivity": 0.178
+        },
+        {
+          "step": 72,
+          "removed": "c6255",
+          "lcc_cities": 347,
+          "lcc_share": 0.3805,
+          "n_components": 121,
+          "mean_component": 6.94,
+          "pair_connectivity": 0.1785
+        },
+        {
+          "step": 73,
+          "removed": "c3280",
+          "lcc_cities": 346,
+          "lcc_share": 0.3794,
+          "n_components": 121,
+          "mean_component": 6.93,
+          "pair_connectivity": 0.1779
+        },
+        {
+          "step": 74,
+          "removed": "c5928",
+          "lcc_cities": 345,
+          "lcc_share": 0.3783,
+          "n_components": 121,
+          "mean_component": 6.93,
+          "pair_connectivity": 0.1773
+        },
+        {
+          "step": 75,
+          "removed": "c3842",
+          "lcc_cities": 344,
+          "lcc_share": 0.3772,
+          "n_components": 121,
+          "mean_component": 6.92,
+          "pair_connectivity": 0.1768
+        },
+        {
+          "step": 76,
+          "removed": "c4180",
+          "lcc_cities": 222,
+          "lcc_share": 0.2434,
+          "n_components": 122,
+          "mean_component": 6.85,
+          "pair_connectivity": 0.0993
+        },
+        {
+          "step": 77,
+          "removed": "c3259",
+          "lcc_cities": 221,
+          "lcc_share": 0.2423,
+          "n_components": 122,
+          "mean_component": 6.84,
+          "pair_connectivity": 0.0989
+        },
+        {
+          "step": 78,
+          "removed": "c5776",
+          "lcc_cities": 221,
+          "lcc_share": 0.2423,
+          "n_components": 123,
+          "mean_component": 6.78,
+          "pair_connectivity": 0.0977
+        },
+        {
+          "step": 79,
+          "removed": "c10374",
+          "lcc_cities": 221,
+          "lcc_share": 0.2423,
+          "n_components": 124,
+          "mean_component": 6.72,
+          "pair_connectivity": 0.0964
+        },
+        {
+          "step": 80,
+          "removed": "c15115",
+          "lcc_cities": 220,
+          "lcc_share": 0.2412,
+          "n_components": 124,
+          "mean_component": 6.71,
+          "pair_connectivity": 0.0959
+        },
+        {
+          "step": 81,
+          "removed": "c5956",
+          "lcc_cities": 219,
+          "lcc_share": 0.2401,
+          "n_components": 124,
+          "mean_component": 6.7,
+          "pair_connectivity": 0.0955
+        },
+        {
+          "step": 82,
+          "removed": "c4183",
+          "lcc_cities": 216,
+          "lcc_share": 0.2368,
+          "n_components": 125,
+          "mean_component": 6.64,
+          "pair_connectivity": 0.0939
+        },
+        {
+          "step": 83,
+          "removed": "c5754",
+          "lcc_cities": 213,
+          "lcc_share": 0.2336,
+          "n_components": 126,
+          "mean_component": 6.58,
+          "pair_connectivity": 0.0922
+        },
+        {
+          "step": 84,
+          "removed": "c7713",
+          "lcc_cities": 211,
+          "lcc_share": 0.2314,
+          "n_components": 127,
+          "mean_component": 6.52,
+          "pair_connectivity": 0.0912
+        },
+        {
+          "step": 85,
+          "removed": "c3214",
+          "lcc_cities": 208,
+          "lcc_share": 0.2281,
+          "n_components": 129,
+          "mean_component": 6.41,
+          "pair_connectivity": 0.0896
+        },
+        {
+          "step": 86,
+          "removed": "c3867",
+          "lcc_cities": 204,
+          "lcc_share": 0.2237,
+          "n_components": 130,
+          "mean_component": 6.35,
+          "pair_connectivity": 0.0874
+        },
+        {
+          "step": 87,
+          "removed": "c5823",
+          "lcc_cities": 204,
+          "lcc_share": 0.2237,
+          "n_components": 131,
+          "mean_component": 6.3,
+          "pair_connectivity": 0.0867
+        },
+        {
+          "step": 88,
+          "removed": "c5885",
+          "lcc_cities": 202,
+          "lcc_share": 0.2215,
+          "n_components": 132,
+          "mean_component": 6.24,
+          "pair_connectivity": 0.0857
+        }
+      ]
+    },
+    {
+      "label": "degree",
+      "curve": [
+        {
+          "step": 0,
+          "removed": null,
+          "lcc_cities": 625,
+          "lcc_share": 0.6853,
+          "n_components": 76,
+          "mean_component": 12.0,
+          "pair_connectivity": 0.4732
+        },
+        {
+          "step": 1,
+          "removed": "c5962",
+          "lcc_cities": 624,
+          "lcc_share": 0.6842,
+          "n_components": 76,
+          "mean_component": 11.99,
+          "pair_connectivity": 0.4728
+        },
+        {
+          "step": 2,
+          "removed": "c3347",
+          "lcc_cities": 623,
+          "lcc_share": 0.6831,
+          "n_components": 76,
+          "mean_component": 11.97,
+          "pair_connectivity": 0.4723
+        },
+        {
+          "step": 3,
+          "removed": "c3212",
+          "lcc_cities": 622,
+          "lcc_share": 0.682,
+          "n_components": 76,
+          "mean_component": 11.96,
+          "pair_connectivity": 0.4718
+        },
+        {
+          "step": 4,
+          "removed": "c4361",
+          "lcc_cities": 621,
+          "lcc_share": 0.6809,
+          "n_components": 76,
+          "mean_component": 11.95,
+          "pair_connectivity": 0.4714
+        },
+        {
+          "step": 5,
+          "removed": "c5862",
+          "lcc_cities": 617,
+          "lcc_share": 0.6765,
+          "n_components": 78,
+          "mean_component": 11.63,
+          "pair_connectivity": 0.4664
+        },
+        {
+          "step": 6,
+          "removed": "c3215",
+          "lcc_cities": 610,
+          "lcc_share": 0.6689,
+          "n_components": 81,
+          "mean_component": 11.19,
+          "pair_connectivity": 0.457
+        },
+        {
+          "step": 7,
+          "removed": "c4177",
+          "lcc_cities": 609,
+          "lcc_share": 0.6678,
+          "n_components": 81,
+          "mean_component": 11.17,
+          "pair_connectivity": 0.4565
+        },
+        {
+          "step": 8,
+          "removed": "c3259",
+          "lcc_cities": 608,
+          "lcc_share": 0.6667,
+          "n_components": 81,
+          "mean_component": 11.16,
+          "pair_connectivity": 0.456
+        },
+        {
+          "step": 9,
+          "removed": "c3210",
+          "lcc_cities": 607,
+          "lcc_share": 0.6656,
+          "n_components": 81,
+          "mean_component": 11.15,
+          "pair_connectivity": 0.4555
+        },
+        {
+          "step": 10,
+          "removed": "c4183",
+          "lcc_cities": 606,
+          "lcc_share": 0.6645,
+          "n_components": 81,
+          "mean_component": 11.14,
+          "pair_connectivity": 0.455
+        },
+        {
+          "step": 11,
+          "removed": "c5750",
+          "lcc_cities": 605,
+          "lcc_share": 0.6634,
+          "n_components": 81,
+          "mean_component": 11.12,
+          "pair_connectivity": 0.4546
+        },
+        {
+          "step": 12,
+          "removed": "c5940",
+          "lcc_cities": 604,
+          "lcc_share": 0.6623,
+          "n_components": 81,
+          "mean_component": 11.11,
+          "pair_connectivity": 0.4541
+        },
+        {
+          "step": 13,
+          "removed": "c3030",
+          "lcc_cities": 601,
+          "lcc_share": 0.659,
+          "n_components": 83,
+          "mean_component": 10.83,
+          "pair_connectivity": 0.4506
+        },
+        {
+          "step": 14,
+          "removed": "c5883",
+          "lcc_cities": 600,
+          "lcc_share": 0.6579,
+          "n_components": 83,
+          "mean_component": 10.82,
+          "pair_connectivity": 0.4501
+        },
+        {
+          "step": 15,
+          "removed": "c5887",
+          "lcc_cities": 599,
+          "lcc_share": 0.6568,
+          "n_components": 83,
+          "mean_component": 10.81,
+          "pair_connectivity": 0.4496
+        },
+        {
+          "step": 16,
+          "removed": "c5956",
+          "lcc_cities": 598,
+          "lcc_share": 0.6557,
+          "n_components": 83,
+          "mean_component": 10.8,
+          "pair_connectivity": 0.4492
+        },
+        {
+          "step": 17,
+          "removed": "c6044",
+          "lcc_cities": 597,
+          "lcc_share": 0.6546,
+          "n_components": 83,
+          "mean_component": 10.78,
+          "pair_connectivity": 0.4487
+        },
+        {
+          "step": 18,
+          "removed": "c3239",
+          "lcc_cities": 591,
+          "lcc_share": 0.648,
+          "n_components": 86,
+          "mean_component": 10.4,
+          "pair_connectivity": 0.4408
+        },
+        {
+          "step": 19,
+          "removed": "c5811",
+          "lcc_cities": 590,
+          "lcc_share": 0.6469,
+          "n_components": 86,
+          "mean_component": 10.38,
+          "pair_connectivity": 0.4403
+        },
+        {
+          "step": 20,
+          "removed": "c4554",
+          "lcc_cities": 588,
+          "lcc_share": 0.6447,
+          "n_components": 87,
+          "mean_component": 10.25,
+          "pair_connectivity": 0.4383
+        },
+        {
+          "step": 21,
+          "removed": "c5885",
+          "lcc_cities": 586,
+          "lcc_share": 0.6425,
+          "n_components": 88,
+          "mean_component": 10.12,
+          "pair_connectivity": 0.4363
+        },
+        {
+          "step": 22,
+          "removed": "c3280",
+          "lcc_cities": 585,
+          "lcc_share": 0.6414,
+          "n_components": 88,
+          "mean_component": 10.11,
+          "pair_connectivity": 0.4358
+        },
+        {
+          "step": 23,
+          "removed": "c8947",
+          "lcc_cities": 583,
+          "lcc_share": 0.6393,
+          "n_components": 89,
+          "mean_component": 9.99,
+          "pair_connectivity": 0.4338
+        },
+        {
+          "step": 24,
+          "removed": "c3307",
+          "lcc_cities": 581,
+          "lcc_share": 0.6371,
+          "n_components": 90,
+          "mean_component": 9.87,
+          "pair_connectivity": 0.4319
+        },
+        {
+          "step": 25,
+          "removed": "c4265",
+          "lcc_cities": 580,
+          "lcc_share": 0.636,
+          "n_components": 90,
+          "mean_component": 9.86,
+          "pair_connectivity": 0.4314
+        },
+        {
+          "step": 26,
+          "removed": "c5825",
+          "lcc_cities": 579,
+          "lcc_share": 0.6349,
+          "n_components": 90,
+          "mean_component": 9.84,
+          "pair_connectivity": 0.4309
+        },
+        {
+          "step": 27,
+          "removed": "c5723",
+          "lcc_cities": 578,
+          "lcc_share": 0.6338,
+          "n_components": 90,
+          "mean_component": 9.83,
+          "pair_connectivity": 0.4304
+        },
+        {
+          "step": 28,
+          "removed": "c5938",
+          "lcc_cities": 577,
+          "lcc_share": 0.6327,
+          "n_components": 90,
+          "mean_component": 9.82,
+          "pair_connectivity": 0.4299
+        },
+        {
+          "step": 29,
+          "removed": "c3330",
+          "lcc_cities": 575,
+          "lcc_share": 0.6305,
+          "n_components": 91,
+          "mean_component": 9.7,
+          "pair_connectivity": 0.4279
+        },
+        {
+          "step": 30,
+          "removed": "c5802",
+          "lcc_cities": 574,
+          "lcc_share": 0.6294,
+          "n_components": 91,
+          "mean_component": 9.69,
+          "pair_connectivity": 0.4274
+        },
+        {
+          "step": 31,
+          "removed": "c5982",
+          "lcc_cities": 572,
+          "lcc_share": 0.6272,
+          "n_components": 92,
+          "mean_component": 9.58,
+          "pair_connectivity": 0.4254
+        },
+        {
+          "step": 32,
+          "removed": "c3563",
+          "lcc_cities": 571,
+          "lcc_share": 0.6261,
+          "n_components": 92,
+          "mean_component": 9.57,
+          "pair_connectivity": 0.4249
+        },
+        {
+          "step": 33,
+          "removed": "c3214",
+          "lcc_cities": 567,
+          "lcc_share": 0.6217,
+          "n_components": 95,
+          "mean_component": 9.25,
+          "pair_connectivity": 0.42
+        },
+        {
+          "step": 34,
+          "removed": "c5812",
+          "lcc_cities": 562,
+          "lcc_share": 0.6162,
+          "n_components": 96,
+          "mean_component": 9.15,
+          "pair_connectivity": 0.4136
+        },
+        {
+          "step": 35,
+          "removed": "c5820",
+          "lcc_cities": 562,
+          "lcc_share": 0.6162,
+          "n_components": 99,
+          "mean_component": 8.86,
+          "pair_connectivity": 0.4142
+        },
+        {
+          "step": 36,
+          "removed": "c4181",
+          "lcc_cities": 561,
+          "lcc_share": 0.6151,
+          "n_components": 99,
+          "mean_component": 8.85,
+          "pair_connectivity": 0.4137
+        },
+        {
+          "step": 37,
+          "removed": "c3064",
+          "lcc_cities": 561,
+          "lcc_share": 0.6151,
+          "n_components": 101,
+          "mean_component": 8.66,
+          "pair_connectivity": 0.4145
+        },
+        {
+          "step": 38,
+          "removed": "c3160",
+          "lcc_cities": 546,
+          "lcc_share": 0.5987,
+          "n_components": 105,
+          "mean_component": 8.32,
+          "pair_connectivity": 0.3938
+        },
+        {
+          "step": 39,
+          "removed": "c3012",
+          "lcc_cities": 542,
+          "lcc_share": 0.5943,
+          "n_components": 106,
+          "mean_component": 8.24,
+          "pair_connectivity": 0.389
+        },
+        {
+          "step": 40,
+          "removed": "c9486",
+          "lcc_cities": 541,
+          "lcc_share": 0.5932,
+          "n_components": 106,
+          "mean_component": 8.23,
+          "pair_connectivity": 0.3885
+        },
+        {
+          "step": 41,
+          "removed": "c9485",
+          "lcc_cities": 540,
+          "lcc_share": 0.5921,
+          "n_components": 106,
+          "mean_component": 8.22,
+          "pair_connectivity": 0.388
+        },
+        {
+          "step": 42,
+          "removed": "c5803",
+          "lcc_cities": 539,
+          "lcc_share": 0.591,
+          "n_components": 106,
+          "mean_component": 8.21,
+          "pair_connectivity": 0.3874
+        },
+        {
+          "step": 43,
+          "removed": "c5902",
+          "lcc_cities": 538,
+          "lcc_share": 0.5899,
+          "n_components": 106,
+          "mean_component": 8.2,
+          "pair_connectivity": 0.3869
+        },
+        {
+          "step": 44,
+          "removed": "c5934",
+          "lcc_cities": 521,
+          "lcc_share": 0.5713,
+          "n_components": 107,
+          "mean_component": 8.11,
+          "pair_connectivity": 0.3642
+        },
+        {
+          "step": 45,
+          "removed": "c5981",
+          "lcc_cities": 518,
+          "lcc_share": 0.568,
+          "n_components": 108,
+          "mean_component": 8.03,
+          "pair_connectivity": 0.3609
+        },
+        {
+          "step": 46,
+          "removed": "c4191",
+          "lcc_cities": 516,
+          "lcc_share": 0.5658,
+          "n_components": 109,
+          "mean_component": 7.94,
+          "pair_connectivity": 0.359
+        },
+        {
+          "step": 47,
+          "removed": "c6300",
+          "lcc_cities": 515,
+          "lcc_share": 0.5647,
+          "n_components": 109,
+          "mean_component": 7.94,
+          "pair_connectivity": 0.3584
+        },
+        {
+          "step": 48,
+          "removed": "c3146",
+          "lcc_cities": 514,
+          "lcc_share": 0.5636,
+          "n_components": 109,
+          "mean_component": 7.93,
+          "pair_connectivity": 0.3579
+        },
+        {
+          "step": 49,
+          "removed": "c3650",
+          "lcc_cities": 513,
+          "lcc_share": 0.5625,
+          "n_components": 109,
+          "mean_component": 7.92,
+          "pair_connectivity": 0.3573
+        },
+        {
+          "step": 50,
+          "removed": "c4315",
+          "lcc_cities": 512,
+          "lcc_share": 0.5614,
+          "n_components": 109,
+          "mean_component": 7.91,
+          "pair_connectivity": 0.3568
+        },
+        {
+          "step": 51,
+          "removed": "c3242",
+          "lcc_cities": 511,
+          "lcc_share": 0.5603,
+          "n_components": 109,
+          "mean_component": 7.9,
+          "pair_connectivity": 0.3562
+        },
+        {
+          "step": 52,
+          "removed": "c5793",
+          "lcc_cities": 509,
+          "lcc_share": 0.5581,
+          "n_components": 110,
+          "mean_component": 7.82,
+          "pair_connectivity": 0.3543
+        },
+        {
+          "step": 53,
+          "removed": "c5693",
+          "lcc_cities": 507,
+          "lcc_share": 0.5559,
+          "n_components": 111,
+          "mean_component": 7.74,
+          "pair_connectivity": 0.3524
+        },
+        {
+          "step": 54,
+          "removed": "c5773",
+          "lcc_cities": 506,
+          "lcc_share": 0.5548,
+          "n_components": 111,
+          "mean_component": 7.73,
+          "pair_connectivity": 0.3518
+        },
+        {
+          "step": 55,
+          "removed": "c3411",
+          "lcc_cities": 504,
+          "lcc_share": 0.5526,
+          "n_components": 112,
+          "mean_component": 7.65,
+          "pair_connectivity": 0.3499
+        },
+        {
+          "step": 56,
+          "removed": "c4262",
+          "lcc_cities": 499,
+          "lcc_share": 0.5471,
+          "n_components": 113,
+          "mean_component": 7.58,
+          "pair_connectivity": 0.3439
+        },
+        {
+          "step": 57,
+          "removed": "c3251",
+          "lcc_cities": 495,
+          "lcc_share": 0.5428,
+          "n_components": 114,
+          "mean_component": 7.5,
+          "pair_connectivity": 0.3393
+        },
+        {
+          "step": 58,
+          "removed": "c5745",
+          "lcc_cities": 493,
+          "lcc_share": 0.5406,
+          "n_components": 115,
+          "mean_component": 7.43,
+          "pair_connectivity": 0.3373
+        },
+        {
+          "step": 59,
+          "removed": "c5973",
+          "lcc_cities": 488,
+          "lcc_share": 0.5351,
+          "n_components": 117,
+          "mean_component": 7.29,
+          "pair_connectivity": 0.3314
+        },
+        {
+          "step": 60,
+          "removed": "c4271",
+          "lcc_cities": 488,
+          "lcc_share": 0.5351,
+          "n_components": 118,
+          "mean_component": 7.22,
+          "pair_connectivity": 0.3321
+        },
+        {
+          "step": 61,
+          "removed": "c3867",
+          "lcc_cities": 484,
+          "lcc_share": 0.5307,
+          "n_components": 119,
+          "mean_component": 7.15,
+          "pair_connectivity": 0.3275
+        },
+        {
+          "step": 62,
+          "removed": "c5942",
+          "lcc_cities": 483,
+          "lcc_share": 0.5296,
+          "n_components": 119,
+          "mean_component": 7.14,
+          "pair_connectivity": 0.3269
+        },
+        {
+          "step": 63,
+          "removed": "c3089",
+          "lcc_cities": 483,
+          "lcc_share": 0.5296,
+          "n_components": 120,
+          "mean_component": 7.08,
+          "pair_connectivity": 0.3275
+        },
+        {
+          "step": 64,
+          "removed": "c5950",
+          "lcc_cities": 475,
+          "lcc_share": 0.5208,
+          "n_components": 121,
+          "mean_component": 7.01,
+          "pair_connectivity": 0.3177
+        },
+        {
+          "step": 65,
+          "removed": "c8838",
+          "lcc_cities": 472,
+          "lcc_share": 0.5175,
+          "n_components": 122,
+          "mean_component": 6.94,
+          "pair_connectivity": 0.3145
+        },
+        {
+          "step": 66,
+          "removed": "c9589",
+          "lcc_cities": 471,
+          "lcc_share": 0.5164,
+          "n_components": 122,
+          "mean_component": 6.93,
+          "pair_connectivity": 0.3139
+        },
+        {
+          "step": 67,
+          "removed": "c7646",
+          "lcc_cities": 470,
+          "lcc_share": 0.5154,
+          "n_components": 122,
+          "mean_component": 6.93,
+          "pair_connectivity": 0.3133
+        },
+        {
+          "step": 68,
+          "removed": "c7311",
+          "lcc_cities": 469,
+          "lcc_share": 0.5143,
+          "n_components": 122,
+          "mean_component": 6.92,
+          "pair_connectivity": 0.3128
+        },
+        {
+          "step": 69,
+          "removed": "c3522",
+          "lcc_cities": 453,
+          "lcc_share": 0.4967,
+          "n_components": 123,
+          "mean_component": 6.85,
+          "pair_connectivity": 0.2931
+        },
+        {
+          "step": 70,
+          "removed": "c5884",
+          "lcc_cities": 408,
+          "lcc_share": 0.4474,
+          "n_components": 124,
+          "mean_component": 6.79,
+          "pair_connectivity": 0.2418
+        },
+        {
+          "step": 71,
+          "removed": "c3649",
+          "lcc_cities": 391,
+          "lcc_share": 0.4287,
+          "n_components": 126,
+          "mean_component": 6.67,
+          "pair_connectivity": 0.2234
+        },
+        {
+          "step": 72,
+          "removed": "c4268",
+          "lcc_cities": 383,
+          "lcc_share": 0.42,
+          "n_components": 128,
+          "mean_component": 6.56,
+          "pair_connectivity": 0.2152
+        },
+        {
+          "step": 73,
+          "removed": "c5760",
+          "lcc_cities": 271,
+          "lcc_share": 0.2971,
+          "n_components": 130,
+          "mean_component": 6.45,
+          "pair_connectivity": 0.1256
+        },
+        {
+          "step": 74,
+          "removed": "c3082",
+          "lcc_cities": 269,
+          "lcc_share": 0.295,
+          "n_components": 131,
+          "mean_component": 6.4,
+          "pair_connectivity": 0.1244
+        },
+        {
+          "step": 75,
+          "removed": "c3246",
+          "lcc_cities": 268,
+          "lcc_share": 0.2939,
+          "n_components": 131,
+          "mean_component": 6.39,
+          "pair_connectivity": 0.1239
+        },
+        {
+          "step": 76,
+          "removed": "c5852",
+          "lcc_cities": 267,
+          "lcc_share": 0.2928,
+          "n_components": 131,
+          "mean_component": 6.38,
+          "pair_connectivity": 0.1235
+        },
+        {
+          "step": 77,
+          "removed": "c5975",
+          "lcc_cities": 266,
+          "lcc_share": 0.2917,
+          "n_components": 131,
+          "mean_component": 6.37,
+          "pair_connectivity": 0.123
+        },
+        {
+          "step": 78,
+          "removed": "c3119",
+          "lcc_cities": 265,
+          "lcc_share": 0.2906,
+          "n_components": 131,
+          "mean_component": 6.37,
+          "pair_connectivity": 0.1225
+        },
+        {
+          "step": 79,
+          "removed": "c3218",
+          "lcc_cities": 264,
+          "lcc_share": 0.2895,
+          "n_components": 131,
+          "mean_component": 6.36,
+          "pair_connectivity": 0.1221
+        },
+        {
+          "step": 80,
+          "removed": "c5861",
+          "lcc_cities": 233,
+          "lcc_share": 0.2555,
+          "n_components": 132,
+          "mean_component": 6.3,
+          "pair_connectivity": 0.1014
+        },
+        {
+          "step": 81,
+          "removed": "c5886",
+          "lcc_cities": 232,
+          "lcc_share": 0.2544,
+          "n_components": 132,
+          "mean_component": 6.3,
+          "pair_connectivity": 0.101
+        },
+        {
+          "step": 82,
+          "removed": "c5970",
+          "lcc_cities": 231,
+          "lcc_share": 0.2533,
+          "n_components": 132,
+          "mean_component": 6.29,
+          "pair_connectivity": 0.1005
+        },
+        {
+          "step": 83,
+          "removed": "c5980",
+          "lcc_cities": 230,
+          "lcc_share": 0.2522,
+          "n_components": 132,
+          "mean_component": 6.28,
+          "pair_connectivity": 0.1001
+        },
+        {
+          "step": 84,
+          "removed": "c5986",
+          "lcc_cities": 171,
+          "lcc_share": 0.1875,
+          "n_components": 133,
+          "mean_component": 6.23,
+          "pair_connectivity": 0.0707
+        },
+        {
+          "step": 85,
+          "removed": "c3887",
+          "lcc_cities": 168,
+          "lcc_share": 0.1842,
+          "n_components": 134,
+          "mean_component": 6.17,
+          "pair_connectivity": 0.0694
+        },
+        {
+          "step": 86,
+          "removed": "c3686",
+          "lcc_cities": 158,
+          "lcc_share": 0.1732,
+          "n_components": 135,
+          "mean_component": 6.12,
+          "pair_connectivity": 0.0649
+        },
+        {
+          "step": 87,
+          "removed": "c5818",
+          "lcc_cities": 145,
+          "lcc_share": 0.159,
+          "n_components": 137,
+          "mean_component": 6.02,
+          "pair_connectivity": 0.0594
+        },
+        {
+          "step": 88,
+          "removed": "c4180",
+          "lcc_cities": 130,
+          "lcc_share": 0.1425,
+          "n_components": 138,
+          "mean_component": 5.97,
+          "pair_connectivity": 0.0538
+        }
+      ]
+    },
+    {
+      "label": "betweenness_recalc",
+      "curve": [
+        {
+          "step": 0,
+          "removed": null,
+          "lcc_cities": 625,
+          "lcc_share": 0.6853,
+          "n_components": 76,
+          "mean_component": 12.0,
+          "pair_connectivity": 0.4732
+        },
+        {
+          "step": 1,
+          "removed": "c3215",
+          "lcc_cities": 618,
+          "lcc_share": 0.6776,
+          "n_components": 79,
+          "mean_component": 11.53,
+          "pair_connectivity": 0.4638
+        },
+        {
+          "step": 2,
+          "removed": "c3347",
+          "lcc_cities": 617,
+          "lcc_share": 0.6765,
+          "n_components": 79,
+          "mean_component": 11.52,
+          "pair_connectivity": 0.4633
+        },
+        {
+          "step": 3,
+          "removed": "c3119",
+          "lcc_cities": 616,
+          "lcc_share": 0.6754,
+          "n_components": 79,
+          "mean_component": 11.51,
+          "pair_connectivity": 0.4628
+        },
+        {
+          "step": 4,
+          "removed": "c5884",
+          "lcc_cities": 615,
+          "lcc_share": 0.6743,
+          "n_components": 79,
+          "mean_component": 11.49,
+          "pair_connectivity": 0.4624
+        },
+        {
+          "step": 5,
+          "removed": "c5934",
+          "lcc_cities": 614,
+          "lcc_share": 0.6732,
+          "n_components": 79,
+          "mean_component": 11.48,
+          "pair_connectivity": 0.4619
+        },
+        {
+          "step": 6,
+          "removed": "c5840",
+          "lcc_cities": 613,
+          "lcc_share": 0.6721,
+          "n_components": 79,
+          "mean_component": 11.47,
+          "pair_connectivity": 0.4614
+        },
+        {
+          "step": 7,
+          "removed": "c4554",
+          "lcc_cities": 611,
+          "lcc_share": 0.67,
+          "n_components": 80,
+          "mean_component": 11.31,
+          "pair_connectivity": 0.4595
+        },
+        {
+          "step": 8,
+          "removed": "c5760",
+          "lcc_cities": 598,
+          "lcc_share": 0.6557,
+          "n_components": 81,
+          "mean_component": 11.16,
+          "pair_connectivity": 0.4414
+        },
+        {
+          "step": 9,
+          "removed": "c5941",
+          "lcc_cities": 597,
+          "lcc_share": 0.6546,
+          "n_components": 81,
+          "mean_component": 11.15,
+          "pair_connectivity": 0.4409
+        },
+        {
+          "step": 10,
+          "removed": "c5883",
+          "lcc_cities": 596,
+          "lcc_share": 0.6535,
+          "n_components": 81,
+          "mean_component": 11.14,
+          "pair_connectivity": 0.4404
+        },
+        {
+          "step": 11,
+          "removed": "c5942",
+          "lcc_cities": 595,
+          "lcc_share": 0.6524,
+          "n_components": 81,
+          "mean_component": 11.12,
+          "pair_connectivity": 0.4399
+        },
+        {
+          "step": 12,
+          "removed": "c3210",
+          "lcc_cities": 594,
+          "lcc_share": 0.6513,
+          "n_components": 81,
+          "mean_component": 11.11,
+          "pair_connectivity": 0.4394
+        },
+        {
+          "step": 13,
+          "removed": "c3082",
+          "lcc_cities": 316,
+          "lcc_share": 0.3465,
+          "n_components": 83,
+          "mean_component": 10.83,
+          "pair_connectivity": 0.2214
+        },
+        {
+          "step": 14,
+          "removed": "c3522",
+          "lcc_cities": 316,
+          "lcc_share": 0.3465,
+          "n_components": 84,
+          "mean_component": 10.69,
+          "pair_connectivity": 0.2115
+        },
+        {
+          "step": 15,
+          "removed": "c3146",
+          "lcc_cities": 316,
+          "lcc_share": 0.3465,
+          "n_components": 84,
+          "mean_component": 10.68,
+          "pair_connectivity": 0.2114
+        },
+        {
+          "step": 16,
+          "removed": "c4180",
+          "lcc_cities": 316,
+          "lcc_share": 0.3465,
+          "n_components": 85,
+          "mean_component": 10.54,
+          "pair_connectivity": 0.1726
+        },
+        {
+          "step": 17,
+          "removed": "c5887",
+          "lcc_cities": 315,
+          "lcc_share": 0.3454,
+          "n_components": 85,
+          "mean_component": 10.53,
+          "pair_connectivity": 0.1722
+        },
+        {
+          "step": 18,
+          "removed": "c3239",
+          "lcc_cities": 313,
+          "lcc_share": 0.3432,
+          "n_components": 86,
+          "mean_component": 10.4,
+          "pair_connectivity": 0.171
+        },
+        {
+          "step": 19,
+          "removed": "c5861",
+          "lcc_cities": 312,
+          "lcc_share": 0.3421,
+          "n_components": 86,
+          "mean_component": 10.38,
+          "pair_connectivity": 0.1706
+        },
+        {
+          "step": 20,
+          "removed": "c5703",
+          "lcc_cities": 311,
+          "lcc_share": 0.341,
+          "n_components": 86,
+          "mean_component": 10.37,
+          "pair_connectivity": 0.1702
+        },
+        {
+          "step": 21,
+          "removed": "c5970",
+          "lcc_cities": 310,
+          "lcc_share": 0.3399,
+          "n_components": 86,
+          "mean_component": 10.36,
+          "pair_connectivity": 0.1698
+        },
+        {
+          "step": 22,
+          "removed": "c3730",
+          "lcc_cities": 309,
+          "lcc_share": 0.3388,
+          "n_components": 86,
+          "mean_component": 10.35,
+          "pair_connectivity": 0.1694
+        },
+        {
+          "step": 23,
+          "removed": "c5902",
+          "lcc_cities": 308,
+          "lcc_share": 0.3377,
+          "n_components": 86,
+          "mean_component": 10.34,
+          "pair_connectivity": 0.169
+        },
+        {
+          "step": 24,
+          "removed": "c9118",
+          "lcc_cities": 248,
+          "lcc_share": 0.2719,
+          "n_components": 87,
+          "mean_component": 10.21,
+          "pair_connectivity": 0.1314
+        },
+        {
+          "step": 25,
+          "removed": "c7311",
+          "lcc_cities": 247,
+          "lcc_share": 0.2708,
+          "n_components": 87,
+          "mean_component": 10.2,
+          "pair_connectivity": 0.1311
+        },
+        {
+          "step": 26,
+          "removed": "c5862",
+          "lcc_cities": 243,
+          "lcc_share": 0.2664,
+          "n_components": 89,
+          "mean_component": 9.96,
+          "pair_connectivity": 0.1289
+        },
+        {
+          "step": 27,
+          "removed": "c5940",
+          "lcc_cities": 242,
+          "lcc_share": 0.2654,
+          "n_components": 89,
+          "mean_component": 9.94,
+          "pair_connectivity": 0.1286
+        },
+        {
+          "step": 28,
+          "removed": "c3012",
+          "lcc_cities": 208,
+          "lcc_share": 0.2281,
+          "n_components": 91,
+          "mean_component": 9.71,
+          "pair_connectivity": 0.1104
+        },
+        {
+          "step": 29,
+          "removed": "c5962",
+          "lcc_cities": 207,
+          "lcc_share": 0.227,
+          "n_components": 91,
+          "mean_component": 9.7,
+          "pair_connectivity": 0.1102
+        },
+        {
+          "step": 30,
+          "removed": "c3212",
+          "lcc_cities": 206,
+          "lcc_share": 0.2259,
+          "n_components": 91,
+          "mean_component": 9.69,
+          "pair_connectivity": 0.1099
+        },
+        {
+          "step": 31,
+          "removed": "c4361",
+          "lcc_cities": 205,
+          "lcc_share": 0.2248,
+          "n_components": 91,
+          "mean_component": 9.68,
+          "pair_connectivity": 0.1096
+        },
+        {
+          "step": 32,
+          "removed": "c4177",
+          "lcc_cities": 203,
+          "lcc_share": 0.2226,
+          "n_components": 92,
+          "mean_component": 9.57,
+          "pair_connectivity": 0.1088
+        },
+        {
+          "step": 33,
+          "removed": "c5825",
+          "lcc_cities": 202,
+          "lcc_share": 0.2215,
+          "n_components": 92,
+          "mean_component": 9.55,
+          "pair_connectivity": 0.1085
+        },
+        {
+          "step": 34,
+          "removed": "c5723",
+          "lcc_cities": 201,
+          "lcc_share": 0.2204,
+          "n_components": 92,
+          "mean_component": 9.54,
+          "pair_connectivity": 0.1083
+        },
+        {
+          "step": 35,
+          "removed": "c3259",
+          "lcc_cities": 200,
+          "lcc_share": 0.2193,
+          "n_components": 92,
+          "mean_component": 9.53,
+          "pair_connectivity": 0.108
+        },
+        {
+          "step": 36,
+          "removed": "c5956",
+          "lcc_cities": 199,
+          "lcc_share": 0.2182,
+          "n_components": 92,
+          "mean_component": 9.52,
+          "pair_connectivity": 0.1077
+        },
+        {
+          "step": 37,
+          "removed": "c5938",
+          "lcc_cities": 198,
+          "lcc_share": 0.2171,
+          "n_components": 92,
+          "mean_component": 9.51,
+          "pair_connectivity": 0.1074
+        },
+        {
+          "step": 38,
+          "removed": "c4265",
+          "lcc_cities": 197,
+          "lcc_share": 0.216,
+          "n_components": 92,
+          "mean_component": 9.5,
+          "pair_connectivity": 0.1072
+        },
+        {
+          "step": 39,
+          "removed": "c5986",
+          "lcc_cities": 196,
+          "lcc_share": 0.2149,
+          "n_components": 92,
+          "mean_component": 9.49,
+          "pair_connectivity": 0.1069
+        },
+        {
+          "step": 40,
+          "removed": "c5959",
+          "lcc_cities": 195,
+          "lcc_share": 0.2138,
+          "n_components": 92,
+          "mean_component": 9.48,
+          "pair_connectivity": 0.1066
+        },
+        {
+          "step": 41,
+          "removed": "c8947",
+          "lcc_cities": 193,
+          "lcc_share": 0.2116,
+          "n_components": 93,
+          "mean_component": 9.37,
+          "pair_connectivity": 0.1059
+        },
+        {
+          "step": 42,
+          "removed": "c6044",
+          "lcc_cities": 192,
+          "lcc_share": 0.2105,
+          "n_components": 93,
+          "mean_component": 9.35,
+          "pair_connectivity": 0.1056
+        },
+        {
+          "step": 43,
+          "removed": "c5811",
+          "lcc_cities": 191,
+          "lcc_share": 0.2094,
+          "n_components": 93,
+          "mean_component": 9.34,
+          "pair_connectivity": 0.1053
+        },
+        {
+          "step": 44,
+          "removed": "c6300",
+          "lcc_cities": 163,
+          "lcc_share": 0.1787,
+          "n_components": 94,
+          "mean_component": 9.23,
+          "pair_connectivity": 0.0813
+        },
+        {
+          "step": 45,
+          "removed": "c5750",
+          "lcc_cities": 162,
+          "lcc_share": 0.1776,
+          "n_components": 94,
+          "mean_component": 9.22,
+          "pair_connectivity": 0.081
+        },
+        {
+          "step": 46,
+          "removed": "c3650",
+          "lcc_cities": 161,
+          "lcc_share": 0.1765,
+          "n_components": 94,
+          "mean_component": 9.21,
+          "pair_connectivity": 0.0808
+        },
+        {
+          "step": 47,
+          "removed": "c3330",
+          "lcc_cities": 145,
+          "lcc_share": 0.159,
+          "n_components": 96,
+          "mean_component": 9.01,
+          "pair_connectivity": 0.0747
+        },
+        {
+          "step": 48,
+          "removed": "c3808",
+          "lcc_cities": 144,
+          "lcc_share": 0.1579,
+          "n_components": 96,
+          "mean_component": 9.0,
+          "pair_connectivity": 0.0745
+        },
+        {
+          "step": 49,
+          "removed": "c5793",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 98,
+          "mean_component": 8.81,
+          "pair_connectivity": 0.066
+        },
+        {
+          "step": 50,
+          "removed": "c5745",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 100,
+          "mean_component": 8.62,
+          "pair_connectivity": 0.0599
+        },
+        {
+          "step": 51,
+          "removed": "c9485",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 100,
+          "mean_component": 8.61,
+          "pair_connectivity": 0.0598
+        },
+        {
+          "step": 52,
+          "removed": "c9486",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 101,
+          "mean_component": 8.51,
+          "pair_connectivity": 0.0568
+        },
+        {
+          "step": 53,
+          "removed": "c3251",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 102,
+          "mean_component": 8.42,
+          "pair_connectivity": 0.0558
+        },
+        {
+          "step": 54,
+          "removed": "c3214",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 105,
+          "mean_component": 8.17,
+          "pair_connectivity": 0.0552
+        },
+        {
+          "step": 55,
+          "removed": "c3867",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 107,
+          "mean_component": 8.01,
+          "pair_connectivity": 0.0523
+        },
+        {
+          "step": 56,
+          "removed": "c3177",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 107,
+          "mean_component": 8.0,
+          "pair_connectivity": 0.0522
+        },
+        {
+          "step": 57,
+          "removed": "c3307",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 109,
+          "mean_component": 7.84,
+          "pair_connectivity": 0.049
+        },
+        {
+          "step": 58,
+          "removed": "c5973",
+          "lcc_cities": 117,
+          "lcc_share": 0.1283,
+          "n_components": 110,
+          "mean_component": 7.76,
+          "pair_connectivity": 0.0485
+        },
+        {
+          "step": 59,
+          "removed": "c9589",
+          "lcc_cities": 116,
+          "lcc_share": 0.1272,
+          "n_components": 110,
+          "mean_component": 7.75,
+          "pair_connectivity": 0.0483
+        },
+        {
+          "step": 60,
+          "removed": "c4275",
+          "lcc_cities": 115,
+          "lcc_share": 0.1261,
+          "n_components": 110,
+          "mean_component": 7.75,
+          "pair_connectivity": 0.0481
+        },
+        {
+          "step": 61,
+          "removed": "c5773",
+          "lcc_cities": 114,
+          "lcc_share": 0.125,
+          "n_components": 110,
+          "mean_component": 7.74,
+          "pair_connectivity": 0.0479
+        },
+        {
+          "step": 62,
+          "removed": "c5694",
+          "lcc_cities": 90,
+          "lcc_share": 0.0987,
+          "n_components": 111,
+          "mean_component": 7.66,
+          "pair_connectivity": 0.0419
+        },
+        {
+          "step": 63,
+          "removed": "c3030",
+          "lcc_cities": 90,
+          "lcc_share": 0.0987,
+          "n_components": 116,
+          "mean_component": 7.32,
+          "pair_connectivity": 0.0397
+        },
+        {
+          "step": 64,
+          "removed": "c9603",
+          "lcc_cities": 90,
+          "lcc_share": 0.0987,
+          "n_components": 117,
+          "mean_component": 7.25,
+          "pair_connectivity": 0.0371
+        },
+        {
+          "step": 65,
+          "removed": "c4230",
+          "lcc_cities": 84,
+          "lcc_share": 0.0921,
+          "n_components": 118,
+          "mean_component": 7.18,
+          "pair_connectivity": 0.0358
+        },
+        {
+          "step": 66,
+          "removed": "c5779",
+          "lcc_cities": 84,
+          "lcc_share": 0.0921,
+          "n_components": 119,
+          "mean_component": 7.11,
+          "pair_connectivity": 0.0344
+        },
+        {
+          "step": 67,
+          "removed": "c3563",
+          "lcc_cities": 83,
+          "lcc_share": 0.091,
+          "n_components": 119,
+          "mean_component": 7.1,
+          "pair_connectivity": 0.0343
+        },
+        {
+          "step": 68,
+          "removed": "c5784",
+          "lcc_cities": 82,
+          "lcc_share": 0.0899,
+          "n_components": 119,
+          "mean_component": 7.09,
+          "pair_connectivity": 0.0341
+        },
+        {
+          "step": 69,
+          "removed": "c5782",
+          "lcc_cities": 64,
+          "lcc_share": 0.0702,
+          "n_components": 120,
+          "mean_component": 7.03,
+          "pair_connectivity": 0.0309
+        },
+        {
+          "step": 70,
+          "removed": "c4183",
+          "lcc_cities": 64,
+          "lcc_share": 0.0702,
+          "n_components": 120,
+          "mean_component": 7.02,
+          "pair_connectivity": 0.0308
+        },
+        {
+          "step": 71,
+          "removed": "c5886",
+          "lcc_cities": 64,
+          "lcc_share": 0.0702,
+          "n_components": 121,
+          "mean_component": 6.95,
+          "pair_connectivity": 0.0299
+        },
+        {
+          "step": 72,
+          "removed": "c4262",
+          "lcc_cities": 59,
+          "lcc_share": 0.0647,
+          "n_components": 122,
+          "mean_component": 6.89,
+          "pair_connectivity": 0.0291
+        },
+        {
+          "step": 73,
+          "removed": "c3160",
+          "lcc_cities": 59,
+          "lcc_share": 0.0647,
+          "n_components": 126,
+          "mean_component": 6.66,
+          "pair_connectivity": 0.0286
+        },
+        {
+          "step": 74,
+          "removed": "c5950",
+          "lcc_cities": 59,
+          "lcc_share": 0.0647,
+          "n_components": 127,
+          "mean_component": 6.6,
+          "pair_connectivity": 0.028
+        },
+        {
+          "step": 75,
+          "removed": "c4190",
+          "lcc_cities": 59,
+          "lcc_share": 0.0647,
+          "n_components": 128,
+          "mean_component": 6.54,
+          "pair_connectivity": 0.0271
+        },
+        {
+          "step": 76,
+          "removed": "c3649",
+          "lcc_cities": 59,
+          "lcc_share": 0.0647,
+          "n_components": 130,
+          "mean_component": 6.43,
+          "pair_connectivity": 0.0263
+        },
+        {
+          "step": 77,
+          "removed": "c5925",
+          "lcc_cities": 57,
+          "lcc_share": 0.0625,
+          "n_components": 131,
+          "mean_component": 6.37,
+          "pair_connectivity": 0.0254
+        },
+        {
+          "step": 78,
+          "removed": "c5852",
+          "lcc_cities": 56,
+          "lcc_share": 0.0614,
+          "n_components": 131,
+          "mean_component": 6.37,
+          "pair_connectivity": 0.0253
+        },
+        {
+          "step": 79,
+          "removed": "c3772",
+          "lcc_cities": 55,
+          "lcc_share": 0.0603,
+          "n_components": 131,
+          "mean_component": 6.36,
+          "pair_connectivity": 0.0252
+        },
+        {
+          "step": 80,
+          "removed": "c5853",
+          "lcc_cities": 53,
+          "lcc_share": 0.0581,
+          "n_components": 132,
+          "mean_component": 6.3,
+          "pair_connectivity": 0.0242
+        },
+        {
+          "step": 81,
+          "removed": "c3064",
+          "lcc_cities": 53,
+          "lcc_share": 0.0581,
+          "n_components": 134,
+          "mean_component": 6.2,
+          "pair_connectivity": 0.0238
+        },
+        {
+          "step": 82,
+          "removed": "c5776",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 135,
+          "mean_component": 6.15,
+          "pair_connectivity": 0.0233
+        },
+        {
+          "step": 83,
+          "removed": "c5981",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 136,
+          "mean_component": 6.1,
+          "pair_connectivity": 0.0229
+        },
+        {
+          "step": 84,
+          "removed": "c5818",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 138,
+          "mean_component": 6.0,
+          "pair_connectivity": 0.0225
+        },
+        {
+          "step": 85,
+          "removed": "c3280",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 138,
+          "mean_component": 5.99,
+          "pair_connectivity": 0.0224
+        },
+        {
+          "step": 86,
+          "removed": "c9434",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 139,
+          "mean_component": 5.94,
+          "pair_connectivity": 0.0221
+        },
+        {
+          "step": 87,
+          "removed": "c8360",
+          "lcc_cities": 49,
+          "lcc_share": 0.0537,
+          "n_components": 140,
+          "mean_component": 5.89,
+          "pair_connectivity": 0.0215
+        },
+        {
+          "step": 88,
+          "removed": "c5848",
+          "lcc_cities": 48,
+          "lcc_share": 0.0526,
+          "n_components": 140,
+          "mean_component": 5.89,
+          "pair_connectivity": 0.0214
+        }
+      ]
+    },
+    {
+      "label": "random_mean",
+      "curve": [
+        {
+          "step": 0,
+          "lcc_share": 0.6853,
+          "n_components": 76.0,
+          "pair_connectivity": 0.4732
+        },
+        {
+          "step": 1,
+          "lcc_share": 0.6844,
+          "n_components": 76.2,
+          "pair_connectivity": 0.4731
+        },
+        {
+          "step": 2,
+          "lcc_share": 0.6833,
+          "n_components": 76.2,
+          "pair_connectivity": 0.4726
+        },
+        {
+          "step": 3,
+          "lcc_share": 0.6824,
+          "n_components": 76.2,
+          "pair_connectivity": 0.4724
+        },
+        {
+          "step": 4,
+          "lcc_share": 0.6818,
+          "n_components": 76.2,
+          "pair_connectivity": 0.4726
+        },
+        {
+          "step": 5,
+          "lcc_share": 0.6813,
+          "n_components": 76.2,
+          "pair_connectivity": 0.473
+        },
+        {
+          "step": 6,
+          "lcc_share": 0.6805,
+          "n_components": 76.4,
+          "pair_connectivity": 0.4728
+        },
+        {
+          "step": 7,
+          "lcc_share": 0.6798,
+          "n_components": 76.4,
+          "pair_connectivity": 0.4729
+        },
+        {
+          "step": 8,
+          "lcc_share": 0.6791,
+          "n_components": 76.4,
+          "pair_connectivity": 0.473
+        },
+        {
+          "step": 9,
+          "lcc_share": 0.6778,
+          "n_components": 76.6,
+          "pair_connectivity": 0.4723
+        },
+        {
+          "step": 10,
+          "lcc_share": 0.6767,
+          "n_components": 76.6,
+          "pair_connectivity": 0.4718
+        },
+        {
+          "step": 11,
+          "lcc_share": 0.675,
+          "n_components": 76.8,
+          "pair_connectivity": 0.4704
+        },
+        {
+          "step": 12,
+          "lcc_share": 0.6739,
+          "n_components": 76.8,
+          "pair_connectivity": 0.4699
+        },
+        {
+          "step": 13,
+          "lcc_share": 0.6732,
+          "n_components": 76.8,
+          "pair_connectivity": 0.4701
+        },
+        {
+          "step": 14,
+          "lcc_share": 0.6721,
+          "n_components": 77.0,
+          "pair_connectivity": 0.4696
+        },
+        {
+          "step": 15,
+          "lcc_share": 0.6706,
+          "n_components": 77.2,
+          "pair_connectivity": 0.4685
+        },
+        {
+          "step": 16,
+          "lcc_share": 0.6698,
+          "n_components": 77.6,
+          "pair_connectivity": 0.4683
+        },
+        {
+          "step": 17,
+          "lcc_share": 0.6601,
+          "n_components": 77.8,
+          "pair_connectivity": 0.4568
+        },
+        {
+          "step": 18,
+          "lcc_share": 0.6594,
+          "n_components": 78.0,
+          "pair_connectivity": 0.4569
+        },
+        {
+          "step": 19,
+          "lcc_share": 0.6586,
+          "n_components": 78.0,
+          "pair_connectivity": 0.4567
+        },
+        {
+          "step": 20,
+          "lcc_share": 0.6579,
+          "n_components": 78.0,
+          "pair_connectivity": 0.4568
+        },
+        {
+          "step": 21,
+          "lcc_share": 0.6568,
+          "n_components": 78.2,
+          "pair_connectivity": 0.4563
+        },
+        {
+          "step": 22,
+          "lcc_share": 0.6562,
+          "n_components": 78.6,
+          "pair_connectivity": 0.4564
+        },
+        {
+          "step": 23,
+          "lcc_share": 0.6533,
+          "n_components": 78.8,
+          "pair_connectivity": 0.4535
+        },
+        {
+          "step": 24,
+          "lcc_share": 0.6522,
+          "n_components": 78.8,
+          "pair_connectivity": 0.453
+        },
+        {
+          "step": 25,
+          "lcc_share": 0.6509,
+          "n_components": 79.4,
+          "pair_connectivity": 0.4522
+        },
+        {
+          "step": 26,
+          "lcc_share": 0.6474,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4484
+        },
+        {
+          "step": 27,
+          "lcc_share": 0.6467,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4485
+        },
+        {
+          "step": 28,
+          "lcc_share": 0.6458,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4483
+        },
+        {
+          "step": 29,
+          "lcc_share": 0.6452,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4484
+        },
+        {
+          "step": 30,
+          "lcc_share": 0.6443,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4482
+        },
+        {
+          "step": 31,
+          "lcc_share": 0.6434,
+          "n_components": 79.6,
+          "pair_connectivity": 0.448
+        },
+        {
+          "step": 32,
+          "lcc_share": 0.6428,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4481
+        },
+        {
+          "step": 33,
+          "lcc_share": 0.6421,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4482
+        },
+        {
+          "step": 34,
+          "lcc_share": 0.6415,
+          "n_components": 79.6,
+          "pair_connectivity": 0.4484
+        },
+        {
+          "step": 35,
+          "lcc_share": 0.639,
+          "n_components": 80.2,
+          "pair_connectivity": 0.446
+        },
+        {
+          "step": 36,
+          "lcc_share": 0.6384,
+          "n_components": 80.4,
+          "pair_connectivity": 0.446
+        },
+        {
+          "step": 37,
+          "lcc_share": 0.6371,
+          "n_components": 80.8,
+          "pair_connectivity": 0.4453
+        },
+        {
+          "step": 38,
+          "lcc_share": 0.6364,
+          "n_components": 80.8,
+          "pair_connectivity": 0.4453
+        },
+        {
+          "step": 39,
+          "lcc_share": 0.6357,
+          "n_components": 80.8,
+          "pair_connectivity": 0.4454
+        },
+        {
+          "step": 40,
+          "lcc_share": 0.6351,
+          "n_components": 80.8,
+          "pair_connectivity": 0.4455
+        },
+        {
+          "step": 41,
+          "lcc_share": 0.634,
+          "n_components": 80.8,
+          "pair_connectivity": 0.445
+        },
+        {
+          "step": 42,
+          "lcc_share": 0.6331,
+          "n_components": 80.8,
+          "pair_connectivity": 0.4448
+        },
+        {
+          "step": 43,
+          "lcc_share": 0.6316,
+          "n_components": 81.0,
+          "pair_connectivity": 0.4437
+        },
+        {
+          "step": 44,
+          "lcc_share": 0.6305,
+          "n_components": 81.4,
+          "pair_connectivity": 0.4432
+        },
+        {
+          "step": 45,
+          "lcc_share": 0.6296,
+          "n_components": 81.4,
+          "pair_connectivity": 0.443
+        },
+        {
+          "step": 46,
+          "lcc_share": 0.6287,
+          "n_components": 81.4,
+          "pair_connectivity": 0.4428
+        },
+        {
+          "step": 47,
+          "lcc_share": 0.6276,
+          "n_components": 81.4,
+          "pair_connectivity": 0.4423
+        },
+        {
+          "step": 48,
+          "lcc_share": 0.6272,
+          "n_components": 81.8,
+          "pair_connectivity": 0.4426
+        },
+        {
+          "step": 49,
+          "lcc_share": 0.6268,
+          "n_components": 81.8,
+          "pair_connectivity": 0.443
+        },
+        {
+          "step": 50,
+          "lcc_share": 0.625,
+          "n_components": 82.0,
+          "pair_connectivity": 0.4416
+        },
+        {
+          "step": 51,
+          "lcc_share": 0.6241,
+          "n_components": 82.0,
+          "pair_connectivity": 0.4413
+        },
+        {
+          "step": 52,
+          "lcc_share": 0.6235,
+          "n_components": 82.0,
+          "pair_connectivity": 0.4414
+        },
+        {
+          "step": 53,
+          "lcc_share": 0.6221,
+          "n_components": 82.6,
+          "pair_connectivity": 0.4407
+        },
+        {
+          "step": 54,
+          "lcc_share": 0.6217,
+          "n_components": 82.6,
+          "pair_connectivity": 0.4411
+        },
+        {
+          "step": 55,
+          "lcc_share": 0.6208,
+          "n_components": 82.6,
+          "pair_connectivity": 0.4408
+        },
+        {
+          "step": 56,
+          "lcc_share": 0.6204,
+          "n_components": 82.8,
+          "pair_connectivity": 0.4413
+        },
+        {
+          "step": 57,
+          "lcc_share": 0.6191,
+          "n_components": 83.0,
+          "pair_connectivity": 0.4404
+        },
+        {
+          "step": 58,
+          "lcc_share": 0.6184,
+          "n_components": 83.2,
+          "pair_connectivity": 0.4405
+        },
+        {
+          "step": 59,
+          "lcc_share": 0.6164,
+          "n_components": 83.4,
+          "pair_connectivity": 0.4387
+        },
+        {
+          "step": 60,
+          "lcc_share": 0.6138,
+          "n_components": 84.0,
+          "pair_connectivity": 0.4361
+        },
+        {
+          "step": 61,
+          "lcc_share": 0.6116,
+          "n_components": 84.8,
+          "pair_connectivity": 0.434
+        },
+        {
+          "step": 62,
+          "lcc_share": 0.611,
+          "n_components": 84.8,
+          "pair_connectivity": 0.4341
+        },
+        {
+          "step": 63,
+          "lcc_share": 0.6103,
+          "n_components": 84.8,
+          "pair_connectivity": 0.4342
+        },
+        {
+          "step": 64,
+          "lcc_share": 0.609,
+          "n_components": 85.0,
+          "pair_connectivity": 0.4334
+        },
+        {
+          "step": 65,
+          "lcc_share": 0.6081,
+          "n_components": 85.0,
+          "pair_connectivity": 0.4331
+        },
+        {
+          "step": 66,
+          "lcc_share": 0.6035,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4279
+        },
+        {
+          "step": 67,
+          "lcc_share": 0.6029,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4279
+        },
+        {
+          "step": 68,
+          "lcc_share": 0.6022,
+          "n_components": 85.4,
+          "pair_connectivity": 0.428
+        },
+        {
+          "step": 69,
+          "lcc_share": 0.6011,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4275
+        },
+        {
+          "step": 70,
+          "lcc_share": 0.6007,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4278
+        },
+        {
+          "step": 71,
+          "lcc_share": 0.6002,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4283
+        },
+        {
+          "step": 72,
+          "lcc_share": 0.5993,
+          "n_components": 85.6,
+          "pair_connectivity": 0.4281
+        },
+        {
+          "step": 73,
+          "lcc_share": 0.5987,
+          "n_components": 85.6,
+          "pair_connectivity": 0.4281
+        },
+        {
+          "step": 74,
+          "lcc_share": 0.5974,
+          "n_components": 85.6,
+          "pair_connectivity": 0.4273
+        },
+        {
+          "step": 75,
+          "lcc_share": 0.5967,
+          "n_components": 85.4,
+          "pair_connectivity": 0.4274
+        },
+        {
+          "step": 76,
+          "lcc_share": 0.596,
+          "n_components": 85.6,
+          "pair_connectivity": 0.4275
+        },
+        {
+          "step": 77,
+          "lcc_share": 0.5954,
+          "n_components": 85.6,
+          "pair_connectivity": 0.4276
+        },
+        {
+          "step": 78,
+          "lcc_share": 0.5947,
+          "n_components": 85.8,
+          "pair_connectivity": 0.4276
+        },
+        {
+          "step": 79,
+          "lcc_share": 0.5938,
+          "n_components": 85.8,
+          "pair_connectivity": 0.4274
+        },
+        {
+          "step": 80,
+          "lcc_share": 0.5914,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4249
+        },
+        {
+          "step": 81,
+          "lcc_share": 0.5908,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4249
+        },
+        {
+          "step": 82,
+          "lcc_share": 0.5901,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4251
+        },
+        {
+          "step": 83,
+          "lcc_share": 0.5897,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4254
+        },
+        {
+          "step": 84,
+          "lcc_share": 0.589,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4255
+        },
+        {
+          "step": 85,
+          "lcc_share": 0.589,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4265
+        },
+        {
+          "step": 86,
+          "lcc_share": 0.5882,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4263
+        },
+        {
+          "step": 87,
+          "lcc_share": 0.5873,
+          "n_components": 86.0,
+          "pair_connectivity": 0.426
+        },
+        {
+          "step": 88,
+          "lcc_share": 0.5864,
+          "n_components": 86.0,
+          "pair_connectivity": 0.4258
+        }
+      ]
+    }
+  ],
+  "tipping_points": {
+    "articulation_betweenness": null,
+    "betweenness_static": {
+      "steps": 76,
+      "lcc_share": 0.2434,
+      "relative_to_baseline": 0.3552
+    },
+    "degree": {
+      "steps": 73,
+      "lcc_share": 0.2971,
+      "relative_to_baseline": 0.4335
+    },
+    "betweenness_recalc": {
+      "steps": 19,
+      "lcc_share": 0.3421,
+      "relative_to_baseline": 0.4992
+    },
+    "random_mean": null
+  },
+  "top_chokepoints": [
+    {
+      "node": "c3215",
+      "city": "Mazara del Vallo, Italy",
+      "country": "Italy",
+      "betweenness": 0.070701,
+      "cables": 9,
+      "is_articulation": true
+    },
+    {
+      "node": "c5884",
+      "city": "Ajigaura, Japan",
+      "country": "Japan",
+      "betweenness": 0.050668,
+      "cables": 3,
+      "is_articulation": false
+    },
+    {
+      "node": "c3650",
+      "city": "Hollywood, Florida, United States",
+      "country": "United States",
+      "betweenness": 0.050056,
+      "cables": 4,
+      "is_articulation": false
+    },
+    {
+      "node": "c3347",
+      "city": "Fortaleza, Brazil",
+      "country": "Brazil",
+      "betweenness": 0.049141,
+      "cables": 12,
+      "is_articulation": false
+    },
+    {
+      "node": "c10397",
+      "city": "Cambridge Bay, Nunavut, Canada",
+      "country": "Canada",
+      "betweenness": 0.042689,
+      "cables": 2,
+      "is_articulation": true
+    },
+    {
+      "node": "c5760",
+      "city": "Makaha, Hawaii, United States",
+      "country": "United States",
+      "betweenness": 0.035704,
+      "cables": 3,
+      "is_articulation": true
+    },
+    {
+      "node": "c5883",
+      "city": "Shima, Japan",
+      "country": "Japan",
+      "betweenness": 0.034316,
+      "cables": 6,
+      "is_articulation": false
+    },
+    {
+      "node": "c3522",
+      "city": "Cork, Ireland",
+      "country": "Ireland",
+      "betweenness": 0.032864,
+      "cables": 4,
+      "is_articulation": true
+    },
+    {
+      "node": "c5751",
+      "city": "Morro Bay, California, United States",
+      "country": "United States",
+      "betweenness": 0.031679,
+      "cables": 2,
+      "is_articulation": false
+    },
+    {
+      "node": "c3239",
+      "city": "Perth, Australia",
+      "country": "Australia",
+      "betweenness": 0.029203,
+      "cables": 6,
+      "is_articulation": true
+    },
+    {
+      "node": "c5861",
+      "city": "Medan, Indonesia",
+      "country": "Indonesia",
+      "betweenness": 0.028484,
+      "cables": 3,
+      "is_articulation": false
+    },
+    {
+      "node": "c3119",
+      "city": "Penmarch, France",
+      "country": "France",
+      "betweenness": 0.02619,
+      "cables": 3,
+      "is_articulation": false
+    },
+    {
+      "node": "c3212",
+      "city": "Mumbai, India",
+      "country": "India",
+      "betweenness": 0.024343,
+      "cables": 11,
+      "is_articulation": false
+    },
+    {
+      "node": "c5962",
+      "city": "Fujairah, United Arab Emirates",
+      "country": "United Arab Emirates",
+      "betweenness": 0.023215,
+      "cables": 13,
+      "is_articulation": false
+    },
+    {
+      "node": "c5745",
+      "city": "Highbridge, United Kingdom",
+      "country": "United Kingdom",
+      "betweenness": 0.022499,
+      "cables": 4,
+      "is_articulation": true
+    }
+  ],
+  "critical_set": [
+    {
+      "rank": 1,
+      "node": "c3215",
+      "city": "Mazara del Vallo, Italy",
+      "country": "Italy",
+      "lcc_after": 618,
+      "cities_severed": 7
+    },
+    {
+      "rank": 2,
+      "node": "c3347",
+      "city": "Fortaleza, Brazil",
+      "country": "Brazil",
+      "lcc_after": 617,
+      "cities_severed": 1
+    },
+    {
+      "rank": 3,
+      "node": "c3119",
+      "city": "Penmarch, France",
+      "country": "France",
+      "lcc_after": 616,
+      "cities_severed": 1
+    },
+    {
+      "rank": 4,
+      "node": "c5884",
+      "city": "Ajigaura, Japan",
+      "country": "Japan",
+      "lcc_after": 615,
+      "cities_severed": 1
+    },
+    {
+      "rank": 5,
+      "node": "c5934",
+      "city": "Sesimbra, Portugal",
+      "country": "Portugal",
+      "lcc_after": 614,
+      "cities_severed": 1
+    },
+    {
+      "rank": 6,
+      "node": "c5840",
+      "city": "Norden, Germany",
+      "country": "Germany",
+      "lcc_after": 613,
+      "cities_severed": 1
+    },
+    {
+      "rank": 7,
+      "node": "c4554",
+      "city": "Bude, United Kingdom",
+      "country": "United Kingdom",
+      "lcc_after": 611,
+      "cities_severed": 2
+    },
+    {
+      "rank": 8,
+      "node": "c5760",
+      "city": "Makaha, Hawaii, United States",
+      "country": "United States",
+      "lcc_after": 598,
+      "cities_severed": 13
+    },
+    {
+      "rank": 9,
+      "node": "c5941",
+      "city": "Melkbosstrand, South Africa",
+      "country": "South Africa",
+      "lcc_after": 597,
+      "cities_severed": 1
+    },
+    {
+      "rank": 10,
+      "node": "c5883",
+      "city": "Shima, Japan",
+      "country": "Japan",
+      "lcc_after": 596,
+      "cities_severed": 1
+    },
+    {
+      "rank": 11,
+      "node": "c5942",
+      "city": "Mtunzini, South Africa",
+      "country": "South Africa",
+      "lcc_after": 595,
+      "cities_severed": 1
+    },
+    {
+      "rank": 12,
+      "node": "c3210",
+      "city": "Marseille, France",
+      "country": "France",
+      "lcc_after": 594,
+      "cities_severed": 1
+    },
+    {
+      "rank": 13,
+      "node": "c3082",
+      "city": "Porthcurno, United Kingdom",
+      "country": "United Kingdom",
+      "lcc_after": 316,
+      "cities_severed": 278
+    }
+  ],
+  "headline": {
+    "baseline_lcc_cities": 625,
+    "baseline_lcc_share": 0.6853,
+    "baseline_components": 76,
+    "tipping_point_removals": 13,
+    "tipping_point_share_of_network": 0.0143,
+    "lcc_before_tip": 594,
+    "lcc_after_tip": 316,
+    "cities_severed_in_one_step": 278,
+    "pair_connectivity_before": 0.4394,
+    "pair_connectivity_after": 0.2214,
+    "random_at_13_removals": 0.6732,
+    "random_at_88_removals": 0.5864,
+    "targeted_at_13_removals": 0.3465,
+    "critical_node": "Porthcurno, United Kingdom",
+    "interpretation": "Robust-yet-fragile confirmed. The first twelve targeted removals cost 31 cities between them. The thirteenth, Porthcurno, severs 278. Random removal of 88 cities, 6.8 times more nodes, costs 14 percent of the giant component. The static articulation set understates this because articulation structure regenerates under attack: it plateaus at 0.3904 and never reaches the half-collapse threshold."
+  }
+}

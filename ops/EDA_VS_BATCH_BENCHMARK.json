@@ -1,0 +1,72 @@
+{
+  "generated_by": "scripts/bench_eda_vs_batch.py",
+  "machine_note": "Local run. Kafka and Confluent are JVM services and were not installable under the available RAM; the in-process bus is the lower bound on any broker's cost.",
+  "fairness_note": "Parse cost is common to both architectures, so the like-for-like comparison is direct-call processing against bus-dispatch processing on the same pre-parsed rows. Timing a pre-parsed event loop against a parsing batch loop reports EDA as 85 percent faster, which measures the timer boundary rather than the architecture.",
+  "batch": {
+    "wall_seconds_parse_plus_process": 0.588,
+    "parse_seconds": 0.66,
+    "process_seconds_direct_call": 0.0722,
+    "records": 104099,
+    "states_resolved": 209,
+    "records_per_second": 176992
+  },
+  "event_driven": {
+    "dispatch_seconds": 0.0903,
+    "events_published": 104099,
+    "handler_invocations": 104099,
+    "per_event_microseconds": 0.87,
+    "events_per_second": 1152306
+  },
+  "like_for_like": {
+    "direct_call_seconds": 0.0722,
+    "bus_dispatch_seconds": 0.0903,
+    "dispatch_overhead_pct": 25.1,
+    "note": "In-process bus only. A real broker adds network, serialisation, partitioning and consumer-group coordination on top of this figure."
+  },
+  "equivalence_check": {
+    "batch_states": 209,
+    "event_states": 209,
+    "identical": true,
+    "note": "Both paths run the same handler and resolve the same 209 states, so the timing comparison is like for like."
+  },
+  "peak_rss_mb": 0.0,
+  "arrival_rates": {
+    "ember": {
+      "cadence": "annual",
+      "distinct_years_in_file": 41,
+      "range": [
+        1985,
+        2025
+      ],
+      "updates_per_year": 1,
+      "note": "Ember publishes a yearly release. A broker cannot make an annual figure arrive more often than annually."
+    },
+    "emodnet": {
+      "cadence": "static release",
+      "release": "EMODnet_HA_Cables_Telecommunication_20230628",
+      "updates_per_year": 0.5,
+      "note": "Dated release, superseded by republication rather than by streaming. Last observed vintage 2023-06-28."
+    },
+    "entsoe": {
+      "cadence": "near-real-time",
+      "updates_per_year": 35040,
+      "note": "15-minute resolution. The only source in this corpus with a genuine streaming shape."
+    },
+    "telegeography_cable_graph": {
+      "cadence": "irregular, roughly annual",
+      "updates_per_year": 1,
+      "note": "connectivity_L1_full is a snapshot workbook. Topology changes when cables enter service."
+    }
+  },
+  "verdict": {
+    "sources_justifying_streaming": [
+      "entsoe"
+    ],
+    "sources_not_justifying_streaming": [
+      "ember",
+      "emodnet",
+      "telegeography_cable_graph"
+    ],
+    "recommendation": "Do not adopt Kafka or Confluent for this corpus as it stands. Three of the four live sources publish annually or on static release; a broker cannot make an annual figure arrive more than once a year, so for those it adds operating surface and buys no freshness. ENTSO-E is the single genuine streaming source, and it does not need a cluster: one consumer process writing to the operational store gives the same freshness at a fraction of the cost. Revisit if and when two or more sub-daily sources are in production and the twin needs cross-source joins on live state, which is the point at which a log genuinely beats a schedule."
+  }
+}

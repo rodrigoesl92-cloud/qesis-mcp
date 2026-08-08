@@ -87,3 +87,8 @@ github-mcp-server/
 
 .vercel
 .env*
+
+# Raw source data held locally, never committed. Derived evidence under
+# data/axes/ and data/fsqca/ carries SHA-256 hashes pinning these inputs.
+data/electricity_yearly_*_EMBER.csv
+data/ember_electricity_data_methodology.pdf

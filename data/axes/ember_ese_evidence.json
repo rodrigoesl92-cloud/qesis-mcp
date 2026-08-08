@@ -1,0 +1,348 @@
+{
+  "generated_by": "scripts/ingest_ember.py",
+  "source": "Ember Yearly Electricity Data",
+  "files": [
+    "electricity_yearly_global_EMBER.csv",
+    "electricity_yearly_lower_EUROPE_EMBER.csv"
+  ],
+  "measure": "Emissions intensity (gCO2e/kWh)",
+  "vintage_years_present": [
+    2024,
+    2025
+  ],
+  "coverage": {
+    "qesis_states_matched": 35,
+    "of": 35,
+    "coverage": 1.0,
+    "big_gate": 0.75,
+    "passes_big_gate": true,
+    "unmatched": []
+  },
+  "comparison": {
+    "states_comparable": 35,
+    "mean_abs_delta": 38.32,
+    "max_abs_delta": 342.48,
+    "states_moving_more_than_50_gco2": [
+      {
+        "iso3": "BHR",
+        "index": 560,
+        "ember": 902.48,
+        "delta": 342.48,
+        "ember_year": 2024
+      },
+      {
+        "iso3": "HKG",
+        "index": 580,
+        "ember": 675.56,
+        "delta": 95.56,
+        "ember_year": 2024
+      },
+      {
+        "iso3": "QAT",
+        "index": 490,
+        "ember": 581.89,
+        "delta": 91.89,
+        "ember_year": 2025
+      },
+      {
+        "iso3": "SAU",
+        "index": 610,
+        "ember": 691.95,
+        "delta": 81.95,
+        "ember_year": 2024
+      },
+      {
+        "iso3": "TWN",
+        "index": 560,
+        "ember": 634.02,
+        "delta": 74.02,
+        "ember_year": 2025
+      },
+      {
+        "iso3": "ISR",
+        "index": 420,
+        "ember": 492.85,
+        "delta": 72.85,
+        "ember_year": 2025
+      },
+      {
+        "iso3": "CAN",
+        "index": 125,
+        "ember": 190.72,
+        "delta": 65.72,
+        "ember_year": 2025
+      },
+      {
+        "iso3": "MEX",
+        "index": 420,
+        "ember": 474.03,
+        "delta": 54.03,
+        "ember_year": 2025
+      }
+    ]
+  },
+  "disposition": "ESE is a diagnostic axis and is excluded from the weighted composite, so a refresh here does not move any published composite. Ember clears the BIG coverage gate and is a direct measure of the same quantity rather than a proxy. Promotion is therefore a vintage decision, not a methodological one, and is recorded for a decision rather than applied silently.",
+  "rows": [
+    {
+      "iso3": "ARE",
+      "index_carbon_gco2_kwh": 420,
+      "ember_gco2_kwh": 467.53,
+      "ember_year": 2024,
+      "delta": 47.53
+    },
+    {
+      "iso3": "AUS",
+      "index_carbon_gco2_kwh": 515,
+      "ember_gco2_kwh": 524.64,
+      "ember_year": 2025,
+      "delta": 9.64
+    },
+    {
+      "iso3": "AUT",
+      "index_carbon_gco2_kwh": 85,
+      "ember_gco2_kwh": 117.23,
+      "ember_year": 2025,
+      "delta": 32.23
+    },
+    {
+      "iso3": "BEL",
+      "index_carbon_gco2_kwh": 140,
+      "ember_gco2_kwh": 132.6,
+      "ember_year": 2025,
+      "delta": -7.4
+    },
+    {
+      "iso3": "BHR",
+      "index_carbon_gco2_kwh": 560,
+      "ember_gco2_kwh": 902.48,
+      "ember_year": 2024,
+      "delta": 342.48
+    },
+    {
+      "iso3": "BRA",
+      "index_carbon_gco2_kwh": 95,
+      "ember_gco2_kwh": 109.83,
+      "ember_year": 2025,
+      "delta": 14.83
+    },
+    {
+      "iso3": "CAN",
+      "index_carbon_gco2_kwh": 125,
+      "ember_gco2_kwh": 190.72,
+      "ember_year": 2025,
+      "delta": 65.72
+    },
+    {
+      "iso3": "CHE",
+      "index_carbon_gco2_kwh": 35,
+      "ember_gco2_kwh": 39.05,
+      "ember_year": 2025,
+      "delta": 4.05
+    },
+    {
+      "iso3": "CHL",
+      "index_carbon_gco2_kwh": 270,
+      "ember_gco2_kwh": 290.6,
+      "ember_year": 2025,
+      "delta": 20.6
+    },
+    {
+      "iso3": "DEU",
+      "index_carbon_gco2_kwh": 370,
+      "ember_gco2_kwh": 330.02,
+      "ember_year": 2025,
+      "delta": -39.98
+    },
+    {
+      "iso3": "DNK",
+      "index_carbon_gco2_kwh": 120,
+      "ember_gco2_kwh": 99.48,
+      "ember_year": 2025,
+      "delta": -20.52
+    },
+    {
+      "iso3": "ESP",
+      "index_carbon_gco2_kwh": 140,
+      "ember_gco2_kwh": 153.58,
+      "ember_year": 2025,
+      "delta": 13.58
+    },
+    {
+      "iso3": "FIN",
+      "index_carbon_gco2_kwh": 60,
+      "ember_gco2_kwh": 57.35,
+      "ember_year": 2025,
+      "delta": -2.65
+    },
+    {
+      "iso3": "FRA",
+      "index_carbon_gco2_kwh": 40,
+      "ember_gco2_kwh": 41.45,
+      "ember_year": 2025,
+      "delta": 1.45
+    },
+    {
+      "iso3": "GBR",
+      "index_carbon_gco2_kwh": 180,
+      "ember_gco2_kwh": 217.33,
+      "ember_year": 2025,
+      "delta": 37.33
+    },
+    {
+      "iso3": "HKG",
+      "index_carbon_gco2_kwh": 580,
+      "ember_gco2_kwh": 675.56,
+      "ember_year": 2024,
+      "delta": 95.56
+    },
+    {
+      "iso3": "IDN",
+      "index_carbon_gco2_kwh": 680,
+      "ember_gco2_kwh": 681.12,
+      "ember_year": 2024,
+      "delta": 1.12
+    },
+    {
+      "iso3": "IND",
+      "index_carbon_gco2_kwh": 655,
+      "ember_gco2_kwh": 670.55,
+      "ember_year": 2025,
+      "delta": 15.55
+    },
+    {
+      "iso3": "ISR",
+      "index_carbon_gco2_kwh": 420,
+      "ember_gco2_kwh": 492.85,
+      "ember_year": 2025,
+      "delta": 72.85
+    },
+    {
+      "iso3": "ITA",
+      "index_carbon_gco2_kwh": 270,
+      "ember_gco2_kwh": 284.7,
+      "ember_year": 2025,
+      "delta": 14.7
+    },
+    {
+      "iso3": "JPN",
+      "index_carbon_gco2_kwh": 445,
+      "ember_gco2_kwh": 477.38,
+      "ember_year": 2025,
+      "delta": 32.38
+    },
+    {
+      "iso3": "KOR",
+      "index_carbon_gco2_kwh": 425,
+      "ember_gco2_kwh": 417.13,
+      "ember_year": 2025,
+      "delta": -7.87
+    },
+    {
+      "iso3": "MEX",
+      "index_carbon_gco2_kwh": 420,
+      "ember_gco2_kwh": 474.03,
+      "ember_year": 2025,
+      "delta": 54.03
+    },
+    {
+      "iso3": "MYS",
+      "index_carbon_gco2_kwh": 570,
+      "ember_gco2_kwh": 603.29,
+      "ember_year": 2025,
+      "delta": 33.29
+    },
+    {
+      "iso3": "NLD",
+      "index_carbon_gco2_kwh": 240,
+      "ember_gco2_kwh": 253.6,
+      "ember_year": 2025,
+      "delta": 13.6
+    },
+    {
+      "iso3": "NOR",
+      "index_carbon_gco2_kwh": 25,
+      "ember_gco2_kwh": 28.06,
+      "ember_year": 2025,
+      "delta": 3.06
+    },
+    {
+      "iso3": "NZL",
+      "index_carbon_gco2_kwh": 110,
+      "ember_gco2_kwh": 92.69,
+      "ember_year": 2025,
+      "delta": -17.31
+    },
+    {
+      "iso3": "POL",
+      "index_carbon_gco2_kwh": 610,
+      "ember_gco2_kwh": 590.86,
+      "ember_year": 2025,
+      "delta": -19.14
+    },
+    {
+      "iso3": "QAT",
+      "index_carbon_gco2_kwh": 490,
+      "ember_gco2_kwh": 581.89,
+      "ember_year": 2025,
+      "delta": 91.89
+    },
+    {
+      "iso3": "SAU",
+      "index_carbon_gco2_kwh": 610,
+      "ember_gco2_kwh": 691.95,
+      "ember_year": 2024,
+      "delta": 81.95
+    },
+    {
+      "iso3": "SGP",
+      "index_carbon_gco2_kwh": 470,
+      "ember_gco2_kwh": 497.01,
+      "ember_year": 2025,
+      "delta": 27.01
+    },
+    {
+      "iso3": "SWE",
+      "index_carbon_gco2_kwh": 25,
+      "ember_gco2_kwh": 35.35,
+      "ember_year": 2025,
+      "delta": 10.35
+    },
+    {
+      "iso3": "TWN",
+      "index_carbon_gco2_kwh": 560,
+      "ember_gco2_kwh": 634.02,
+      "ember_year": 2025,
+      "delta": 74.02
+    },
+    {
+      "iso3": "USA",
+      "index_carbon_gco2_kwh": 370,
+      "ember_gco2_kwh": 384.4,
+      "ember_year": 2025,
+      "delta": 14.4
+    },
+    {
+      "iso3": "ZAF",
+      "index_carbon_gco2_kwh": 700,
+      "ember_gco2_kwh": 698.99,
+      "ember_year": 2025,
+      "delta": -1.01
+    }
+  ],
+  "source_provenance": {
+    "note": "Raw source files are held locally and not committed; the repository carries derived evidence only, per the storage tiering rule. These hashes pin the exact inputs.",
+    "hashes": {
+      "electricity_yearly_global_EMBER.csv": {
+        "sha256": "bfe5ee43da273e2399626be735743e33c7f9c2706eac5be3c31517960f9cec8f",
+        "bytes": 15593443
+      },
+      "electricity_yearly_lower_EUROPE_EMBER.csv": {
+        "sha256": "00b508946ac29af49ff031253bca687cebe3d26cc57c724572e63d63dc38c98c",
+        "bytes": 4082699
+      },
+      "EMODnet_release_shp_dbf_aggregate": {
+        "sha256": "24f721a9bd046e6da98b680afb282290751c71ef12eaf1700fdb892fe7382606"
+      }
+    }
+  }
+}
