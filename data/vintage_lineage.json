@@ -49,7 +49,7 @@
   },
   {
    "vintage": "v8.6 (2026-08-09)",
-   "qesis_mcp_commit": "PENDING_MERGE",
+   "qesis_mcp_commit": "9c76d0bf2c56b311096effd90209c2b4466809d6",
    "sovereign_infra_commit": null,
    "single_repo_reason": "Provenance relabel confined to qesis-mcp. No sovereign-infra generation step ran, so no commit there to pair. Chain seq 655 was appended to the exported spine here and awaits replay into the sovereign-infra log.",
    "summary": "Provenance relabel of the SAU CSE component from EMODnet to the ITU Submarine Cable Map proxy under D-108. The EMODnet HA release 20230628 carries zero geometry attributable to SAU and EMODnet's remit is European seas, so the EMODnet label could not have produced 94.3. Key renamed to ITU_SCM_proxy and the composition rule restated. Verified across all 35 states: 0 axis or composite changes; fsQCA, coupling and withholding blocks byte-identical. SAU holds CSE 64.3 and composite 75.6. Artifact d78f39f7964eb6f49a7be97311b772ec552c46c0b6e29050eb9b0c52ff874325, bound at chain seq 655, entry_hash 3fd13431c16455ce."
