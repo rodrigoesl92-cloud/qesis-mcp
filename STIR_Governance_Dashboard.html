@@ -148,6 +148,39 @@ footer{font-size:11.5px;color:var(--mut);padding:10px 4px 30px}
 }
 
 @media print{.controls,.tease,.drift .ctl,.gbtns{display:none}.card,.kpi{box-shadow:none;border:1px solid var(--line)}}
+
+@media(max-width:980px){
+  .r2{grid-template-columns:1fr}
+  .tallwrap{height:460px; overflow-x:auto;}
+  .maphold{height:300px; overflow:hidden;}
+  .maphold canvas{width:100%!important; height:100%!important;}
+  .cv{height:220px; overflow-x:auto;}
+  .cv canvas{width:100%!important; height:100%!important;}
+  table.data{display:block; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .hm{display:block; overflow-x:auto;}
+}
+@media(max-width:768px){
+  .wrap{padding:6px; max-width:100%}
+  .hero{padding:14px 12px 10px}
+  .hero h1{font-size:16px}
+  .quote{font-size:13px; padding-left:8px}
+  .controls{flex-direction:column; align-items:stretch; gap:6px}
+  .controls select{width:100%; font-size:14px}
+  .kpis{grid-template-columns:repeat(2, 1fr); gap:8px}
+  .kpi{padding:12px 14px}
+  .kpi .v{font-size:20px}
+  .drift .yr{font-size:28px}
+  .ctx,.insight,.card,.getdata{padding:12px 14px}
+  table.data th, table.data td{padding:6px 4px; font-size:10.5px}
+  .gform{grid-template-columns:1fr}
+  .contact{flex-direction:column}
+}
+@media(max-width:480px){
+  .kpis{grid-template-columns:1fr}
+  .meta{grid-template-columns:1fr}
+  .maphold{height:220px}
+}
+
 </style>
 </head>
 <body>
@@ -308,7 +341,40 @@ footer{font-size:11.5px;color:var(--mut);padding:10px 4px 30px}
     .tv.on circle{stroke-width:3}
     .tpanel{background:#f8f8f7;border:1px solid var(--line);border-left:5px solid var(--cool);border-radius:8px;padding:14px 18px;font-size:14px;margin-top:16px;min-height:74px;line-height:1.6}
     .tpanel b{display:block;margin-bottom:3px}
-  </style>
+  
+@media(max-width:980px){
+  .r2{grid-template-columns:1fr}
+  .tallwrap{height:460px; overflow-x:auto;}
+  .maphold{height:300px; overflow:hidden;}
+  .maphold canvas{width:100%!important; height:100%!important;}
+  .cv{height:220px; overflow-x:auto;}
+  .cv canvas{width:100%!important; height:100%!important;}
+  table.data{display:block; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .hm{display:block; overflow-x:auto;}
+}
+@media(max-width:768px){
+  .wrap{padding:6px; max-width:100%}
+  .hero{padding:14px 12px 10px}
+  .hero h1{font-size:16px}
+  .quote{font-size:13px; padding-left:8px}
+  .controls{flex-direction:column; align-items:stretch; gap:6px}
+  .controls select{width:100%; font-size:14px}
+  .kpis{grid-template-columns:repeat(2, 1fr); gap:8px}
+  .kpi{padding:12px 14px}
+  .kpi .v{font-size:20px}
+  .drift .yr{font-size:28px}
+  .ctx,.insight,.card,.getdata{padding:12px 14px}
+  table.data th, table.data td{padding:6px 4px; font-size:10.5px}
+  .gform{grid-template-columns:1fr}
+  .contact{flex-direction:column}
+}
+@media(max-width:480px){
+  .kpis{grid-template-columns:1fr}
+  .meta{grid-template-columns:1fr}
+  .maphold{height:220px}
+}
+
+</style>
   <h3>The trilemma lineage: pick two, always</h3>
   <div class="note">Three generations of the same structural truth, one century apart. The political trilemma points up, the monetary trilemma points down; together they form a six-pointed constraint on every modern state. The Infrastructural Trilemma stands beside them: the physical layer both of the older ones silently rest on. Click any vertex to read what it stands for.</div>
   <div class="tris">
@@ -484,7 +550,7 @@ fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r=>r
  function score(c,yr){const s=c.ext||c.th;if(!s)return null;
   for(let i=0;i<3;i++){if(yr<=YRS[i+1]){const f=(yr-YRS[i])/(YRS[i+1]-YRS[i]);
    if(s[i]==null||s[i+1]==null)return null;return s[i]+(s[i+1]-s[i])*f;}}return s[3];}
- function size(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=340*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+ function size(){const r=cv.getBoundingClientRect();if(r.width>0){cv.width=r.width*devicePixelRatio;cv.height=340*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}}
  size();addEventListener('resize',size);
  function draw(yr){
   const W=cv.getBoundingClientRect().width,Hh=340,L=110,R=24,rowH=(Hh-44)/list.length;
