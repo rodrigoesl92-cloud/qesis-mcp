@@ -7,9 +7,9 @@ name: QESIS+ integrity gate
 on:
   push:
     branches: ["**"]
-    paths: ["data/**", "scripts/**", "server.py", ".github/workflows/**"]
+    paths: ["data/**", "eval/**", "scripts/**", "server.py", ".github/workflows/**"]
   pull_request:
-    paths: ["data/**", "scripts/**", "server.py"]
+    paths: ["data/**", "eval/**", "scripts/**", "server.py"]
   workflow_dispatch:
   schedule:
     # Ahead of the 08:30 local morning protocol, so a drift is already known.
