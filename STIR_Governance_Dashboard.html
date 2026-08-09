@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -621,8 +621,16 @@ document.getElementById('selMetric').onchange=renderCmp;
 
 // ---- table
 let sortCol='ext0',sortDir=-1;
-const COLS=[['iso3','ISO3'],['country','Country'],['tier','Tier'],['WSE','WSE'],['CSE','CSE'],['ODI','ODI'],['CRD','CRD'],['FPE','FPE'],['REE','REE'],['ESE','ESE'],['h1','2030'],['h2','2050'],['h3','2080'],['d2080','Δ 2080'],['big','Gate']];
-function cellVal(c,k){if(AXES.includes(k))return c.axes[k];if(k==='yr2030')return c.ext&&c.ext[1];if(k==='yr2050')return c.ext&&c.ext[2];if(k==='yr2080')return c.ext&&c.ext[3];if(k==='yr2030')return c.ext&&c.ext[1];if(k==='yr2050')return c.ext&&c.ext[2];if(k==='yr2080')return c.ext&&c.ext[3];if(k==='ext0')return c.ext&&c.ext[0];return c[k];}
+const COLS=[['iso3','ISO3'],['country','Country'],['tier','Tier'],['WSE','WSE'],['CSE','CSE'],['ODI','ODI'],['CRD','CRD'],['FPE','FPE'],['REE','REE'],['ESE','ESE'],['yr2030','2030'],['yr2050','2050'],['yr2080','2080'],['d2080','Δ 2080'],['big','Gate']];
+function cellVal(c,k){
+  if(AXES.includes(k))return c.axes[k];
+  if(k==='yr2030')return c.ext&&c.ext[1];
+  if(k==='yr2050')return c.ext&&c.ext[2];
+  if(k==='yr2080')return c.ext&&c.ext[3];
+  if(k==='th0')return c.th&&c.th[0];
+  if(k==='ext0')return c.ext&&c.ext[0];
+  return c[k];
+}
 function renderTable(){
  let cs=[...D.countries].sort((a,b)=>{const x=cellVal(a,sortCol),y=cellVal(b,sortCol);if(x==null)return 1;if(y==null)return -1;return (x<y?-1:x>y?1:0)*sortDir;});
  let h='<table class="data"><thead><tr>'+COLS.map(c=>`<th onclick="setSort('${c[0]}')">${c[1]}${sortCol===c[0]?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr></thead><tbody>';
