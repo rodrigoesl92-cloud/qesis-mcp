@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QESIS+ | Substrate sovereignty, measured and checkable</title>
+<meta name="author" content="R. Batista Silva">
+<meta name="citation_author" content="Batista Silva, R.">
+<meta name="dcterms.rightsHolder" content="R. Batista Silva">
+<meta name="description" content="Seven-axis substrate exposure across 35 states on the QESIS+ v8.6 (2026-08-09) vintage, with every number traceable to a hashed asset.">
+<link rel="canonical" href="https://qesis-public.vercel.app">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "QESIS+ substrate sovereignty index",
+  "alternateName": "Quantitative Epistemic Sovereignty Index Stack",
+  "description": "Seven-axis measurement of substrate sovereignty exposure across 35 states. Each axis is defined in the methodology and each score traces to a named source, a licence and a hash. States below the coverage threshold are published as gaps rather than imputed.",
+  "url": "https://qesis-public.vercel.app",
+  "version": "v8.6 (2026-08-09)",
+  "creator": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "conditionsOfAccess": "CC BY-NC 4.0. Commercial use requires an institutional licence.",
+  "isAccessibleForFree": true,
+  "inLanguage": "en",
+  "keywords": [
+    "substrate sovereignty",
+    "digital sovereignty",
+    "critical infrastructure",
+    "international political economy",
+    "fuzzy-set QCA",
+    "EU AI Act",
+    "ISO 42001",
+    "data provenance"
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "WSE Water Stress Exposure",
+      "description": "Exposure of digital infrastructure siting to catchment water stress.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "CSE Cable Stress Exposure",
+      "description": "Exposure arising from submarine cable route and landing concentration.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "REE Rare Earth Element Stress",
+      "description": "Exposure to concentration in rare earth supply relevant to hardware.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "FPE Foreign Platform Exposure",
+      "description": "Share of platform capacity provided from outside the jurisdiction.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "ODI Operator Dependency Index",
+      "description": "Concentration of infrastructure operation among few providers.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "CRD Cloud Risk Density",
+      "description": "Density of cloud service dependency relative to domestic capacity.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "ESE Electricity Stress Exposure",
+      "description": "Exposure of infrastructure to electricity cost, carbon and reliability.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    }
+  ],
+  "measurementTechnique": "Composite index under declared axis weights, with a coverage threshold below which a state is reported as an epistemic gap. Configurational analysis by fuzzy-set QCA.",
+  "citation": "Batista Silva, R. (2026). Ontological Blind-Spots: Hybrid War, Imperial Decline, and the Polycrisis No One Can Exit. ESIC University.",
+  "creativeWorkStatus": "Published"
+}
+</script>
+<style>
+:root {
+  --bg:#141b2b; --card:#1b2334; --head:#2a2f3a; --line:#3a445c;
+  --ink:#f8f8f7; --mut:#9aa3ba;
+  --cool-100:#dce7f5; --cool-300:#93b3dd; --cool-500:#5b7fa6; --cool-700:#3f5c7d; --cool-900:#28394d;
+  --warm-300:#e0c3a5; --warm-500:#c99b72; --warm-700:#9c7350;
+  --hot:#c96a5e; --pos:#4d7c62; --epis:#6d7382;
+  --font-prose:ui-serif,Charter,"Iowan Old Style",Georgia,serif;
+  --font-ui:ui-sans-serif,"Inter",system-ui,sans-serif;
+  --font-num:ui-monospace,"SF Mono","Cascadia Mono",monospace;
+  --t-xs:12px; --t-sm:14px; --t-md:16px; --t-lg:20px; --t-xl:25px; --t-2xl:31px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px; --s-8:64px;
+  --r-sm:4px; --r-md:8px; --r-full:999px;
+  --e-1:0 1px 2px rgb(0 0 0 / .30);
+  --chart-h:320px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:var(--t-md)/1.65 var(--font-prose);
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:72rem;margin:0 auto;padding:var(--s-5)}
+a{color:var(--cool-300);text-underline-offset:2px}
+h1,h2,h3{font-family:var(--font-ui);line-height:1.25}
+h1{font-size:var(--t-xl);margin-bottom:var(--s-3)}
+h2{font-size:var(--t-lg);margin:var(--s-8) 0 var(--s-4);padding-bottom:var(--s-2);
+  border-bottom:1px solid var(--line)}
+h3{font-size:var(--t-md);margin:var(--s-5) 0 var(--s-3)}
+p{margin-bottom:var(--s-4);max-width:68ch}
+.lede{color:var(--mut);font-size:var(--t-lg);max-width:60ch;line-height:1.5}
+.backbar{display:flex;gap:var(--s-3);align-items:center;flex-wrap:wrap;
+  padding-bottom:var(--s-4);margin-bottom:var(--s-5);border-bottom:1px solid var(--line);
+  font:var(--t-sm) var(--font-ui)}
+.backbar a{min-height:44px;display:inline-flex;align-items:center}
+.masthead{border-bottom:1px solid var(--line);padding-bottom:var(--s-5);margin-bottom:var(--s-6)}
+.kicker{font:600 var(--t-xs)/1 var(--font-ui);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);margin-bottom:var(--s-3)}
+.num,td.num,.score{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.score--gap{color:var(--epis)}
+.grid{display:grid;gap:var(--s-4)}
+@media(min-width:820px){.grid--3{grid-template-columns:repeat(3,1fr)}
+  .grid--2{grid-template-columns:1fr 1fr}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:var(--s-4);box-shadow:var(--e-1)}
+.stat__n{font:600 var(--t-2xl)/1.1 var(--font-num);font-variant-numeric:tabular-nums;display:block}
+.stat__l{font:var(--t-xs)/1.45 var(--font-ui);color:var(--mut);margin-top:var(--s-2);display:block}
+.stat--hot .stat__n{color:var(--hot)}
+.chart{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:var(--s-4);margin:0 0 var(--s-5);box-shadow:var(--e-1)}
+.chart__title{font:600 var(--t-lg)/1.35 var(--font-ui);margin-bottom:var(--s-1)}
+.chart__sub{font:var(--t-sm)/1.5 var(--font-ui);color:var(--mut);margin-bottom:var(--s-3)}
+.chart__canvas{min-height:var(--chart-h)}
+.chart__source{font:var(--t-xs)/1.5 var(--font-ui);color:var(--mut);margin:var(--s-3) 0 0;
+  padding-top:var(--s-2);border-top:1px solid var(--line)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-family:var(--font-ui);font-size:var(--t-sm)}
+th,td{text-align:left;padding:var(--s-2) var(--s-3);border-bottom:1px solid var(--line);
+  vertical-align:top}
+thead th{background:var(--head);font-weight:600;font-size:var(--t-xs);
+  letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+tbody th{font-weight:500}
+td.num,th.num{text-align:right;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.barcell{width:44%;min-width:120px}
+.bar{height:9px;border-radius:var(--r-full);background:var(--cool-500)}
+.bar--cool{background:var(--cool-500)}
+/* The bar under discussion, the binding axis or the focus state, is marked
+   from the warm family rather than the hot accent. The accent is spent once
+   on this page, on the count of held decisions, and a chart that also reached
+   for it left three hot things on one screen, which is none (DESIGN_SYSTEM 2). */
+.bar--focus{background:var(--warm-500)}
+.bar--gap{background:var(--epis)}
+.domain{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  margin-bottom:var(--s-3)}
+.domain summary{cursor:pointer;padding:var(--s-3) var(--s-4);font:500 var(--t-md)/1.4 var(--font-ui);
+  display:flex;justify-content:space-between;gap:var(--s-3);align-items:center}
+.domain .count{font:var(--t-xs)/1 var(--font-ui);color:var(--mut);white-space:nowrap}
+.domain .tablewrap{padding:0 var(--s-4) var(--s-4)}
+.unblocks{color:var(--mut);font-size:var(--t-xs);max-width:34ch}
+.risk{font:600 var(--t-xs)/1 var(--font-ui);padding:3px 8px;border-radius:var(--r-full);
+  border:1px solid var(--line);white-space:nowrap}
+/* Critical outranks high by weight and lightness inside the warm family, not
+   by the accent. Four critical rows painted hot made four most-important
+   things, and --neg carries the same hex as --hot, so reaching for it would
+   have passed the gate and changed nothing a reader can see. */
+.risk--critical{color:var(--warm-300);border-color:var(--warm-500);font-weight:700}
+.risk--high{color:var(--warm-500);border-color:var(--warm-700)}
+.risk--medium{color:var(--cool-300)}
+.note{background:var(--card);border-left:3px solid var(--cool-700);padding:var(--s-4);
+  border-radius:0 var(--r-md) var(--r-md) 0;margin-bottom:var(--s-5)}
+.exchange{border-top:1px solid var(--line);margin-top:var(--s-8);padding-top:var(--s-6)}
+.exchange__gdpr{font:var(--t-xs)/1.65 var(--font-ui);color:var(--mut);max-width:62ch}
+.field{display:flex;gap:var(--s-2);flex-wrap:wrap;margin:var(--s-4) 0;max-width:34rem}
+.field input{flex:1;min-width:220px;min-height:44px;background:var(--bg);color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:0 var(--s-3);
+  font:var(--t-md) var(--font-ui)}
+.field button{min-height:44px;min-width:44px;padding:0 var(--s-5);border:0;
+  border-radius:var(--r-sm);background:var(--cool-500);color:var(--bg);
+  font:600 var(--t-sm) var(--font-ui);cursor:pointer}
+footer{margin-top:var(--s-8);padding-top:var(--s-5);border-top:1px solid var(--line);
+  font:var(--t-xs)/1.7 var(--font-ui);color:var(--mut)}
+:where(a,button,input,summary):focus-visible{outline:2px solid var(--cool-300);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav style="font-size:13px; margin: 8px 0 16px 0; color:#9aa3ba;">
+  <span style="color:#fff; font-weight:600;">Overview</span> &nbsp;/&nbsp; 
+  <a href="method.html" style="color:#93b3dd; text-decoration:none;">Method and playground</a> &nbsp;/&nbsp; 
+  <a href="console.html" style="color:#93b3dd; text-decoration:none;">Agent console</a> &nbsp;/&nbsp; 
+  <a href="STIR_Governance_Dashboard.html" style="color:#93b3dd; text-decoration:none;">Governance dashboard</a>
+</nav>
+
+<header class="masthead">
+  <p class="kicker">QESIS+ Digital Twin OS &middot; vintage v8.6 (2026-08-09)</p>
+  <h1>Substrate sovereignty, measured and checkable</h1>
+  <p class="lede">Seven physical and institutional axes across 35 states.
+  Every number on this page traces to a hashed asset, and every state without
+  sufficient coverage is published as a gap rather than filled with an estimate.</p>
+</header>
+
+<section class="grid grid--3" aria-label="System state">
+  <div class="stat"><span class="stat__n">118/118</span>
+    <span class="stat__l">assets re-checkable from their own hash. Provenance coverage 100 percent.</span></div>
+  <div class="stat"><span class="stat__n">681</span>
+    <span class="stat__l">append-only audit entries, hash chained, verified intact.</span></div>
+  <div class="stat stat--hot"><span class="stat__n">2</span>
+    <span class="stat__l">decisions held for human approval under EU AI Act Article 14. Nothing publishes until a person signs.</span></div>
+</section>
+
+<h2 id="exposure">Where the exposure sits</h2>
+<p>Composite exposure combines the seven axes under declared weights. Higher means
+more exposed. Countries below the coverage threshold are named beneath the table
+rather than ranked, because a rank computed on missing data is a guess wearing a number.</p>
+
+<div class="chart">
+  <p class="chart__title">Composite substrate exposure, most exposed first</p>
+  <p class="chart__sub">32 states ranked, 3 excluded for coverage. Today's highlighted state rotates.</p>
+  <div class="chart__canvas tablewrap">
+    <table>
+      <caption class="visually-hidden">Composite exposure ranking</caption>
+      <thead><tr><th class="num">#</th><th>State</th><th class="num">Composite</th><th>Relative</th></tr></thead>
+      <tbody><tr><td class="num">1</td><th scope="row">Saudi Arabia</th><td class="num">75.6</td><td class="barcell"><div class="bar bar--cool" style="width:100.0%"></div></td></tr>
+<tr><td class="num">2</td><th scope="row">United States</th><td class="num">68.2</td><td class="barcell"><div class="bar bar--cool" style="width:90.2%"></div></td></tr>
+<tr><td class="num">3</td><th scope="row">Spain</th><td class="num">60.2</td><td class="barcell"><div class="bar bar--cool" style="width:79.6%"></div></td></tr>
+<tr><td class="num">4</td><th scope="row">Belgium</th><td class="num">59.7</td><td class="barcell"><div class="bar bar--cool" style="width:79.0%"></div></td></tr>
+<tr><td class="num">5</td><th scope="row">Bahrain</th><td class="num">58.1</td><td class="barcell"><div class="bar bar--cool" style="width:76.9%"></div></td></tr>
+<tr><td class="num">6</td><th scope="row">United Arab Emirates</th><td class="num">56.5</td><td class="barcell"><div class="bar bar--cool" style="width:74.7%"></div></td></tr>
+<tr><td class="num">7</td><th scope="row">Qatar</th><td class="num">50.9</td><td class="barcell"><div class="bar bar--cool" style="width:67.3%"></div></td></tr>
+<tr><td class="num">8</td><th scope="row">Poland</th><td class="num">49.1</td><td class="barcell"><div class="bar bar--cool" style="width:64.9%"></div></td></tr>
+<tr><td class="num">9</td><th scope="row">India</th><td class="num">48.7</td><td class="barcell"><div class="bar bar--cool" style="width:64.4%"></div></td></tr>
+<tr><td class="num">10</td><th scope="row">Chile</th><td class="num">47.7</td><td class="barcell"><div class="bar bar--cool" style="width:63.1%"></div></td></tr>
+<tr><td class="num">11</td><th scope="row">Israel</th><td class="num">46.8</td><td class="barcell"><div class="bar bar--cool" style="width:61.9%"></div></td></tr>
+<tr><td class="num">12</td><th scope="row">Netherlands</th><td class="num">46.1</td><td class="barcell"><div class="bar bar--cool" style="width:61.0%"></div></td></tr></tbody>
+    </table>
+  </div>
+  <p class="chart__source">Source: <a href="#method">QESIS+ v8.6 (2026-08-09) canonical index</a>, asset QES-A0001, coverage 32/35 states, vintage v8.6 (2026-08-09).</p>
+</div>
+
+<h2 id="focus">Today's state in focus: Canada</h2>
+<p>The selection rotates daily across the ranked sample. This is an instrument for
+35 states, and pinning one of them to the front page would quietly
+turn it into a case study about that state.</p>
+
+<div class="chart">
+  <p class="chart__title">Canada across seven axes</p>
+  <p class="chart__sub">Composite 26.0.
+  Binding constraint: Rare Earth Element Stress at 55.5.
+  Full coverage on all seven axes.</p>
+  <div class="chart__canvas tablewrap">
+    <table>
+      <thead><tr><th>Axis</th><th class="num">Score</th><th>Relative to scale</th></tr></thead>
+      <tbody><tr><th scope="row">WSE Water Stress Exposure</th><td class="num">24.7</td><td class="barcell"><div class="bar bar--cool" style="width:24.7%" title="WSE Water Stress Exposure"></div></td></tr>
+<tr><th scope="row">CSE Cable Stress Exposure</th><td class="num">9.7</td><td class="barcell"><div class="bar bar--cool" style="width:9.7%" title="CSE Cable Stress Exposure"></div></td></tr>
+<tr><th scope="row">REE Rare Earth Element Stress</th><td class="num">55.5</td><td class="barcell"><div class="bar bar--focus" style="width:55.5%" title="binding constraint"></div></td></tr>
+<tr><th scope="row">FPE Foreign Platform Exposure</th><td class="num">25.0</td><td class="barcell"><div class="bar bar--cool" style="width:25.0%" title="FPE Foreign Platform Exposure"></div></td></tr>
+<tr><th scope="row">ODI Operator Dependency Index</th><td class="num">25.0</td><td class="barcell"><div class="bar bar--cool" style="width:25.0%" title="ODI Operator Dependency Index"></div></td></tr>
+<tr><th scope="row">CRD Cloud Risk Density</th><td class="num score--gap">no coverage</td><td class="barcell"><div class="bar bar--gap" style="width:8%"></div></td></tr>
+<tr><th scope="row">ESE Electricity Stress Exposure</th><td class="num">29.0</td><td class="barcell"><div class="bar bar--cool" style="width:29.0%" title="ESE Electricity Stress Exposure"></div></td></tr></tbody>
+    </table>
+  </div>
+  <p class="chart__source">Source: <a href="#method">QESIS+ v8.6 (2026-08-09) axis scores</a>, asset QES-A0001, coverage see per-axis flags above, vintage v8.6 (2026-08-09).</p>
+</div>
+
+<h2 id="governance">The Article 14 gate</h2>
+<p>An agent here cannot publish, spend, or grant itself privilege. High-risk operations
+stop at a gate and wait for a named person. That is a legal requirement under Article 14,
+and it is also the negative feedback that keeps a coupled system from running away from
+its operator. Twenty-five decisions currently sit behind it.</p>
+
+<div class="note">
+  <h3 style="margin-top:0">What the failure analysis found</h3>
+  <p style="margin-bottom:0">One thousand simulated deployments, calibrated on declared anchors and run through
+  the local fsQCA engine, confirm both specified failure configurations and add a third
+  result that was not specified. No condition is necessary on its own, so there is no
+  single dial to watch. Concurrency and recursion depth together form the core of every
+  surviving term. And the term carrying a human gate still survives the consistency
+  cutoff at 0.822 under tool-switching, which says plainly that human oversight
+  attenuates failure without preventing it. Solution coverage is 0.406, so this model
+  explains part of the picture and is stated as partial.</p>
+</div>
+
+
+    <details class="domain">
+      <summary><span>Domain 1: Autonomous agent authorization and privilege escalation</span><span class="count">5 held</span></summary>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Decision</th><th>Risk</th><th>Unblocks on approval</th></tr></thead>
+        <tbody><tr><td class="num">1</td><th scope="row">Authorization boundary for autonomous GitHub PR generation and auto-merge</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Agents may open PRs; auto-merge stays closed until separately signed</td></tr>
+<tr><td class="num">2</td><th scope="row">Self-modification constraints for local agentic scripts</th><td><span class="risk risk--critical">CRITICAL</span></td><td class="unblocks">Bounded self-edit inside `qesis_agents/`, never to the gate or the chain</td></tr>
+<tr><td class="num">3</td><th scope="row">Threshold limits for automated API token use and cloud provisioning</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Metered external calls under a declared cost envelope</td></tr>
+<tr><td class="num">4</td><th scope="row">Cross-repository refactoring without manual peer review</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Multi-repo edits; currently every repo is reviewed singly</td></tr>
+<tr><td class="num">5</td><th scope="row">Revocation protocol and emergency kill-switch parameters</th><td><span class="risk risk--critical">CRITICAL</span></td><td class="unblocks">The stop control. **Read the analysis above: this is not redundant with the approval gate.**</td></tr></tbody>
+      </table>
+      </div>
+    </details>
+    <details class="domain">
+      <summary><span>Domain 2: Data ingestion, licensing and provenance</span><span class="count">5 held</span></summary>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Decision</th><th>Risk</th><th>Unblocks on approval</th></tr></thead>
+        <tbody><tr><td class="num">6</td><th scope="row">Licence resolution and monetization clearance for the unlicensed documents</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">The content ladder. This is the binding constraint on all revenue.</td></tr>
+<tr><td class="num">7</td><th scope="row">External scraping parameters and data-feed integration policy</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">SCOUT may collect beyond the local corpus</td></tr>
+<tr><td class="num">8</td><th scope="row">Data-masking verification for public commits (D-026)</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Public push; the credential gate already runs, this signs its scope</td></tr>
+<tr><td class="num">9</td><th scope="row">Embedding space integrity sign-off, 768 dimensions</th><td><span class="risk risk--medium">MEDIUM</span></td><td class="unblocks">Confirmed: pgvector 0.8.2, `vector(768)`, matching nomic-embed-text</td></tr>
+<tr><td class="num">10</td><th scope="row">Dataset versioning and archival synchronization manifests</th><td><span class="risk risk--medium">MEDIUM</span></td><td class="unblocks">Citable dataset releases with a persistent identifier</td></tr></tbody>
+      </table>
+      </div>
+    </details>
+    <details class="domain">
+      <summary><span>Domain 3: Digital twin behavioral and predictive parameters</span><span class="count">5 held</span></summary>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Decision</th><th>Risk</th><th>Unblocks on approval</th></tr></thead>
+        <tbody><tr><td class="num">11</td><th scope="row">Calibration bounds for behavioral simulation weights</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Simulated stakeholder response enters analysis with declared bounds</td></tr>
+<tr><td class="num">12</td><th scope="row">Macro-geopolitical scenario variables for the analytical models</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Scenario runs beyond the canonical vintage</td></tr>
+<tr><td class="num">13</td><th scope="row">Bias mitigation and variance thresholds for decision-support output</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Agent output may inform an external recommendation</td></tr>
+<tr><td class="num">14</td><th scope="row">Real-time telemetry integration from the reporting layer</th><td><span class="risk risk--medium">MEDIUM</span></td><td class="unblocks">Live dashboard feeds rather than periodic exports</td></tr>
+<tr><td class="num">15</td><th scope="row">Structural drift criteria between the twin and real institutional metrics</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Automated drift alarms with a defined trigger</td></tr></tbody>
+      </table>
+      </div>
+    </details>
+    <details class="domain">
+      <summary><span>Domain 4: Compliance, auditability and ISO 42001 alignment</span><span class="count">5 held</span></summary>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Decision</th><th>Risk</th><th>Unblocks on approval</th></tr></thead>
+        <tbody><tr><td class="num">16</td><th scope="row">Automated audit trail linking ticket closures to commits</th><td><span class="risk risk--medium">MEDIUM</span></td><td class="unblocks">Closure evidence generated rather than asserted</td></tr>
+<tr><td class="num">17</td><th scope="row">Formal risk management framework documentation</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Closes the last substantive ISO 42001 clause gap</td></tr>
+<tr><td class="num">18</td><th scope="row">Human oversight protocol for high-risk classification changes</th><td><span class="risk risk--critical">CRITICAL</span></td><td class="unblocks">Who may reclassify a system, and on what evidence</td></tr>
+<tr><td class="num">19</td><th scope="row">Transparency and explainability metrics for RAG retrievals</th><td><span class="risk risk--medium">MEDIUM</span></td><td class="unblocks">Retrieval already returns matched terms and both component ranks; this signs the standard</td></tr>
+<tr><td class="num">20</td><th scope="row">Review schedule and accountability for the human supervisor</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Names the reviewer and the cadence. **Currently one person, which is risk R-01.**</td></tr></tbody>
+      </table>
+      </div>
+    </details>
+    <details class="domain">
+      <summary><span>Domain 5: Commercialization, monetization and publishing</span><span class="count">5 held</span></summary>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Decision</th><th>Risk</th><th>Unblocks on approval</th></tr></thead>
+        <tbody><tr><td class="num">21</td><th scope="row">Publishing rights for thesis outputs and the governance dashboard</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">The dashboard goes public; blocked also by the two design defects</td></tr>
+<tr><td class="num">22</td><th scope="row">Commercialization boundaries and IP protection for the architecture</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">The licence split that is the business model</td></tr>
+<tr><td class="num">23</td><th scope="row">External ecosystem integrations, enterprise collaboration channels</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">Third-party connectors touch the boundary; each needs its own review</td></tr>
+<tr><td class="num">24</td><th scope="row">Pricing, access tiering and data-sharing agreements</th><td><span class="risk risk--high">HIGH</span></td><td class="unblocks">The institutional tier becomes sellable</td></tr>
+<tr><td class="num">25</td><th scope="row">Master go-live authorization, staging to active autonomous operation</th><td><span class="risk risk--critical">CRITICAL</span></td><td class="unblocks">Everything. Signed last, on the evidence of the other 24.</td></tr></tbody>
+      </table>
+      </div>
+    </details>
+
+<h2 id="provenance">Provenance</h2>
+<p>Every asset carries an identifier, a SHA-256 and a lineage note. The register is
+re-checkable end to end: each entry can be recomputed from the file it names, and the
+audit chain commits each entry to its predecessor, so a retroactive edit breaks the
+chain downstream where an auditor can see it.</p>
+
+<section class="grid grid--3" aria-label="Provenance and storage">
+  <div class="stat"><span class="stat__n">45</span>
+    <span class="stat__l">tables in the analytical warehouse, 2,523 rows, read-only to every agent.</span></div>
+  <div class="stat"><span class="stat__n">719</span>
+    <span class="stat__l">retrieval chunks, each carrying its source, licence and hash.</span></div>
+  <div class="stat"><span class="stat__n">134</span>
+    <span class="stat__l">pipeline entries derived from measured exposure and published institutional remit.</span></div>
+</section>
+
+<h2 id="method">Method, and what would falsify it</h2>
+<p>Coverage below 0.75 excludes a state from ranking. The gap is
+published as a finding and never imputed. Correlations are reported with a named
+confounder and a stated falsifier or they are not reported as findings at all, which is
+enforced in code rather than by good intentions: the analysis tool refuses to return an
+interpretation without both.</p>
+<p>What would falsify the headline reading: stratify the sample by jurisdiction tier. If
+the cross-axis associations collapse inside every tier, the pooled coefficients were
+composition rather than mechanism, and the composite would need rebuilding on
+tier-relative rather than absolute terms.</p>
+
+<section class="exchange">
+  <h2 style="margin-top:0" id="sheet">Take the country sheet</h2>
+  <p>One page per state: seven axis scores, the binding constraint, coverage flags and
+  the full source trail. Free, licensed CC BY-NC. Commercial use needs an institutional licence.</p>
+  <form class="field" method="post" action="#" aria-label="Request the country sheet">
+    <label for="email" style="position:absolute;left:-9999px">Your email</label>
+    <input id="email" name="email" type="email" placeholder="you@institution.eu" required autocomplete="email">
+    <button type="submit">Send the sheet</button>
+  </form>
+  <p class="exchange__gdpr">Your address is used to send this sheet and nothing else unless
+  you ask for the monthly note. It is stored inside the EU, never sold and never shared.
+  Unsubscribe in one click. Lawful basis: consent, GDPR Art. 6(1)(a). The processor list
+  and full terms live in the privacy policy. This form is not yet connected to a backend,
+  and it says so rather than silently discarding what you type.</p>
+</section>
+
+<footer>
+  <p>QESIS+ Digital Twin OS. Dataset: Sovereign_Infra_Intelligence v8.6 (2026-08-09).
+  Citation: Batista Silva, R. (2026). Ontological Blind-Spots: Hybrid War, Imperial
+  Decline, and the Polycrisis No One Can Exit. ESIC/LSE.</p>
+  <p>Generated from live data at 2026-08-09T08:30:19. Compliance frame: EU AI Act Arts. 9, 10,
+  12 and 14; ISO/IEC 42001; EU Data Act portability, which is why this page is a static
+  file in an open format with no build step.</p>
+</footer>
+
+</div>
+</body>
+</html>

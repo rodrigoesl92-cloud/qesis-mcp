@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QESIS+ Agent Console</title>
+<meta name="author" content="R. Batista Silva">
+<meta name="dcterms.rightsHolder" content="R. Batista Silva">
+<link rel="canonical" href="https://qesis-public.vercel.app/console.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "QESIS+ agent console",
+  "description": "Operational state of the six-agent runtime: what each agent may do, what is held at the Article 14 gate, and how the audit chain verifies.",
+  "url": "https://qesis-public.vercel.app/console.html",
+  "version": "v8.3 (2026-07-31)",
+  "inLanguage": "en",
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "creator": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408"
+  },
+  "isPartOf": {
+    "@type": "Dataset",
+    "name": "QESIS+ substrate sovereignty index",
+    "url": "https://qesis-public.vercel.app"
+  }
+}
+</script>
+<style>
+/* QESIS+ design tokens v1.0 · 2026-07-28
+   The single source of colour, type, spacing and elevation.
+   Nothing else in the codebase declares a colour literal. */
+
+:root {
+  /* ── Surfaces and ink ────────────────────────────────────────────── */
+  --bg: #141b2b;
+  --card: #1b2334;
+  --head: #2a2f3a;
+  --line: #3a445c;
+  --ink: #f8f8f7;
+  --mut: #9aa3ba;
+
+  /* ── Cool family: sequential, low to high exposure ───────────────── */
+  --cool-100: #dce7f5;
+  --cool-300: #93b3dd;
+  --cool-500: #5b7fa6;
+  --cool-700: #3f5c7d;
+  --cool-900: #28394d;
+
+  /* ── Warm family: categorical partner ────────────────────────────── */
+  --warm-300: #e0c3a5;
+  --warm-500: #c99b72;
+  --warm-700: #9c7350;
+
+  /* ── The one hot accent. One use per view. ───────────────────────── */
+  --hot: #c96a5e;
+
+  /* ── Semantic ────────────────────────────────────────────────────── */
+  --pos: #4d7c62;
+  --neg: #c96a5e;
+  --epis: #6d7382;   /* epistemic gap: labelled, never interpolated */
+
+  /* ── Typography ──────────────────────────────────────────────────── */
+  --font-prose: ui-serif, Charter, "Iowan Old Style", Georgia, serif;
+  --font-ui: ui-sans-serif, "Inter", system-ui, sans-serif;
+  --font-num: ui-monospace, "SF Mono", "Cascadia Mono", monospace;
+
+  --t-xs: 12px;
+  --t-sm: 14px;
+  --t-md: 16px;
+  --t-lg: 20px;
+  --t-xl: 25px;
+  --t-2xl: 31px;
+
+  /* ── Spacing, 4px base ───────────────────────────────────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  /* ── Radius and elevation ────────────────────────────────────────── */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-full: 999px;
+  --e-1: 0 1px 2px rgb(0 0 0 / 0.30);
+  --e-2: 0 4px 12px rgb(0 0 0 / 0.35);
+
+  /* ── Chart canvas heights. Explicit, always (L-014). ─────────────── */
+  --chart-h: 320px;
+  --chart-h-tall: 440px;
+  --chart-h-spark: 64px;
+}
+
+/* Light surface for print and for the downloadable one-pagers. */
+@media print {
+  :root {
+    --bg: #ffffff;
+    --card: #f8f8f7;
+    --head: #efeeeb;
+    --line: #d8d6d1;
+    --ink: #141b2b;
+    --mut: #5b6070;
+  }
+}
+
+/* ── Chart pattern ─────────────────────────────────────────────────── */
+.chart {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  margin: 0 0 var(--s-5);
+  box-shadow: var(--e-1);
+}
+
+.chart__title {
+  font: 600 var(--t-lg) / 1.4 var(--font-ui);
+  color: var(--ink);
+  margin-bottom: var(--s-3);
+}
+
+/* The wrapper carries the height. A canvas has no intrinsic size, and a
+   chart without a sized wrapper overflows its frame at some viewport. */
+.chart__canvas {
+  position: relative;
+  height: var(--chart-h);
+  width: 100%;
+}
+
+.chart__canvas > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart__canvas--tall { height: var(--chart-h-tall); }
+.chart__canvas--spark { height: var(--chart-h-spark); }
+
+/* Mandatory. Data without a clickable origin is unpublishable. */
+.chart__source {
+  font: var(--t-xs) / 1.5 var(--font-ui);
+  color: var(--mut);
+  margin-top: var(--s-3);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line);
+}
+
+.chart__source a {
+  color: var(--cool-300);
+  text-underline-offset: 2px;
+}
+
+/* ── Numbers ───────────────────────────────────────────────────────── */
+.num,
+td.num,
+.score {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+
+.score--hot { color: var(--hot); }
+.score--pos { color: var(--pos); }
+.score--neg { color: var(--neg); }
+
+/* An epistemic gap is grey and labelled. It is never blank and never zero. */
+.score--gap {
+  color: var(--epis);
+  font-style: normal;
+}
+.score--gap::after {
+  content: " no coverage";
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+}
+
+/* ── Provenance chip ───────────────────────────────────────────────── */
+.prov {
+  display: inline-flex;
+  gap: var(--s-1);
+  align-items: center;
+  padding: 2px var(--s-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  font: var(--t-xs) / 1.4 var(--font-ui);
+  color: var(--mut);
+}
+.prov--unrecorded { border-color: var(--epis); color: var(--epis); }
+
+/* ── Exchange block ────────────────────────────────────────────────── */
+.exchange {
+  border-top: 1px solid var(--line);
+  margin-top: var(--s-8);
+  padding-top: var(--s-6);
+}
+.exchange__gdpr {
+  font: var(--t-xs) / 1.6 var(--font-ui);
+  color: var(--mut);
+  max-width: 62ch;
+  margin-top: var(--s-3);
+}
+
+/* ── Accessibility floor ───────────────────────────────────────────── */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--cool-300);
+  outline-offset: 2px;
+}
+
+button, .btn, a.btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+        font-family:var(--font-ui); font-size:var(--t-sm); line-height:1.55; }
+.wrap { max-width:1180px; margin:0 auto; padding:var(--s-6) var(--s-5) var(--s-8); }
+h1 { font-size:var(--t-2xl); margin:0 0 var(--s-2); letter-spacing:-0.01em; }
+h2 { font-size:var(--t-lg); margin:var(--s-7) 0 var(--s-3);
+      border-top:1px solid var(--line); padding-top:var(--s-4); }
+.lede { color:var(--mut); max-width:70ch; margin:0 0 var(--s-5); }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+         gap:var(--s-3); }
+.cell { background:var(--card); border:1px solid var(--line);
+         border-radius:var(--r-md); padding:var(--s-4); }
+.cell .k { color:var(--mut); font-size:var(--t-xs); text-transform:uppercase;
+            letter-spacing:0.08em; }
+.cell .v { font-family:var(--font-num); font-size:var(--t-xl); margin:var(--s-1) 0; }
+.cell .n { color:var(--mut); font-size:var(--t-xs); }
+/* The hot accent appears exactly once on this page, on the number the page
+   exists to show. Never a border, never decorative (DESIGN_SYSTEM 2). */
+.gate { background:var(--card); border:1px solid var(--line);
+         border-radius:var(--r-md); padding:var(--s-5); margin:var(--s-4) 0;
+         display:flex; gap:var(--s-5); align-items:baseline; }
+.gate .big { font-family:var(--font-num); font-size:44px; color:var(--hot);
+              line-height:1; }
+.gate p { margin:0; color:var(--mut); max-width:62ch; }
+.gate b { color:var(--ink); font-weight:600; }
+figure { margin:var(--s-4) 0; background:var(--card); border:1px solid var(--line);
+          border-radius:var(--r-md); padding:var(--s-4); }
+figure svg { width:100%; height:auto; display:block; }
+/* The topology takes its paint here and nowhere else. Presentation attributes
+   cannot resolve a token, so every fill and stroke below is a real CSS
+   declaration and the print inversion above reaches the diagram for free. */
+.topo .node { fill:var(--card); stroke:var(--cool-500); stroke-width:1.5; }
+.topo .node--held { stroke:var(--warm-500); }
+.topo .name { fill:var(--ink); font:13px var(--font-ui); letter-spacing:0.08em; }
+.topo .meta { fill:var(--mut); font:11px var(--font-num); }
+.topo .meta--held { fill:var(--warm-300); }
+.topo .edge { fill:none; stroke:var(--line); stroke-width:1.5; }
+.topo .arrow { fill:var(--line); }
+.topo .bound { fill:var(--warm-700); }
+.topo .boundlab { fill:var(--mut); font:11px var(--font-ui); }
+.agents { display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+           gap:var(--s-3); }
+.agent { background:var(--card); border:1px solid var(--line);
+          border-radius:var(--r-md); padding:var(--s-4); }
+.agent header { display:flex; justify-content:space-between; align-items:baseline; }
+.agent h3 { margin:0; font-size:var(--t-md); letter-spacing:0.08em; }
+.verb { color:var(--warm-500); font-size:var(--t-xs); letter-spacing:0.08em; }
+.purpose { color:var(--mut); margin:var(--s-2) 0 var(--s-3); font-size:var(--t-xs); }
+dl { margin:0 0 var(--s-3); display:grid; gap:var(--s-1); }
+dl.wide { grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:var(--s-3); }
+dl div { display:flex; justify-content:space-between; gap:var(--s-3);
+          border-bottom:1px dotted var(--line); padding-bottom:2px; }
+dt { color:var(--mut); font-size:var(--t-xs); }
+dd { margin:0; font-family:var(--font-num); font-size:var(--t-xs); }
+ul.ops { list-style:none; margin:0; padding:0; }
+ul.ops li { display:flex; align-items:baseline; gap:var(--s-2);
+             padding:3px 0; border-top:1px solid var(--line); }
+ul.ops li span { flex:1; font-family:var(--font-num); font-size:var(--t-xs);
+                  color:var(--cool-300); }
+ul.ops li b { font-family:var(--font-num); font-size:var(--t-xs); }
+ul.ops li em { font-style:normal; font-size:var(--t-xs); color:var(--warm-300); }
+table { width:100%; border-collapse:collapse; font-size:var(--t-xs); }
+th { background:var(--head); text-align:left; padding:var(--s-2) var(--s-3);
+      color:var(--mut); font-weight:500; letter-spacing:0.06em; }
+td { padding:var(--s-2) var(--s-3); border-bottom:1px solid var(--line);
+      font-family:var(--font-num); }
+td.num { text-align:right; }
+ol.doctrine { list-style:none; margin:0; padding:0; }
+ol.doctrine li { display:flex; gap:var(--s-3); padding:var(--s-2) 0;
+                  border-bottom:1px solid var(--line); }
+ol.doctrine code { color:var(--warm-500); font-family:var(--font-num);
+                    font-size:var(--t-xs); min-width:56px; }
+.src { color:var(--mut); font-size:var(--t-xs); max-width:82ch; }
+code { font-family:var(--font-num); }
+footer { margin-top:var(--s-7); border-top:1px solid var(--line);
+          padding-top:var(--s-4); color:var(--mut); font-size:var(--t-xs); }
+</style></head>
+<body><div class="wrap">
+
+<nav style="font-size:13px; margin: 8px 0 16px 0; color:#9aa3ba;">
+  <a href="overview.html" style="color:#93b3dd; text-decoration:none;">Overview</a> &nbsp;/&nbsp; 
+  <a href="method.html" style="color:#93b3dd; text-decoration:none;">Method and playground</a> &nbsp;/&nbsp; 
+  <span style="color:#fff; font-weight:600;">Agent console</span> &nbsp;/&nbsp; 
+  <a href="STIR_Governance_Dashboard.html" style="color:#93b3dd; text-decoration:none;">Governance dashboard</a>
+</nav>
+
+<h1>QESIS+ Agent Console</h1>
+<p class="lede">The six agents run headless. This page is the instrument that
+shows what they did, read from the hash chain rather than recalled from a
+session. It is a plain file: it opens in any browser, makes no network request,
+and needs no assistant, no plugin and no account to read. Two planes appear
+below, the runtime plane from the operational store and the index plane from
+the published vintage, and on this surface both are read at build time, which
+was 2026-07-31T11:48:40Z. On the pinned desktop artifact they diverge, and the runtime
+plane there carries its own older stamp for that reason.</p>
+
+<div class="grid"><div class="cell"><div class="k">chain height</div><div class="v">604</div><div class="n">entries, hash linked</div></div><div class="cell"><div class="k">link breaks</div><div class="v">0</div><div class="n">recomputed, not asserted</div></div><div class="cell"><div class="k">agents</div><div class="v">6</div><div class="n">registry closed at six</div></div><div class="cell"><div class="k">operations</div><div class="v">30</div><div class="n">distinct action types logged</div></div><div class="cell"><div class="k">open tasks</div><div class="v">13</div><div class="n">owner named on each</div></div></div>
+
+<div class="gate">
+  <div class="big">0</div>
+  <p><b>actions held at the human gate.</b> Each one ran, produced output, and
+  stopped. Release requires a named person through
+  <code>python -m qesis_agents approve &lt;log_id&gt; --by "R. Batista Silva"</code>.
+  No agent signs and no agent may approve its own work.</p>
+</div>
+
+<h2>Topology</h2>
+<figure><svg class="topo" viewBox="0 0 900 300" role="img" aria-label="Six agent pipeline: SCOUT collects, SENTINEL gates, ANALYST reasons, then ARCHITECT, HERALD and COUNSEL fan out to the Article 14 human boundary">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="arrow" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+<path class="edge" d="M208,146 L234,146" marker-end="url(#a)"/>
+<path class="edge" d="M408,146 L434,146" marker-end="url(#a)"/>
+<path class="edge" d="M608,146 L621.0,146 L621.0,66 L634,66" marker-end="url(#a)"/>
+<path class="edge" d="M608,146 L634,146" marker-end="url(#a)"/>
+<path class="edge" d="M608,146 L621.0,146 L621.0,226 L634,226" marker-end="url(#a)"/>
+<rect class="node" x="40" y="120" width="168" height="52" rx="4"/>
+<text class="name" x="52" y="142">SCOUT</text>
+<text class="meta" x="52" y="160">collect · 98 logged</text>
+<rect class="node" x="240" y="120" width="168" height="52" rx="4"/>
+<text class="name" x="252" y="142">SENTINEL</text>
+<text class="meta" x="252" y="160">gate · 188 logged</text>
+<rect class="node" x="440" y="120" width="168" height="52" rx="4"/>
+<text class="name" x="452" y="142">ANALYST</text>
+<text class="meta" x="452" y="160">reason · 93 logged</text>
+<rect class="node" x="640" y="40" width="168" height="52" rx="4"/>
+<text class="name" x="652" y="62">ARCHITECT</text>
+<text class="meta" x="652" y="80">record · 134 logged</text>
+<rect class="node node--held" x="640" y="120" width="168" height="52" rx="4"/>
+<text class="name" x="652" y="142">HERALD</text>
+<text class="meta meta--held" x="652" y="160">publish · 45 logged · 36 held</text>
+<rect class="node node--held" x="640" y="200" width="168" height="52" rx="4"/>
+<text class="name" x="652" y="222">COUNSEL</text>
+<text class="meta meta--held" x="652" y="240">bind · 46 logged · 35 held</text>
+<rect class="bound" x="840" y="40" width="4" height="212"/>
+<text class="boundlab" x="828" y="34" text-anchor="end">Article 14 boundary. No agent signs.</text>
+</svg>
+<figcaption class="src">Collection reaches nothing downstream without passing
+the gate. A warm border marks an agent with work waiting on a human.</figcaption>
+</figure>
+
+<h2>Agents</h2>
+<div class="agents">
+        <article class="agent">
+          <header><h3>SCOUT</h3><span class="verb">collect</span></header>
+          <p class="purpose">Research and collection, refresh monitoring</p>
+          <dl>
+            <div><dt>risk default</dt><dd>MEDIUM</dd></div>
+            <div><dt>web facing</dt><dd>yes</dd></div>
+            <div><dt>last run</dt><dd>2026-07-30T23:01:01Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>research_brief</span><b>36</b></li><li><span>assess_content</span><b>36</b></li><li><span>refresh_audit</span><b>20</b></li><li><span>submit_intake</span><b>3</b></li><li><span>citation_scan</span><b>3</b></li></ul>
+        </article>
+        <article class="agent">
+          <header><h3>SENTINEL</h3><span class="verb">gate</span></header>
+          <p class="purpose">Integrity gate, security, EU AI Act and ISO 42001 conformity</p>
+          <dl>
+            <div><dt>risk default</dt><dd>MEDIUM</dd></div>
+            <div><dt>web facing</dt><dd>no</dd></div>
+            <div><dt>last run</dt><dd>2026-07-30T18:34:30Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>integrity_audit</span><b>60</b></li><li><span>doctrine_audit</span><b>54</b></li><li><span>validate_intake</span><b>39</b></li><li><span>licence_audit</span><b>18</b></li><li><span>verify_chain</span><b>12</b></li><li><span>pending_approvals</span><b>3</b></li><li><span>gate_publication</span><b>1</b></li><li><span>connector_review</span><b>1</b></li></ul>
+        </article>
+        <article class="agent">
+          <header><h3>ANALYST</h3><span class="verb">reason</span></header>
+          <p class="purpose">Correlation, fsQCA, epistemic classification</p>
+          <dl>
+            <div><dt>risk default</dt><dd>MEDIUM</dd></div>
+            <div><dt>web facing</dt><dd>no</dd></div>
+            <div><dt>last run</dt><dd>2026-07-30T18:16:06Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>correlate</span><b>78</b></li><li><span>axis_matrix</span><b>8</b></li><li><span>tables</span><b>5</b></li><li><span>sql</span><b>1</b></li><li><span>association_scan</span><b>1</b></li></ul>
+        </article>
+        <article class="agent">
+          <header><h3>ARCHITECT</h3><span class="verb">record</span></header>
+          <p class="purpose">Documentation, reports, register hygiene, KPI custody</p>
+          <dl>
+            <div><dt>risk default</dt><dd>LOW</dd></div>
+            <div><dt>web facing</dt><dd>no</dd></div>
+            <div><dt>last run</dt><dd>2026-07-31T11:46:19Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>daily_report</span><b>55</b></li><li><span>technical_documentation</span><b>20</b></li><li><span>reconcile_register</span><b>17</b></li><li><span>add_task</span><b>17</b></li><li><span>kpi_snapshot</span><b>14</b></li><li><span>task_queue</span><b>10</b></li><li><span>propagate</span><b>1</b></li></ul>
+        </article>
+        <article class="agent">
+          <header><h3>HERALD</h3><span class="verb">publish</span></header>
+          <p class="purpose">Content, SEO, funnel, lead generation</p>
+          <dl>
+            <div><dt>risk default</dt><dd>HIGH</dd></div>
+            <div><dt>web facing</dt><dd>yes</dd></div>
+            <div><dt>last run</dt><dd>2026-07-30T18:16:07Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>artifact_ladder</span><b>35</b><em>35 held</em></li><li><span>lead_scan</span><b>9</b></li><li><span>draft</span><b>1</b><em>1 held</em></li></ul>
+        </article>
+        <article class="agent">
+          <header><h3>COUNSEL</h3><span class="verb">bind</span></header>
+          <p class="purpose">Legal, commercial compliance, licensing, obligations</p>
+          <dl>
+            <div><dt>risk default</dt><dd>HIGH</dd></div>
+            <div><dt>web facing</dt><dd>no</dd></div>
+            <div><dt>last run</dt><dd>2026-07-30T18:16:07Z</dd></div>
+          </dl>
+          <ul class="ops"><li><span>triage_contract</span><b>35</b><em>35 held</em></li><li><span>licence_posture</span><b>11</b></li></ul>
+        </article></div>
+
+<h2>What waits on you</h2>
+<table><thead><tr><th>agent</th><th>operation</th><th>article</th>
+<th>risk</th><th class="num">held</th><th class="num">oldest</th></tr></thead>
+<tbody><tr><td>COUNSEL</td><td>triage_contract</td><td>Art. 14 (Human oversight)</td><td>HIGH</td><td class="num">35</td><td class="num">2026-07-28T17:12:48Z</td></tr><tr><td>HERALD</td><td>artifact_ladder</td><td>Art. 12 (Record-keeping)</td><td>HIGH</td><td class="num">35</td><td class="num">2026-07-28T17:12:48Z</td></tr><tr><td>HERALD</td><td>draft</td><td>Art. 12 (Record-keeping)</td><td>HIGH</td><td class="num">1</td><td class="num">2026-07-28T17:19:01Z</td></tr></tbody></table>
+<p class="src">The gate is wider than the article: 36 under Art. 12, 35 under Art. 14. Holding
+follows the reach of the output rather than the label on the record, because
+risk classification and write scope are separate properties and stay separate
+fields (L-035).</p>
+
+<h2>Index plane</h2>
+
+        <dl class="wide">
+          <div><dt>vintage</dt><dd>v8.3 (2026-07-31)</dd></div>
+          <div><dt>supersedes</dt><dd>v8.2 (2026-07)</dd></div>
+          <div><dt>states</dt><dd>35</dd></div>
+          <div><dt>ranked</dt><dd>32</dd></div>
+          <div><dt>withheld under the coverage gate</dt><dd>3</dd></div>
+          <div><dt>uncertainty entries</dt>
+               <dd>2 high, 4 medium,
+                   2 low</dd></div>
+        </dl>
+        <p class="src">Composite: <code>0.3*WSE + 0.3*CSE + 0.17*ODI + 0.08*RGD + 0.15*REE</code>.
+           Withheld: HKG at 0.7, SGP at 0.7, TWN at 0.7. Coverage below 0.75 is published as a gap and
+           never imputed (D-007).</p>
+
+<h2>Standing constraints</h2>
+<ol class="doctrine"><li><code>D-006</code><span>No credential is handled by any agent, in either direction.</span></li><li><code>D-007</code><span>Coverage below 0.75 is a finding. Nothing is imputed.</span></li><li><code>D-004</code><span>Quarantine, never delete.</span></li><li><code>D-012</code><span>Public surfaces carry methodology, never licensed data.</span></li><li><code>D-019</code><span>The registry is closed at six. A seventh displaces an existing one.</span></li><li><code>D-027</code><span>Anything writable lives outside the sync mount.</span></li><li><code>L-015</code><span>The em dash is banned in prose and the gate runs on this page too.</span></li><li><code>L-023</code><span>A counter reports the thing it is named after. Drafts count as drafts.</span></li><li><code>L-040</code><span>A capability is claimed only on the surface where it was verified.</span></li><li><code>L-047</code><span>A token in a presentation attribute is discarded and paints black.</span></li></ol>
+
+<footer>
+Generated by <code>scripts/build_console.py</code> at 2026-07-31T11:48:40Z from
+<code>var/qesis_ops.sqlite</code> and the canonical index. Chain head, first 32
+of 64 hexadecimal characters:
+<code>06fc6d1a7cdbf6618ac8cc5c85c59b4b</code>. Regenerate with
+<code>python scripts/build_console.py</code>. This file is generated and is
+never hand edited. It carries no script, no external font, no analytics and no
+outbound request, so it works offline and leaves no trace of being opened.
+</footer>
+</div></body></html>
