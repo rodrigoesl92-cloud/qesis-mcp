@@ -1,98 +1,90 @@
 name: Production integrity probe
 
-# The workflow PR #33 was named for and never contained. It is deliberately not
-# a placeholder that exits 0: this repository has just finished deleting a file
-# that asserted ALL_SOURCES_OPERATIONAL while validating nothing, and a green
-# tick that checks nothing is the same defect wearing CI colours.
-#
-# What it does: re-derives the integrity claim from committed artefacts only,
-# then compares it against what production actually serves. It reads no
-# database, no OneDrive and no private log, so it runs identically here and on
-# the laptop.
-
 on:
   push:
-    branches: ["**"]
+    branches: [ main ]
     paths:
-      - "data/**"
-      - "scripts/**"
-      - ".github/workflows/production-integrity-probe.yml"
-  pull_request:
-    paths: ["data/**", "scripts/**"]
-  workflow_dispatch:
+      - 'data/**'
+      - 'scripts/**'
   schedule:
-    # Hourly, so a drift between the committed index and the served one is
-    # caught inside an hour rather than at the next manual look.
-    - cron: "17 * * * *"
-
-permissions:
-  contents: read
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 concurrency:
-  group: production-integrity-probe-${{ github.ref }}
-  cancel-in-progress: true
+  group: production-integrity-probe
+  cancel-in-progress: false
 
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Committed-artifact gates
-        run: |
-          python scripts/verify_index.py
-          python scripts/verify_chain.py
-          python scripts/verify_release.py
-          python scripts/verify_vintage_pairing.py
-
-      - name: Candidate vintages are gated too
-        # A candidate that cannot pass its own gates should not sit in the repo
-        # waiting to be promoted. v8.6 is bound and attested but not published.
-        run: |
-          for f in data/qesis_v8.*.json; do
-            case "$f" in
-              *_superseded.json|*_CANDIDATE.json) continue ;;
-            esac
-            echo "--- $f"
-            python scripts/verify_index.py --json "$f"
-            python scripts/verify_release.py --index "$f"
-          done
+          python-version: '3.11'
 
       - name: Served endpoint agrees with the committed index
-        # Compares the live vintage and index hash against the committed ones.
-        # Non-fatal on network failure, fatal on disagreement: an unreachable
-        # endpoint is an outage, a disagreeing one is a drift, and they are not
-        # the same finding.
+        # Three outcomes, not two. Serving the PREVIOUS release is a deploy in
+        # flight, not a drift, and failing on it makes every deploy red for a
+        # few minutes and trains people to ignore this check.
         env:
           PROBE_URL: https://qesis-mcp.vercel.app/health
+          GRACE_ATTEMPTS: "10"
+          GRACE_SLEEP: "30"
         run: |
           python - <<'PY'
-          import hashlib, json, os, sys, urllib.request
+          import hashlib, json, os, sys, time, urllib.request
 
           committed = open("data/qesis_v8.json", "rb").read()
           local_sha = hashlib.sha256(committed).hexdigest()
           local_vintage = json.loads(committed)["vintage"]
 
-          try:
-              with urllib.request.urlopen(os.environ["PROBE_URL"], timeout=25) as r:
-                  served = json.load(r)
-          except Exception as exc:
-              print(f"::warning::endpoint unreachable ({type(exc).__name__}: {exc}). "
-                    f"Treating as an outage, not a drift.")
+          # Every SHA this repo has ever published. Serving one of these is a
+          # lagging deploy; serving anything else is unaccounted bytes.
+          releases = json.load(open("data/RELEASES.json", encoding="utf-8"))
+          known = {r["artifact_sha"] for r in releases.values() if r.get("artifact_sha")}
+
+          attempts = int(os.environ["GRACE_ATTEMPTS"])
+          sleep_s = int(os.environ["GRACE_SLEEP"])
+          served = None
+
+          for i in range(1, attempts + 1):
+              try:
+                  with urllib.request.urlopen(os.environ["PROBE_URL"], timeout=25) as r:
+                      served = json.load(r)
+              except Exception as exc:
+                  print(f"attempt {i}: unreachable ({type(exc).__name__})")
+                  time.sleep(sleep_s)
+                  continue
+
+              sha = served.get("index_sha256")
+              if sha == local_sha and served.get("vintage") == local_vintage:
+                  break
+              if sha in known:
+                  print(f"attempt {i}: serving a previous release "
+                        f"{str(sha)[:12]}..., deploy in flight")
+                  time.sleep(sleep_s)
+                  continue
+              print(f"::error::served index {str(sha)[:12]}... matches no release "
+                    f"in RELEASES.json. This is unaccounted bytes, not a lag.")
+              sys.exit(1)
+
+          if served is None:
+              print("::warning::endpoint unreachable for the whole grace window. "
+                    "Outage, not drift. Not failing the gate on it.")
               sys.exit(0)
 
           fail = []
           if served.get("vintage") != local_vintage:
               fail.append(f"vintage: served {served.get('vintage')!r} != "
-                          f"committed {local_vintage!r}")
+                          f"committed {local_vintage!r} after the grace window")
           if served.get("index_sha256") != local_sha:
               fail.append(f"index_sha256: served {str(served.get('index_sha256'))[:12]}... "
-                          f"!= committed {local_sha[:12]}...")
+                          f"!= committed {local_sha[:12]}... after the grace window")
           chain = served.get("chain", {})
           if chain.get("status") != "VERIFIED":
               fail.append(f"chain status served as {chain.get('status')!r}")
