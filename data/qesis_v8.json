@@ -1,6 +1,6 @@
 {
- "vintage": "v8.5 (2026-08-01)",
- "supersedes": "v8.3 (2026-07-31)",
+ "vintage": "v8.6 (2026-08-09)",
+ "supersedes": "v8.5 (2026-08-01)",
  "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
  "composite_model": {
   "formula_id": "QESIS_THEORY_v3",
@@ -2059,9 +2059,10 @@
     "ODI_ordinal_manual_override": false,
     "source_row": "v8_qesis_country_scores.csv",
     "cse_components": {
-     "EMODnet": 94.3,
      "SubmarineMap": 19.4,
-     "rule": "0.6*EMO + 0.4*SCM; non-EU = SCM"
+     "rule": "0.6*ITU_SCM_proxy + 0.4*SubmarineMap",
+     "ITU_SCM_proxy": 94.3,
+     "provenance_note": "D-108. The value is sourced from the ITU Submarine Cable Map used as a Middle East proxy, not from EMODnet: the EMODnet HA release 20230628 contains zero geometry attributable to SAU and EMODnet's remit is European seas. Relabel only; CSE and composite unchanged."
     },
     "ree_base_2026": 63.1,
     "ree_stress_2026": 70.2,
