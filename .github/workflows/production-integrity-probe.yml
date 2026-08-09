@@ -1,0 +1,108 @@
+name: Production integrity probe
+
+# The workflow PR #33 was named for and never contained. It is deliberately not
+# a placeholder that exits 0: this repository has just finished deleting a file
+# that asserted ALL_SOURCES_OPERATIONAL while validating nothing, and a green
+# tick that checks nothing is the same defect wearing CI colours.
+#
+# What it does: re-derives the integrity claim from committed artefacts only,
+# then compares it against what production actually serves. It reads no
+# database, no OneDrive and no private log, so it runs identically here and on
+# the laptop.
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "data/**"
+      - "scripts/**"
+      - ".github/workflows/production-integrity-probe.yml"
+  pull_request:
+    paths: ["data/**", "scripts/**"]
+  workflow_dispatch:
+  schedule:
+    # Hourly, so a drift between the committed index and the served one is
+    # caught inside an hour rather than at the next manual look.
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-integrity-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Committed-artifact gates
+        run: |
+          python scripts/verify_index.py
+          python scripts/verify_chain.py
+          python scripts/verify_release.py
+          python scripts/verify_vintage_pairing.py
+
+      - name: Candidate vintages are gated too
+        # A candidate that cannot pass its own gates should not sit in the repo
+        # waiting to be promoted. v8.6 is bound and attested but not published.
+        run: |
+          for f in data/qesis_v8.*.json; do
+            case "$f" in
+              *_superseded.json|*_CANDIDATE.json) continue ;;
+            esac
+            echo "--- $f"
+            python scripts/verify_index.py --json "$f"
+            python scripts/verify_release.py --index "$f"
+          done
+
+      - name: Served endpoint agrees with the committed index
+        # Compares the live vintage and index hash against the committed ones.
+        # Non-fatal on network failure, fatal on disagreement: an unreachable
+        # endpoint is an outage, a disagreeing one is a drift, and they are not
+        # the same finding.
+        env:
+          PROBE_URL: https://qesis-mcp.vercel.app/health
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, sys, urllib.request
+
+          committed = open("data/qesis_v8.json", "rb").read()
+          local_sha = hashlib.sha256(committed).hexdigest()
+          local_vintage = json.loads(committed)["vintage"]
+
+          try:
+              with urllib.request.urlopen(os.environ["PROBE_URL"], timeout=25) as r:
+                  served = json.load(r)
+          except Exception as exc:
+              print(f"::warning::endpoint unreachable ({type(exc).__name__}: {exc}). "
+                    f"Treating as an outage, not a drift.")
+              sys.exit(0)
+
+          fail = []
+          if served.get("vintage") != local_vintage:
+              fail.append(f"vintage: served {served.get('vintage')!r} != "
+                          f"committed {local_vintage!r}")
+          if served.get("index_sha256") != local_sha:
+              fail.append(f"index_sha256: served {str(served.get('index_sha256'))[:12]}... "
+                          f"!= committed {local_sha[:12]}...")
+          chain = served.get("chain", {})
+          if chain.get("status") != "VERIFIED":
+              fail.append(f"chain status served as {chain.get('status')!r}")
+          if not chain.get("attestation_agrees"):
+              fail.append("served chain reports attestation_agrees false")
+
+          print(f"served  {served.get('vintage')}  {str(served.get('index_sha256'))[:12]}...  "
+                f"chain {chain.get('status')} {chain.get('entries')}")
+          print(f"commit  {local_vintage}  {local_sha[:12]}...")
+          for f in fail:
+              print(f"::error::{f}")
+          sys.exit(1 if fail else 0)
+          PY
