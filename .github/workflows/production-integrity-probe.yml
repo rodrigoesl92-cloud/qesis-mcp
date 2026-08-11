@@ -32,7 +32,7 @@ jobs:
         # flight, not a drift, and failing on it makes every deploy red for a
         # few minutes and trains people to ignore this check.
         env:
-          PROBE_URL: https://qesis-mcp.vercel.app/health
+          PROBE_URL: https://qesis-public.vercel.app
           GRACE_ATTEMPTS: "10"
           GRACE_SLEEP: "30"
         run: |
