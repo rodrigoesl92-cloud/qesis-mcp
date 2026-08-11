@@ -76,7 +76,7 @@ async def lifespan(app):
 
 async def request(app, method: str, path: str, body: bytes = b"",
                   accept: str = "application/json, text/event-stream",
-                  host: str = "qesis-mcp.vercel.app") -> tuple[int, dict, bytes]:
+                  host: str = "qesis-public.vercel.app") -> tuple[int, dict, bytes]:
     """Minimal ASGI client: one request, collected to completion."""
     headers = [(b"host", host.encode()),
                (b"accept", accept.encode()),
