@@ -60,6 +60,13 @@
    "sovereign_infra_commit": null,
    "single_repo_reason": "Concordance status correction confined to qesis-mcp. The declared mirror sovereign-infra/ops/CITATION_CONCORDANCE.md already carried the corrected status ('superseded, re-run 2026-08-01') and is unchanged by this release, so there is no paired generation step to record. The defect was the served payload drifting away from its own mirror, which is the finding CONC-1 records.",
    "summary": "Citation concordance status correction under CONC-1. The D-103 rows and the D-103 erratum status are brought into line with fsqca.recalibration_required, which has read RESOLVED_DECLINED since 2026-08-01, and with the sovereign-infra mirror, which already read 'superseded, re-run 2026-08-01' and was therefore correct throughout. Adds citation_concordance.resolution_bindings and unbound_errata, the declarations that gates R1.22 and R1.23 read. No axis, composite, coverage, coupling, CSovE, fsQCA or withholding value changed. Artifact 6d790854010fab096e516116f9710c117ca06463a3af949231ce3c980e61b6f9."
+  },
+  {
+   "vintage": "v8.8 (2026-08-12)",
+   "qesis_mcp_commit": "PENDING",
+   "sovereign_infra_commit": null,
+   "single_repo_reason": "Necessity rule and derived labels confined to qesis-mcp. No sovereign-infra generation step ran: the D-103 re-run output is unchanged and only the rule applied to it moved.",
+   "summary": "D-109 resolves CONC-2. One conjunctive necessity rule replaces the two contradictory rules v8.7 carried. Every verdict is now derived from the published measures by the declared thresholds rather than asserted beside them, and gates R1.24 and R1.25 recompute and refuse disagreement. No axis, composite, coverage, coupling, CSovE, withholding or fsQCA solution value changed: only necessity labels and the rule that produces them. Artifact 86a88d2f16c6fa607bbf3502efbbeb5bcf7f1632ed9ce691f270add59d946007."
   }
  ]
 }

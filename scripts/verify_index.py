@@ -245,6 +245,74 @@ def main() -> int:
           "R1.23 no erratum is resolved in one field and pending in another",
           "; ".join(conflicts[:4]))
 
+    # ── 10b. CONC-2: one necessity rule, applied, not typed ─────────────
+    # D-109, 2026-08-12. v8.7 carried two decision rules that disagreed.
+    # necessity_gate_method declared RoN >= 0.60 with coverage_N >= 0.60 and
+    # labelled five conditions NECESSARY. necessity_verdict in the same payload
+    # said nothing was publishable as necessary, applying the conventional
+    # consistency >= 0.90 bar. Five conditions were necessary and not necessary
+    # at once, depending on which sentence a reader reached first.
+    #
+    # The resolution is conjunctive and it is not a matter of taste. Under a
+    # bare consistency rule, REE returns consistency_N 0.9672 against the fixed
+    # 75/50/25 sensitivity anchors and is relabelled NECESSARY, which walks the
+    # withdrawn section 4.5 claim back in through the sensitivity regime. RoN
+    # 0.195 is the only measure that refuses it. Consistency alone cannot
+    # establish necessity (Schneider and Wagemann 2012, ch. 5), which is why the
+    # REE withdrawal is grounded on triviality rather than threshold failure.
+    #
+    # This gate does not read the stored verdict. It recomputes it from the
+    # published measures and the declared thresholds, and fails on disagreement.
+    # A label that is asserted rather than derived is the defect CONC-2 was.
+    gate = (d.get("fsqca") or {}).get("necessity_gate") or {}
+    if gate:
+        def verdict_from_rule(m: dict) -> str:
+            t = m.get("thresholds") or {}
+            cons_bar = t.get("consistency_N_publishable")
+            ron_bar = t.get("RoN_publishable")
+            cov_bar = t.get("coverage_N_publishable")
+            triv_bar = t.get("RoN_trivial_below")
+            if None in (cons_bar, ron_bar, cov_bar, triv_bar):
+                return "UNDECLARED"
+            cons, ron, cov = (m.get("consistency_N"), m.get("relevance_of_necessity"),
+                              m.get("coverage_N"))
+            if None in (cons, ron, cov):
+                return "UNDECLARED"
+            neg = m.get("negated_outcome") or {}
+            if neg.get("also_necessary_for_negation") or neg.get("no_better_than_negation"):
+                return "TRIVIAL"
+            if ron < triv_bar:
+                return "TRIVIAL"
+            if cons >= cons_bar and ron >= ron_bar and cov >= cov_bar:
+                return "NECESSARY"
+            return "LABEL-DECLINED"
+
+        mismatched, undeclared = [], []
+        for cond, m in gate.items():
+            want = verdict_from_rule(m)
+            if want == "UNDECLARED":
+                undeclared.append(cond)
+            elif want != m.get("verdict"):
+                mismatched.append(f"{cond}: stored {m.get('verdict')}, rule says {want}")
+        check(not undeclared,
+              "R1.24 every necessity condition declares all four thresholds",
+              "; ".join(undeclared[:6]))
+        check(not mismatched,
+              "R1.24 every necessity verdict is derived from the declared rule",
+              "; ".join(mismatched[:4]))
+
+        # The prose verdict is the sentence a reader quotes. It may not contradict
+        # the labels sitting beside it.
+        necessary = sorted(c for c, m in gate.items() if m.get("verdict") == "NECESSARY")
+        prose = str((d.get("fsqca") or {}).get("necessity_verdict") or "").lower()
+        claims_none = "no condition" in prose and "necessary" in prose
+        check(not (necessary and claims_none),
+              "R1.25 the prose necessity verdict agrees with the per-condition labels",
+              f"labels say {necessary} are NECESSARY while the verdict says none is")
+        check(not (not necessary and not claims_none),
+              "R1.25 the prose necessity verdict agrees with the per-condition labels",
+              "no condition is labelled NECESSARY but the verdict does not say so")
+
     # ── 11. a scoped roadmap item carries its date (C-05) ───────────────
     # An undated roadmap item is indistinguishable from an abandoned one, which
     # is what U-06 was through three vintages.
