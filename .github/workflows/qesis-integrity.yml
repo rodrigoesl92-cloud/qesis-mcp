@@ -123,6 +123,17 @@ jobs:
         # state rotates by day of year, so the numbers are what get compared.
         run: python scripts/build_landing.py --check
 
+      # R1.27. The dashboard is the instrument's own control panel and had no
+      # generator and no gate: it served "v8.6 canonical", asserted the trilemma
+      # as a measured limitation, and published "4 of 35 pass" with a named state
+      # list that no field in the index could produce. A surface nobody gates
+      # says whatever it said last. Blocking, exit 1 stops the run. (L-090.)
+      - name: Dashboard agrees with the served index
+        run: python scripts/verify_dashboard.py
+
+      - name: Service identity is declared once
+        run: python scripts/verify_domains.py
+
       - name: Summary
         if: always()
         run: |
