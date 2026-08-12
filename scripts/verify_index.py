@@ -313,6 +313,49 @@ def main() -> int:
               "R1.25 the prose necessity verdict agrees with the per-condition labels",
               "no condition is labelled NECESSARY but the verdict does not say so")
 
+    # ── 10c. R1.26: governance travels as data, and carries its content ──
+    # QT-0007. The alternative on the table was to inject these limitations into
+    # the agent's prompt. Prompt text is advisory: a model may ignore it and an
+    # editor may delete it without tripping anything. Served as fields they are
+    # read deterministically and asserted here.
+    #
+    # Each flag must ship its statement. A bare boolean is a pointer to a fact,
+    # and a retrieval layer that receives only the pointer has been told a
+    # limitation exists and nothing about what it is. The R&D pool's RAG guide
+    # makes the same argument from the other direction: shape structured fields
+    # so the meaning survives retrieval, rather than leaving the model to infer
+    # it from a bare value.
+    arc = d.get("agent_reading_contract") or {}
+    flags = arc.get("flags") or {}
+    check(bool(flags),
+          "R1.26 the agent reading contract is served with at least one flag",
+          f"{len(flags)} flags")
+    if flags:
+        thin = []
+        for name, f in flags.items():
+            if not isinstance(f, dict):
+                thin.append(f"{name} is a bare value, not a flag with a statement")
+                continue
+            if f.get("value") is None:
+                thin.append(f"{name} carries no value")
+            if not str(f.get("statement") or "").strip():
+                thin.append(f"{name} carries no statement")
+            if not str(f.get("authority") or "").strip():
+                thin.append(f"{name} names no authority")
+            vocab = f.get("vocabulary")
+            if vocab and f.get("value") not in vocab:
+                thin.append(f"{name} value {f.get('value')!r} is outside its declared vocabulary")
+        check(not thin,
+              "R1.26 every served flag carries a value, a statement and an authority",
+              "; ".join(thin[:5]))
+        # The two the operator asked for by name, so a later edit cannot quietly
+        # drop them while leaving the block populated and the gate green.
+        required = ["theory_informed_limitation", "trilemma_status"]
+        absent = [r for r in required if r not in flags]
+        check(not absent,
+              "R1.26 the declared limitation flags are present",
+              "; ".join(absent))
+
     # ── 11. a scoped roadmap item carries its date (C-05) ───────────────
     # An undated roadmap item is indistinguishable from an abandoned one, which
     # is what U-06 was through three vintages.

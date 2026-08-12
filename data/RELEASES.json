@@ -49,9 +49,20 @@
   "artifact_sha": "86a88d2f16c6fa607bbf3502efbbeb5bcf7f1632ed9ce691f270add59d946007",
   "bound_at": null,
   "provenance": "D-109 resolves CONC-2. One conjunctive necessity rule replaces the two contradictory rules v8.7 carried. Every verdict is now derived from the published measures by the declared thresholds rather than asserted beside them, and gates R1.24 and R1.25 recompute and refuse disagreement. No axis, composite, coverage, coupling, CSovE, withholding or fsQCA solution value changed: only necessity labels and the rule that produces them.",
-  "status": "staged",
+  "status": "superseded",
   "supersedes": [
    "v8.7 (2026-08-12)"
+  ],
+  "superseded_by": "v8.9 (2026-08-12)",
+  "superseded_at": "2026-08-12T19:00:00Z"
+ },
+ "v8.9 (2026-08-12)": {
+  "artifact_sha": "f5c393b8e82bfdb9b4e982dd573fd0b64c0488481413ba99fec700f248625bdc",
+  "bound_at": null,
+  "provenance": "Successor annotation on the D-103 concordance rows, baseline statistics 0.9048 and 0.5807 retained unchanged as the historic record. Adds agent_reading_contract, which serves the theory-informed limitation, the trilemma demotion and the D-109 necessity rule as data with their statements rather than as prompt text, asserted by R1.26. Generator layer: necessity_gate now takes its thresholds as a parameter (L-085) and both solution-matrix printers refuse a missing key instead of rendering None (L-086). No axis, composite, coverage, coupling, CSovE or withholding value changed.",
+  "status": "staged",
+  "supersedes": [
+   "v8.8 (2026-08-12)"
   ]
  }
 }

@@ -1,5 +1,5 @@
 {
- "vintage": "v8.8 (2026-08-12)",
+ "vintage": "v8.9 (2026-08-12)",
  "supersedes": "v8.5 (2026-08-01)",
  "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
  "composite_model": {
@@ -3738,7 +3738,11 @@
     "vintage": "v6.6 fsQCA",
     "live": "withdrawn",
     "status": "withdrawn; re-run complete 2026-08-01 and the figure is not recovered. Superseded by necessity consistency 0.7033 under the primary anchors, verdict TRIVIAL on relevance of necessity 0.5766, not on threshold failure",
-    "erratum": "D-103"
+    "erratum": "D-103",
+    "successor_specification": "D-109",
+    "successor_evidence": "sovereign-infra/ops/analysis/D-109_fsqca_5cond.json",
+    "successor_note": "A five-condition successor specification was executed 2026-08-12 with ESC_inv dropped, returning complex consistency 0.8719 and coverage 0.5782 over four terms at n=32. It does NOT supersede the figures in this row. D-103 violation C is defined about ESC_inv, so a model without ESC_inv cannot demonstrate C is closed, and the six-condition run remains the standing evidence for that. The two specifications are reported side by side and neither replaces the other.",
+    "baseline_status": "RETAINED as the historic record. Do not overwrite."
    },
    {
     "figure": "§4.5 consistency 1.000 / coverage 0.920",
@@ -3750,7 +3754,11 @@
     "violations": [
      "C",
      "D"
-    ]
+    ],
+    "successor_specification": "D-109",
+    "successor_evidence": "sovereign-infra/ops/analysis/D-109_fsqca_5cond.json",
+    "successor_note": "A five-condition successor specification was executed 2026-08-12 with ESC_inv dropped, returning complex consistency 0.8719 and coverage 0.5782 over four terms at n=32. It does NOT supersede the figures in this row. D-103 violation C is defined about ESC_inv, so a model without ESC_inv cannot demonstrate C is closed, and the six-condition run remains the standing evidence for that. The two specifications are reported side by side and neither replaces the other.",
+    "baseline_status": "RETAINED as the historic record. Do not overwrite."
    },
    {
     "figure": "§4.4 “27% substrate-adjusted compliance”",
@@ -4062,5 +4070,30 @@
    "id": "scope",
    "change": "No axis, composite, coverage, coupling or fsQCA value changed. Every v8.3 number survives byte-identical."
   }
- ]
+ ],
+ "agent_reading_contract": {
+  "why": "These are limitations on how the fsQCA block may be used. Carried in a prompt they are advisory and deletable; carried here they are data the agent reads and a gate asserts. Each flag ships with its statement, because a boolean is a pointer to a fact and a reader that receives only the pointer has been told a limitation exists and nothing about what it is. R1.26 fails the build if a flag arrives without its statement.",
+  "read_before": "any evaluation of a country profile or pathway membership",
+  "flags": {
+   "theory_informed_limitation": {
+    "value": true,
+    "statement": "The directional expectations behind the intermediate solution (DE-v9.0, DE-v9.1) were written by an analyst who had already read the served pathways, so they are not a blind prior. The intermediate solution is reported as theory-informed and must never be described as a pre-registered or blind expectation. Under the primary anchors it is identical to the complex solution at 0.8719 and 0.5782: the declared expectations simplify nothing, which is a null result and is reported as one.",
+    "authority": "sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.json"
+   },
+   "trilemma_status": {
+    "value": "interpretive_overlay_only",
+    "statement": "The Infrastructural Trilemma does not decompose the condition set. HYPER carried both Algorithmic Independence and Hyperscale Efficiency while CABLE and REE mapped to no constraint, and dropping ESC_inv removed the second condition under Ecological Sustainability. It is an interpretive claim in the theory chapter and takes no part in the model, its calibration or its solution. No pathway term, necessity verdict or solution statistic may be described as a trilemma corner.",
+    "vocabulary": [
+     "interpretive_overlay_only",
+     "structural_decomposition"
+    ],
+    "authority": "operator decision 2026-08-12, QT-0007"
+   },
+   "necessity_rule": {
+    "value": "D-109 conjunctive",
+    "statement": "consistency_N >= 0.90 AND RoN >= 0.60 AND coverage_N >= 0.60. No condition or negation clears it. A RoN-only rule labelled GCI_inv necessary at consistency_N 0.0217, because RoN rewards rarity.",
+    "authority": "D-109, CONC-2"
+   }
+  }
+ }
 }
