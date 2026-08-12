@@ -127,6 +127,42 @@ def m_undated_roadmap(d):
     return d
 
 
+def m_conc1_replay(d):
+    """CONC-1 replayed: the re-run is complete and the row still says pending.
+
+    This is the v8.6 defect itself, not an invented one. It is the fixture
+    R1.23 must refuse. (L-074.)
+    """
+    for r in d["citation_concordance"]["rows"]:
+        if r.get("erratum") == "D-103":
+            r["status"] = "withdrawn pending re-run"
+    return d
+
+
+def m_conc1_erratum_replay(d):
+    """The same contradiction carried by the erratum block instead of the row."""
+    for e in d["citation_concordance"]["errata"]:
+        if e.get("id") == "D-103":
+            e["status"] = "OPEN, blocks the Phase 1 gate"
+    return d
+
+
+def m_unbound_erratum(d):
+    """An erratum is neither bound nor excused, so the gate cannot see it."""
+    cc = d["citation_concordance"]
+    cc["unbound_errata"] = [u for u in cc.get("unbound_errata", [])
+                            if u.get("erratum") != "D-105"]
+    return d
+
+
+def m_excuse_without_reason(d):
+    """An erratum is 'declared' unbound with an empty reason, which says nothing."""
+    for u in d["citation_concordance"].get("unbound_errata", []):
+        if u.get("erratum") == "D-104":
+            u["reason"] = "   "
+    return d
+
+
 CASES = [
     ("composite drift (DEU)",        m_drift,               "R1.4"),
     ("Singapore: number over gap",   m_singapore,           "R1.5"),
@@ -140,6 +176,10 @@ CASES = [
     ("concordance row dangles",      m_dangling_erratum,    "R1.19"),
     ("concordance row says nothing", m_silent_concordance_row, "R1.20"),
     ("roadmap item loses its date",  m_undated_roadmap,     "R1.21"),
+    ("erratum neither bound nor excused", m_unbound_erratum, "R1.22"),
+    ("unbound excuse carries no reason",  m_excuse_without_reason, "R1.22"),
+    ("CONC-1: row pending, re-run done", m_conc1_replay,    "R1.23"),
+    ("CONC-1: erratum OPEN, re-run done", m_conc1_erratum_replay, "R1.23"),
 ]
 
 
