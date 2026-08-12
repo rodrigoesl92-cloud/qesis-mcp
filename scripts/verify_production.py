@@ -17,6 +17,9 @@ import json
 import pathlib
 import sys
 import urllib.request
+from pathlib import Path
+_DOMAINS = json.loads((Path(__file__).resolve().parent.parent / 'data' / 'domains.json').read_text(encoding='utf-8'))
+
 
 if len(sys.argv) != 3:
     print(__doc__)
@@ -38,7 +41,7 @@ except Exception as e:                                             # noqa: BLE00
 # vercel.json rewrites, so a route under that namespace with no matching file is
 # unreachable however correctly it is registered. /mcp works for the same reason
 # in reverse: it sits outside /api/.
-HEALTH = "https://qesis-public.vercel.app"
+HEALTH = _DOMAINS["probe_base"]
 
 try:
     h = json.load(urllib.request.urlopen(HEALTH, timeout=25))

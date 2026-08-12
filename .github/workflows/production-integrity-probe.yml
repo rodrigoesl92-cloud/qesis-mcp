@@ -14,6 +14,10 @@ concurrency:
   group: production-integrity-probe
   cancel-in-progress: false
 
+env:
+  # single declaration, data/domains.json is the source (L-089)
+  QESIS_BASE: https://qesis-mcp.vercel.app
+
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -32,7 +36,7 @@ jobs:
         # flight, not a drift, and failing on it makes every deploy red for a
         # few minutes and trains people to ignore this check.
         env:
-          PROBE_URL: https://qesis-public.vercel.app
+          PROBE_URL: ${{ env.QESIS_BASE }}
           GRACE_ATTEMPTS: "10"
           GRACE_SLEEP: "30"
         run: |

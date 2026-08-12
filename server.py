@@ -287,6 +287,9 @@ AXIS_NAMES = {
     "ESE": "Electricity Stress Exposure",
 }
 
+_ROOT = Path(__file__).resolve().parent
+
+
 def _allowed_hosts() -> list[str]:
     """Hosts accepted by the DNS-rebinding guard on the HTTP transport.
 
@@ -312,10 +315,13 @@ def _allowed_hosts() -> list[str]:
         # variable alone would have left every real request arriving on a Host
         # the guard had never been told about, so /mcp would have answered 421
         # from a deployment whose build, routes and tools were all correct.
-        hosts = ["qesis.eu", "www.qesis.eu",
-                 "qesis-mcp.vercel.app", "qesis.vercel.app",
-                 "localhost", "localhost:*",
-                 "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"]
+        # Read from data/domains.json, never a literal here. The literal list
+        # that used to sit at this line omitted qesis-public.vercel.app, which
+        # three consumers were using, so the guard answered 421 to the project's
+        # own test suite and probe while the deployment was entirely correct.
+        # (L-089.)
+        _d = json.loads((_ROOT / "data" / "domains.json").read_text(encoding="utf-8"))
+        hosts = _d["canonical"] + _d["vercel"] + _d["local"]
     for var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
         v = os.environ.get(var, "").strip()
         if v and v not in hosts:

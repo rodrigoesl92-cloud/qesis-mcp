@@ -1,59 +1,21 @@
 {
-  "cleanUrls": true,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/overview",
-      "dest": "/overview.html"
-    },
-    {
-      "src": "/method",
-      "dest": "/method.html"
-    },
-    {
-      "src": "/console",
-      "dest": "/console.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/STIR_Governance_Dashboard.html"
-    },
-    {
-      "src": "/STIR_Governance_Dashboard.html",
-      "dest": "/STIR_Governance_Dashboard.html"
-    },
-    {
-      "src": "/overview.html",
-      "dest": "/overview.html"
-    },
-    {
-      "src": "/method.html",
-      "dest": "/method.html"
-    },
-    {
-      "src": "/console.html",
-      "dest": "/console.html"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/index.html"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/health",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/diag",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/mcp/_diag",
-      "destination": "/index.html"
-    }
+    { "src": "/health", "dest": "/api/index" },
+    { "src": "/diag", "dest": "/api/index" },
+    { "src": "/mcp/_diag", "dest": "/api/index" },
+    { "src": "/mcp", "dest": "/api/index" },
+    { "src": "/mcp/(.*)", "dest": "/api/index" },
+
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/overview", "dest": "/overview.html" },
+    { "src": "/method", "dest": "/method.html" },
+    { "src": "/console", "dest": "/console.html" },
+    { "src": "/dashboard", "dest": "/STIR_Governance_Dashboard.html" },
+    { "src": "/STIR_Governance_Dashboard.html", "dest": "/STIR_Governance_Dashboard.html" },
+    { "src": "/overview.html", "dest": "/overview.html" },
+    { "src": "/method.html", "dest": "/method.html" },
+    { "src": "/console.html", "dest": "/console.html" },
+    { "src": "/index.html", "dest": "/index.html" }
   ]
 }

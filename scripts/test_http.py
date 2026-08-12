@@ -7,6 +7,7 @@ list coming back empty, and -- the one that cost a production window -- the
 lifespan not running, which leaves an app that builds, imports, routes, and then
 raises `Task group is not initialized` on the first request.
 
+
 This drives the app in-process over ASGI, through the real lifespan protocol.
 
 Usage:  python scripts/test_http.py
@@ -20,6 +21,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# The service identity is declared once, in data/domains.json. This test used
+# to carry the literal 'qesis-public.vercel.app' while server.py's rebinding
+# guard allowed 'qesis-mcp.vercel.app', so the suite got HTTP 421 from a
+# deployment that was entirely correct. (L-089.)
+_DOMAINS = json.loads((ROOT / 'data' / 'domains.json').read_text(encoding='utf-8'))
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "api"))
 
@@ -76,7 +82,7 @@ async def lifespan(app):
 
 async def request(app, method: str, path: str, body: bytes = b"",
                   accept: str = "application/json, text/event-stream",
-                  host: str = "qesis-public.vercel.app") -> tuple[int, dict, bytes]:
+                  host: str = _DOMAINS["test_host"]) -> tuple[int, dict, bytes]:
     """Minimal ASGI client: one request, collected to completion."""
     headers = [(b"host", host.encode()),
                (b"accept", accept.encode()),

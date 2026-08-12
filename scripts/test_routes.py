@@ -61,17 +61,57 @@ async def main() -> int:
         if not ok:
             failures.append(f"{path} is not routable in the app ({code})")
 
-    # The other half. A route with no rewrite is unreachable in production even
-    # though it passes the check above.
-    rewrites = {r["source"] for r in
-                json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))["rewrites"]}
+    # The other half. A route with no platform routing entry is unreachable in
+    # production even though it passes the check above.
+    #
+    # This block used to read vercel.json["rewrites"] and it passed for three
+    # days while /health returned 404 in production. Two reasons, and both are
+    # the same mistake:
+    #
+    #   1. Vercel's `routes` is the legacy routing property and it is exclusive.
+    #      When `routes` is present the platform ignores `rewrites`, `redirects`,
+    #      `headers` and `cleanUrls` entirely. `routes` was added by cdd4c2c to
+    #      configure the static pages, which silently switched off the rewrites
+    #      block that made /health reachable. Then a11f5b4, "restore missing
+    #      rewrites key to resolve test_routes.py KeyError", put the key back to
+    #      satisfy THIS TEST, in a block the platform does not read.
+    #
+    #   2. The rewrite pointed /health at /index.html, the static landing page,
+    #      not at the Python function that answers it.
+    #
+    # So the assertion is now made against the property the platform actually
+    # honours, and it checks the destination as well as the presence of the key.
+    # Reading a config key is not checking the routing. (L-088, and the render
+    # contract doctrine: a gate that checks the text of an artefact is not
+    # checking the artefact.)
+    cfg = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
     print()
+
+    inert = [k for k in ("rewrites", "redirects", "headers", "cleanUrls",
+                         "trailingSlash") if k in cfg and "routes" in cfg]
+    ok = not inert
+    print(f"  {'OK  ' if ok else 'FAIL'}  vercel.json declares one routing mechanism")
+    if not ok:
+        failures.append(
+            f"vercel.json carries `routes` together with {inert}. Vercel ignores "
+            f"the latter when `routes` is present, so those entries are inert and "
+            f"read as configuration that is not applied")
+
+    routes = cfg.get("routes") or []
+    FUNCTION_DEST = "/api/index"
     for path, _ in PUBLIC:
-        ok = path in rewrites
-        print(f"  {'OK  ' if ok else 'FAIL'}  vercel.json rewrite for {path}")
-        if not ok:
-            failures.append(f"{path} has a route but no vercel.json rewrite, so "
-                            f"production cannot reach it")
+        hit = next((r for r in routes if r.get("src") == path), None)
+        ok = hit is not None and hit.get("dest") == FUNCTION_DEST
+        where = "absent" if hit is None else f"-> {hit.get('dest')}"
+        print(f"  {'OK  ' if ok else 'FAIL'}  vercel.json route for {path:14} {where}")
+        if hit is None:
+            failures.append(f"{path} has an app route but no vercel.json `routes` "
+                            f"entry, so production cannot reach it")
+        elif hit.get("dest") != FUNCTION_DEST:
+            failures.append(f"{path} routes to {hit.get('dest')}, not to the "
+                            f"function at {FUNCTION_DEST}. A path that resolves to "
+                            f"a static page is reachable and still wrong: it "
+                            f"answers 200 with HTML instead of the handler")
 
     if failures:
         print("\nROUTE CHECK FAILED:")
