@@ -70,8 +70,8 @@
   },
   {
    "vintage": "v8.9 (2026-08-12)",
-   "qesis_mcp_commit": "PENDING",
-   "sovereign_infra_commit": "PENDING",
+   "qesis_mcp_commit": "a0f08a5c000e0a852550b2b4e5b7bdd37e93873d",
+   "sovereign_infra_commit": "09557dbbae47e7d916890d62b8d6f650ead46841",
    "single_repo_reason": null,
    "summary": "Successor annotation on the D-103 concordance rows, baseline statistics 0.9048 and 0.5807 retained unchanged as the historic record. Adds agent_reading_contract, which serves the theory-informed limitation, the trilemma demotion and the D-109 necessity rule as data with their statements rather than as prompt text, asserted by R1.26. Generator layer: necessity_gate now takes its thresholds as a parameter (L-085) and both solution-matrix printers refuse a missing key instead of rendering None (L-086). No axis, composite, coverage, coupling, CSovE or withholding value changed. Artifact f5c393b8e82bfdb9b4e982dd573fd0b64c0488481413ba99fec700f248625bdc."
   }
