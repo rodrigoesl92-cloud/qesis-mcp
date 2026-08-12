@@ -189,6 +189,24 @@ def m_prose_contradicts_labels(d):
     return d                                              # verdict still says none is
 
 
+def m_flag_without_statement(d):
+    """A governance flag arrives as a bare value, so the reader learns nothing."""
+    d["agent_reading_contract"]["flags"]["theory_informed_limitation"]["statement"] = ""
+    return d
+
+
+def m_flag_dropped(d):
+    """The trilemma demotion is quietly removed while the block stays populated."""
+    d["agent_reading_contract"]["flags"].pop("trilemma_status", None)
+    return d
+
+
+def m_flag_outside_vocabulary(d):
+    """A flag takes a value its own declared vocabulary does not allow."""
+    d["agent_reading_contract"]["flags"]["trilemma_status"]["value"] = "structural"
+    return d
+
+
 CASES = [
     ("composite drift (DEU)",        m_drift,               "R1.4"),
     ("Singapore: number over gap",   m_singapore,           "R1.5"),
@@ -209,6 +227,9 @@ CASES = [
     ("CONC-2: label the rule denies",  m_conc2_replay,        "R1.24"),
     ("necessity threshold undeclared", m_necessity_threshold_dropped, "R1.24"),
     ("prose contradicts the labels",   m_prose_contradicts_labels, "R1.25"),
+    ("flag without its statement",     m_flag_without_statement, "R1.26"),
+    ("limitation flag dropped",        m_flag_dropped,        "R1.26"),
+    ("flag outside its vocabulary",    m_flag_outside_vocabulary, "R1.26"),
 ]
 
 
