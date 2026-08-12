@@ -56,7 +56,7 @@
   },
   {
    "vintage": "v8.7 (2026-08-12)",
-   "qesis_mcp_commit": "PENDING",
+   "qesis_mcp_commit": "ffac6a2c4c86df0274a8f2b1a895ca45d406f5d5",
    "sovereign_infra_commit": null,
    "single_repo_reason": "Concordance status correction confined to qesis-mcp. The declared mirror sovereign-infra/ops/CITATION_CONCORDANCE.md already carried the corrected status ('superseded, re-run 2026-08-01') and is unchanged by this release, so there is no paired generation step to record. The defect was the served payload drifting away from its own mirror, which is the finding CONC-1 records.",
    "summary": "Citation concordance status correction under CONC-1. The D-103 rows and the D-103 erratum status are brought into line with fsqca.recalibration_required, which has read RESOLVED_DECLINED since 2026-08-01, and with the sovereign-infra mirror, which already read 'superseded, re-run 2026-08-01' and was therefore correct throughout. Adds citation_concordance.resolution_bindings and unbound_errata, the declarations that gates R1.22 and R1.23 read. No axis, composite, coverage, coupling, CSovE, fsQCA or withholding value changed. Artifact 6d790854010fab096e516116f9710c117ca06463a3af949231ce3c980e61b6f9."
