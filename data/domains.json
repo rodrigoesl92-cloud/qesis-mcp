@@ -1,0 +1,10 @@
+{
+  "why": "The single declaration of who this service is. The DNS-rebinding guard, both probe workflows, the HTTP entry test and the production verifier each carried their own domain literal, and they disagreed: the guard allowed qesis-mcp.vercel.app while three consumers used qesis-public.vercel.app, so a correct deployment answered HTTP 421 to its own test suite. Every consumer reads this file. scripts/verify_domains.py fails the build if a domain literal appears anywhere that is not declared here.",
+  "serving": "www.qesis.eu",
+  "canonical": ["qesis.eu", "www.qesis.eu"],
+  "vercel": ["qesis-mcp.vercel.app", "qesis-public.vercel.app", "qesis.vercel.app"],
+  "local": ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"],
+  "probe_base": "https://qesis-mcp.vercel.app",
+  "test_host": "qesis-mcp.vercel.app",
+  "note": "qesis.eu answers 308 to www.qesis.eu, so www is the serving name. VERCEL_PROJECT_PRODUCTION_URL resolves to the shortest domain and is therefore not sufficient on its own; it is still appended at runtime from the environment."
+}
