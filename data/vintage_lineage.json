@@ -63,7 +63,7 @@
   },
   {
    "vintage": "v8.8 (2026-08-12)",
-   "qesis_mcp_commit": "PENDING",
+   "qesis_mcp_commit": "e122c77dd669f57d3f12523bfd82a9d5d4822e47",
    "sovereign_infra_commit": null,
    "single_repo_reason": "Necessity rule and derived labels confined to qesis-mcp. No sovereign-infra generation step ran: the D-103 re-run output is unchanged and only the rule applied to it moved.",
    "summary": "D-109 resolves CONC-2. One conjunctive necessity rule replaces the two contradictory rules v8.7 carried. Every verdict is now derived from the published measures by the declared thresholds rather than asserted beside them, and gates R1.24 and R1.25 recompute and refuse disagreement. No axis, composite, coverage, coupling, CSovE, withholding or fsQCA solution value changed: only necessity labels and the rule that produces them. Artifact 86a88d2f16c6fa607bbf3502efbbeb5bcf7f1632ed9ce691f270add59d946007."
