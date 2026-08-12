@@ -218,12 +218,28 @@ def concordance() -> dict:
             {"figure": "§4.3 ODI EU 54.6 / global 44.8", "thesis_value": None,
              "vintage": "v6.6 ordinal", "live": "continuous",
              "status": "superseded", "erratum": "D-045"},
+            # CONC-1. These two rows read "withdrawn pending re-run" through
+            # v8.6 while fsqca.recalibration_required in the same payload read
+            # RESOLVED_DECLINED. Withdrawal is permanent; what ended on
+            # 2026-08-01 is the pendency. The two facts are distinct and the
+            # row now states both. R1.23 is the assertion that keeps them
+            # from drifting apart again. (L-074.)
             {"figure": "§4.5 necessity REE 0.916", "thesis_value": "0.916",
              "vintage": "v6.6 fsQCA", "live": "withdrawn",
-             "status": "withdrawn pending re-run", "erratum": "D-103"},
+             "status": ("withdrawn; re-run complete 2026-08-01 and the figure is "
+                        "not recovered. Superseded by necessity consistency "
+                        "0.7033 under the primary anchors, verdict TRIVIAL on "
+                        "relevance of necessity 0.5766, not on threshold "
+                        "failure"),
+             "erratum": "D-103"},
             {"figure": "§4.5 consistency 1.000 / coverage 0.920",
              "thesis_value": None, "vintage": "v6.6 fsQCA", "live": "withdrawn",
-             "status": "withdrawn pending re-run", "erratum": "D-103",
+             "status": ("withdrawn; re-run complete 2026-08-01 and the figures "
+                        "are not recovered. Superseded by the complex solution "
+                        "at consistency 0.9048 and coverage 0.5807, n=32. The "
+                        "published pair was additionally impossible: coverage "
+                        "cannot fall as logical remainders are added"),
+             "erratum": "D-103",
              "violations": ["C", "D"]},
             {"figure": "§4.4 “27% substrate-adjusted compliance”",
              "thesis_value": "27%", "vintage": "v6.6", "live": "method unspecified",
@@ -246,6 +262,50 @@ def concordance() -> dict:
              "status": "renamed and re-slotted", "erratum": "D-106"},
         ],
         "errata": errata(),
+        # ── CONC-1: bind every erratum to the field that carries its
+        # resolution state, so the gate reads a declaration instead of a
+        # literal list. A literal list is how RGD went unvalidated after the
+        # v8.3 rename; the same shape of hole is not reopened here. The
+        # binding is data because the contradiction was data. (L-074.)
+        "resolution_bindings": [
+            {
+                "erratum": "D-103",
+                "resolution_path": "fsqca.recalibration_required.status",
+                "resolved_when": ["RESOLVED", "RESOLVED_DECLINED"],
+                "forbidden_when_resolved": ["pending re-run", "pending the re-run",
+                                            "OPEN", "blocks the Phase 1 gate"],
+                "why": ("The re-run is the remediation. Once the fsQCA block "
+                        "records it as complete, no concordance row and no "
+                        "erratum status may describe the same figures as "
+                        "waiting for it."),
+            },
+        ],
+        # An erratum with no binding is unfalsifiable by this gate, so the
+        # absence of a binding must itself be declared and reasoned. Silence
+        # is not an exemption here either.
+        "unbound_errata": [
+            {"erratum": "D-101",
+             "reason": ("Remediation is the recomputed composite, already served. "
+                        "There is no separate pendency field to contradict.")},
+            {"erratum": "D-102",
+             "reason": ("Remediation is BIG withholding, already served and "
+                        "asserted by R1.5 and R1.17.")},
+            {"erratum": "D-104",
+             "reason": ("DELIBERATELY UNBOUND. sovereign-infra/ops/ERRATA_D104.md "
+                        "(2026-08-09) executes the withdraw limb, but it grounds "
+                        "the retraction of the §4.4 27% figure on the SFC axis "
+                        "Big Gate of 27 of 35 states, which is an unrelated "
+                        "quantity that happens to share the digits. Binding "
+                        "D-104 to that document would close the erratum on a "
+                        "coincidence. It stays OPEN in this payload until the "
+                        "errata states the clause the figure actually failed. "
+                        "Owner HUMAN.")},
+            {"erratum": "D-105",
+             "reason": "Author action on the SSRN deposit. No served field tracks it."},
+            {"erratum": "D-106",
+             "reason": ("Recorded, not remediated: the rename and slot substitution "
+                        "are the published position, not a pending fix.")},
+        ],
         "id_namespace": ("D-001 to D-099 are ecosystem decisions. D-101 upward are "
                          "defects found in the v6.6 to v8.0 lineage. The ranges are "
                          "kept apart so a citation is unambiguous about whether it "
@@ -343,7 +403,13 @@ def errata() -> list[dict]:
             "action": ("Supersedes uncertainty ledger entry U-02, which recorded this "
                        "as affecting only the HYPER condition. U-02 is rewritten in "
                        "this vintage to carry the full scope."),
-            "status": "OPEN, blocks the Phase 1 gate",
+            "status": ("CLOSED 2026-08-01 by full re-run against the published "
+                       "axes with every anchor re-derived. All five violations "
+                       "A to E are resolved. No withdrawn figure is recovered: "
+                       "the re-run supersedes them and declines the necessity "
+                       "label. Evidence ops/analysis/D-103_fsqca_rerun.json, "
+                       "reproduce with scripts/rerun_fsqca_d103.py in "
+                       "sovereign-infra"),
         },
         {
             "id": "D-104", "severity": "blocking", "scope": "thesis chapters IV, V, VII",

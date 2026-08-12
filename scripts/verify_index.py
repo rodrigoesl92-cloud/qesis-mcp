@@ -187,6 +187,64 @@ def main() -> int:
     check(not unstated, "R1.20 every concordance row states a status",
           "; ".join(str(x) for x in unstated[:4]))
 
+    # ── 10a. CONC-1: one erratum, one status, across the whole payload ───
+    # L-074. Through v8.6 this payload said three things at once about the
+    # same fsQCA re-run: the concordance rows said "withdrawn pending re-run",
+    # recalibration_required said RESOLVED_DECLINED, and the D-103 erratum
+    # said OPEN. No amount of cross-document diligence catches that, because
+    # the contradiction is internal to a single JSON response. The assertion
+    # has to live in the builder's own gate.
+    bindings = cc.get("resolution_bindings") or []
+    unbound = cc.get("unbound_errata") or []
+
+    # A gate that can be defeated by declining to declare a binding is not a
+    # gate. Every erratum is bound or is explicitly unbound with a reason.
+    declared = {b.get("erratum") for b in bindings}
+    excused = {u.get("erratum") for u in unbound if (u.get("reason") or "").strip()}
+    undeclared = sorted({e.get("id") for e in errata} - declared - excused)
+    check(not undeclared,
+          "R1.22 every erratum is bound to a resolution field or declared unbound "
+          "with a reason",
+          "; ".join(str(x) for x in undeclared[:6]))
+
+    def _resolve(path: str):
+        node = d
+        for part in path.split("."):
+            if not isinstance(node, dict):
+                return None
+            node = node.get(part)
+        return node
+
+    conflicts: list[str] = []
+    for b in bindings:
+        eid, path = b.get("erratum"), b.get("resolution_path") or ""
+        state = _resolve(path)
+        if state is None:
+            conflicts.append(f"{eid}: resolution_path {path} resolves to nothing")
+            continue
+        if str(state) not in (b.get("resolved_when") or []):
+            continue  # not yet resolved; rows may legitimately say "pending"
+        banned = [s for s in (b.get("forbidden_when_resolved") or []) if s]
+        for e in errata:
+            if e.get("id") != eid:
+                continue
+            hit = [s for s in banned if s.lower() in str(e.get("status") or "").lower()]
+            if hit:
+                conflicts.append(
+                    f"{eid}: {path} is {state} but the erratum status still says "
+                    f"{hit[0]!r}")
+        for r in rows:
+            if r.get("erratum") != eid:
+                continue
+            hit = [s for s in banned if s.lower() in str(r.get("status") or "").lower()]
+            if hit:
+                conflicts.append(
+                    f"{eid}: {path} is {state} but row {r.get('figure')!r} still "
+                    f"says {hit[0]!r}")
+    check(not conflicts,
+          "R1.23 no erratum is resolved in one field and pending in another",
+          "; ".join(conflicts[:4]))
+
     # ── 11. a scoped roadmap item carries its date (C-05) ───────────────
     # An undated roadmap item is indistinguishable from an abandoned one, which
     # is what U-06 was through three vintages.
