@@ -1,5 +1,5 @@
 {
- "vintage": "v8.7 (2026-08-12)",
+ "vintage": "v8.8 (2026-08-12)",
  "supersedes": "v8.5 (2026-08-01)",
  "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
  "composite_model": {
@@ -3085,12 +3085,13 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
-    "verdict": "NECESSARY",
-    "reading": "Publishable as necessary, with the prevalence caveat: WSE holds above 0.5 in 16 of 32 cases (0.5)."
+    "verdict": "LABEL-DECLINED",
+    "reading": "Report the values and decline the necessity label: consistency_N 0.7896 below 0.9. D-109 is conjunctive, so one failing measure declines the label."
    },
    "~WSE": {
     "condition": "~WSE",
@@ -3107,12 +3108,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "~WSE scores 0.8092 against the negated outcome against 0.3449 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "~WSE scores 0.8092 against the negated outcome against 0.3449 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "CABLE": {
     "condition": "CABLE",
@@ -3129,12 +3131,13 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
-    "verdict": "NECESSARY",
-    "reading": "Publishable as necessary, with the prevalence caveat: CABLE holds above 0.5 in 16 of 32 cases (0.5)."
+    "verdict": "LABEL-DECLINED",
+    "reading": "Report the values and decline the necessity label: consistency_N 0.6521 below 0.9. D-109 is conjunctive, so one failing measure declines the label."
    },
    "~CABLE": {
     "condition": "~CABLE",
@@ -3151,12 +3154,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "~CABLE scores 0.7187 against the negated outcome against 0.4714 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "~CABLE scores 0.7187 against the negated outcome against 0.4714 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "REE": {
     "condition": "REE",
@@ -3173,12 +3177,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "REE scores 0.7268 against the negated outcome against 0.7033 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "REE scores 0.7268 against the negated outcome against 0.7033 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "~REE": {
     "condition": "~REE",
@@ -3195,12 +3200,13 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
-    "verdict": "NECESSARY",
-    "reading": "Publishable as necessary, with the prevalence caveat: ~REE holds above 0.5 in 3 of 32 cases (0.0938)."
+    "verdict": "LABEL-DECLINED",
+    "reading": "Report the values and decline the necessity label: consistency_N 0.4516 below 0.9. D-109 is conjunctive, so one failing measure declines the label."
    },
    "HYPER": {
     "condition": "HYPER",
@@ -3217,12 +3223,13 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "LABEL-DECLINED",
-    "reading": "RoN 0.707 clears the bar but coverage of necessity 0.5979 is below 0.6. Report the value and decline the necessity label."
+    "reading": "Report the values and decline the necessity label: consistency_N 0.584 below 0.9; coverage_N 0.5979 below 0.6. D-109 is conjunctive, so one failing measure declines the label."
    },
    "~HYPER": {
     "condition": "~HYPER",
@@ -3239,12 +3246,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "~HYPER scores 0.5752 against the negated outcome against 0.4979 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "~HYPER scores 0.5752 against the negated outcome against 0.4979 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "ESC_inv": {
     "condition": "ESC_inv",
@@ -3261,12 +3269,13 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
-    "verdict": "NECESSARY",
-    "reading": "Publishable as necessary, with the prevalence caveat: ESC_inv holds above 0.5 in 16 of 32 cases (0.5)."
+    "verdict": "LABEL-DECLINED",
+    "reading": "Report the values and decline the necessity label: consistency_N 0.5999 below 0.9. D-109 is conjunctive, so one failing measure declines the label."
    },
    "~ESC_inv": {
     "condition": "~ESC_inv",
@@ -3283,12 +3292,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "~ESC_inv scores 0.6617 against the negated outcome against 0.5146 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "~ESC_inv scores 0.6617 against the negated outcome against 0.5146 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "GCI_inv": {
     "condition": "GCI_inv",
@@ -3305,12 +3315,13 @@
      "no_better_than_negation": true
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
     "verdict": "TRIVIAL",
-    "reading": "GCI_inv scores 0.6033 against the negated outcome against 0.454 against the outcome, so it tracks the negation at least as closely as the result. Neither figure is evidence of necessity. Report as trivial."
+    "reading": "GCI_inv scores 0.6033 against the negated outcome against 0.454 against the outcome, so it tracks the negation at least as closely as the result. Report as trivial."
    },
    "~GCI_inv": {
     "condition": "~GCI_inv",
@@ -3327,16 +3338,17 @@
      "no_better_than_negation": false
     },
     "thresholds": {
+     "consistency_N_publishable": 0.9,
      "RoN_publishable": 0.6,
      "RoN_trivial_below": 0.5,
      "coverage_N_publishable": 0.6
     },
-    "verdict": "NECESSARY",
-    "reading": "Publishable as necessary, with the prevalence caveat: ~GCI_inv holds above 0.5 in 16 of 32 cases (0.5)."
+    "verdict": "LABEL-DECLINED",
+    "reading": "Report the values and decline the necessity label: consistency_N 0.6447 below 0.9. D-109 is conjunctive, so one failing measure declines the label."
    }
   },
-  "necessity_gate_method": "Consistency alone cannot establish necessity: a condition held by almost every case is a superset of almost every outcome and scores high without carrying information. Four measures are published per condition and per negation: consistency_N, coverage_N as sum(min(X,Y))/sum(X), Relevance of Necessity as sum(1-X)/sum(1-min(X,Y)), and the count of cases holding the condition above 0.5. Necessity is re-run against the negated outcome, because a condition that tracks a result and its absence equally well discriminates nothing. Decision rule: RoN at or above 0.60 with coverage_N at or above 0.60 is publishable as necessary with the prevalence caveat; RoN below 0.50 is reported as non-necessary or trivial; between the two the value is reported and the necessity label declined.",
-  "necessity_verdict": "No condition or negation is publishable as necessary. REE, published at 0.916 in thesis section 4.5, returns consistency 0.703 under the primary anchors with RoN 0.577 and coverage_N 0.576, and it holds above 0.5 in 29 of 32 cases. It also scores 0.727 against the negated outcome, higher than the 0.703 it scores against the outcome, so it tracks the absence of the result more closely than the result. The gate returns TRIVIAL. The sensitivity run is the demonstration: under fixed 75/50/25 anchors REE's necessity consistency rises to 0.967, close to the published 0.916, while RoN falls to 0.195 and coverage_N to 0.389. The consistency figure rises precisely because the condition becomes near-constant, which is the artefact the bare number cannot show.",
+  "necessity_gate_method": "D-109, 2026-08-12. Necessity is decided by one conjunctive rule and the verdict is derived from the measures, never asserted alongside them. A condition is publishable as necessary only if consistency_N >= 0.90 AND Relevance of Necessity >= 0.60 AND coverage_N >= 0.60, and only if it does not track the negated outcome at least as closely as the outcome. RoN below 0.50 is reported as trivial. Otherwise the values are reported and the label is declined. Four measures are published per condition and per negation: consistency_N, coverage_N as sum(min(X,Y))/sum(X), Relevance of Necessity as sum(1-X)/sum(1-min(X,Y)), and the count of cases holding the condition above 0.5. Why conjunctive: consistency alone cannot establish necessity, because a condition held by almost every case is a superset of almost every outcome and scores high without carrying information (Schneider and Wagemann 2012, ch. 5). Under a bare consistency bar REE returns 0.9672 against the fixed 75/50/25 sensitivity anchors and would be relabelled necessary, readmitting the withdrawn section 4.5 claim through the sensitivity regime. RoN 0.195 is the only measure that refuses it. Supersedes the RoN-only rule, which labelled ~REE necessary at consistency_N 0.4516, a condition present in under half the outcome cases. That contradiction is recorded as CONC-2.",
+  "necessity_verdict": "No condition or negation is publishable as necessary under D-109. The highest consistency_N in the set is WSE at 0.7896, below the 0.90 bar, so the conjunctive rule is not reached by any condition. REE, published at 0.916 in thesis section 4.5, returns 0.7033 under the primary anchors with RoN 0.5766 and coverage_N 0.5763, and holds above 0.5 in 29 of 32 cases. It also scores 0.7268 against the negated outcome, higher than against the outcome, so it tracks the absence of the result more closely than the result. The sensitivity run is the demonstration: under fixed 75/50/25 anchors REE's consistency rises to 0.9672 while RoN falls to 0.195 and coverage_N to 0.389. The consistency figure rises precisely because the condition becomes near-constant, which is the artefact a bare threshold cannot show and the reason D-109 is conjunctive.",
   "diagnostics": {
    "near_constancy": {
     "WSE": {

@@ -163,6 +163,32 @@ def m_excuse_without_reason(d):
     return d
 
 
+def m_conc2_replay(d):
+    """CONC-2 replayed: a NECESSARY label the declared rule does not produce.
+
+    WSE returns consistency_N 0.7896, below the 0.90 bar, so under D-109 its
+    label is LABEL-DECLINED. Asserting NECESSARY beside the measures is the
+    v8.7 defect itself. R1.24 recomputes rather than reads.
+    """
+    d["fsqca"]["necessity_gate"]["WSE"]["verdict"] = "NECESSARY"
+    return d
+
+
+def m_necessity_threshold_dropped(d):
+    """A condition stops declaring the consistency bar, so the rule cannot apply."""
+    d["fsqca"]["necessity_gate"]["WSE"]["thresholds"].pop(
+        "consistency_N_publishable", None)
+    return d
+
+
+def m_prose_contradicts_labels(d):
+    """The quotable sentence disagrees with the labels beside it."""
+    g = d["fsqca"]["necessity_gate"]["CABLE"]
+    g["thresholds"]["consistency_N_publishable"] = 0.10   # make CABLE clear the bar
+    g["verdict"] = "NECESSARY"
+    return d                                              # verdict still says none is
+
+
 CASES = [
     ("composite drift (DEU)",        m_drift,               "R1.4"),
     ("Singapore: number over gap",   m_singapore,           "R1.5"),
@@ -180,6 +206,9 @@ CASES = [
     ("unbound excuse carries no reason",  m_excuse_without_reason, "R1.22"),
     ("CONC-1: row pending, re-run done", m_conc1_replay,    "R1.23"),
     ("CONC-1: erratum OPEN, re-run done", m_conc1_erratum_replay, "R1.23"),
+    ("CONC-2: label the rule denies",  m_conc2_replay,        "R1.24"),
+    ("necessity threshold undeclared", m_necessity_threshold_dropped, "R1.24"),
+    ("prose contradicts the labels",   m_prose_contradicts_labels, "R1.25"),
 ]
 
 

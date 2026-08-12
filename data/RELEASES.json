@@ -38,9 +38,20 @@
   "artifact_sha": "6d790854010fab096e516116f9710c117ca06463a3af949231ce3c980e61b6f9",
   "bound_at": null,
   "provenance": "Citation concordance status correction under CONC-1. The D-103 rows and the D-103 erratum status are brought into line with fsqca.recalibration_required, which has read RESOLVED_DECLINED since 2026-08-01, and with the sovereign-infra mirror, which already read 'superseded, re-run 2026-08-01' and was therefore correct throughout. Adds citation_concordance.resolution_bindings and unbound_errata, the declarations that gates R1.22 and R1.23 read. No axis, composite, coverage, coupling, CSovE, fsQCA or withholding value changed.",
-  "status": "staged",
+  "status": "superseded",
   "supersedes": [
    "v8.6 (2026-08-09)"
+  ],
+  "superseded_by": "v8.8 (2026-08-12)",
+  "superseded_at": "2026-08-12T18:00:00Z"
+ },
+ "v8.8 (2026-08-12)": {
+  "artifact_sha": "86a88d2f16c6fa607bbf3502efbbeb5bcf7f1632ed9ce691f270add59d946007",
+  "bound_at": null,
+  "provenance": "D-109 resolves CONC-2. One conjunctive necessity rule replaces the two contradictory rules v8.7 carried. Every verdict is now derived from the published measures by the declared thresholds rather than asserted beside them, and gates R1.24 and R1.25 recompute and refuse disagreement. No axis, composite, coverage, coupling, CSovE, withholding or fsQCA solution value changed: only necessity labels and the rule that produces them.",
+  "status": "staged",
+  "supersedes": [
+   "v8.7 (2026-08-12)"
   ]
  }
 }
