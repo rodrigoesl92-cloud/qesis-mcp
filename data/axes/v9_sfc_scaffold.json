@@ -48,7 +48,7 @@
   "baseline_identity": "Two sources may be merged only on proof that their 200mm-equivalent conversion is identical. A dataset for Asia on one baseline and a dataset for Europe on another produces a column that is not comparable across its own rows, and the gate cannot detect that from the values alone."
  },
  "source_audit_protocol": {
-  "status": "PLANNED, NOT EXECUTED",
+  "status": "PHASE 1 AND 2 EXECUTED 2026-08-13. Axis remains WITHHELD.",
   "provenance_of_this_plan": "Supplied by the operator 2026-08-07. The leads below are pointers to audit, not findings. None has been retrieved, opened or verified by this repository, and nothing here may be cited as evidence that such a dataset exists.",
   "phase_1_policy_network": {
    "vector": "Policy institutes synthesise capacity data; they do not count wafers. The objective is their appendices, bibliographies and data-licensing disclosures, to reach the primary source behind their charts.",
@@ -70,7 +70,51 @@
    "reject_on_sight": "Any table measuring market share by revenue, tallying raw fab count, or listing announced but unbuilt capacity. These are the refused_units and the announced_capacity clause, and the gate enforces both.",
    "baseline_check": "Verify each source's definition of a 200mm-equivalent before merging anything. Sources may not be combined without proving the conversion identical."
   },
-  "outcome_rule": "The axis stays WITHHELD until a single source, on one consistent definition, is admitted for at least 27 of the 35 states. Stitching partial sources with different units is how a coverage gate is cleared on paper while the axis measures nothing."
+  "outcome_rule": "The axis stays WITHHELD until a single source, on one consistent definition, is admitted for at least 27 of the 35 states. Stitching partial sources with different units is how a coverage gate is cleared on paper while the axis measures nothing.",
+  "executed": {
+   "by": "SCOUT, session QT-0007",
+   "date": "2026-08-13",
+   "method": "Web search and direct fetch of publisher pages. Every finding below was read from a retrieved page, never inferred. Where a page did not render its data tables the finding says so rather than assuming.",
+   "findings": [
+    {
+     "target": "SEMI, the body that measures wafer capacity",
+     "urls": [
+      "https://www.semi.org/en/products-services/market-data/world-fab-forecast",
+      "https://www.semi.org/en/products-services/market-data/200mm-fab-outlook"
+     ],
+     "verdict": "REFUSED as published, ADMISSIBLE if purchased",
+     "detail": "SEMI's PUBLIC output reports capacity by REGION, not by state. Its own press release gives 200mm shares as China 22 percent, Japan 16, Taiwan 15, 'Europe & Mideast' 14, 'America' 14. 'Europe & Mideast' and 'America' are aggregate rows and are refused by the aggregate_rows_refused clause. The shares are percentages, not wspm, and are refused by refused_units. The go_no_go written into phase_1 anticipated exactly this and it is what happened. The PAID World Fab Forecast is facility-level, line by line, and would satisfy the contract on unit and granularity. It is a commercial subscription and its licence must be read before any figure derived from it is published under CC-BY-NC.",
+     "cost_to_admit": "subscription purchase plus a licence review by COUNSEL"
+    },
+    {
+     "target": "OECD Semiconductor Production Database, 'The Chip Landscape'",
+     "urls": [
+      "https://www.oecd.org/en/publications/the-chip-landscape_02dbd028-en/full-report/component-5.html"
+     ],
+     "verdict": "STRONGEST LEAD. Not yet admitted: the data tables did not render in the fetch.",
+     "detail": "The publisher's own abstract states the paper maps 'global semiconductor wafer fabrication capacity BY ECONOMY, process node density, process technology and business model, building on the newly assembled OECD Semiconductor Production Database'. Capacity in this literature is reported in wafer starts per month on 8-inch equivalents, which IS the scaffold's canonical_unit wspm_200mm_equivalent: 8 inch is 200mm. By economy rather than by region is the clause SEMI's public output fails. OECD is an intergovernmental statistical body with published methodology, not a content aggregator, so D-015 does not refuse it on its face. It does however compile commercial sources including SEMI and TechInsights, which raises the baseline_identity question rather than settling it.",
+     "unverified": [
+      "how many of the 35 sample states carry a value",
+      "whether smaller producers are folded into a residual region",
+      "the licence terms for redistribution of derived values",
+      "whether the 8-inch conversion is stated and identical across economies"
+     ]
+    },
+    {
+     "target": "Content aggregators encountered during the search",
+     "urls": [
+      "statista.com",
+      "wifitalents.com",
+      "siliconanalysts.com",
+      "semiwiki.com forum"
+     ],
+     "verdict": "REFUSED ON SIGHT under D-015 and L-007",
+     "detail": "Statista appeared twice in search results with figures that look authoritative. It is named in refused_publishers. Recorded here so a later reader does not rediscover it and mistake it for a source."
+    }
+   ],
+   "verdict": "The axis stays WITHHELD. No source has been admitted for any state, so coverage remains 0 of 35 against a minimum of 27. This is a finding, not a gap to fill: D-007 forbids imputation and the outcome_rule forbids stitching partial sources.",
+   "next_action_single": "Retrieve the OECD Semiconductor Production Database tables directly and count the economies. One number decides this axis: if it carries 27 or more of the 35 sample states on one stated 8-inch-equivalent definition, the axis is admissible and v9.0 is unblocked. If it folds smaller producers into a residual region, it fails the aggregate-rows clause and the only remaining route is the paid SEMI World Fab Forecast."
+  }
  },
  "measured_against": "v8.5 (2026-08-01)",
  "coverage": {
