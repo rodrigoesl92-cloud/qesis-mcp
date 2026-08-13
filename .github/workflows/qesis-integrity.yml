@@ -29,7 +29,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gate:
+  # The job id IS the status check name GitHub reports. There is no
+  # `name:` here, so the check was reported as `gate`, while the branch
+  # ruleset on main requires `qesis-integrity`. A required check that
+  # never reports blocks every merge forever and shows nothing red, so
+  # the failure looks like GitHub being slow. Renamed to match the
+  # requirement, which is also the better name: `gate` says nothing
+  # about what it gates. (L-093.)
+  qesis-integrity:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
