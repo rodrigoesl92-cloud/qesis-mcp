@@ -101,5 +101,60 @@ def main() -> int:
     return 0
 
 
+
+def live() -> int:
+    """Prove the declared probe target answers with the vintage this repo serves.
+
+    L-094. The first version of this file consolidated four scattered copies of
+    a domain into one declaration, and consolidated on the wrong value:
+    qesis-mcp.vercel.app, an orphaned Vercel project serving a build from
+    2026-08-01. Every consumer agreed with every other consumer, the gate passed,
+    and the hourly production probe tested a dead deployment for three days.
+
+    A single source of truth checked only against itself certifies agreement, not
+    correctness. This is the check against reality. Network-dependent, so it is
+    opt-in and never runs in the pre-build gate, where a transient failure would
+    block a deployment for a reason that has nothing to do with the build.
+    """
+    import urllib.request
+
+    local = json.loads((ROOT / "data" / "qesis_v8.json").read_text(
+        encoding="utf-8"))["vintage"]
+    url = DOMAINS["probe_base"].rstrip("/") + "/health"
+    print(f"declared probe target: {url}")
+    print(f"vintage in this repo : {local}")
+    try:
+        with urllib.request.urlopen(url, timeout=20) as r:
+            served = json.loads(r.read().decode("utf-8"))
+    except Exception as exc:
+        print(f"\nLIVE CHECK FAILED: {url} did not answer: "
+              f"{exc.__class__.__name__}: {exc}")
+        print("The declared probe target is not the deployment. Fix "
+              "data/domains.json, not the probe.")
+        return 1
+
+    checks = [
+        ("vintage", served.get("vintage"), local),
+        ("status", served.get("status"), "ok"),
+    ]
+    bad = [f"{k}: served {s!r}, expected {e!r}" for k, s, e in checks if s != e]
+    print(f"vintage served       : {served.get('vintage')}")
+    print(f"index_sha256         : {str(served.get('index_sha256'))[:16]}")
+    print(f"deployment_commit    : {str(served.get('deployment_commit'))[:12]}")
+    ch = served.get("chain") or {}
+    print(f"chain                : {ch.get('status')}, {ch.get('entries')} entries, "
+          f"{ch.get('link_breaks')} link breaks, agrees={ch.get('attestation_agrees')}")
+    print(f"tools                : {served.get('tool_count')}")
+    if bad:
+        print("\nLIVE CHECK FAILED:")
+        for b in bad:
+            print(f"  x {b}")
+        return 1
+    print("\nLIVE CHECK PASSED: the declared probe target serves this vintage.")
+    return 0
+
+
 if __name__ == "__main__":
+    if "--live" in sys.argv:
+        raise SystemExit(main() or live())
     raise SystemExit(main())
