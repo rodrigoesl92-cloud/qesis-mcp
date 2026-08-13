@@ -74,6 +74,13 @@
    "sovereign_infra_commit": "09557dbbae47e7d916890d62b8d6f650ead46841",
    "single_repo_reason": null,
    "summary": "Successor annotation on the D-103 concordance rows, baseline statistics 0.9048 and 0.5807 retained unchanged as the historic record. Adds agent_reading_contract, which serves the theory-informed limitation, the trilemma demotion and the D-109 necessity rule as data with their statements rather than as prompt text, asserted by R1.26. Generator layer: necessity_gate now takes its thresholds as a parameter (L-085) and both solution-matrix printers refuse a missing key instead of rendering None (L-086). No axis, composite, coverage, coupling, CSovE or withholding value changed. Artifact f5c393b8e82bfdb9b4e982dd573fd0b64c0488481413ba99fec700f248625bdc."
+  },
+  {
+   "vintage": "v9.0 (2026-08-13)",
+   "qesis_mcp_commit": "865adcfdc8fa2053666374f9ded16981ec71d840",
+   "sovereign_infra_commit": "7a9da8c68a0b6cc361573c0c88625fc190f9080d",
+   "single_repo_reason": null,
+   "summary": "Provenance-complete vintage, cut by scripts/bump_vintage.py, which is the first generator the served index has had since v8.4. Metadata release: vintage, supersedes and change_log_vintages are the only keys that move, asserted by diffing every key before and after the write. No score, weight or axis value was recomputed, and this is checkable rather than asserted: the index was byte-identical to the v8.9 artifact f5c393b8e82bfdb9 immediately before the bump. Publishes work already recorded in the evidence plane and gated here: the SFC axis intake (scripts/scout_sfc_intake.py, data/axes/v9_sfc_scaffold.json) with the axis still WITHHELD at 0 of 35 and verify_axis_sfc.py enforcing that the declared status matches measured coverage; the EMODnet CSE evidence re-export against AUDIT-1; the chain spine re-export carrying the v9.0 binding; service identity declared once (data/domains.json, scripts/verify_domains.py); the pre-build deploy gate (scripts/vercel_gate.py) that refuses to build a tree whose gates fail; and the dashboard generator gate (scripts/verify_dashboard.py, R1.27). In the evidence plane, every retrieval chunk now carries a licence. Six Tier C quarantined tables remain open pending rights review and are NOT closed by this vintage."
   }
  ]
 }

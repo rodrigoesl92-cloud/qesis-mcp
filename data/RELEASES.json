@@ -60,9 +60,21 @@
   "artifact_sha": "f5c393b8e82bfdb9b4e982dd573fd0b64c0488481413ba99fec700f248625bdc",
   "bound_at": null,
   "provenance": "Successor annotation on the D-103 concordance rows, baseline statistics 0.9048 and 0.5807 retained unchanged as the historic record. Adds agent_reading_contract, which serves the theory-informed limitation, the trilemma demotion and the D-109 necessity rule as data with their statements rather than as prompt text, asserted by R1.26. Generator layer: necessity_gate now takes its thresholds as a parameter (L-085) and both solution-matrix printers refuse a missing key instead of rendering None (L-086). No axis, composite, coverage, coupling, CSovE or withholding value changed.",
-  "status": "staged",
+  "status": "superseded",
   "supersedes": [
    "v8.8 (2026-08-12)"
-  ]
+  ],
+  "superseded_by": "v9.0 (2026-08-13)",
+  "superseded_at": "2026-08-13T00:00:00Z"
+ },
+ "v9.0 (2026-08-13)": {
+  "artifact_sha": "8009815e4c19132048bf285cf6622cc864e7bc090fc31627b09ce0145463647d",
+  "bound_at": null,
+  "provenance": "Provenance-complete vintage, and the first cut by a generator since v8.4: scripts/bump_vintage.py moves vintage, supersedes and change_log_vintages and asserts by key diff that nothing else moved. No score, weight or axis value was recomputed, which is checkable rather than asserted: the index was byte-identical to the v8.9 artifact f5c393b8e82bfdb9 immediately before the bump. Publishes work already in the evidence plane: the SFC axis intake with the axis still WITHHELD at 0 of 35, the EMODnet CSE evidence re-export against AUDIT-1, service identity declared once, the pre-build deploy gate, and the dashboard gate R1.27. Six Tier C quarantined tables remain open pending rights review and are not closed by this vintage.",
+  "status": "staged",
+  "supersedes": [
+   "v8.9 (2026-08-12)"
+  ],
+  "binding_note": "The writer emitted CRLF on its first run under the Windows platform default, hashing to f99ca4b984e0 instead of the LF form recorded here. This is the second instance of the fault the v8.5 binding_corrected block records. It was caught before any commit, and the cause is now fixed in code rather than in the binding: bump_vintage.py writes with newline='\n' and re-reads the bytes to prove the sha256 it announces is the sha256 of what it wrote."
  }
 }
