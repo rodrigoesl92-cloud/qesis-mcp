@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QESIS+ v9.0 · V1 Effective Weights</title>
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   TOKENS. Verbatim subset of sovereign-infra/design/tokens.css.
+   Inlined so this prototype opens with no build step and no cross-repo path.
+   PRODUCTION LINKS THE FILE. This copy is a declared deviation from W-2 and
+   is recorded in ops/VISUALISATION_SPEC.md. Do not edit a value here.
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#141b2b; --card:#1b2334; --head:#2a2f3a; --line:#3a445c;
+  --ink:#f8f8f7; --mut:#9aa3ba;
+  --cool-100:#dce7f5; --cool-300:#93b3dd; --cool-500:#5b7fa6; --cool-700:#3f5c7d;
+  --warm-500:#c99b72;
+  --hot:#c96a5e; --epis:#6d7382;
+  --font-prose:ui-serif,Charter,"Iowan Old Style",Georgia,serif;
+  --font-ui:ui-sans-serif,"Inter",system-ui,sans-serif;
+  --font-num:ui-monospace,"SF Mono","Cascadia Mono",monospace;
+  --t-xs:12px; --t-sm:14px; --t-md:16px; --t-lg:20px; --t-2xl:31px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px;
+  --r-sm:4px; --r-md:8px;
+  --chart-h:320px; --chart-h-tall:440px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);
+     font-size:var(--t-md);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:72rem;margin:0 auto;padding:var(--s-6) var(--s-5) var(--s-7)}
+
+/* Serial position: the finding is first. */
+.eyebrow{font-size:var(--t-xs);letter-spacing:.09em;text-transform:uppercase;
+         color:var(--mut);margin:0 0 var(--s-2)}
+h1{font-family:var(--font-prose);font-size:var(--t-2xl);line-height:1.2;
+   margin:0 0 var(--s-3);max-width:34ch}
+.sub{color:var(--mut);font-size:var(--t-sm);margin:0 0 var(--s-6);max-width:70ch}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+      padding:var(--s-5)}
+
+/* L-014: explicit height wrapper. A canvas or SVG has no intrinsic size. */
+.chart__canvas{height:var(--chart-h-tall);width:100%}
+.chart__canvas svg{width:100%;height:100%;display:block}
+
+/* W-2: painted from the stylesheet. var() does not resolve inside a
+   presentation attribute, so nothing here is painted by fill="". */
+.grid-line{stroke:var(--line);stroke-width:1;opacity:.45}
+.axis-text{fill:var(--mut);font-family:var(--font-num);font-size:11px}
+.row-label{fill:var(--ink);font-family:var(--font-ui);font-size:13px;font-weight:600}
+.row-note{fill:var(--mut);font-family:var(--font-num);font-size:10.5px}
+.bar-realised{fill:var(--cool-300)}
+.bar-realised--hot{fill:var(--hot)}          /* von Restorff. Exactly one. */
+.ci-line{stroke:var(--cool-500);stroke-width:2;opacity:.85}
+.ci-cap{stroke:var(--cool-500);stroke-width:2;opacity:.85}
+.nominal-tick{stroke:var(--warm-500);stroke-width:2.5}
+.value-num{fill:var(--ink);font-family:var(--font-num);font-size:12px}
+.value-num--hot{fill:var(--hot);font-family:var(--font-num);font-size:12px;font-weight:600}
+
+.legend{display:flex;flex-wrap:wrap;gap:var(--s-5);margin-top:var(--s-4);
+        font-size:var(--t-xs);color:var(--mut);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:var(--s-2)}
+.sw{width:22px;height:10px;border-radius:2px;display:inline-block}
+.sw--realised{background:var(--cool-300)}
+.sw--hot{background:var(--hot)}
+.sw--nominal{width:3px;height:14px;background:var(--warm-500);border-radius:0}
+.sw--ci{width:22px;height:2px;background:var(--cool-500)}
+
+.kicker{margin-top:var(--s-6);padding:var(--s-5);background:var(--head);
+        border-left:3px solid var(--warm-500);border-radius:var(--r-sm)}
+.kicker b{font-family:var(--font-num);font-size:var(--t-lg);display:block;
+          margin-bottom:var(--s-1)}
+.kicker p{margin:0;color:var(--mut);font-size:var(--t-sm);max-width:75ch}
+
+/* E-2. The caveat bounds the headline, so it shares the viewport with it.
+   Not a footnote, not behind a disclosure. */
+.caveat{margin-top:var(--s-4);padding:var(--s-4) var(--s-5);
+        border:1px dashed var(--line);border-radius:var(--r-sm);
+        color:var(--mut);font-size:var(--t-sm);max-width:80ch}
+.caveat strong{color:var(--ink)}
+
+.falsifier{margin-top:var(--s-4);font-size:var(--t-sm);color:var(--mut);max-width:80ch}
+.falsifier strong{color:var(--ink);font-weight:600}
+
+/* V6 provenance strip. A view without provenance is unpublishable. */
+.prov{margin-top:var(--s-7);border-top:1px solid var(--line);padding-top:var(--s-5);
+      font-family:var(--font-num);font-size:var(--t-xs);color:var(--mut)}
+.prov dl{display:grid;grid-template-columns:170px 1fr;gap:var(--s-2) var(--s-4);margin:0}
+.prov dt{color:var(--mut)}
+.prov dd{margin:0;color:var(--ink);word-break:break-all}
+.warn{margin-top:var(--s-4);padding:var(--s-3) var(--s-4);border-radius:var(--r-sm);
+      background:rgb(201 106 94 / .10);border:1px solid rgb(201 106 94 / .35);
+      color:var(--ink);font-size:var(--t-xs);max-width:80ch}
+.src{margin-top:var(--s-4);font-size:var(--t-xs)}
+.src a{color:var(--cool-300)}
+
+@media (max-width:768px){
+  .chart__canvas{height:var(--chart-h)}
+  .prov dl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){
+  .bar-realised,.bar-realised--hot{transition:width .28s ease}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">QESIS+ v9.0 (2026-08-13) · View V1 of 6 · Effective weights</p>
+  <h1>An index that declares five weights and behaves as if it has two.</h1>
+  <p class="sub">
+    Nominal weight is what the composite says it multiplies each axis by. Realised
+    weight is the first-order sensitivity index measured from the same 32 states.
+    They disagree. Water stress realises roughly 1.8 times its declared weight, and
+    it is the only axis whose nominal value falls outside its own confidence interval.
+  </p>
+
+  <div class="card">
+    <div class="chart__canvas"><svg id="v1" viewBox="0 0 760 420" role="img"
+      aria-label="Nominal against realised weight for five composite axes, with 95 percent bootstrap intervals"></svg></div>
+
+    <div class="legend">
+      <span><i class="sw sw--nominal"></i> Nominal weight (declared)</span>
+      <span><i class="sw sw--realised"></i> Realised main effect Si</span>
+      <span><i class="sw sw--hot"></i> Nominal outside its own interval</span>
+      <span><i class="sw sw--ci"></i> 95% bootstrap interval, 4000 resamples</span>
+    </div>
+  </div>
+
+  <div class="kicker">
+    <b>Spearman 0.9329</b>
+    <p>Deleting ODI, RGD and REE entirely, which is 40% of the nominal weight,
+       leaves a ranking that correlates with the published one at this level.
+       The composite is reported as five-dimensional and orders states as if it
+       were two-dimensional.</p>
+  </div>
+
+  <div class="caveat">
+    <strong>What this view is not licensed to say.</strong>
+    At n=32 the bootstrap intervals are wide. Only WSE's inflation is
+    distinguishable from its nominal weight at 95%. The point estimates for ODI,
+    RGD and REE are near zero but their intervals do not exclude the nominal
+    values. The defensible claim is that nominal weights are not identified at
+    this sample size, not that those three axes are weightless.
+  </div>
+
+  <p class="falsifier">
+    <strong>Falsifier.</strong> A sample large enough to tighten the ODI, RGD and
+    REE intervals away from zero, or a re-estimation in which WSE's nominal 0.30
+    returns inside its interval. Either outcome retires this finding.
+  </p>
+
+  <div class="prov">
+    <dl>
+      <dt>Vintage</dt><dd>v9.0 (2026-08-13). Lineage in <code>data/vintage_lineage.json</code></dd>
+      <dt>index_sha256</dt><dd>8009815e4c19132048bf285cf6622cc864e7bc090fc31627b09ce0145463647d</dd>
+      <dt>Chain</dt><dd>VERIFIED · 752 entries · 0 link breaks · sequence dense</dd>
+      <dt>Chain head</dt><dd>af96057d43c1c2db2f6c91b01a61eb924f4f8b586c13dc0b8a7529ea27328f2c</dd>
+      <dt>Sample</dt><dd>n_complete 32 of 35 · 3 withheld under BIG (HKG, SGP, TWN)</dd>
+      <dt>Method</dt><dd>Pearson correlation ratio, main effect Si. Paruolo, Saisana and Saltelli (2013), JRSS-A 176(3), 609-634</dd>
+      <dt>Composite</dt><dd>0.3*WSE + 0.3*CSE + 0.17*ODI + 0.08*RGD + 0.15*REE</dd>
+      <dt>Licence</dt><dd>CC-BY-NC. Institutional licence separate</dd>
+      <dt>Scope</dt><dd>Geographic layers stop at infrastructure, never people</dd>
+    </dl>
+
+    <div class="warn">
+      <strong>Plane: working tree.</strong> deployment_commit is null. These bytes
+      may be uncommitted. Match index_sha256 against a commit before citing
+      anything from this process. This is G-01b working as designed and is not a
+      defect: it tells you which of the two planes you are reading.
+    </div>
+
+    <p class="src">Source: <a href="https://qesis-mcp.vercel.app">qesis_get_integrity</a>,
+       field <code>effective_weights</code>, served index <code>data/qesis_v8.json</code>.</p>
+  </div>
+</div>
+
+<script>
+/* Doherty: data is embedded and pre-aggregated, so re-render is local.
+   Every figure below is copied from effective_weights in the served payload.
+   No value is computed here and none is rounded here. */
+const DATA = {
+  method_n: 32,
+  resamples: 4000,
+  axes: [
+    { id:"WSE", label:"Water stress",            nominal:0.30, main:0.539, ci:[0.331,0.724], in_ci:false },
+    { id:"CSE", label:"Cable exposure",          nominal:0.30, main:0.407, ci:[0.108,0.637], in_ci:true  },
+    { id:"ODI", label:"Operator concentration",  nominal:0.17, main:0.024, ci:[0.000,0.248], in_ci:true  },
+    { id:"RGD", label:"Regulatory divergence",   nominal:0.08, main:0.022, ci:[0.000,0.297], in_ci:true  },
+    { id:"REE", label:"Rare earth exposure",     nominal:0.15, main:0.000, ci:[0.000,0.172], in_ci:true  }
+  ]
+};
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+const W = 760, H = 420;
+const PAD = { l:196, r:74, t:40, b:44 };
+const X0 = PAD.l, X1 = W - PAD.r;
+const VMAX = 0.75;                       // covers the widest CI upper bound, 0.724
+const ROW_H = (H - PAD.t - PAD.b) / DATA.axes.length;
+const BAR_H = 20;
+
+const x  = v => X0 + (v / VMAX) * (X1 - X0);
+const el = (n, a) => { const e = document.createElementNS(SVG_NS, n);
+                       for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+function render() {
+  const svg = document.getElementById("v1");
+  svg.textContent = "";
+
+  // Gridlines and value axis.
+  for (let v = 0; v <= VMAX + 1e-9; v += 0.15) {
+    const gx = x(v);
+    svg.appendChild(el("line", { class:"grid-line", x1:gx, y1:PAD.t - 12, x2:gx, y2:H - PAD.b + 4 }));
+    const t = el("text", { class:"axis-text", x:gx, y:H - PAD.b + 20, "text-anchor":"middle" });
+    t.textContent = v.toFixed(2);
+    svg.appendChild(t);
+  }
+  const cap = el("text", { class:"axis-text", x:X0, y:PAD.t - 22, "text-anchor":"start" });
+  cap.textContent = "share of variance in the composite  (Si)";
+  svg.appendChild(cap);
+
+  DATA.axes.forEach((a, i) => {
+    const yTop = PAD.t + i * ROW_H + (ROW_H - BAR_H) / 2;
+    const yMid = yTop + BAR_H / 2;
+
+    // Axis id and plain-language name. Miller: the label carries the meaning,
+    // so the reader never holds a three-letter code in working memory.
+    const lab = el("text", { class:"row-label", x:X0 - 16, y:yMid - 3, "text-anchor":"end" });
+    lab.textContent = a.id;
+    svg.appendChild(lab);
+    const nte = el("text", { class:"row-note", x:X0 - 16, y:yMid + 12, "text-anchor":"end" });
+    nte.textContent = a.label;
+    svg.appendChild(nte);
+
+    // Realised main effect. von Restorff: the hot accent fires once, on the
+    // single axis whose declared weight its own interval rejects.
+    const hot = a.in_ci === false;
+    svg.appendChild(el("rect", {
+      class: hot ? "bar-realised--hot" : "bar-realised",
+      x:X0, y:yTop, width:Math.max(x(a.main) - X0, 1.5), height:BAR_H, rx:2
+    }));
+
+    // 95% bootstrap interval. E-2: the point estimate never renders alone.
+    svg.appendChild(el("line", { class:"ci-line", x1:x(a.ci[0]), y1:yMid, x2:x(a.ci[1]), y2:yMid }));
+    [a.ci[0], a.ci[1]].forEach(c => svg.appendChild(el("line", {
+      class:"ci-cap", x1:x(c), y1:yMid - 6, x2:x(c), y2:yMid + 6 })));
+
+    // Nominal weight as a reference tick. Bullet-chart convention (Few):
+    // the target is a mark, not a competing bar.
+    svg.appendChild(el("line", {
+      class:"nominal-tick", x1:x(a.nominal), y1:yTop - 7, x2:x(a.nominal), y2:yTop + BAR_H + 7 }));
+
+    // Printed value. Fitts is not in play here, nothing is a target, so the
+    // number sits where the eye already is: at the end of its own bar.
+    const val = el("text", {
+      class: hot ? "value-num--hot" : "value-num",
+      x:X1 + 10, y:yMid + 4, "text-anchor":"start" });
+    val.textContent = a.main.toFixed(3);
+    svg.appendChild(val);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
