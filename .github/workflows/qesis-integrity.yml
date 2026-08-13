@@ -9,7 +9,13 @@ on:
     branches: ["**"]
     paths: ["data/**", "eval/**", "scripts/**", "server.py", ".github/workflows/**"]
   pull_request:
-    paths: ["data/**", "eval/**", "scripts/**", "server.py"]
+    # No paths filter, deliberately. As of 2026-08-12 this workflow is a
+    # REQUIRED status check on main. A required check that does not run does
+    # not report, and GitHub blocks the merge forever on "Expected, waiting for
+    # status". The filter excluded vercel.json and .github/**, so a routing or
+    # workflow change alone would have been unmergeable with nothing red to
+    # point at. A required check runs on every pull request or it is a trap.
+    # (L-092.)
   workflow_dispatch:
   schedule:
     # Ahead of the 08:30 local morning protocol, so a drift is already known.
