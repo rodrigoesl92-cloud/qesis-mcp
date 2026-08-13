@@ -1,10 +1,28 @@
 {
-  "why": "The single declaration of who this service is. The DNS-rebinding guard, both probe workflows, the HTTP entry test and the production verifier each carried their own domain literal, and they disagreed: the guard allowed qesis-mcp.vercel.app while three consumers used qesis-public.vercel.app, so a correct deployment answered HTTP 421 to its own test suite. Every consumer reads this file. scripts/verify_domains.py fails the build if a domain literal appears anywhere that is not declared here.",
-  "serving": "www.qesis.eu",
-  "canonical": ["qesis.eu", "www.qesis.eu"],
-  "vercel": ["qesis-mcp.vercel.app", "qesis-public.vercel.app", "qesis.vercel.app"],
-  "local": ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*", "0.0.0.0:*"],
-  "probe_base": "https://qesis-mcp.vercel.app",
-  "test_host": "qesis-mcp.vercel.app",
-  "note": "qesis.eu answers 308 to www.qesis.eu, so www is the serving name. VERCEL_PROJECT_PRODUCTION_URL resolves to the shortest domain and is therefore not sufficient on its own; it is still appended at runtime from the environment."
+  "why": "The single declaration of who this service is. Every consumer reads it: the DNS-rebinding guard in server.py, the probe workflows, test_http.py and verify_production.py. scripts/verify_domains.py fails the build if a domain literal appears anywhere that is not declared here, and --live additionally proves the declared probe target actually answers with the vintage this repo serves.",
+  "serving": "qesis.qesis.eu",
+  "canonical": [
+    "qesis.qesis.eu",
+    "qesis.eu",
+    "www.qesis.eu"
+  ],
+  "vercel": [
+    "qesis-git-main-rodrigoesl92s-projects.vercel.app",
+    "qesis-public.vercel.app",
+    "qesis.vercel.app",
+    "qesis-mcp.vercel.app"
+  ],
+  "local": [
+    "localhost",
+    "localhost:*",
+    "127.0.0.1",
+    "127.0.0.1:*",
+    "0.0.0.0:*"
+  ],
+  "probe_base": "https://qesis.qesis.eu",
+  "test_host": "qesis.qesis.eu",
+  "corrections": {
+    "2026-08-13": "serving was declared as www.qesis.eu and probe_base as qesis-mcp.vercel.app. Both were wrong. The site serves from the subdomain qesis.qesis.eu, which appeared in no declaration and was therefore absent from the rebinding guard's allowed hosts. qesis-mcp.vercel.app is an ORPHANED Vercel project still serving a build from 2026-08-01 at vintage v8.6: it is not this project, it does not appear among the deployment's domains, and the hourly production probe had been testing it for three days. That is the whole of issue #41 and its successor #46. It is retained in the allowed-hosts list because an allowed host nobody serves costs nothing, and removed as the probe target because probing it proves nothing. L-094: consolidating a value into one declaration does not make it correct."
+  },
+  "note": "qesis.eu and www.qesis.eu are registered at regfish, expiring 2027-08-05 with auto-renew and DNSSEC active, and neither returns a body at present. They stay in canonical so the guard accepts them if and when they are pointed at the deployment, which costs nothing and avoids a 421 on the day the DNS changes."
 }

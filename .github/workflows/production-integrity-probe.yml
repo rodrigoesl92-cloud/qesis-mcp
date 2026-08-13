@@ -16,7 +16,7 @@ concurrency:
 
 env:
   # single declaration, data/domains.json is the source (L-089)
-  QESIS_BASE: https://qesis-mcp.vercel.app
+  QESIS_BASE: https://qesis.qesis.eu
 
 jobs:
   probe:
