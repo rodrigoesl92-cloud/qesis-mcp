@@ -1,6 +1,6 @@
 {
- "vintage": "v8.9 (2026-08-12)",
- "supersedes": "v8.5 (2026-08-01)",
+ "vintage": "v9.0 (2026-08-13)",
+ "supersedes": "v8.9 (2026-08-12)",
  "license": "Demo vintage CC-BY-NC; institutional license required for commercial use",
  "composite_model": {
   "formula_id": "QESIS_THEORY_v3",
@@ -4095,5 +4095,17 @@
     "authority": "D-109, CONC-2"
    }
   }
- }
+ },
+ "change_log_vintages": [
+  {
+   "vintage": "v9.0 (2026-08-13)",
+   "ticket": "QT-0007",
+   "date": "2026-08-13",
+   "note": "provenance-complete vintage: CONC-2/D-109, LIC-1, AUDIT-1, six quarantines",
+   "supersedes": "v8.9 (2026-08-12)",
+   "kind": "metadata release",
+   "analytical_values_changed": false,
+   "statement": "This vintage publishes work already recorded in the evidence plane. No score, weight or axis value was recomputed. A vintage that changes an analytical value goes through the axis pipeline, not through bump_vintage.py."
+  }
+ ]
 }
