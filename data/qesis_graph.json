@@ -1,0 +1,1661 @@
+{
+ "vintage": "v9.0 (2026-08-13)",
+ "derived_from": {
+  "file": "data/qesis_v8.json",
+  "authority": "D-110"
+ },
+ "generator": "scripts/build_graph.py",
+ "note": "Generated from the served index. Never hand-edited. No value is computed here that the index does not already publish.",
+ "scope_statement": "SOLE_PROVIDER means only one hyperscaler operates a cloud region on that state's territory, weighted one unit per active region because availability-zone counts are missing for 27 of 35 states (U-04). It is jurisdictional single-sourcing, not a claim about where that state's workloads run. This sentence travels with every use.",
+ "edge_schema": {
+  "HOSTS_REGION_OF": {
+   "domain": "State",
+   "range": "Provider"
+  },
+  "SOLE_PROVIDER": {
+   "domain": "State",
+   "range": "Provider"
+  },
+  "CSE_VALUE_SOURCED_FROM": {
+   "domain": "State",
+   "range": "CableSourceDataset"
+  },
+  "CHOKEPOINT_IN": {
+   "domain": "LandingCity",
+   "range": "CableNetwork"
+  },
+  "COUPLED_WITH": {
+   "domain": "Axis",
+   "range": "Axis"
+  },
+  "WITHHELD_UNDER": {
+   "domain": "State",
+   "range": "WithholdingCause"
+  },
+  "SUPERSEDES": {
+   "domain": "Vintage",
+   "range": "Vintage"
+  }
+ },
+ "counts": {
+  "nodes": 68,
+  "edges": 175,
+  "by_kind": {
+   "Axis": 6,
+   "CableNetwork": 1,
+   "CableSourceDataset": 3,
+   "LandingCity": 15,
+   "Provider": 4,
+   "State": 35,
+   "Vintage": 2,
+   "WithholdingCause": 2
+  },
+  "by_edge_type": {
+   "CHOKEPOINT_IN": 15,
+   "COUPLED_WITH": 15,
+   "CSE_VALUE_SOURCED_FROM": 45,
+   "HOSTS_REGION_OF": 89,
+   "SOLE_PROVIDER": 7,
+   "SUPERSEDES": 1,
+   "WITHHELD_UNDER": 3
+  }
+ },
+ "findings": {
+  "sole_provider_and_chokepoint_host": {
+   "states": [],
+   "n": 0,
+   "detail": [],
+   "statement": "Sole hyperscaler on territory AND host of a top-betweenness cable landing city. The composite is a weighted sum and a sum cannot represent a conjunction, so these states appear there only as separate moderate addends. Both limbs are physical.",
+   "falsifier": "A state entering this set whose composite already places it in the high-exposure decile would show the composite is not blind to conjunction, only coarse about it."
+  },
+  "network_fragility": {
+   "critical_node": "Porthcurno, United Kingdom",
+   "tipping_point_removals": 13,
+   "cities_severed_in_one_step": 278,
+   "targeted_at_13_removals": 0.3465,
+   "random_at_88_removals": 0.5864,
+   "statement": "Robust-yet-fragile, already computed and already audited in data/axes/cse_percolation.json. Twelve targeted removals cost 31 cities. The thirteenth, Porthcurno, severs 278. This is the cable finding. It is not a gap and it was never missing.",
+   "source": "data/axes/cse_percolation.json, scripts/percolation_cse.py"
+  },
+  "cse_value_provenance": {
+   "by_dataset": {
+    "SubmarineMap": 35,
+    "EMODnet": 9,
+    "ITU_SCM_proxy": 1
+   },
+   "statement": "A PROVENANCE count, not an infrastructure one. The non-EU SubmarineMap-only rule is a documented and audited disposition: data/axes/emodnet_cse_evidence.json records EMODnet release 20230628 at coverage 0.3429 against the 0.75 BIG gate with verdict NOT REPRODUCIBLE at rho -0.467. The disposition is in the evidence plane. It is not an unrecorded single point of failure and must not be presented as one.",
+   "source": "data/axes/emodnet_cse_evidence.json"
+  }
+ },
+ "nodes": [
+  {
+   "kind": "State",
+   "id": "ARE",
+   "name": "United Arab Emirates",
+   "composite": 56.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "Provider",
+   "id": "AWS"
+  },
+  {
+   "kind": "Provider",
+   "id": "Azure"
+  },
+  {
+   "kind": "CableSourceDataset",
+   "id": "SubmarineMap"
+  },
+  {
+   "kind": "State",
+   "id": "AUS",
+   "name": "Australia",
+   "composite": 43.3,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "Provider",
+   "id": "GCP"
+  },
+  {
+   "kind": "Provider",
+   "id": "OCI"
+  },
+  {
+   "kind": "State",
+   "id": "AUT",
+   "name": "Austria",
+   "composite": 31.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "BEL",
+   "name": "Belgium",
+   "composite": 59.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "CableSourceDataset",
+   "id": "EMODnet"
+  },
+  {
+   "kind": "State",
+   "id": "BHR",
+   "name": "Bahrain",
+   "composite": 58.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "INFR"
+  },
+  {
+   "kind": "State",
+   "id": "BRA",
+   "name": "Brazil",
+   "composite": 28.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "CAN",
+   "name": "Canada",
+   "composite": 26.0,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "CHE",
+   "name": "Switzerland",
+   "composite": 19.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "CHL",
+   "name": "Chile",
+   "composite": 47.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "DEU",
+   "name": "Germany",
+   "composite": 33.3,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "DNK",
+   "name": "Denmark",
+   "composite": 44.0,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "ESP",
+   "name": "Spain",
+   "composite": 60.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "FIN",
+   "name": "Finland",
+   "composite": 38.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "FRA",
+   "name": "France",
+   "composite": 42.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "GBR",
+   "name": "United Kingdom",
+   "composite": 42.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "HKG",
+   "name": "Hong Kong",
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "IDN",
+   "name": "Indonesia",
+   "composite": 40.4,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "INFR"
+  },
+  {
+   "kind": "State",
+   "id": "IND",
+   "name": "India",
+   "composite": 48.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "ISR",
+   "name": "Israel",
+   "composite": 46.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "ITA",
+   "name": "Italy",
+   "composite": 42.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "JPN",
+   "name": "Japan",
+   "composite": 38.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "KOR",
+   "name": "South Korea",
+   "composite": 33.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "MEX",
+   "name": "Mexico",
+   "composite": 41.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "MYS",
+   "name": "Malaysia",
+   "composite": 32.5,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "NLD",
+   "name": "Netherlands",
+   "composite": 46.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "NOR",
+   "name": "Norway",
+   "composite": 29.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "NZL",
+   "name": "New Zealand",
+   "composite": 20.8,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "POL",
+   "name": "Poland",
+   "composite": 49.1,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "ACTIVE"
+  },
+  {
+   "kind": "State",
+   "id": "QAT",
+   "name": "Qatar",
+   "composite": 50.9,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "INFR"
+  },
+  {
+   "kind": "State",
+   "id": "SAU",
+   "name": "Saudi Arabia",
+   "composite": 75.6,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "INFR"
+  },
+  {
+   "kind": "CableSourceDataset",
+   "id": "ITU_SCM_proxy"
+  },
+  {
+   "kind": "State",
+   "id": "SGP",
+   "name": "Singapore",
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "State",
+   "id": "SWE",
+   "name": "Sweden",
+   "composite": 39.7,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "TWN",
+   "name": "Taiwan",
+   "composite": null,
+   "composite_status": "EPIS",
+   "coverage": 0.7,
+   "big_flags": [
+    "WSE"
+   ],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "USA",
+   "name": "United States",
+   "composite": 68.2,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": null
+  },
+  {
+   "kind": "State",
+   "id": "ZAF",
+   "name": "South Africa",
+   "composite": 43.9,
+   "composite_status": "DORM",
+   "coverage": 1.0,
+   "big_flags": [],
+   "csove_tier": "EPIS"
+  },
+  {
+   "kind": "Axis",
+   "id": "WSE"
+  },
+  {
+   "kind": "Axis",
+   "id": "CSE"
+  },
+  {
+   "kind": "Axis",
+   "id": "REE"
+  },
+  {
+   "kind": "Axis",
+   "id": "FPE"
+  },
+  {
+   "kind": "Axis",
+   "id": "ODI"
+  },
+  {
+   "kind": "Axis",
+   "id": "ESE"
+  },
+  {
+   "kind": "WithholdingCause",
+   "id": "SOURCE_RESOLUTION",
+   "statement": "The source measures at a resolution that does not resolve this territory. The value is absent for a measurement reason, and no amount of access would produce it."
+  },
+  {
+   "kind": "WithholdingCause",
+   "id": "SOURCE_POLITICAL_COVERAGE",
+   "statement": "The source's territorial schema does not carry this entity as a separate entry. The value is absent for a coverage reason that is political in origin, not measurement error and not missing data."
+  },
+  {
+   "kind": "Vintage",
+   "id": "v9.0 (2026-08-13)"
+  },
+  {
+   "kind": "Vintage",
+   "id": "v8.9 (2026-08-12)"
+  },
+  {
+   "kind": "CableNetwork",
+   "id": "SubmarineCableNetwork",
+   "cities": 912,
+   "cables": 343,
+   "edges_n": 1489,
+   "components": 76,
+   "baseline_lcc_cities": 625,
+   "source": "scripts/percolation_cse.py"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3215",
+   "city": "Mazara del Vallo, Italy",
+   "country": "Italy"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5884",
+   "city": "Ajigaura, Japan",
+   "country": "Japan"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3650",
+   "city": "Hollywood, Florida, United States",
+   "country": "United States"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3347",
+   "city": "Fortaleza, Brazil",
+   "country": "Brazil"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c10397",
+   "city": "Cambridge Bay, Nunavut, Canada",
+   "country": "Canada"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5760",
+   "city": "Makaha, Hawaii, United States",
+   "country": "United States"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5883",
+   "city": "Shima, Japan",
+   "country": "Japan"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3522",
+   "city": "Cork, Ireland",
+   "country": "Ireland"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5751",
+   "city": "Morro Bay, California, United States",
+   "country": "United States"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3239",
+   "city": "Perth, Australia",
+   "country": "Australia"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5861",
+   "city": "Medan, Indonesia",
+   "country": "Indonesia"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3119",
+   "city": "Penmarch, France",
+   "country": "France"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c3212",
+   "city": "Mumbai, India",
+   "country": "India"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5962",
+   "city": "Fujairah, United Arab Emirates",
+   "country": "United Arab Emirates"
+  },
+  {
+   "kind": "LandingCity",
+   "id": "c5745",
+   "city": "Highbridge, United Kingdom",
+   "country": "United Kingdom"
+  }
+ ],
+ "edges": [
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ARE",
+   "target": "AWS",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ARE",
+   "target": "Azure",
+   "share": 0.6667
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ARE",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "AUS",
+   "target": "AWS",
+   "share": 0.2222
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "AUS",
+   "target": "Azure",
+   "share": 0.4444
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "AUS",
+   "target": "GCP",
+   "share": 0.1111
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "AUS",
+   "target": "OCI",
+   "share": 0.2222
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "AUS",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "AUT",
+   "target": "Azure",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "AUT",
+   "target": "Azure",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "AUT",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BEL",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BEL",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "BEL",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "BEL",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BHR",
+   "target": "AWS",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "BHR",
+   "target": "AWS",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "BHR",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BRA",
+   "target": "AWS",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BRA",
+   "target": "Azure",
+   "share": 0.4
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "BRA",
+   "target": "OCI",
+   "share": 0.4
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "BRA",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CAN",
+   "target": "AWS",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CAN",
+   "target": "Azure",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CAN",
+   "target": "GCP",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CAN",
+   "target": "OCI",
+   "share": 0.25
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "CAN",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CHE",
+   "target": "AWS",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CHE",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CHE",
+   "target": "GCP",
+   "share": 0.25
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "CHE",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CHL",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "CHL",
+   "target": "OCI",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "CHL",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "DEU",
+   "target": "AWS",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "DEU",
+   "target": "Azure",
+   "share": 0.4
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "DEU",
+   "target": "GCP",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "DEU",
+   "target": "OCI",
+   "share": 0.2
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "DEU",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "DEU",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "DNK",
+   "target": "Azure",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "DNK",
+   "target": "Azure",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "DNK",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "DNK",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ESP",
+   "target": "AWS",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ESP",
+   "target": "Azure",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ESP",
+   "target": "GCP",
+   "share": 0.3333
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ESP",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ESP",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "FIN",
+   "target": "GCP",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "FIN",
+   "target": "GCP",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "FIN",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "FRA",
+   "target": "AWS",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "FRA",
+   "target": "Azure",
+   "share": 0.4
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "FRA",
+   "target": "GCP",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "FRA",
+   "target": "OCI",
+   "share": 0.2
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "FRA",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "GBR",
+   "target": "AWS",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "GBR",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "GBR",
+   "target": "GCP",
+   "share": 0.25
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "GBR",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "GBR",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "HKG",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "HKG",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "HKG",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IDN",
+   "target": "AWS",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IDN",
+   "target": "Azure",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IDN",
+   "target": "GCP",
+   "share": 0.3333
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "IDN",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IND",
+   "target": "AWS",
+   "share": 0.2857
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IND",
+   "target": "Azure",
+   "share": 0.4286
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IND",
+   "target": "GCP",
+   "share": 0.1429
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "IND",
+   "target": "OCI",
+   "share": 0.1429
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "IND",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ISR",
+   "target": "AWS",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ISR",
+   "target": "Azure",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ISR",
+   "target": "GCP",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ISR",
+   "target": "OCI",
+   "share": 0.25
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ISR",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ITA",
+   "target": "AWS",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ITA",
+   "target": "Azure",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ITA",
+   "target": "GCP",
+   "share": 0.25
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ITA",
+   "target": "OCI",
+   "share": 0.25
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ITA",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ITA",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "JPN",
+   "target": "AWS",
+   "share": 0.2857
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "JPN",
+   "target": "Azure",
+   "share": 0.2857
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "JPN",
+   "target": "GCP",
+   "share": 0.2857
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "JPN",
+   "target": "OCI",
+   "share": 0.1429
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "JPN",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "KOR",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "KOR",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "KOR",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "MEX",
+   "target": "AWS",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "MEX",
+   "target": "Azure",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "MEX",
+   "target": "OCI",
+   "share": 0.3333
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "MEX",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "MYS",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "MYS",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "MYS",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "NLD",
+   "target": "OCI",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "NLD",
+   "target": "OCI",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "NLD",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "NLD",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "NOR",
+   "target": "Azure",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "NOR",
+   "target": "Azure",
+   "odi_hhi": 100.0,
+   "n_regions": 2
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "NOR",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "NZL",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "NZL",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "NZL",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "POL",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "POL",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "POL",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "POL",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "QAT",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "QAT",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "QAT",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SAU",
+   "target": "OCI",
+   "share": 1.0
+  },
+  {
+   "type": "SOLE_PROVIDER",
+   "source": "SAU",
+   "target": "OCI",
+   "odi_hhi": 100.0,
+   "n_regions": 1
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "SAU",
+   "target": "ITU_SCM_proxy"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "SAU",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SGP",
+   "target": "AWS",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SGP",
+   "target": "GCP",
+   "share": 0.3333
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SGP",
+   "target": "OCI",
+   "share": 0.3333
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "SGP",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SWE",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "SWE",
+   "target": "Azure",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "SWE",
+   "target": "EMODnet"
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "SWE",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "TWN",
+   "target": "AWS",
+   "share": 0.5
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "TWN",
+   "target": "GCP",
+   "share": 0.5
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "TWN",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "USA",
+   "target": "AWS",
+   "share": 0.2105
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "USA",
+   "target": "Azure",
+   "share": 0.4737
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "USA",
+   "target": "GCP",
+   "share": 0.3158
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "USA",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ZAF",
+   "target": "AWS",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ZAF",
+   "target": "Azure",
+   "share": 0.4
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ZAF",
+   "target": "GCP",
+   "share": 0.2
+  },
+  {
+   "type": "HOSTS_REGION_OF",
+   "source": "ZAF",
+   "target": "OCI",
+   "share": 0.2
+  },
+  {
+   "type": "CSE_VALUE_SOURCED_FROM",
+   "source": "ZAF",
+   "target": "SubmarineMap"
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "WSE",
+   "target": "CSE",
+   "r": 0.07
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "WSE",
+   "target": "REE",
+   "r": -0.259
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "WSE",
+   "target": "FPE",
+   "r": -0.211
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "WSE",
+   "target": "ODI",
+   "r": -0.179
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "WSE",
+   "target": "ESE",
+   "r": 0.36
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "CSE",
+   "target": "REE",
+   "r": 0.114
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "CSE",
+   "target": "FPE",
+   "r": -0.095
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "CSE",
+   "target": "ODI",
+   "r": -0.072
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "CSE",
+   "target": "ESE",
+   "r": 0.137
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "REE",
+   "target": "FPE",
+   "r": 0.197
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "REE",
+   "target": "ODI",
+   "r": 0.245
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "REE",
+   "target": "ESE",
+   "r": -0.281
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "FPE",
+   "target": "ODI",
+   "r": 0.783
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "FPE",
+   "target": "ESE",
+   "r": -0.385
+  },
+  {
+   "type": "COUPLED_WITH",
+   "source": "ODI",
+   "target": "ESE",
+   "r": -0.423
+  },
+  {
+   "type": "WITHHELD_UNDER",
+   "source": "HKG",
+   "target": "SOURCE_RESOLUTION",
+   "coverage": 0.7
+  },
+  {
+   "type": "WITHHELD_UNDER",
+   "source": "SGP",
+   "target": "SOURCE_RESOLUTION",
+   "coverage": 0.7
+  },
+  {
+   "type": "WITHHELD_UNDER",
+   "source": "TWN",
+   "target": "SOURCE_POLITICAL_COVERAGE",
+   "coverage": 0.7
+  },
+  {
+   "type": "SUPERSEDES",
+   "source": "v9.0 (2026-08-13)",
+   "target": "v8.9 (2026-08-12)"
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3215",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.070701,
+   "cables": 9,
+   "is_articulation": true
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5884",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.050668,
+   "cables": 3,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3650",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.050056,
+   "cables": 4,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3347",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.049141,
+   "cables": 12,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c10397",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.042689,
+   "cables": 2,
+   "is_articulation": true
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5760",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.035704,
+   "cables": 3,
+   "is_articulation": true
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5883",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.034316,
+   "cables": 6,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3522",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.032864,
+   "cables": 4,
+   "is_articulation": true
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5751",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.031679,
+   "cables": 2,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3239",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.029203,
+   "cables": 6,
+   "is_articulation": true
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5861",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.028484,
+   "cables": 3,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3119",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.02619,
+   "cables": 3,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c3212",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.024343,
+   "cables": 11,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5962",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.023215,
+   "cables": 13,
+   "is_articulation": false
+  },
+  {
+   "type": "CHOKEPOINT_IN",
+   "source": "c5745",
+   "target": "SubmarineCableNetwork",
+   "betweenness": 0.022499,
+   "cables": 4,
+   "is_articulation": true
+  }
+ ]
+}
