@@ -110,11 +110,45 @@
      ],
      "verdict": "REFUSED ON SIGHT under D-015 and L-007",
      "detail": "Statista appeared twice in search results with figures that look authoritative. It is named in refused_publishers. Recorded here so a later reader does not rediscover it and mistake it for a source."
+    },
+    {
+     "target": "OECD Policy Paper 188, 'The Chip Landscape', read from the PDF in Digital Twin R&D",
+     "verdict": "REFUSED ON COVERAGE. Decisive. The lead is closed, not pending.",
+     "read_at": "2026-08-13, 38 pages, 88525 characters extracted",
+     "unit_confirmed": "The paper states verbatim: 'The production capacity of a fab is measured in wafer starts per month (WSPM) in 8-inch (8'') equivalents (EQ)'. That IS the scaffold's canonical_unit wspm_200mm_equivalent with no conversion. The unit was never the problem.",
+     "coverage_measured": {
+      "economies_named_in_paper": 17,
+      "also_in_the_35_state_sample": 15,
+      "states": [
+       "AUT",
+       "CHE",
+       "DEU",
+       "FRA",
+       "IND",
+       "ISR",
+       "ITA",
+       "JPN",
+       "KOR",
+       "MYS",
+       "NLD",
+       "POL",
+       "SGP",
+       "TWN",
+       "USA"
+      ],
+      "bar": 27,
+      "shortfall": 12
+     },
+     "aggregate_rows_present": "RoW appears twice, Europe three times",
+     "why_this_closes_the_lead": "The go_no_go clause written into phase_1 said: 'If the dataset aggregates states into Rest of World or Europe, it fails the aggregate-rows clause and cannot reach 27 states however complete it looks.' It does both. It names 15 of the 35 and folds the remainder into RoW and Europe. No amount of careful extraction reaches 27 from a source that covers 15. The clause predicted the outcome and the outcome is what it predicted.",
+     "what_survives": "OECD remains the correct TAXONOMY authority: the 8-inch-equivalent definition, the node-density and business-model dimensions are directly reusable and are cited in Chips, Nodes and Wafers (OECD 2024). Use the paper for the method and the definitions, never as the coverage source."
     }
    ],
    "verdict": "The axis stays WITHHELD. No source has been admitted for any state, so coverage remains 0 of 35 against a minimum of 27. This is a finding, not a gap to fill: D-007 forbids imputation and the outcome_rule forbids stitching partial sources.",
    "next_action_single": "Retrieve the OECD Semiconductor Production Database tables directly and count the economies. One number decides this axis: if it carries 27 or more of the 35 sample states on one stated 8-inch-equivalent definition, the axis is admissible and v9.0 is unblocked. If it folds smaller producers into a residual region, it fails the aggregate-rows clause and the only remaining route is the paid SEMI World Fab Forecast."
-  }
+  },
+  "verdict": "The axis stays WITHHELD. Coverage 0 of 35 against a minimum of 27. Both public leads are now CLOSED rather than pending: SEMI's public output reports regions, and the OECD paper covers 15 of the 35 states and folds the rest into RoW and Europe. The only remaining admissible route is the paid SEMI World Fab Forecast, which is facility-level, plus a COUNSEL licence review before any derived figure ships under CC-BY-NC. That is a purchase decision, not a research task.",
+  "next_action_single": "Decide whether to buy the SEMI World Fab Forecast. There is no free source that clears 27 of 35 on one definition. Until that decision, SFC stays WITHHELD WITH CAUSE and v9.0 does not build on this axis."
  },
  "measured_against": "v8.5 (2026-08-01)",
  "coverage": {
