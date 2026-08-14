@@ -1,0 +1,84 @@
+{
+ "vintage": "v9.1 (2026-08-14)",
+ "supersedes": "v9.0 (2026-08-13)",
+ "authority": "D-111, operator decision R. Batista Silva 2026-08-14",
+ "why": "The sample is not reduced. It is split into two frames published side by side that test each other. HKG, SGP and TWN are essential to the rare-earth and production-supply-chain ontology and are retained.",
+ "frames": {
+  "states": {
+   "n": 32,
+   "members": [
+    "ARE",
+    "AUS",
+    "AUT",
+    "BEL",
+    "BHR",
+    "BRA",
+    "CAN",
+    "CHE",
+    "CHL",
+    "DEU",
+    "DNK",
+    "ESP",
+    "FIN",
+    "FRA",
+    "GBR",
+    "IDN",
+    "IND",
+    "ISR",
+    "ITA",
+    "JPN",
+    "KOR",
+    "MEX",
+    "MYS",
+    "NLD",
+    "NOR",
+    "NZL",
+    "POL",
+    "QAT",
+    "SAU",
+    "SWE",
+    "USA",
+    "ZAF"
+   ],
+   "comparable_on": [
+    "WSE",
+    "CSE",
+    "REE",
+    "FPE",
+    "ODI",
+    "ESE",
+    "RGD",
+    "composite"
+   ],
+   "statement": "Full substrate composite. Nothing withheld."
+  },
+  "regions": {
+   "n": 3,
+   "members": [
+    "HKG",
+    "SGP",
+    "TWN"
+   ],
+   "comparable_on": [
+    "CSE",
+    "REE",
+    "FPE",
+    "ODI",
+    "ESE",
+    "RGD"
+   ],
+   "not_comparable_on": [
+    "WSE",
+    "composite"
+   ],
+   "cause": {
+    "HKG": "SOURCE_RESOLUTION",
+    "SGP": "SOURCE_RESOLUTION",
+    "TWN": "SOURCE_POLITICAL_COVERAGE"
+   },
+   "statement": "A property of the ENTITY TYPE, not of the data collection. Two are city-territories whose catchment does not resolve at Aqueduct's grid resolution; one is absent from the source's territorial schema. A frame is the correct place to record a property of the entity type."
+  }
+ },
+ "pooling_forbidden": "The two frames are never pooled into one ranking. A composite over seven axes and one over six are different measures, and a table sorting them together is a category error. Gate this, do not request it.",
+ "stress_test": "The frames share five axes and one calibration. A finding that holds in states and inverts in regions is a finding about the frame rather than about the world. Taiwan carrying the highest semiconductor concentration on earth while sitting outside the substrate composite is exactly the case that should be visible rather than hidden."
+}

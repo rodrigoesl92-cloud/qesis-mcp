@@ -1,0 +1,111 @@
+{
+ "id": "SDI",
+ "name": "Semiconductor Dependency Index",
+ "supersedes": {
+  "id": "SFC",
+  "name": "Semiconductor Fabrication Capacity",
+  "status": "RETIRED",
+  "authority": "D-111, operator decision R. Batista Silva 2026-08-14",
+  "retirement_ground": "Physical capacity cannot be robustly measured without violating unit rules (ETO refusal). Dependency maps directly to sovereignty exposure. SFC retired.",
+  "sources_refused": [
+   {
+    "source": "OECD Geographical Distribution of Wafer Fabrication Capacity",
+    "unit": "WSPM 8-inch equivalent",
+    "admissible_unit": true,
+    "coverage": "4 of 35",
+    "ratio": 0.1143,
+    "verdict": "REFUSED ON COVERAGE"
+   },
+   {
+    "source": "OECD Vulnerabilities in the Semiconductor Supply Chain",
+    "unit": null,
+    "verdict": "REFUSED, not a capacity dataset"
+   },
+   {
+    "source": "CSET/ETO Advanced Semiconductor Supply Chain Dataset",
+    "unit": "market_share_pct",
+    "verdict": "REFUSED TWICE: unit is in refused_units, and the source documents HQ-of-ultimate-parent keying and lists physical-location assessment as not recommended"
+   },
+   {
+    "source": "SEMI World Fab Forecast",
+    "unit": "wspm_200mm_equivalent",
+    "verdict": "ADMISSIBLE BUT PAID. Procurement refused by the operator 2026-08-14"
+   }
+  ]
+ },
+ "status": "SPECIFIED, NOT INGESTED",
+ "definition": "Net import dependency on semiconductors and electronic integrated circuits, normalised to a 0-100 stress scale where 100 is maximum dependency. Measures whether a state can obtain chips without another state, which is the exposure the retired capacity axis was a proxy for.",
+ "what_it_cannot_see": "Import dependency cannot distinguish a state that imports by choice from one that imports because it cannot fabricate. A state hosting foreign-owned fabs that export output reads as low dependency for a reason this axis does not observe. Ships in the uncertainty ledger, never as a footnote.",
+ "source": {
+  "publisher": "United Nations Statistics Division",
+  "dataset": "UN Comtrade",
+  "classification": "HS",
+  "codes": [
+   "8541",
+   "8542"
+  ],
+  "codes_meaning": "8541 semiconductor devices; 8542 electronic integrated circuits",
+  "access": "free API key",
+  "rate_limit": {
+   "records_per_query": 100000,
+   "calls_per_day": 500
+  }
+ },
+ "licence_posture": {
+  "verdict": "CONDITIONAL, derived aggregates only",
+  "finding": "UN Comtrade data is UN copyright, internal use only, and may not be re-disseminated in any form without written permission of UNSD.",
+  "conflict": "QESIS+ serves a public index under CC-BY-NC. Serving Comtrade values is redistribution.",
+  "precedent": "The licence block already reads: TeleGeography-derived cable material is published only as derived aggregates, never raw. Same treatment applies.",
+  "rules": [
+   "No raw Comtrade record reaches any served surface or either repository (OBL-1).",
+   "Serve one normalised 0-100 score per state, from which trade values cannot be reconstructed.",
+   "Raw records stay outside the repo under .gitignore; record query params, retrieval date and a SHA-256 of the payload so derivation is reproducible without republishing the input.",
+   "Attribution wherever the axis appears: Derived from UN Comtrade, United Nations Statistics Division.",
+   "Rate-limit the ingest to the free tier. Breaching it is a licence matter, not an engineering one (OBL-2)."
+  ],
+  "escalation": "OBL-3. Seek UNSD confirmation before any paid tier includes this axis. COUNSEL is not a lawyer."
+ },
+ "ingestion_contract": {
+  "canonical_unit": "net_import_dependency_0_100",
+  "required_fields_per_state": [
+   "iso3",
+   "imports_usd",
+   "exports_usd",
+   "reference_year",
+   "hs_codes"
+  ],
+  "required_provenance": [
+   "origin_url",
+   "publisher",
+   "license",
+   "retrieved_at",
+   "payload_sha256"
+  ],
+  "refused_units": [
+   "fab_count",
+   "market_share_pct",
+   "revenue",
+   "wspm"
+  ],
+  "aggregate_rows_refused": "A row naming anything that is not an entity in the sample is refused. EU, ASEAN and World cannot stand in for their members.",
+  "reexport_caveat": "Entrepot economies re-export at high volume. Net balance, never gross imports, or Singapore and the Netherlands read as self-sufficient."
+ },
+ "big_gate": {
+  "coverage_min": 0.75,
+  "minimum_states": 27,
+  "rule": "Publishable only when at least 75 percent of the frame carries an admitted value. Below that, withheld with cause per state, never imputed (D-007)."
+ },
+ "coverage": {
+  "expected": "35 of 35",
+  "measured": null,
+  "note": "EXPECTED, NOT MEASURED. No Comtrade record has been retrieved. Stated as expectation because asserting coverage before ingest is the D-101 pattern."
+ },
+ "calibration": {
+  "anchors": null,
+  "note": "No anchors until real values exist. Anchors are part of the result, never a setting (fsqca.calibration.declared_because)."
+ },
+ "composite_weight": {
+  "value": null,
+  "note": "Undecided. Adding an axis changes every composite, so it does not enter the weighted sum until ingest and calibration close. HUMAN decides."
+ }
+}

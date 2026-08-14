@@ -81,6 +81,26 @@
    "sovereign_infra_commit": "7a9da8c68a0b6cc361573c0c88625fc190f9080d",
    "single_repo_reason": null,
    "summary": "Provenance-complete vintage, cut by scripts/bump_vintage.py, which is the first generator the served index has had since v8.4. Metadata release: vintage, supersedes and change_log_vintages are the only keys that move, asserted by diffing every key before and after the write. No score, weight or axis value was recomputed, and this is checkable rather than asserted: the index was byte-identical to the v8.9 artifact f5c393b8e82bfdb9 immediately before the bump. Publishes work already recorded in the evidence plane and gated here: the SFC axis intake (scripts/scout_sfc_intake.py, data/axes/v9_sfc_scaffold.json) with the axis still WITHHELD at 0 of 35 and verify_axis_sfc.py enforcing that the declared status matches measured coverage; the EMODnet CSE evidence re-export against AUDIT-1; the chain spine re-export carrying the v9.0 binding; service identity declared once (data/domains.json, scripts/verify_domains.py); the pre-build deploy gate (scripts/vercel_gate.py) that refuses to build a tree whose gates fail; and the dashboard generator gate (scripts/verify_dashboard.py, R1.27). In the evidence plane, every retrieval chunk now carries a licence. Six Tier C quarantined tables remain open pending rights review and are NOT closed by this vintage."
+  },
+  {
+   "vintage": "v9.1 (2026-08-14)",
+   "supersedes": "v9.0 (2026-08-13)",
+   "qesis_mcp_commit": "PENDING, filled at commit per commit_reference_rule",
+   "sovereign_infra_commit": "PENDING, filled at commit per commit_reference_rule",
+   "single_repo_reason": null,
+   "decided_by": "R. Batista Silva",
+   "summary": "D-111. SFC retired and replaced by SDI, semiconductor import dependency from UN Comtrade, on the ground that physical capacity cannot be robustly measured without violating unit rules. Three sources retrieved and refused on the record: OECD wafer capacity at 4 of 35, OECD supply-chain paper carrying no capacity data, CSET/ETO refused twice on unit and on HQ keying. The sample is NOT reduced: it splits into two published frames, states n=32 and regions n=3, which share five axes and one calibration and therefore test each other. U-03 fidelity extended from 3 to 32 of 32 in frame with DEU reproducing at 0.9430 against the published 0.943. U-04 closed as bounded intervals, 30 of 35 decidable and 5 named. U-07 overrides exported. U-02 restated. Sponsorship register opened for the licence-bound gaps.",
+   "artefacts": [
+    "data/qesis_v9_1.json",
+    "data/frames_v9_1.json",
+    "data/axes/v9_1_sdi_scaffold.json",
+    "data/axes/fidelity_full_sample.json",
+    "data/axes/odi_capacity_bounds.json",
+    "data/axes/u07_odi_override_export.json",
+    "data/axes/u02_restatement.json",
+    "ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md",
+    "ops/SPONSORSHIP_REGISTER.md"
+   ]
   }
  ]
 }
