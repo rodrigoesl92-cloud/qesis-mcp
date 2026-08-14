@@ -1,0 +1,298 @@
+{
+ "vintage": "v9.0 (2026-08-13)",
+ "generator": "scripts/compute_fidelity.py",
+ "closes": "U-03",
+ "method": "Bhattacharyya fidelity between trace-normalised stress distributions over WSE, CSE, REE, FPE, ODI, ESE. F = [Tr sqrt(sqrt(rho) sigma sqrt(rho))]^2, which on diagonal operators reduces exactly to the squared Bhattacharyya coefficient. Structural Lack = 1 - F.",
+ "anchors": {
+  "WSE": 10.0,
+  "CSE": 10.0,
+  "REE": 40.0,
+  "FPE": 30.0,
+  "ODI": 27.1,
+  "ESE": 22.74,
+  "note": "WSE, CSE, REE, FPE are declared constants. ODI and ESE are the 10th sample percentile, computed each run rather than carried, so the anchor cannot go stale against the sample it anchors."
+ },
+ "coverage": {
+  "computed": 32,
+  "in_scope": 32,
+  "out_of_scope": 3,
+  "of_index": 35,
+  "ratio_of_in_scope": 1.0
+ },
+ "out_of_scope": {
+  "HKG": {
+   "name": "Hong Kong",
+   "absent_axes": [
+    "WSE"
+   ],
+   "reason": "OUT_OF_SCOPE",
+   "statement": "Excluded from the substrate sample by operator decision. Retained in the index for the rare-earth and production-supply-chain question, where it is in scope. Not a coverage failure."
+  },
+  "SGP": {
+   "name": "Singapore",
+   "absent_axes": [
+    "WSE"
+   ],
+   "reason": "OUT_OF_SCOPE",
+   "statement": "Excluded from the substrate sample by operator decision. Retained in the index for the rare-earth and production-supply-chain question, where it is in scope. Not a coverage failure."
+  },
+  "TWN": {
+   "name": "Taiwan",
+   "absent_axes": [
+    "WSE"
+   ],
+   "reason": "OUT_OF_SCOPE",
+   "statement": "Excluded from the substrate sample by operator decision. Retained in the index for the rare-earth and production-supply-chain question, where it is in scope. Not a coverage failure."
+  }
+ },
+ "acceptance_test": {
+  "state": "DEU",
+  "published": 0.943,
+  "computed": 0.943,
+  "status": "PASS",
+  "why": "The one published value the declared method reproduces. It is the fixture that proves the specification rather than a coincidence, and the build fails without it."
+ },
+ "supersedes": {
+  "values": {
+   "DEU": 0.943,
+   "ESP": 0.782,
+   "GBR": 0.833
+  },
+  "reproducible": [
+   "DEU"
+  ],
+  "not_reproducible": [
+   "ESP",
+   "GBR"
+  ],
+  "search": "96 specifications tested: every subset of the six axes from size 3 to 6, with and without ree_stress_2026 substituted for the REE base. None reproduces ESP 0.782 or GBR 0.833.",
+  "reading": "The method is confirmed and the two outliers are not derivable from the axes published beside them. That is the D-101 pattern, and the D-101 remedy applies: recompute at build time and retire the carried figures. No value is recovered and none is quietly retro-fitted.",
+  "authority": "U-03 closure, 2026-08-14"
+ },
+ "scores": {
+  "ARE": {
+   "name": "United Arab Emirates",
+   "fidelity": 0.8729,
+   "structural_lack": 0.1271
+  },
+  "AUS": {
+   "name": "Australia",
+   "fidelity": 0.9209,
+   "structural_lack": 0.0791
+  },
+  "AUT": {
+   "name": "Austria",
+   "fidelity": 0.8794,
+   "structural_lack": 0.1206
+  },
+  "BEL": {
+   "name": "Belgium",
+   "fidelity": 0.8969,
+   "structural_lack": 0.1031
+  },
+  "BHR": {
+   "name": "Bahrain",
+   "fidelity": 0.8914,
+   "structural_lack": 0.1086
+  },
+  "BRA": {
+   "name": "Brazil",
+   "fidelity": 0.9721,
+   "structural_lack": 0.0279
+  },
+  "CAN": {
+   "name": "Canada",
+   "fidelity": 0.9753,
+   "structural_lack": 0.0247
+  },
+  "CHE": {
+   "name": "Switzerland",
+   "fidelity": 0.9171,
+   "structural_lack": 0.0829
+  },
+  "CHL": {
+   "name": "Chile",
+   "fidelity": 0.8441,
+   "structural_lack": 0.1559
+  },
+  "DEU": {
+   "name": "Germany",
+   "fidelity": 0.943,
+   "structural_lack": 0.057
+  },
+  "DNK": {
+   "name": "Denmark",
+   "fidelity": 0.9647,
+   "structural_lack": 0.0353
+  },
+  "ESP": {
+   "name": "Spain",
+   "fidelity": 0.8784,
+   "structural_lack": 0.1216
+  },
+  "FIN": {
+   "name": "Finland",
+   "fidelity": 0.955,
+   "structural_lack": 0.045
+  },
+  "FRA": {
+   "name": "France",
+   "fidelity": 0.9301,
+   "structural_lack": 0.0699
+  },
+  "GBR": {
+   "name": "United Kingdom",
+   "fidelity": 0.9551,
+   "structural_lack": 0.0449
+  },
+  "IDN": {
+   "name": "Indonesia",
+   "fidelity": 0.94,
+   "structural_lack": 0.06
+  },
+  "IND": {
+   "name": "India",
+   "fidelity": 0.8929,
+   "structural_lack": 0.1071
+  },
+  "ISR": {
+   "name": "Israel",
+   "fidelity": 0.8332,
+   "structural_lack": 0.1668
+  },
+  "ITA": {
+   "name": "Italy",
+   "fidelity": 0.9027,
+   "structural_lack": 0.0973
+  },
+  "JPN": {
+   "name": "Japan",
+   "fidelity": 0.9493,
+   "structural_lack": 0.0507
+  },
+  "KOR": {
+   "name": "South Korea",
+   "fidelity": 0.8907,
+   "structural_lack": 0.1093
+  },
+  "MEX": {
+   "name": "Mexico",
+   "fidelity": 0.8617,
+   "structural_lack": 0.1383
+  },
+  "MYS": {
+   "name": "Malaysia",
+   "fidelity": 0.9815,
+   "structural_lack": 0.0185
+  },
+  "NLD": {
+   "name": "Netherlands",
+   "fidelity": 0.9116,
+   "structural_lack": 0.0884
+  },
+  "NOR": {
+   "name": "Norway",
+   "fidelity": 0.8995,
+   "structural_lack": 0.1005
+  },
+  "NZL": {
+   "name": "New Zealand",
+   "fidelity": 0.9445,
+   "structural_lack": 0.0555
+  },
+  "POL": {
+   "name": "Poland",
+   "fidelity": 0.9485,
+   "structural_lack": 0.0515
+  },
+  "QAT": {
+   "name": "Qatar",
+   "fidelity": 0.8635,
+   "structural_lack": 0.1365
+  },
+  "SAU": {
+   "name": "Saudi Arabia",
+   "fidelity": 0.9016,
+   "structural_lack": 0.0984
+  },
+  "SWE": {
+   "name": "Sweden",
+   "fidelity": 0.941,
+   "structural_lack": 0.059
+  },
+  "USA": {
+   "name": "United States",
+   "fidelity": 0.8602,
+   "structural_lack": 0.1398
+  },
+  "ZAF": {
+   "name": "South Africa",
+   "fidelity": 0.8686,
+   "structural_lack": 0.1314
+  }
+ },
+ "most_structural_lack": [
+  {
+   "iso3": "ISR",
+   "name": "Israel",
+   "fidelity": 0.8332,
+   "structural_lack": 0.1668
+  },
+  {
+   "iso3": "CHL",
+   "name": "Chile",
+   "fidelity": 0.8441,
+   "structural_lack": 0.1559
+  },
+  {
+   "iso3": "USA",
+   "name": "United States",
+   "fidelity": 0.8602,
+   "structural_lack": 0.1398
+  },
+  {
+   "iso3": "MEX",
+   "name": "Mexico",
+   "fidelity": 0.8617,
+   "structural_lack": 0.1383
+  },
+  {
+   "iso3": "QAT",
+   "name": "Qatar",
+   "fidelity": 0.8635,
+   "structural_lack": 0.1365
+  }
+ ],
+ "least_structural_lack": [
+  {
+   "iso3": "GBR",
+   "name": "United Kingdom",
+   "fidelity": 0.9551,
+   "structural_lack": 0.0449
+  },
+  {
+   "iso3": "DNK",
+   "name": "Denmark",
+   "fidelity": 0.9647,
+   "structural_lack": 0.0353
+  },
+  {
+   "iso3": "BRA",
+   "name": "Brazil",
+   "fidelity": 0.9721,
+   "structural_lack": 0.0279
+  },
+  {
+   "iso3": "CAN",
+   "name": "Canada",
+   "fidelity": 0.9753,
+   "structural_lack": 0.0247
+  },
+  {
+   "iso3": "MYS",
+   "name": "Malaysia",
+   "fidelity": 0.9815,
+   "structural_lack": 0.0185
+  }
+ ]
+}

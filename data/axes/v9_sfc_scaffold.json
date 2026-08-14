@@ -48,7 +48,7 @@
   "baseline_identity": "Two sources may be merged only on proof that their 200mm-equivalent conversion is identical. A dataset for Asia on one baseline and a dataset for Europe on another produces a column that is not comparable across its own rows, and the gate cannot detect that from the values alone."
  },
  "source_audit_protocol": {
-  "status": "PHASE 1 AND 2 EXECUTED 2026-08-13. Axis remains WITHHELD.",
+  "status": "PHASE 1, 2 AND 3 EXECUTED. Phase 3 closed 2026-08-14. Axis remains WITHHELD.",
   "provenance_of_this_plan": "Supplied by the operator 2026-08-07. The leads below are pointers to audit, not findings. None has been retrieved, opened or verified by this repository, and nothing here may be cited as evidence that such a dataset exists.",
   "phase_1_policy_network": {
    "vector": "Policy institutes synthesise capacity data; they do not count wafers. The objective is their appendices, bibliographies and data-licensing disclosures, to reach the primary source behind their charts.",
@@ -148,7 +148,57 @@
    "next_action_single": "Retrieve the OECD Semiconductor Production Database tables directly and count the economies. One number decides this axis: if it carries 27 or more of the 35 sample states on one stated 8-inch-equivalent definition, the axis is admissible and v9.0 is unblocked. If it folds smaller producers into a residual region, it fails the aggregate-rows clause and the only remaining route is the paid SEMI World Fab Forecast."
   },
   "verdict": "The axis stays WITHHELD. Coverage 0 of 35 against a minimum of 27. Both public leads are now CLOSED rather than pending: SEMI's public output reports regions, and the OECD paper covers 15 of the 35 states and folds the rest into RoW and Europe. The only remaining admissible route is the paid SEMI World Fab Forecast, which is facility-level, plus a COUNSEL licence review before any derived figure ships under CC-BY-NC. That is a purchase decision, not a research task.",
-  "next_action_single": "Decide whether to buy the SEMI World Fab Forecast. There is no free source that clears 27 of 35 on one definition. Until that decision, SFC stays WITHHELD WITH CAUSE and v9.0 does not build on this axis."
+  "next_action_single": "Decide whether to buy the SEMI World Fab Forecast. There is no free source that clears 27 of 35 on one definition. Until that decision, SFC stays WITHHELD WITH CAUSE and v9.0 does not build on this axis.",
+  "phase_3_retrieval": {
+   "executed": "2026-08-14",
+   "closes": "the standing caveat that no lead had been retrieved, opened or verified by this repository. Both leads have now been opened and read against the ingestion contract.",
+   "sources_opened": [
+    {
+     "file": "Digital Twin R&D/GEOGRAPHICAL DISTRIBUTION OF WAFER FABRICATION CAPACITY_semicondutor axis.pdf",
+     "pages": 38,
+     "publisher": "OECD, drawing on SEMI World Fab Forecast and TechInsights WFW",
+     "unit_declared": "WSPM in 8-inch equivalents",
+     "unit_verdict": "ADMISSIBLE. 8-inch is 200mm, so the source unit equals the canonical wspm_200mm_equivalent. This is the one contract clause the source clears."
+    },
+    {
+     "file": "Digital Twin R&D/vulnerabilities in the semicondutor supply chain_OECD.pdf",
+     "pages": 35,
+     "publisher": "OECD",
+     "unit_verdict": "REFUSED. Two occurrences of capacity and no WSPM figures. It is a supply-chain risk paper, not a capacity dataset."
+    }
+   ],
+   "coverage_measured": {
+    "sample_states_with_a_wspm_figure": [
+     "DEU",
+     "JPN",
+     "TWN",
+     "USA"
+    ],
+    "n": 4,
+    "of": 35,
+    "ratio": 0.1143,
+    "required_ratio": 0.75,
+    "required_states": 27,
+    "note": "China and Chinese Taipei carry the largest figures. China is not in the 35-state sample. Even reading every named economy generously the count does not exceed 6."
+   },
+   "closed_world_assumption_tested": {
+    "hypothesis": "If the underlying fab database were a global census, a state absent from it would carry a MEASURED zero capacity rather than a missing value, and the axis would unlock at full coverage.",
+    "verdict": "REFUSED BY THE SOURCE ITSELF",
+    "evidence": [
+     "'incomplete geographic coverage' (p.395)",
+     "'Data coverage is uneven across economies' (p.407)",
+     "'Neither of the datasets are fully complete, correct and accurate' (p.1232)",
+     "'missing information, coverage biases and inaccuracies can be expected' (p.1233)"
+    ],
+    "reading": "Absence from an admittedly uneven dataset is not a measured zero. Treating it as one would convert a coverage bias into a stress score of 100 for every unlisted state, which is imputation wearing a measurement's clothes and is refused by D-007."
+   },
+   "further_contract_failures": [
+    "Most figures are disaggregated per chip type, not a single installed_capacity_wspm per state.",
+    "A large share of the reported figures are UPCOMING capacity, refused outright by the announced_capacity clause.",
+    "No row carries process_nodes_covered, reference_year and per-state provenance in the required shape."
+   ],
+   "verdict": "REFUSE. The axis remains WITHHELD WITH CAUSE. The gate worked: a source measured in the right unit but covering 4 of 35 states was refused on coverage rather than admitted on unit."
+  }
  },
  "measured_against": "v8.5 (2026-08-01)",
  "coverage": {
@@ -192,6 +242,7 @@
    "TWN",
    "USA",
    "ZAF"
-  ]
+  ],
+  "audit_note": "cited remains 0 because no state cleared the full ingestion contract. Four states carry an admissible-unit figure but fail the per-state required_fields and provenance clauses. See source_audit_protocol.phase_3_retrieval."
  }
 }

@@ -1,0 +1,9 @@
+{
+ "id": "U-02",
+ "action": "RESTATE, severity unchanged at high",
+ "stale_text_removed": "described the fsQCA as awaiting a re-run",
+ "current_position": "The re-run is complete (2026-08-01). All five D-103 violations A to E are resolved and diagnostics.present_in_every_sufficient_path is now empty, so violation C is demonstrably closed. No withdrawn figure is recovered: the re-run supersedes them and DECLINES the necessity label under D-109.",
+ "what_remains_high": "The outcome is still calibrated from the published composite, so the analysis explains the index using the axes the index is built from. fsqca.conceptual_independence_test.standing_limitation states this plainly. That circularity is the reason the entry stays high severity, and it is unresolved, not stale.",
+ "closes_when": "An outcome sourced from outside the index. D-110 KG-4 owns it.",
+ "authority": "D-111 change set, R. Batista Silva 2026-08-14"
+}

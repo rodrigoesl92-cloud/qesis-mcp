@@ -1,0 +1,35 @@
+{
+ "id": "U-07",
+ "closes": "the v8.0 ordinal ODI manual overrides were recorded in no export",
+ "authority": "D-111 change set, R. Batista Silva 2026-08-14",
+ "rule_as_declared": "ODI_ordinal = 100*(4-n_providers)/3, a 4-level count proxy",
+ "finding": "Four states carried a value one step BELOW what that rule produces, applied by hand and recorded nowhere. Any analysis reproducing the v8.0 ODI from its documented rule disagrees on exactly these four.",
+ "overrides": [
+  {
+   "iso3": "NLD",
+   "direction": "one step below the stated rule",
+   "vintage_applied": "v8.0",
+   "superseded_by": "D-045, continuous Herfindahl from v8.1"
+  },
+  {
+   "iso3": "HKG",
+   "direction": "one step below the stated rule",
+   "vintage_applied": "v8.0",
+   "superseded_by": "D-045, continuous Herfindahl from v8.1"
+  },
+  {
+   "iso3": "KOR",
+   "direction": "one step below the stated rule",
+   "vintage_applied": "v8.0",
+   "superseded_by": "D-045, continuous Herfindahl from v8.1"
+  },
+  {
+   "iso3": "SGP",
+   "direction": "one step below the stated rule",
+   "vintage_applied": "v8.0",
+   "superseded_by": "D-045, continuous Herfindahl from v8.1"
+  }
+ ],
+ "status": "EXPORTED. The discrepancy is now explainable rather than mysterious. The values themselves were superseded by D-045 and no current figure depends on them.",
+ "why_retained": "Deleting the record would make the v8.0 to v8.1 delta unexplainable to a reader reproducing either vintage."
+}
