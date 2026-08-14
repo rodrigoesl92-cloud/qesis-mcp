@@ -157,6 +157,28 @@ def main() -> int:
             + (f" · exemption: {row['single_repo_reason'][:60]}"
                if row.get("single_repo_reason") else ""))
 
+
+    # ── R1.28. THE REGISTER TAIL MUST BE THE SERVED VINTAGE.
+    # Added 2026-08-14 after the register announced v9.1 while the index served
+    # v9.0 for several hours, through a full merge and promotion, with every
+    # other gate green. This gate read the lineage file and never compared its
+    # TAIL to the vintage the index declares, so a register could advertise a
+    # vintage nobody serves. That is the CONC-1 family: one field resolved, another
+    # still saying something else, and no control asserting the two agree.
+    # A vintage is defined by its PAYLOAD. Scaffolding beside the index is not a
+    # vintage, however much of it there is.
+    tail = entries[-1] if entries else None
+    if tail is None:
+        failures.append("the lineage register carries no entries at all")
+    elif tail.get("vintage") != served:
+        failures.append(
+            f"register tail is {tail.get('vintage')!r} but the index serves {served!r}. "
+            f"A register that announces a vintage the index does not serve is a phantom "
+            f"vintage. Either bump the index with scripts/bump_vintage.py, or withdraw "
+            f"the entry. Do not promote with the two disagreeing.")
+    else:
+        say(f"  ok    register tail agrees with the served vintage: {served}")
+
     if failures:
         print("\nFAILED:", file=sys.stderr)
         for f in failures:
