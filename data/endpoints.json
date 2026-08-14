@@ -1,0 +1,22 @@
+{
+  "why": "The single declaration of every MCP endpoint this repository DIALS OUT to. data/domains.json declares who this service is when it answers; this file declares who it calls. Both exist for the same reason: a value typed in more than one place drifts, and nothing notices until a consumer talks to the wrong process. scripts/verify_endpoints.py fails the build if an endpoint literal appears anywhere that is not declared here, and qesis_endpoints.py is the only sanctioned reader.",
+  "endpoints": {
+    "horizon": {
+      "env": "QESIS_HORIZON_ENDPOINT",
+      "default": "http://127.0.0.1:8000/sse",
+      "transport": "sse",
+      "plane": "working tree",
+      "what": "The Subsea and TeleGeography MCP that infrastructure_mcp.py queries for physical cable and landing point data. Consumed by infrastructure_mcp.fetch_physical_infrastructure and exercised by test_client.py.",
+      "operator_note": "The declared default is loopback, so it resolves only on a machine where the server is already running. Use the exact URL printed by that server in the terminal: set QESIS_HORIZON_ENDPOINT rather than editing this file, because the port moves between runs and an edit here is a commit that says the port changed for everyone."
+    }
+  },
+  "resolution_order": [
+    "the environment variable named in `env`, when it is set and non-empty",
+    "the `default` declared above"
+  ],
+  "credentials": "G-03 and G-04. This file names environment variables and never holds a value that authenticates anything. An endpoint that needs a credential declares the variable and stops there. No agent supplies the value, in either direction, including for the purpose of testing whether it is dead.",
+  "planes": "G-01b. `plane` records which of the two planes an endpoint belongs to. `working tree` means it is read from a process running against the local checkout and carries no deployment_commit. That is not a defect, and a reader is always told which plane answered: qesis_endpoints.resolve returns the source alongside the URL so a caller can print it.",
+  "provenance": {
+    "2026-08-14": "Recovered from an untracked file at the repository root named `horizon_endpoint = http127.0.0.1800.txt`, whose entire content was the horizon default and the instruction to use the URL printed in the terminal. ops/SESSION_REPORT_2026-08-08.md had already listed that file as litter without reading what it carried, so the direction it held sat unimplemented while the same literal was typed a second and third time into infrastructure_mcp.py and test_client.py. Same failure family as L-089, which is one identity declared in four places with three values. Made in the Default and not yet propagated: see ops/ENDPOINT_DECLARATION_PROPAGATION.md."
+  }
+}
