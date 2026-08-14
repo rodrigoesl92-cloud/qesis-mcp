@@ -326,6 +326,18 @@ def check_pairing(results: list[tuple[str, bool]]) -> None:
         "vintage": "v8.9 (2099-01-01)", "qesis_mcp_commit": "pending",
         "sovereign_infra_commit": "pending", "single_repo_reason": None,
         "summary": "a later vintage, so the served one is not this row"})
+    # R1.28, added 2026-08-14 (L-117). The register TAIL announces a vintage the
+    # index does not serve. This survived a merge and a promotion with every other
+    # gate green, because the pairing gate read the register and never compared its
+    # tail to the served vintage. A vintage is defined by its payload, not by
+    # scaffolding beside it. The ACCEPT fixture is the unmodified register, which
+    # "pairing baseline passes" above already exercises.
+    phantom_tail = json.loads(json.dumps(reg))
+    phantom_tail["entries"].append({
+        "vintage": "v99.9 (2099-01-01)", "qesis_mcp_commit": None,
+        "sovereign_infra_commit": None, "single_repo_reason": "fixture",
+        "summary": "phantom tail, the index never served this"})
+
     old_pending = json.loads(json.dumps(reg))
     for e in old_pending["entries"]:
         if e["vintage"] != served:
@@ -339,6 +351,7 @@ def check_pairing(results: list[tuple[str, bool]]) -> None:
         ("pairing: row says nothing", silent, "G1.3"),
         ("pairing: duplicate rows", duped, "G1.4"),
         ("pairing: pending outlives its vintage", old_pending, "G1.2"),
+        ("pairing: register tail is a phantom vintage", phantom_tail, "register tail is"),
     ]:
         rc, out = run(r)
         results.append((f"caught: {name}", rc != 0 and expect in out))
