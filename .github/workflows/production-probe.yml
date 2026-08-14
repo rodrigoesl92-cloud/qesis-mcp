@@ -39,11 +39,34 @@ jobs:
           python scripts/verify_production.py "${{ steps.expect.outputs.index_sha }}" "${{ github.sha }}" | tee probe.txt
           echo "exit=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
 
+      # L-095. Exit 2 is TRANSPORT: production did not answer, or answered with
+      # something that is not JSON. One of those is usually a deploy still
+      # propagating. Exit 1 is CERTIFICATION: production answered and disagreed
+      # with the committed artefact, which is always real and always pages.
+      # The two-strike rule was promised in the issue body from the day it was
+      # written and implemented nowhere. A rule held only in prose has been
+      # described, not applied (L-054).
+      - name: Two-strike gate for transport failures
+        id: strike
+        if: steps.run.outputs.exit == '2'
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const r = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner, repo: context.repo.repo,
+              workflow_id: 'production-probe.yml', status: 'completed', per_page: 2
+            });
+            // The run before this one. If it also failed, this is strike two.
+            const prev = r.data.workflow_runs.find(x => x.id !== context.runId);
+            const second = prev && prev.conclusion === 'failure';
+            core.setOutput('page', second ? 'yes' : 'no');
+            core.info(second
+              ? 'Second consecutive transport failure. Paging.'
+              : 'First transport failure. Holding. Production is not declared down on one miss.');
+
       - name: Raise an issue if production is not verified
-        if: steps.run.outputs.exit != '0'
-        # SEC-1 UNPINNED. Resolve and replace, do not guess:
-        #   gh api repos/actions/github-script/commits/v7 --jq .sha
-        uses: actions/github-script@v7
+        if: steps.run.outputs.exit == '1' || steps.strike.outputs.page == 'yes'
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const fs = require('fs');
@@ -80,9 +103,7 @@ jobs:
 
       - name: Close the alert when production is healthy again
         if: steps.run.outputs.exit == '0'
-        # SEC-1 UNPINNED. Resolve and replace, do not guess:
-        #   gh api repos/actions/github-script/commits/v7 --jq .sha
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const open = await github.rest.issues.listForRepo({

@@ -42,9 +42,17 @@ Say "remote : $(git remote get-url origin)"
 Say "mode   : $(if ($Apply) { 'APPLY' } else { 'DRY RUN, pass -Apply to execute' })" `
   $(if ($Apply) { "Green" } else { "Yellow" })
 
-# Preconditions. A dirty tree turns a prune into data loss.
-if (git status --porcelain) { throw "Working tree is dirty. Commit or stash first." }
+# Preconditions.
+# A dirty tree turns a PRUNE into data loss. It does not affect a dry run, which
+# mutates nothing. v1 threw before printing anything, so the one mode that was
+# safe to run on a dirty tree was the only mode you could not run. Guard the
+# destructive path, not the inspection path.
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) { throw "gh CLI not found." }
+$dirty = [bool](git status --porcelain)
+if ($dirty) {
+  if ($Apply) { throw "Working tree is dirty and -Apply deletes branches. Commit or stash first." }
+  Say "  NOTE: working tree is dirty. Dry run is safe; -Apply will refuse until it is clean." Yellow
+}
 git fetch --all --prune | Out-Null
 
 # ─────────────────────────────────────────────────────────────────────────────
