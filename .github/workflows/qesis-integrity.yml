@@ -1,4 +1,4 @@
-name: QESIS+ integrity gate
+﻿name: QESIS+ integrity gate
 
 # Runs in GitHub's cloud, not on the build machine. The gate reads only the
 # committed index, so it needs no OneDrive, no database and no local runtime.
