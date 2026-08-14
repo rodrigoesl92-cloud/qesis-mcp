@@ -413,6 +413,66 @@ def check_contract(results: list[tuple[str, bool]]) -> None:
             INDEX.read_bytes() == original))
 
 
+ENDPOINT_GATE = ROOT / "scripts" / "verify_endpoints.py"
+
+
+def check_endpoints(results: list[tuple[str, bool]]) -> None:
+    """V-2 for verify_endpoints.py: one fixture it must accept, three it must refuse.
+
+    Built in a temporary tree rather than by mutating the repository, because
+    the interesting refusal is an undeclared literal and writing one into the
+    working tree to prove a point is how a fixture becomes a defect.
+
+    The case that matters most is the second: a literal that AGREES with the
+    declaration today. A gate that only refuses disagreement certifies the state
+    of one afternoon. The horizon endpoint's three copies all agreed with each
+    other on the day they were written, and the copy that carried the operator
+    instruction was still the one no consumer read.
+    """
+    if not ENDPOINT_GATE.exists():
+        results.append(("endpoint gate present", False))
+        return
+
+    # The fixture values are READ from the declaration, never retyped here.
+    # Two reasons. The gate refuses endpoint literals in *.py and this file is
+    # *.py, so a retyped fixture makes the self-test fail the gate it is testing.
+    # The better reason is L-014's shape: a fixture holding its own copy of the
+    # value under test stops exercising the real case the moment the declaration
+    # moves, and goes on passing while it does.
+    decl = json.loads((ROOT / "data" / "endpoints.json").read_text(
+        encoding="utf-8"))
+    declared_url = decl["endpoints"]["horizon"]["default"]
+    # An address that is well formed and NOT declared. Derived so it stays
+    # undeclared however the declaration changes.
+    undeclared_url = declared_url.replace("://", "://x-", 1) + "-undeclared"
+
+    def run(consumer: str | None, declaration: dict | None) -> tuple[int, str]:
+        d = Path(tempfile.mkdtemp())
+        (d / "data").mkdir()
+        if declaration is not None:
+            (d / "data" / "endpoints.json").write_text(
+                json.dumps(declaration), encoding="utf-8")
+        if consumer is not None:
+            (d / "consumer.py").write_text(consumer, encoding="utf-8")
+        p = subprocess.run([sys.executable, str(ENDPOINT_GATE), "--root", str(d),
+                            "--quiet"], capture_output=True, text=True)
+        return p.returncode, (p.stdout + p.stderr)
+
+    clean = "from qesis_endpoints import resolve\nurl = resolve('horizon').url\n"
+    rc, out = run(clean, decl)
+    results.append(("endpoints: resolved consumer passes", rc == 0))
+
+    for name, consumer, declaration, expect in [
+        ("endpoints: declared value retyped at call site",
+         f'ep = "{declared_url}"\n', decl, "E1.1"),
+        ("endpoints: undeclared endpoint dialled",
+         f'ep = "{undeclared_url}"\n', decl, "E1.2"),
+        ("endpoints: declaration absent", clean, None, "E1.0"),
+    ]:
+        rc, out = run(consumer, declaration)
+        results.append((f"caught: {name}", rc != 0 and expect in out))
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -465,6 +525,7 @@ def main() -> int:
     check_chain(extra)
     check_pairing(extra)
     check_contract(extra)
+    check_endpoints(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

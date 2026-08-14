@@ -2,14 +2,20 @@ import asyncio
 from mcp import ClientSession
 from mcp.client.sse import sse_client
 
+from qesis_endpoints import describe, resolve
+
 async def test_local_subsea_connection():
-    # Routing directly to the local SSE server you started
-    local_endpoint = "http://127.0.0.1:8000/sse"
-    
-    print(f"Connecting to {local_endpoint}...")
-    
-    # Establish the Server-Sent Events connection locally
-    async with sse_client(local_endpoint) as streams:
+    # Routing to the declared horizon endpoint. Set QESIS_HORIZON_ENDPOINT to
+    # the exact URL the SSE server printed in the terminal; the declared default
+    # is loopback and only resolves when that server is already running here.
+    horizon = resolve("horizon")
+
+    # G-01b: say which plane and which source answered, every time. A URL
+    # printed without its provenance cannot be told apart from a stale default.
+    print(f"Connecting to {describe('horizon')}...")
+
+    # Establish the Server-Sent Events connection
+    async with sse_client(horizon.url) as streams:
         async with ClientSession(streams[0], streams[1]) as session:
             await session.initialize()
             print("Connection established successfully!\n")

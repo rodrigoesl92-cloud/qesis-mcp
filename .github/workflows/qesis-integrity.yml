@@ -147,6 +147,13 @@ jobs:
       - name: Service identity is declared once
         run: python scripts/verify_domains.py
 
+      # The outbound half of the same rule. verify_domains.py binds the identity
+      # this service answers on; this binds the addresses it dials. The horizon
+      # endpoint had reached three copies, and the only one carrying the
+      # operator instruction was the one no consumer read. (L-089 family.)
+      - name: Outbound endpoints are declared once
+        run: python scripts/verify_endpoints.py
+
       - name: Summary
         if: always()
         run: |
