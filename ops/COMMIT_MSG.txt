@@ -1,0 +1,50 @@
+fix(CI): root cause found. The secrets gate was excluded by the secrets ignore rule
+
+ROOT CAUSE of three CI failures in a week and a month of repair by hypothesis.
+
+.gitignore line 79 carries *SECRET*, correctly, to keep credentials out of the
+repository. It also matched scripts/verify_no_plaintext_secrets.py, which is the
+GATE and not a secret. git add -A skipped it silently, git status --short hides
+ignored files, the commit shipped without it, and qesis-integrity.yml died in
+thirteen seconds running a step whose script was not in the checkout.
+
+Local gates read the WORKING TREE. CI reads the COMMIT. Nothing asserted that
+those are different questions (L-135). The timing said so from the first
+occurrence and was not read: thirteen seconds cannot install dependencies and
+run a gate suite, which excluded every hypothesis about gate logic before it was
+written (L-136).
+
+STRUCTURAL:
+  scripts/ci_local.py executes the real workflow step list in declared order and
+  stops at the first failure with its command and output. It found the root
+  cause on its first run.
+  verify_workflow_contract C-2 asserts every workflow-referenced script is
+  TRACKED via git ls-files, not merely present. C-4 extends that to the local
+  control set. Both report which mode established the answer.
+  .gitignore negates the two credential-GUARDING tools by name rather than
+  renaming them, which would leave the rule free to swallow the next file whose
+  name contains the word it guards.
+  scripts/_walk.py holds one tree walker with pruning during traversal.
+  verify_domains, verify_endpoints and verify_no_plaintext_secrets import it
+  instead of carrying three copies of the same rglob defect (L-048, L-138).
+
+THE HANDOVER WAS THE REAL DEFECT (L-139). Four consecutive deliveries failed on
+the operator's Windows machine and none failed on the Linux box they were
+authored on: bash -lc routing through WSL with no python on PATH, rglob dying on
+a path only the analysis mount has, and a regex whose STRING replacement parsed
+a Windows interpreter path as a template and died on \U. An agent that cannot
+execute in the operator's environment does not hand the operator code to run.
+ops/LAND.md replaces every handover script with three git commands, because git
+is the only tool whose behaviour is identical on both platforms. Verification
+moves to ubuntu-latest, which is the environment the agent runs in, so what was
+tested is what runs.
+
+Fourth naming failure in this .gitignore. ENTSO-E API KEY.txt escaped *.key,
+.env2 escaped .env.*, _to_delete/graphify-out.zip escaped graphify-out/. Those
+three are a rule too NARROW letting a secret out; this is a rule too BROAD
+swallowing a control. An ignore rule is matched by name and nobody verified the
+resulting tracked set against intent.
+
+L-135 to L-139 registered, each with its control wired here.
+
+Refs L-048 L-118 L-123 L-124 L-131 L-133 L-134 L-135 L-136 L-137 L-138 L-139

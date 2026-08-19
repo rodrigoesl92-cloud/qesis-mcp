@@ -93,6 +93,36 @@ def local_controls() -> set[str]:
     return set(re.findall(r"scripts/([A-Za-z0-9_]+\.py)", block))
 
 
+def tracked_scripts() -> tuple[set[str], str]:
+    """Scripts git actually carries, and how that was established.
+
+    THE WHOLE MONTH IN ONE FUNCTION. Local gates read the WORKING TREE; CI reads
+    the COMMIT. Any file present locally and absent from the commit makes local
+    green and CI red, and nothing in this repository asserted the difference.
+
+    On 2026-08-19 `.gitignore` line 79, `*SECRET*`, swallowed
+    scripts/verify_no_plaintext_secrets.py. `git add -A` skipped it without a
+    word, `git status --short` hides ignored files, the commit shipped without
+    it, and CI died in thirteen seconds running a step whose script was not
+    there. The secrets gate was excluded by the secrets ignore rule (L-135).
+
+    `git ls-files` reads the index and never writes it, so it takes no lock and
+    is safe on an analysis mount (L-123). Where git is unavailable, as in the
+    Vercel pre-build gate, the mode is reported rather than silently downgraded:
+    a check that quietly answers a weaker question is how this started.
+    """
+    import subprocess
+    try:
+        r = subprocess.run(["git", "ls-files", "scripts"], cwd=ROOT,
+                           capture_output=True, text=True, timeout=60)
+        if r.returncode == 0:
+            return ({line.rsplit("/", 1)[-1] for line in r.stdout.split() if line},
+                    "git ls-files")
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return ({p.name for p in (ROOT / "scripts").glob("*.py")}, "filesystem fallback")
+
+
 def workflow_steps(text: str) -> list[tuple[int, str]]:
     return [(i, l) for i, l in enumerate(text.splitlines(), 1)]
 
@@ -138,6 +168,7 @@ def main() -> int:
         return 1
 
     controls = local_controls()
+    tracked, mode = tracked_scripts()
     ci_scripts: set[str] = set()
 
     for wf in sorted(WORKFLOWS.glob("*.yml")):
@@ -157,9 +188,14 @@ def main() -> int:
             # C-2 and C-3
             for m in re.finditer(r"python\s+scripts/([A-Za-z0-9_]+\.py)", line):
                 name = m.group(1)
-                if not (ROOT / "scripts" / name).exists():
+                if name not in tracked:
+                    on_disk = (ROOT / "scripts" / name).exists()
+                    why = ("exists on disk but is NOT TRACKED, so CI will not have "
+                           "it. Check `git check-ignore -v` before assuming a "
+                           "rename is needed." if on_disk else
+                           "does not exist at all")
                     fails.append(f"C-2 {wf.name}:{lineno} references scripts/{name}, "
-                                 f"which does not exist")
+                                 f"which {why}")
                 ci_scripts.add(name)
 
     # C-3, reconciliation
@@ -170,6 +206,14 @@ def main() -> int:
             f"C-3 scripts/{name} runs in CI and is absent from the selfheal "
             f"control set. Add it to CONTROLS, or declare it in EXEMPT with a "
             f"reason. Silence is not an exemption.")
+
+    # C-4. Every script the LOCAL control set depends on must be tracked too.
+    # A control that runs locally from an untracked file is a control CI does
+    # not have, and the loop would report green on a set the runner cannot run.
+    for name in sorted(controls):
+        if name not in tracked:
+            fails.append(f"C-4 scripts/{name} is in the selfheal control set and "
+                         f"is NOT TRACKED. The loop runs it locally and CI cannot.")
 
     # A dead exemption hides the next real one, so it is a finding. It is scoped
     # to exemptions whose script EXISTS: an exemption naming a script that is not
@@ -190,7 +234,8 @@ def main() -> int:
         return 1
     if not quiet:
         print(f"OK   workflow contract holds: {len(ci_scripts)} CI scripts, "
-              f"{len(controls)} local controls, {len(EXEMPT)} declared exemptions")
+              f"{len(controls)} local controls, {len(EXEMPT)} declared exemptions, "
+              f"tracked via {mode}")
     return 0
 
 

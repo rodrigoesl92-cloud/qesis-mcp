@@ -26,6 +26,9 @@ import re
 import sys
 from pathlib import Path
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 # Broad on purpose. It must catch an endpoint nobody thought to declare, which
 # is the whole failure mode; narrowing it to known ports would make the gate
 # agree with the defect. Matches a transport URL carrying an MCP stream path,
@@ -51,13 +54,10 @@ def declared(root: Path) -> tuple[set[str], set[str]]:
 
 
 def files(root: Path):
-    for pat in SEARCH:
-        for f in root.rglob(pat):
-            if any(s in f.parts for s in SKIP_DIRS):
-                continue
-            if f.name in SKIP_FILES:
-                continue
-            yield f
+    from _walk import iter_files
+    # Shared walker, same reason as verify_domains: pruning during traversal,
+    # never filtering after it (L-131, L-138).
+    yield from iter_files(root, tuple(SEARCH), SKIP_DIRS, SKIP_FILES)
 
 
 def main(argv: list[str] | None = None) -> int:

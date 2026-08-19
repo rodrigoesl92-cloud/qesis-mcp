@@ -111,3 +111,15 @@ graphify_src_DELETE_ME.tar.gz
 # by enumerated filename means the rule protects exactly the files you thought of
 # and nothing else (L-124).
 _to_delete/
+
+# 2026-08-19. `*SECRET*` on line 79 is correct and stays. It also swallowed
+# scripts/verify_no_plaintext_secrets.py, which is the GATE, not a secret, so
+# `git add -A` skipped it silently, `git status --short` did not list it because
+# status hides ignored files, and CI died in 13 seconds running a file that was
+# not in the commit. The secrets gate was excluded by the secrets ignore rule.
+#
+# Negated rather than renamed. A rename would remove the symptom and leave the
+# rule free to swallow the next file whose name contains the word it guards.
+# Any tool that GUARDS credentials is named here explicitly.
+!scripts/verify_no_plaintext_secrets.py
+!scripts/scan_credentials.py
