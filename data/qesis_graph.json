@@ -10,32 +10,53 @@
  "edge_schema": {
   "HOSTS_REGION_OF": {
    "domain": "State",
-   "range": "Provider"
+   "range": "Provider",
+   "plane": "physical"
   },
   "SOLE_PROVIDER": {
    "domain": "State",
-   "range": "Provider"
+   "range": "Provider",
+   "plane": "physical"
   },
   "CSE_VALUE_SOURCED_FROM": {
    "domain": "State",
-   "range": "CableSourceDataset"
+   "range": "CableSourceDataset",
+   "plane": "provenance"
   },
   "CHOKEPOINT_IN": {
    "domain": "LandingCity",
-   "range": "CableNetwork"
+   "range": "CableNetwork",
+   "plane": "physical"
   },
   "COUPLED_WITH": {
    "domain": "Axis",
-   "range": "Axis"
+   "range": "Axis",
+   "plane": "analytic"
   },
   "WITHHELD_UNDER": {
    "domain": "State",
-   "range": "WithholdingCause"
+   "range": "WithholdingCause",
+   "plane": "provenance"
   },
   "SUPERSEDES": {
    "domain": "Vintage",
-   "range": "Vintage"
+   "range": "Vintage",
+   "plane": "provenance"
   }
+ },
+ "planes": {
+  "declared": [
+   "analytic",
+   "physical",
+   "provenance"
+  ],
+  "provenance_kinds": [
+   "CableSourceDataset",
+   "Vintage",
+   "WithholdingCause"
+  ],
+  "rule": "A physical edge may not resolve to a provenance node kind. A dataset does not carry traffic and a vintage does not land a cable. Enforced in validate(), fixtures in scripts/test_gate.py::check_graph.",
+  "why": "Domain and range say what a type connects. The plane says what kind of assertion it is. Revision A of this file typed dataset names as infrastructure, so 'single cable source' read as 'one cable route' while meaning 'one dataset supplied the value'. Domain and range block that today only because no dataset node is typed as a LandingCity, which is a fact about the current node set and not a commitment."
  },
  "counts": {
   "nodes": 68,
@@ -83,7 +104,8 @@
     "EMODnet": 9,
     "ITU_SCM_proxy": 1
    },
-   "statement": "A PROVENANCE count, not an infrastructure one. The non-EU SubmarineMap-only rule is a documented and audited disposition: data/axes/emodnet_cse_evidence.json records EMODnet release 20230628 at coverage 0.3429 against the 0.75 BIG gate with verdict NOT REPRODUCIBLE at rho -0.467. The disposition is in the evidence plane. It is not an unrecorded single point of failure and must not be presented as one.",
+   "statement": "A PROVENANCE count, not an infrastructure one. The non-EU SubmarineMap-only rule is a documented and audited disposition: data/axes/emodnet_cse_evidence.json records EMODnet release 20230628 at coverage 0.3429 against the 0.75 BIG gate. The disposition is in the evidence plane. It is not an unrecorded single point of failure and must not be presented as one.",
+   "verdict": "DIRECTIONALLY CONSISTENT, MAGNITUDE INCONCLUSIVE AT n=9. The inherited column moves in the direction its own formula requires. It is neither reproduced nor refuted: |rho| 0.467 does not reach the 0.683 needed at n=9, and ITA at 0.0 against 10,826 km and DEU at 2.9 against 5,960 km are the two cases pulling it down. Reporting this as NOT REPRODUCIBLE overstated the finding; reporting it as verified would overstate it in the other direction. Both are refused.",
    "source": "data/axes/emodnet_cse_evidence.json"
   }
  },

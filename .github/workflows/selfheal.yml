@@ -1,0 +1,192 @@
+name: Self-heal loop
+
+# G-07. The ecosystem runs continuously and repairs its own defects. This is the
+# scheduler half; the local half is `python scripts/selfheal.py` at session start
+# under CLAUDE.md rule SH-1.
+#
+# Hourly rather than daily, because the failures this catches are cheap to repair
+# the hour they appear and expensive to repair after a promotion has carried them
+# forward. The v8.4 half-implemented vintage was public for a day.
+#
+# It does NOT promote. Promotion requires ops/G-07_PROMOTION_POLICY_SIGNED.json,
+# which the runner reads and which is absent until the operator signs it. Absent
+# that file the runner holds and escalates, which is the current state and the
+# correct one.
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: ["**"]
+    paths:
+      - "data/**"
+      - "scripts/**"
+      - ".github/workflows/selfheal.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: selfheal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install runtime
+        # Before the loop, not after it. Without this the served-contract
+        # verifier cannot import server.py and reports a benign condition that
+        # is only benign locally. In CI it would be a real gap wearing a benign
+        # label, which is the worst available outcome for a suppression rule.
+        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
+      - name: Diagnose only
+        # Two passes on purpose. The first records what the ecosystem looked like
+        # before anything touched it, so the repair cannot erase the evidence of
+        # the defect it repaired. R-2: a remedy gets the same hostile reading as
+        # the defect, and that is impossible if the remedy overwrote the symptom.
+        id: diagnose
+        continue-on-error: true
+        run: python scripts/selfheal.py --dry-run
+
+      - name: Repair and reverify
+        id: heal
+        continue-on-error: true
+        run: python scripts/selfheal.py
+
+      - name: Report
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          p = pathlib.Path("ops/SELFHEAL_LATEST.json")
+          if not p.exists():
+              print("## Self-heal\n\nNo report emitted. The runner did not reach its write.")
+              raise SystemExit(0)
+          s = json.loads(p.read_text(encoding="utf-8"))
+          print(f"## Self-heal: {s['verdict']}\n")
+          print(f"- generated `{s['generated_utc']}`, mode `{s['mode']}`")
+          print(f"- repaired {len(s['repaired'])}, degraded {len(s['degraded'])}, "
+                f"escalations {len(s['escalations'])}")
+          print(f"- promotion: **{'PROCEED' if s['promotion']['proceed'] else 'HELD'}** "
+                f"({s['promotion']['reason']})\n")
+          print("| control | status |\n|---|---|")
+          for c in s["controls"]:
+              print(f"| `{c['name']}` | {c['status']} |")
+          if s["repaired"]:
+              print("\n### Repaired without a human\n")
+              for r in s["repaired"]:
+                  print(f"- `{r['control']}` via `{r.get('ran') or r.get('would_run')}`: {r['why']}")
+          if s["degraded"]:
+              print("\n### Degraded safely\n")
+              for d in s["degraded"]:
+                  print(f"- `{d['control']}` -> `{d['degradation']}`: {d['why']}")
+          if s["escalations"]:
+              print("\n### Escalated\n")
+              for e in s["escalations"]:
+                  print(f"- **[{e['severity']}]** `{e['control']}`\n"
+                        f"  - {e['why']}\n  - settle with: `{e['command']}`")
+          if s["benign"]:
+              print("\n### Benign, declared\n")
+              for b in s["benign"]:
+                  for d in b["detail"]:
+                      print(f"- `{b['control']}`: {d}")
+          PY
+
+      - name: Open an issue on escalation only
+        # Escalation is the only paging condition. A repaired or safely degraded
+        # run is the loop working, and a scheduler that pages on both teaches the
+        # operator to ignore it (L-063).
+        if: steps.heal.outcome == 'failure'
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const fs = require('fs');
+            let s;
+            try { s = JSON.parse(fs.readFileSync('ops/SELFHEAL_LATEST.json','utf8')); }
+            catch (e) { core.setFailed('runner produced no report: ' + e.message); return; }
+            if (!s.escalations.length) return;
+            const crit = s.escalations.some(e => e.severity === 'CRITICAL');
+            const title = `selfheal ${crit ? 'CRITICAL' : 'HIGH'}: `
+                        + s.escalations.map(e => e.control).join(', ');
+            const body = [
+              `Verdict **${s.verdict}** at ${s.generated_utc}.`,
+              ``,
+              `Escalated because the correct action is not derivable from the record.`,
+              `Everything with a declared remedy was already applied.`,
+              ``,
+              ...s.escalations.map(e =>
+                `### [${e.severity}] \`${e.control}\`\n${e.why}\n\nSettle with:\n\`\`\`\n${e.command}\n\`\`\``),
+              ``,
+              `Promotion: **${s.promotion.proceed ? 'PROCEED' : 'HELD'}** (${s.promotion.reason})`,
+            ].join('\n');
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'selfheal' });
+            const dup = existing.data.find(i => i.title === title);
+            if (dup) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: dup.number,
+                body: `Recurred at ${s.generated_utc}.` });
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title, body, labels: ['selfheal', crit ? 'critical' : 'high'] });
+
+      - name: Land the repairs the loop made
+        # SH-7. Nothing depends on the operator's machine. When the loop repairs a
+        # derived artefact it must be able to land that repair, or the repair
+        # exists for the lifetime of a runner and the next run does it again
+        # forever. That is a loop that looks busy and changes nothing.
+        #
+        # It opens a PULL REQUEST and never pushes to main. G-06 limit 3 is
+        # unchanged: direct pushes to main stay prohibited, merging a paired
+        # remediation PR is delegated, and promotion is not delegated at all.
+        # The branch name is derived from the run id so concurrent runs cannot
+        # collide, and the guard is `git diff --quiet` rather than a trust that
+        # something changed.
+        if: steps.heal.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- . ':!ops/SELFHEAL_LATEST.json'; then
+            echo "no repairs to land beyond the run report"
+            exit 0
+          fi
+          BR="selfheal/${{ github.run_id }}"
+          git config user.name  "qesis-selfheal[bot]"
+          git config user.email "selfheal@qesis.invalid"
+          git checkout -b "$BR"
+          git add -A
+          git commit -m "fix(selfheal): land class A repairs from run ${{ github.run_id }}
+
+          Derived artefacts had drifted from their sources and the declared
+          remedy rebuilt them. Every change here is a rebuild, never a new
+          number: class A remedies are idempotent by construction and are
+          reverified before this step runs.
+
+          See ops/SELFHEAL_LATEST.json for the control set and the verdict.
+          Authority G-07. No promotion, no direct push to main."
+          git push origin "$BR"
+          gh pr create --base main --head "$BR" \
+            --title "selfheal: land class A repairs from run ${{ github.run_id }}" \
+            --body "Automated under G-07. Class A remedies only, each reverified before commit. Review the control set in \`ops/SELFHEAL_LATEST.json\`. Merge with \`--rebase\`, never squash (G-05)."
+
+      - name: Fail the run on escalation
+        if: steps.heal.outcome == 'failure'
+        run: |
+          echo "::error::self-heal escalated. See the step summary and the issue."
+          exit 1

@@ -96,3 +96,18 @@ data/ember_electricity_data_methodology.pdf
 # Connection strings and local credential scratch. Never commit.
 database_string.txt
 *_connection_string.txt
+
+# Graphify local codebase-navigation tool output (2026-08-15) - local aid only, never a source of truth
+graphify-out/
+graphify_src_DELETE_ME.tar.gz
+
+# Staging area for files on their way out of the repository. Its whole purpose is
+# to hold things that must NOT be committed, so it is ignored as a directory
+# rather than by the names of whatever happens to be sitting in it today.
+#
+# Added 2026-08-15 after `_to_delete/graphify-out.zip` was committed at f14385b.
+# The two rules above name a directory and a filename, and the zip matched
+# neither: it is `graphify-out.zip`, not the `graphify-out/` directory. Ignoring
+# by enumerated filename means the rule protects exactly the files you thought of
+# and nothing else (L-124).
+_to_delete/

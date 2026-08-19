@@ -486,6 +486,131 @@ def check_endpoints(results: list[tuple[str, bool]]) -> None:
         results.append((f"caught: {name}", rc != 0 and expect in out))
 
 
+GRAPH_BUILDER = ROOT / "scripts" / "build_graph.py"
+
+
+def run_graph_validate(mutate=None) -> tuple[bool, list[str]]:
+    """Drive build_graph.validate() directly, optionally on a mutated graph.
+
+    Imported rather than shelled out because validate() is the assertion under
+    test and running the CLI would test the CLI. The import is guarded: a public
+    checkout without the builder skips rather than fails, the same posture
+    check_idempotent takes for build_index.py.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("_bg", GRAPH_BUILDER)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    g = mod.build()
+    if mutate is not None:
+        g = mutate(g)
+    fails = mod.validate(g)
+    return (not fails), fails
+
+
+def g_retype_provenance_as_physical(g):
+    """KG-5 refuse fixture. Retype a provenance edge onto the physical plane.
+
+    This is the D-110 revision A defect replayed: CSE_VALUE_SOURCED_FROM said
+    "one dataset supplied this value" and was read as "one cable route". A
+    provenance edge wearing a physical edge's clothes. The graph must refuse it.
+    """
+    for e in g["edges"]:
+        if e["type"] == "CSE_VALUE_SOURCED_FROM":
+            e["type"] = "CHOKEPOINT_IN"
+            return g
+    raise AssertionError("fixture is vacuous: no CSE_VALUE_SOURCED_FROM edge "
+                         "exists to retype, so this case proves nothing")
+
+
+def g_physical_edge_onto_provenance_kind(g):
+    """KG-5 refuse fixture. A physical edge whose endpoint resolves to a
+    provenance kind, with domain and range left consistent.
+
+    This is the case domain and range cannot catch. Retype a CableSourceDataset
+    node as a LandingCity and CHOKEPOINT_IN still satisfies its declaration:
+    source is a LandingCity, target is a CableNetwork, every field agrees. The
+    graph now asserts that a dataset is a place where cables land. Only the plane
+    rule refuses it, and it refuses on the RESOLVED endpoint rather than on the
+    declaration, which is why the check is worth having.
+    """
+    ds = next((n for n in g["nodes"] if n["kind"] == "CableSourceDataset"), None)
+    net = next((n for n in g["nodes"] if n["kind"] == "CableNetwork"), None)
+    if ds is None or net is None:
+        raise AssertionError("fixture is vacuous: needs a CableSourceDataset and "
+                             "a CableNetwork node to construct the defect")
+    # The node keeps its true kind. The edge claims it is a landing city.
+    g["edges"].append({"type": "CHOKEPOINT_IN", "source": ds["id"], "target": net["id"]})
+    return g
+
+
+def g_undeclared_edge_type(g):
+    """An edge type absent from EDGE_SCHEMA. The table IS the ontology, so an
+    edge outside it is an undeclared commitment, not a warning."""
+    g["edges"].append({"type": "DEPENDS_ON",
+                       "source": g["nodes"][0]["id"],
+                       "target": g["nodes"][1]["id"]})
+    return g
+
+
+def g_range_violation(g):
+    """Domain holds, range does not. Catches the half of the declaration a
+    source-only check would miss."""
+    for e in g["edges"]:
+        if e["type"] == "SOLE_PROVIDER":
+            axis = next((n["id"] for n in g["nodes"] if n["kind"] == "Axis"), None)
+            if axis is None:
+                raise AssertionError("fixture is vacuous: no Axis node to point at")
+            e["target"] = axis
+            return g
+    raise AssertionError("fixture is vacuous: no SOLE_PROVIDER edge exists")
+
+
+def check_graph(results: list[tuple[str, bool]]) -> None:
+    """KG-1. The fixtures build_graph.py's docstring has been naming since it
+    was written, and which did not exist until now.
+
+    `validate()` said "Fixtures live in scripts/test_gate.py; this is the
+    assertion they exercise." A grep for "graph" in this file returned zero. A
+    gate whose docstring names fixtures that do not exist is the same failure
+    shape as a threshold living in prose (L-054), committed in the file whose
+    entire argument is that typed edges make commitments explicit.
+
+    One fixture the gate must accept, three it must refuse.
+    """
+    if not GRAPH_BUILDER.exists():
+        results.append(("graph: builder present", False))
+        return
+    try:
+        ok, fails = run_graph_validate()
+    except Exception as exc:                      # noqa: BLE001
+        results.append((f"graph: baseline build ({type(exc).__name__})", False))
+        return
+    results.append(("graph: baseline validates (accept fixture)", ok))
+    if not ok:
+        print(f"      baseline violations: {fails[:3]}")
+
+    for name, mut, expect in [
+        ("graph: provenance edge retyped as physical",
+         g_retype_provenance_as_physical, "CHOKEPOINT_IN"),
+        ("graph: undeclared edge type", g_undeclared_edge_type, "undeclared"),
+        ("graph: range violation on SOLE_PROVIDER", g_range_violation, "range"),
+        ("graph: physical edge resolves to a provenance kind",
+         g_physical_edge_onto_provenance_kind, "provenance kind"),
+    ]:
+        try:
+            ok, fails = run_graph_validate(mut)
+        except AssertionError as exc:
+            # A vacuous fixture is a failure of the fixture, not of the gate,
+            # and it must be loud. A refuse case that cannot construct the
+            # defect it names silently proves nothing (L-049).
+            print(f"      VACUOUS FIXTURE: {exc}")
+            results.append((f"caught: {name}", False))
+            continue
+        caught = (not ok) and any(expect in f for f in fails)
+        results.append((f"caught: {name}", caught))
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -539,6 +664,7 @@ def main() -> int:
     check_pairing(extra)
     check_contract(extra)
     check_endpoints(extra)
+    check_graph(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

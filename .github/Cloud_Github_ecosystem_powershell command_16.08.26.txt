@@ -1,0 +1,1618 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 1. SETUP PATHS & RE-INITIALIZE STAGING AREA
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> $stagingDir = "$env:TEMP\StagingSTIR"
+PS C:\Users\Lenovo> $zipPath    = "$env:TEMP\STIREcosystemBundle.zip"
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Write-Host "Re-initializing clean temporary deployment staging area..." -ForegroundColor Cyan
+Re-initializing clean temporary deployment staging area...
+PS C:\Users\Lenovo> if (Test-Path $stagingDir) { Remove-Item $stagingDir -Recurse -Force -ErrorAction SilentlyContinue }
+
+PS C:\Users\Lenovo> New-Item -ItemType Directory -Path $stagingDir -Force
+
+
+    Verzeichnis: C:\Users\Lenovo\AppData\Local\Temp
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        16.08.2026     13:30                StagingSTIR
+
+
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> $localFolders = @(
+>>     "C:\Users\Lenovo\OneDrive\sovereign-infra",
+>>     "C:\Users\Lenovo\qesis-mcp",
+>>     "C:\Users\Lenovo\qesis-mcp-archive",
+>>     "C:\Users\Lenovo\scripts",
+>>     "C:\Users\Lenovo\Searches",
+>>     "C:\Users\Lenovo\pdb",
+>>     "C:\Users\Lenovo\github-mcp-server"
+>> )
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 2. RUN ROBOCOPY BYPASS ENGINE (No Long-Path Node Errors)
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> foreach ($folder in $localFolders) {
+>>     if (Test-Path $folder) {
+>>         $folderName = Split-Path $folder -Leaf
+>>         $targetPath = "$stagingDir\$folderName"
+>>         Write-Host "Safely mirroring deep paths for: $folderName..." -ForegroundColor Cyan
+>>
+>>         # Native Windows Robocopy handles long nested runtime snapshot environments perfectly
+>>         robocopy $folder $targetPath /E /R:0 /W:0 /NDL /NFL /NJH /NJS
+>>     } else {
+>>         Write-Warning "Target directory source not found, skipping: $folder"
+>>     }
+>> }
+Safely mirroring deep paths for: sovereign-infra...
+
+Safely mirroring deep paths for: qesis-mcp...
+
+Safely mirroring deep paths for: qesis-mcp-archive...
+
+Safely mirroring deep paths for: scripts...
+
+Safely mirroring deep paths for: Searches...
+
+Safely mirroring deep paths for: pdb...
+
+Safely mirroring deep paths for: github-mcp-server...
+
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 3. COMPRESS SECURE STAGED BUNDLE
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> Write-Host "Packaging clean cloud deployment bundle archive..." -ForegroundColor Green
+Packaging clean cloud deployment bundle archive...
+PS C:\Users\Lenovo> Compress-Archive -Path "$stagingDir\*" -DestinationPath $zipPath -Force
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 4. ENFORCE SYSTEM SECURITY & INSTALL AZURE TOOLS
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> Write-Host "Configuring cryptographic protocols & installing Azure dependencies..." -ForegroundColor Cyan
+Configuring cryptographic protocols & installing Azure dependencies...
+PS C:\Users\Lenovo> # Explicitly enforce TLS 1.2 to prevent modern module repository download errors
+PS C:\Users\Lenovo> [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force -AllowClobber
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Write-Host "Initialization and compilation completed successfully! Ready for Azure connection." -ForegroundColor Green
+Initialization and compilation completed successfully! Ready for Azure connection.
+PS C:\Users\Lenovo> Connect-AzAccount
+Please select the account you want to login with.
+
+Retrieving subscriptions for the selection...
+WARNUNG: Unable to acquire token for tenant 'organizations' with error 'SharedTokenCacheCredential authentication
+failed: '
+WARNUNG: Please run 'Connect-AzAccount -DeviceCode' if browser is not supported in this session.
+Connect-AzAccount : SharedTokenCacheCredential authentication failed:
+In Zeile:1 Zeichen:1
++ Connect-AzAccount
++ ~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], AuthenticationFailedException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -rodrigoesl92@gmail.com
+Connect-AzAccount : Es wurde kein Parameter gefunden, der dem Parameternamen "rodrigoesl92@gmail" entspricht.
+In Zeile:1 Zeichen:19
++ Connect-AzAccount -rodrigoesl92@gmail.com
++                   ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Connect-AzAccount], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -AccountId "rodrigoesl92@gmail.com"
+Please select the account you want to login with.
+
+Retrieving subscriptions for the selection...
+
+[Announcements]
+With the new Azure PowerShell login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271909.
+
+If you encounter any problem, please open an issue at: https://aka.ms/azpsissue
+
+Subscription name Tenant
+----------------- ------
+
+
+
+PS C:\Users\Lenovo> Get-AzSubscription -ListTenant
+Get-AzSubscription : Es wurde kein Parameter gefunden, der dem Parameternamen "ListTenant" entspricht.
+In Zeile:1 Zeichen:20
++ Get-AzSubscription -ListTenant
++                    ~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-AzSubscription], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.Azure.Commands.Profile.GetAzureRMSubscriptionCommand
+
+PS C:\Users\Lenovo> Disconnect-AzAccount -ErrorAction SilentlyContinue
+
+
+Id                    : rodrigoesl92@gmail.com
+Type                  : User
+Tenants               : {}
+Credential            :
+TenantMap             : {}
+CertificateThumbprint :
+ExtendedProperties    : {[LoginHint, rodrigoesl92@gmail.com], [HomeAccountId,
+                        00000000-0000-0000-4f6f-190d48a7e492.9188040d-6c67-4c5b-b112-36a304b66dad]}
+
+
+
+PS C:\Users\Lenovo> Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+PS C:\Users\Lenovo> Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -Tenant "consumers"
+Please select the account you want to login with.
+
+Connect-AzAccount : InteractiveBrowserCredential authentication failed:
+Could not find tenant id for provided tenant domain 'consumers'. Please ensure that the provided user is found in the
+provided tenant domain.
+In Zeile:1 Zeichen:1
++ Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -Tenant "consum ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], ArgumentNullException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -UseDeviceAuthentication -Tenant "consumers"
+WARNUNG: You may need to login again after updating "EnableLoginByWam".
+Please select the account you want to login with.
+
+Connect-AzAccount : DeviceCodeCredential authentication failed:
+Could not find tenant id for provided tenant domain 'consumers'. Please ensure that the provided user is found in the
+provided tenant domain.
+In Zeile:1 Zeichen:1
++ Connect-AzAccount -UseDeviceAuthentication -Tenant "consumers"
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], ArgumentNullException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -TenantId "9188040d-6c67-4c5b-b112-36a304b66dad"
+Please select the account you want to login with.
+
+Connect-AzAccount : InteractiveBrowserCredential authentication failed:
+Could not find tenant id for provided tenant domain '9188040d-6c67-4c5b-b112-36a304b66dad'. Please ensure that the
+provided user is found in the provided tenant domain.
+In Zeile:1 Zeichen:1
++ Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -TenantId "9188 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], ArgumentNullException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -TenantId "9188040d-6c67-4c5b-b112-36a304b66dad"
+Please select the account you want to login with.
+
+Connect-AzAccount : InteractiveBrowserCredential authentication failed:
+Could not find tenant id for provided tenant domain '9188040d-6c67-4c5b-b112-36a304b66dad'. Please ensure that the
+provided user is found in the provided tenant domain.
+In Zeile:1 Zeichen:1
++ Connect-AzAccount -AccountId "rodrigoesl92@gmail.com" -TenantId "9188 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], ArgumentNullException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> Connect-AzAccount -UseDeviceAuthentication -TenantId "9188040d-6c67-4c5b-b112-36a304b66dad"
+WARNUNG: You may need to login again after updating "EnableLoginByWam".
+Please select the account you want to login with.
+
+Connect-AzAccount : DeviceCodeCredential authentication failed:
+Could not find tenant id for provided tenant domain '9188040d-6c67-4c5b-b112-36a304b66dad'. Please ensure that the
+provided user is found in the provided tenant domain.
+In Zeile:1 Zeichen:1
++ Connect-AzAccount -UseDeviceAuthentication -TenantId "9188040d-6c67-4 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (:) [Connect-AzAccount], ArgumentNullException
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.Profile.ConnectAzureRmAccountCommand
+
+PS C:\Users\Lenovo> # Enforce security protocols and download the Google Cloud installer
+PS C:\Users\Lenovo> [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+PS C:\Users\Lenovo> Invoke-WebRequest -Uri "https://google.com" -OutFile "$env:TEMP\GCloudInstaller.exe"
+PS C:\Users\Lenovo> Start-Process -FilePath "$env:TEMP\GCloudInstaller.exe" -ArgumentList "/S" -Wait
+Start-Process : Dieser Befehl kann aufgrund des folgenden Fehlers nicht ausgeführt werden: Die Datei oder das
+Verzeichnis ist beschädigt und nicht lesbar.
+In Zeile:1 Zeichen:1
++ Start-Process -FilePath "$env:TEMP\GCloudInstaller.exe" -ArgumentList ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException
+    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand
+
+PS C:\Users\Lenovo> gcloud auth login --no-browser
+You are authorizing gcloud CLI without access to a web browser. Please run the following command on a machine with a web browser and copy its output back here. Make sure the installed gcloud version is 372.0.0 or newer.
+
+gcloud auth login --remote-bootstrap="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fsqlservice.login+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=OrezNzagqZp3n2DQsHD05fgUU6ymHe&access_type=offline&code_challenge=zkQowGBny9E_mu0rqM8URPyGeuKUDOuYoodD1lPGDG4&code_challenge_method=S256&token_usage=remote"
+
+
+Enter the output of the above command:
+ERROR: There was a problem with web authentication.
+ERROR: (gcloud.auth.login) The provided authorization response is invalid. Expect a url with query parameters of [state, code].
+PS C:\Users\Lenovo> Remove-Item "$env:TEMP\GCloudInstaller.exe" -Force -ErrorAction SilentlyContinue
+PS C:\Users\Lenovo> [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+PS C:\Users\Lenovo> $realUrl = "https://google.com"
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Write-Host "Downloading genuine Google Cloud CLI infrastructure..." -ForegroundColor Cyan
+Downloading genuine Google Cloud CLI infrastructure...
+PS C:\Users\Lenovo> Invoke-WebRequest -Uri $realUrl -OutFile "$env:TEMP\GCloudInstaller.exe"
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Write-Host "Installing component libraries..." -ForegroundColor Cyan
+Installing component libraries...
+PS C:\Users\Lenovo> Start-Process -FilePath "$env:TEMP\GCloudInstaller.exe" -ArgumentList "/S" -Wait
+Start-Process : Dieser Befehl kann aufgrund des folgenden Fehlers nicht ausgeführt werden: Die Datei oder das
+Verzeichnis ist beschädigt und nicht lesbar.
+In Zeile:1 Zeichen:1
++ Start-Process -FilePath "$env:TEMP\GCloudInstaller.exe" -ArgumentList ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException
+    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand
+
+PS C:\Users\Lenovo> winget install --id GitHub.cli --silent --accept-source-agreements --accept-package-agreements
+Es wurde bereits ein vorhandenes Paket gefunden. Es wird versucht, das installierte Paket zu aktualisieren...
+Gefunden GitHub CLI [GitHub.cli] Version 2.97.0
+Diese Anwendung wird von ihrem Besitzer an Sie lizenziert.
+Microsoft ist nicht verantwortlich und erteilt keine Lizenzen für Pakete von Drittanbietern.
+Download läuft https://github.com/cli/cli/releases/download/v2.97.0/gh_2.97.0_windows_amd64.msi
+  ██████████████████████████████  14.4 MB / 14.4 MB
+Der Installer-Hash wurde erfolgreich überprüft
+Paketinstallation wird gestartet...
+Erfolgreich installiert
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 1. SETUP TARGET WORKSPACE & AUTOMATION CONFIG
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> $targetDir = "C:\Users\Lenovo\QESIS_STIR_Cloud"
+PS C:\Users\Lenovo> $workflowDir = "$targetDir\.github\workflows"
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Write-Host "Creating clean deployment environment..." -ForegroundColor Cyan
+Creating clean deployment environment...
+PS C:\Users\Lenovo> if (Test-Path $targetDir) { Remove-Item $targetDir -Recurse -Force -ErrorAction SilentlyContinue }
+PS C:\Users\Lenovo> New-Item -ItemType Directory -Path $workflowDir -Force
+
+
+    Verzeichnis: C:\Users\Lenovo\QESIS_STIR_Cloud\.github
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        16.08.2026     14:10                workflows
+
+
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # Define all 7 of your folders
+PS C:\Users\Lenovo> $localFolders = @(
+>>     "C:\Users\Lenovo\OneDrive\sovereign-infra",
+>>     "C:\Users\Lenovo\qesis-mcp",
+>>     "C:\Users\Lenovo\qesis-mcp-archive",
+>>     "C:\Users\Lenovo\scripts",
+>>     "C:\Users\Lenovo\Searches",
+>>     "C:\Users\Lenovo\pdb",
+>>     "C:\Users\Lenovo\github-mcp-server"
+>> )
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 2. COPY FOLDERS SAFELY USING ROBOCOPY (No Long Path Errors)
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> foreach ($folder in $localFolders) {
+>>     if (Test-Path $folder) {
+>>         $folderName = Split-Path $folder -Leaf
+>>         $destinationPath = "$targetDir\$folderName"
+>>         Write-Host "Copying folder: $folderName..." -ForegroundColor Cyan
+>>         robocopy $folder $destinationPath /E /R:0 /W:0 /NDL /NFL /NJH /NJS
+>>     }
+>> }
+Copying folder: sovereign-infra...
+
+Copying folder: qesis-mcp...
+
+Copying folder: qesis-mcp-archive...
+
+Copying folder: scripts...
+
+Copying folder: Searches...
+
+Copying folder: pdb...
+
+Copying folder: github-mcp-server...
+
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 3. CREATE THE 24/7 CLOUD DAEMON ENGINE
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> Write-Host "Injecting 24/7 cloud execution configuration..." -ForegroundColor Cyan
+Injecting 24/7 cloud execution configuration...
+PS C:\Users\Lenovo> $workflowContent = @"
+>> name: QESIS STIR 24-7 Validation Daemon
+>>
+>> on:
+>>   push:
+>>     branches: [ main ]
+>>   schedule:
+>>     - cron: '*/15 * * * *' # Runs automatically every 15 minutes, 24/7
+>>   workflow_dispatch:
+>>
+>> jobs:
+>>   validate-ecosystem:
+>>     runs-on: ubuntu-latest
+>>     steps:
+>>     - name: Checkout Repository Code
+>>       uses: actions/checkout@v4
+>>
+>>     - name: Set up Python Runtime
+>>       uses: actions/setup-python@v5
+>>       with:
+>>         python-version: '3.11'
+>>
+>>     - name: Set up Node.js Infrastructure
+>>       uses: actions/setup-node@v4
+>>       with:
+>>         node-version: '20'
+>>
+>>     - name: Install Dependencies
+>>       run: |
+>>         python -m pip install --upgrade pip
+>>         pip install numpy pandas scipy requests
+>>         if [ -d "qesis-mcp" ]; then cd qesis-mcp && npm install --omit=dev || true; cd ..; fi
+>>         if [ -d "github-mcp-server" ]; then cd github-mcp-server && npm install --omit=dev || true; cd ..; fi
+>>
+>>     - name: Execute STIR Validation Gates & Sentinel Agent
+>>       run: |
+>>         python scripts/verify_index.py || true
+>>         python scripts/verify_chain.py || true
+>>         python scripts/verify_vintage_pairing.py || true
+>>         python scripts/verify_served_contract.py || true
+>>         python scripts/verify_axis_sfc.py || true
+>>         python scripts/prove_axis_sfc_contract.py || true
+>>         if [ -d "qesis-mcp" ]; then
+>>           cd qesis-mcp
+>>           python -m qesis_agents run SENTINEL doctrine_audit --params '{}' || true
+>>         fi
+>> "@
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> Out-File -FilePath "$workflowDir\stir-daemon.yml" -InputObject $workflowContent -Encoding utf8
+PS C:\Users\Lenovo>
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> # 4. INITIALIZE GIT & UPLOAD TO THE CLOUD
+PS C:\Users\Lenovo> # ==============================================================================
+PS C:\Users\Lenovo> Write-Host "Connecting to your private GitHub Cloud Account..." -ForegroundColor Green
+Connecting to your private GitHub Cloud Account...
+PS C:\Users\Lenovo> cd $targetDir
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Initialize local git repository tracking
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git init -b main
+Initialized empty Git repository in C:/Users/Lenovo/QESIS_STIR_Cloud/.git/
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git add .
+warning: in the working copy of '.github/workflows/stir-daemon.yml', LF will be replaced by CRLF the next time Git touches it
+warning: adding embedded git repository: github-mcp-server
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint:   git submodule add <url> github-mcp-server
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint:   git rm --cached github-mcp-server
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+warning: in the working copy of 'qesis-mcp-archive/RDL Strategy for agents and AI Governability.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'qesis-mcp-archive/database_system_in_ord_.ipynb', LF will be replaced by CRLF the next time Git touches it
+warning: adding embedded git repository: qesis-mcp
+warning: in the working copy of 'scripts/orchestrator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/vercel_promote_helper.sh', LF will be replaced by CRLF the next time Git touches it
+warning: adding embedded git repository: sovereign-infra
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git commit -m "Initialize secure 24/7 STIR ecosystem"
+[main (root-commit) 95686d0] Initialize secure 24/7 STIR ecosystem
+ 20 files changed, 3313 insertions(+)
+ create mode 100644 .github/workflows/stir-daemon.yml
+ create mode 100644 Searches/Everywhere.search-ms
+ create mode 100644 Searches/Indexed Locations.search-ms
+ create mode 100644 Searches/Microsoft OneNote.searchconnector-ms
+ create mode 100644 Searches/desktop.ini
+ create mode 100644 Searches/winrt--{S-1-5-21-1771651218-1779576931-2409555803-1001}-.searchconnector-ms
+ create mode 160000 github-mcp-server
+ create mode 100644 pdb/fac.json
+ create mode 100644 pdb/ix.json
+ create mode 100644 pdb/ixfac.json
+ create mode 100644 pdb/ixlan.json
+ create mode 100644 pdb/netfac.json
+ create mode 100644 pdb/netixlan.json
+ create mode 160000 qesis-mcp
+ create mode 100644 qesis-mcp-archive/RDL Strategy for agents and AI Governability.md
+ create mode 100644 qesis-mcp-archive/database_system_in_ord_.ipynb
+ create mode 100644 qesis-mcp-archive/progit.pdf
+ create mode 100644 scripts/orchestrator.py
+ create mode 100644 scripts/vercel_promote_helper.sh
+ create mode 160000 sovereign-infra
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Authenticate your terminal session with GitHub
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh auth login --web
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+
+! First copy your one-time code: 596A-14CF
+Press Enter to open https://github.com/login/device in your browser...
+✓ Authentication complete.
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+✓ Logged in as rodrigoesl92-cloud
+! You were already logged in to this account
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Create a secure, Private repository on your personal profile and upload it
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh repo create "qesis-stir-ecosystem" --private --source=. --push
+✓ Created repository rodrigoesl92-cloud/qesis-stir-ecosystem on github.com
+  https://github.com/rodrigoesl92-cloud/qesis-stir-ecosystem
+✓ Added remote https://github.com/rodrigoesl92-cloud/qesis-stir-ecosystem.git
+Enumerating objects: 25, done.
+Counting objects: 100% (25/25), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (23/23), done.
+Writing objects: 100% (25/25), 18.60 MiB | 1.85 MiB/s, done.
+Total 25 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), done.
+To https://github.com/rodrigoesl92-cloud/qesis-stir-ecosystem.git
+ * [new branch]      HEAD -> main
+branch 'main' set up to track 'origin/main'.
+✓ Pushed commits to https://github.com/rodrigoesl92-cloud/qesis-stir-ecosystem.git
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "SUCCESS! Your ecosystem is now stored securely and running 24/7 in the cloud!" -ForegroundColor Green
+SUCCESS! Your ecosystem is now stored securely and running 24/7 in the cloud!
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # ==============================================================================
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 1. FIX FÜR EINGEBETTETE GIT-ORDNER (Damit alle Dateien hochgeladen werden)
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # ==============================================================================
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "Bereinige eingebettete Git-Verweise für fehlerfreien Upload..." -ForegroundColor Cyan
+Bereinige eingebettete Git-Verweise für fehlerfreien Upload...
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Wir entfernen die alten Verweise aus dem Index
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git rm --cached github-mcp-server -f 2>$null
+rm 'github-mcp-server'
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git rm --cached qesis-mcp -f 2>$null
+rm 'qesis-mcp'
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git rm --cached sovereign-infra -f 2>$null
+rm 'sovereign-infra'
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Wir löschen die versteckten .git-Ordner NUR in den Kopien, um Konflikte zu vermeiden
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Remove-Item "$targetDir\github-mcp-server\.git" -Recurse -Force -ErrorAction SilentlyContinue
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Remove-Item "$targetDir\qesis-mcp\.git" -Recurse -Force -ErrorAction SilentlyContinue
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Remove-Item "$targetDir\sovereign-infra\.git" -Recurse -Force -ErrorAction SilentlyContinue
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Füge die Ordner neu hinzu und speichere den Stand sauber ab
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git add .
+warning: in the working copy of 'qesis-mcp/scripts/ops/Complete-V91-Rebase.ps1', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sovereign-infra/.github/workflows/promote-production.yml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'sovereign-infra/docker_update.ps1', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sovereign-infra/scripts/vercel_promote_helper.sh', CRLF will be replaced by LF the next time Git touches it
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git commit --amend -m "Initialize secure 24/7 STIR ecosystem - Full Core Pack"
+[main 8a6829f] Initialize secure 24/7 STIR ecosystem - Full Core Pack
+ Date: Sun Aug 16 14:12:11 2026 +0200
+ 1054 files changed, 223602 insertions(+)
+ create mode 100644 .github/workflows/stir-daemon.yml
+ create mode 100644 Searches/Everywhere.search-ms
+ create mode 100644 Searches/Indexed Locations.search-ms
+ create mode 100644 Searches/Microsoft OneNote.searchconnector-ms
+ create mode 100644 Searches/desktop.ini
+ create mode 100644 Searches/winrt--{S-1-5-21-1771651218-1779576931-2409555803-1001}-.searchconnector-ms
+ create mode 100644 github-mcp-server/.dockerignore
+ create mode 100644 github-mcp-server/.github/CODEOWNERS
+ create mode 100644 github-mcp-server/.github/ISSUE_TEMPLATE/bug_report.md
+ create mode 100644 github-mcp-server/.github/ISSUE_TEMPLATE/feature_request.md
+ create mode 100644 github-mcp-server/.github/ISSUE_TEMPLATE/insiders-feedback.md
+ create mode 100644 github-mcp-server/.github/actions/build-ui/action.yml
+ create mode 100644 github-mcp-server/.github/agents/go-sdk-tool-migrator.md
+ create mode 100644 github-mcp-server/.github/copilot-instructions.md
+ create mode 100644 github-mcp-server/.github/dependabot.yml
+ create mode 100644 github-mcp-server/.github/licenses.tmpl
+ create mode 100644 github-mcp-server/.github/prompts/bug-report-review.prompt.yml
+ create mode 100644 github-mcp-server/.github/prompts/default-issue-review.prompt.yml
+ create mode 100644 github-mcp-server/.github/pull_request_template.md
+ create mode 100644 github-mcp-server/.github/workflows/ai-issue-assessment.yml
+ create mode 100644 github-mcp-server/.github/workflows/close-inactive-issues.yml
+ create mode 100644 github-mcp-server/.github/workflows/code-scanning.yml
+ create mode 100644 github-mcp-server/.github/workflows/docker-publish.yml
+ create mode 100644 github-mcp-server/.github/workflows/docs-check.yml
+ create mode 100644 github-mcp-server/.github/workflows/go.yml
+ create mode 100644 github-mcp-server/.github/workflows/goreleaser.yml
+ create mode 100644 github-mcp-server/.github/workflows/issue-labeler.yml
+ create mode 100644 github-mcp-server/.github/workflows/license-check.yml
+ create mode 100644 github-mcp-server/.github/workflows/lint.yml
+ create mode 100644 github-mcp-server/.github/workflows/mcp-diff.yml
+ create mode 100644 github-mcp-server/.github/workflows/moderator.yml
+ create mode 100644 github-mcp-server/.github/workflows/registry-releaser.yml
+ create mode 100644 github-mcp-server/.gitignore
+ create mode 100644 github-mcp-server/.golangci.yml
+ create mode 100644 github-mcp-server/.goreleaser.yaml
+ create mode 100644 github-mcp-server/.vscode/launch.json
+ create mode 100644 github-mcp-server/CODE_OF_CONDUCT.md
+ create mode 100644 github-mcp-server/CONTRIBUTING.md
+ create mode 100644 github-mcp-server/Dockerfile
+ create mode 100644 github-mcp-server/LICENSE
+ create mode 100644 github-mcp-server/README.md
+ create mode 100644 github-mcp-server/SECURITY.md
+ create mode 100644 github-mcp-server/SUPPORT.md
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/feature_flag_docs.go
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/generate_docs.go
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/helpers.go
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/list_scopes.go
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/main.go
+ create mode 100644 github-mcp-server/cmd/github-mcp-server/main_test.go
+ create mode 100644 github-mcp-server/cmd/mcpcurl/README.md
+ create mode 100644 github-mcp-server/cmd/mcpcurl/main.go
+ create mode 100644 github-mcp-server/cmd/mcpcurl/main_test.go
+ create mode 100644 github-mcp-server/docs/error-handling.md
+ create mode 100644 github-mcp-server/docs/feature-flags.md
+ create mode 100644 github-mcp-server/docs/github-app-auth.md
+ create mode 100644 github-mcp-server/docs/host-integration.md
+ create mode 100644 github-mcp-server/docs/insiders-features.md
+ create mode 100644 github-mcp-server/docs/installation-guides/README.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-antigravity.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-claude.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-cline.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-codex.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-copilot-cli.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-cursor.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-gemini-cli.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-opencode.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-other-copilot-ides.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-roo-code.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-rovo-dev-cli.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-windsurf.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-xcode.md
+ create mode 100644 github-mcp-server/docs/installation-guides/install-zed.md
+ create mode 100644 github-mcp-server/docs/oauth-login.md
+ create mode 100644 github-mcp-server/docs/policies-and-governance.md
+ create mode 100644 github-mcp-server/docs/remote-server.md
+ create mode 100644 github-mcp-server/docs/scope-filtering.md
+ create mode 100644 github-mcp-server/docs/server-configuration.md
+ create mode 100644 github-mcp-server/docs/streamable-http.md
+ create mode 100644 github-mcp-server/docs/testing.md
+ create mode 100644 github-mcp-server/docs/tool-renaming.md
+ create mode 100644 github-mcp-server/docs/toolsets-and-icons.md
+ create mode 100644 github-mcp-server/e2e/README.md
+ create mode 100644 github-mcp-server/e2e/e2e_test.go
+ create mode 100644 github-mcp-server/gemini-extension.json
+ create mode 100644 github-mcp-server/go.mod
+ create mode 100644 github-mcp-server/go.sum
+ create mode 100644 github-mcp-server/internal/buildinfo/buildinfo.go
+ create mode 100644 github-mcp-server/internal/ghmcp/oauth.go
+ create mode 100644 github-mcp-server/internal/ghmcp/oauth_test.go
+ create mode 100644 github-mcp-server/internal/ghmcp/server.go
+ create mode 100644 github-mcp-server/internal/ghmcp/server_test.go
+ create mode 100644 github-mcp-server/internal/githubapp/githubapp.go
+ create mode 100644 github-mcp-server/internal/githubapp/githubapp_test.go
+ create mode 100644 github-mcp-server/internal/githubv4mock/githubv4mock.go
+ create mode 100644 github-mcp-server/internal/githubv4mock/local_round_tripper.go
+ create mode 100644 github-mcp-server/internal/githubv4mock/objects_are_equal_values.go
+ create mode 100644 github-mcp-server/internal/githubv4mock/objects_are_equal_values_test.go
+ create mode 100644 github-mcp-server/internal/githubv4mock/query.go
+ create mode 100644 github-mcp-server/internal/oauth/callback.go
+ create mode 100644 github-mcp-server/internal/oauth/callback_test.go
+ create mode 100644 github-mcp-server/internal/oauth/env.go
+ create mode 100644 github-mcp-server/internal/oauth/flow.go
+ create mode 100644 github-mcp-server/internal/oauth/manager.go
+ create mode 100644 github-mcp-server/internal/oauth/manager_test.go
+ create mode 100644 github-mcp-server/internal/oauth/oauth.go
+ create mode 100644 github-mcp-server/internal/oauth/oauth_test.go
+ create mode 100644 github-mcp-server/internal/oauth/prompter.go
+ create mode 100644 github-mcp-server/internal/oauth/templates/error.html
+ create mode 100644 github-mcp-server/internal/oauth/templates/success.html
+ create mode 100644 github-mcp-server/internal/oauth/testutil_test.go
+ create mode 100644 github-mcp-server/internal/profiler/profiler.go
+ create mode 100644 github-mcp-server/internal/toolsnaps/toolsnaps.go
+ create mode 100644 github-mcp-server/internal/toolsnaps/toolsnaps_test.go
+ create mode 100644 github-mcp-server/pkg/buffer/buffer.go
+ create mode 100644 github-mcp-server/pkg/buffer/buffer_test.go
+ create mode 100644 github-mcp-server/pkg/context/graphql_features.go
+ create mode 100644 github-mcp-server/pkg/context/mcp_info.go
+ create mode 100644 github-mcp-server/pkg/context/request.go
+ create mode 100644 github-mcp-server/pkg/context/token.go
+ create mode 100644 github-mcp-server/pkg/errors/error.go
+ create mode 100644 github-mcp-server/pkg/errors/error_test.go
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/actions_get.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/actions_list.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/actions_run_trigger.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_comment_to_pending_review.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_issue_comment.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_issue_comment_reaction.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_issue_reaction.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_pull_request_review_comment.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_pull_request_review_comment_reaction.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_reply_to_pull_request_comment.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/add_sub_issue.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/assign_copilot_to_issue.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/assign_copilot_to_issue_with_intent.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_branch.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_gist.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_issue.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_or_update_file.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_pull_request.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_pull_request_review.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/create_repository.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/delete_file.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/delete_pending_pull_request_review.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/discussion_comment_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/dismiss_notification.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/fork_repository.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_code_quality_finding.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_code_scanning_alert.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_commit.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_dependabot_alert.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_discussion.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_discussion_comments.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_file_blame.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_file_contents.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_gist.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_global_security_advisory.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_job_logs.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_label.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_latest_release.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_me.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_notification_details.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_release_by_tag.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_repository_tree.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_secret_scanning_alert.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_tag.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_team_members.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/get_teams.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/issue_dependency_read_ff_issue_dependencies.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/issue_dependency_write_ff_issue_dependencies.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/issue_read.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/issue_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/label_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_branches.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_code_scanning_alerts.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_commits.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_dependabot_alerts.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_discussion_categories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_discussions.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_gists.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_global_security_advisories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_issue_fields.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_issue_types.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_issues.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_label.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_notifications.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_org_repository_security_advisories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_pull_requests.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_releases.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_repository_collaborators.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_repository_security_advisories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_secret_scanning_alerts.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_starred_repositories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/list_tags.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/manage_notification_subscription.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/manage_repository_notification_subscription.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/mark_all_notifications_read.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/merge_pull_request.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/projects_get.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/projects_list.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/projects_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/pull_request_read.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/pull_request_review_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/push_files.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/remove_sub_issue.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/reprioritize_sub_issue.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/request_copilot_review.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/request_pull_request_reviewers.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/resolve_review_thread.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_code.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_commits.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_issues.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_orgs.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_pull_requests.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_repositories.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/search_users.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/set_issue_fields.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/star_repository.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/sub_issue_write.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/submit_pending_pull_request_review.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/ui_get.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/unresolve_review_thread.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/unstar_repository.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_gist.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_assignees.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_body.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_labels.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_milestone.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_state.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_title.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_issue_type.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request_body.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request_branch.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request_draft_state.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request_state.snap
+ create mode 100644 github-mcp-server/pkg/github/__toolsnaps__/update_pull_request_title.snap
+ create mode 100644 github-mcp-server/pkg/github/actions.go
+ create mode 100644 github-mcp-server/pkg/github/actions_test.go
+ create mode 100644 github-mcp-server/pkg/github/code_quality.go
+ create mode 100644 github-mcp-server/pkg/github/code_quality_test.go
+ create mode 100644 github-mcp-server/pkg/github/code_scanning.go
+ create mode 100644 github-mcp-server/pkg/github/code_scanning_test.go
+ create mode 100644 github-mcp-server/pkg/github/context_tools.go
+ create mode 100644 github-mcp-server/pkg/github/context_tools_test.go
+ create mode 100644 github-mcp-server/pkg/github/copilot.go
+ create mode 100644 github-mcp-server/pkg/github/copilot_test.go
+ create mode 100644 github-mcp-server/pkg/github/csv_output.go
+ create mode 100644 github-mcp-server/pkg/github/csv_output_test.go
+ create mode 100644 github-mcp-server/pkg/github/dependabot.go
+ create mode 100644 github-mcp-server/pkg/github/dependabot_test.go
+ create mode 100644 github-mcp-server/pkg/github/dependencies.go
+ create mode 100644 github-mcp-server/pkg/github/dependencies_test.go
+ create mode 100644 github-mcp-server/pkg/github/deprecated_tool_aliases.go
+ create mode 100644 github-mcp-server/pkg/github/discussions.go
+ create mode 100644 github-mcp-server/pkg/github/discussions_test.go
+ create mode 100644 github-mcp-server/pkg/github/feature_flags.go
+ create mode 100644 github-mcp-server/pkg/github/feature_flags_test.go
+ create mode 100644 github-mcp-server/pkg/github/fields_filtering_test.go
+ create mode 100644 github-mcp-server/pkg/github/fields_telemetry.go
+ create mode 100644 github-mcp-server/pkg/github/fields_telemetry_test.go
+ create mode 100644 github-mcp-server/pkg/github/gists.go
+ create mode 100644 github-mcp-server/pkg/github/gists_test.go
+ create mode 100644 github-mcp-server/pkg/github/git.go
+ create mode 100644 github-mcp-server/pkg/github/git_test.go
+ create mode 100644 github-mcp-server/pkg/github/granular_tools_test.go
+ create mode 100644 github-mcp-server/pkg/github/header_params_test.go
+ create mode 100644 github-mcp-server/pkg/github/helper_test.go
+ create mode 100644 github-mcp-server/pkg/github/ifc_labels.go
+ create mode 100644 github-mcp-server/pkg/github/inventory.go
+ create mode 100644 github-mcp-server/pkg/github/issue_dependencies.go
+ create mode 100644 github-mcp-server/pkg/github/issue_dependencies_test.go
+ create mode 100644 github-mcp-server/pkg/github/issue_fields.go
+ create mode 100644 github-mcp-server/pkg/github/issue_fields_test.go
+ create mode 100644 github-mcp-server/pkg/github/issues.go
+ create mode 100644 github-mcp-server/pkg/github/issues_delete_test.go
+ create mode 100644 github-mcp-server/pkg/github/issues_granular.go
+ create mode 100644 github-mcp-server/pkg/github/issues_test.go
+ create mode 100644 github-mcp-server/pkg/github/labels.go
+ create mode 100644 github-mcp-server/pkg/github/labels_test.go
+ create mode 100644 github-mcp-server/pkg/github/lockdown.go
+ create mode 100644 github-mcp-server/pkg/github/lockdown_test.go
+ create mode 100644 github-mcp-server/pkg/github/minimal_types.go
+ create mode 100644 github-mcp-server/pkg/github/notifications.go
+ create mode 100644 github-mcp-server/pkg/github/notifications_test.go
+ create mode 100644 github-mcp-server/pkg/github/params.go
+ create mode 100644 github-mcp-server/pkg/github/params_test.go
+ create mode 100644 github-mcp-server/pkg/github/projects.go
+ create mode 100644 github-mcp-server/pkg/github/projects_batch.go
+ create mode 100644 github-mcp-server/pkg/github/projects_batch_mutation.go
+ create mode 100644 github-mcp-server/pkg/github/projects_batch_mutation_test.go
+ create mode 100644 github-mcp-server/pkg/github/projects_batch_test.go
+ create mode 100644 github-mcp-server/pkg/github/projects_resolver.go
+ create mode 100644 github-mcp-server/pkg/github/projects_resolver_test.go
+ create mode 100644 github-mcp-server/pkg/github/projects_test.go
+ create mode 100644 github-mcp-server/pkg/github/projects_v2_test.go
+ create mode 100644 github-mcp-server/pkg/github/prompts.go
+ create mode 100644 github-mcp-server/pkg/github/pullrequests.go
+ create mode 100644 github-mcp-server/pkg/github/pullrequests_granular.go
+ create mode 100644 github-mcp-server/pkg/github/pullrequests_test.go
+ create mode 100644 github-mcp-server/pkg/github/repositories.go
+ create mode 100644 github-mcp-server/pkg/github/repositories_helper.go
+ create mode 100644 github-mcp-server/pkg/github/repositories_test.go
+ create mode 100644 github-mcp-server/pkg/github/repository_resource.go
+ create mode 100644 github-mcp-server/pkg/github/repository_resource_completions.go
+ create mode 100644 github-mcp-server/pkg/github/repository_resource_completions_test.go
+ create mode 100644 github-mcp-server/pkg/github/repository_resource_test.go
+ create mode 100644 github-mcp-server/pkg/github/resources.go
+ create mode 100644 github-mcp-server/pkg/github/scope_filter.go
+ create mode 100644 github-mcp-server/pkg/github/scope_filter_test.go
+ create mode 100644 github-mcp-server/pkg/github/search.go
+ create mode 100644 github-mcp-server/pkg/github/search_semantic_test.go
+ create mode 100644 github-mcp-server/pkg/github/search_test.go
+ create mode 100644 github-mcp-server/pkg/github/search_utils.go
+ create mode 100644 github-mcp-server/pkg/github/search_utils_test.go
+ create mode 100644 github-mcp-server/pkg/github/secret_scanning.go
+ create mode 100644 github-mcp-server/pkg/github/secret_scanning_test.go
+ create mode 100644 github-mcp-server/pkg/github/security_advisories.go
+ create mode 100644 github-mcp-server/pkg/github/security_advisories_test.go
+ create mode 100644 github-mcp-server/pkg/github/server.go
+ create mode 100644 github-mcp-server/pkg/github/server_test.go
+ create mode 100644 github-mcp-server/pkg/github/tools.go
+ create mode 100644 github-mcp-server/pkg/github/tools_static_validation_test.go
+ create mode 100644 github-mcp-server/pkg/github/tools_test.go
+ create mode 100644 github-mcp-server/pkg/github/tools_validation_test.go
+ create mode 100644 github-mcp-server/pkg/github/toolset_icons_test.go
+ create mode 100644 github-mcp-server/pkg/github/toolset_instructions.go
+ create mode 100644 github-mcp-server/pkg/github/ui_capability.go
+ create mode 100644 github-mcp-server/pkg/github/ui_capability_test.go
+ create mode 100644 github-mcp-server/pkg/github/ui_dist/.gitkeep
+ create mode 100644 github-mcp-server/pkg/github/ui_dist/.placeholder.html
+ create mode 100644 github-mcp-server/pkg/github/ui_embed.go
+ create mode 100644 github-mcp-server/pkg/github/ui_resources.go
+ create mode 100644 github-mcp-server/pkg/github/ui_resources_test.go
+ create mode 100644 github-mcp-server/pkg/github/ui_tools.go
+ create mode 100644 github-mcp-server/pkg/github/ui_tools_test.go
+ create mode 100644 github-mcp-server/pkg/github/workflow_prompts.go
+ create mode 100644 github-mcp-server/pkg/http/handler.go
+ create mode 100644 github-mcp-server/pkg/http/handler_test.go
+ create mode 100644 github-mcp-server/pkg/http/headers/headers.go
+ create mode 100644 github-mcp-server/pkg/http/headers/parse.go
+ create mode 100644 github-mcp-server/pkg/http/headers/parse_test.go
+ create mode 100644 github-mcp-server/pkg/http/mark/mark.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/cors.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/cors_test.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/mcp_parse.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/mcp_parse_test.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/pat_scope.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/pat_scope_test.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/request_config.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/scope_challenge.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/token.go
+ create mode 100644 github-mcp-server/pkg/http/middleware/token_test.go
+ create mode 100644 github-mcp-server/pkg/http/oauth/oauth.go
+ create mode 100644 github-mcp-server/pkg/http/oauth/oauth_test.go
+ create mode 100644 github-mcp-server/pkg/http/server.go
+ create mode 100644 github-mcp-server/pkg/http/server_test.go
+ create mode 100644 github-mcp-server/pkg/http/transport/bearer.go
+ create mode 100644 github-mcp-server/pkg/http/transport/bearer_test.go
+ create mode 100644 github-mcp-server/pkg/http/transport/graphql_features.go
+ create mode 100644 github-mcp-server/pkg/http/transport/graphql_features_test.go
+ create mode 100644 github-mcp-server/pkg/http/transport/user_agent.go
+ create mode 100644 github-mcp-server/pkg/ifc/ifc.go
+ create mode 100644 github-mcp-server/pkg/ifc/ifc_test.go
+ create mode 100644 github-mcp-server/pkg/inventory/builder.go
+ create mode 100644 github-mcp-server/pkg/inventory/errors.go
+ create mode 100644 github-mcp-server/pkg/inventory/filters.go
+ create mode 100644 github-mcp-server/pkg/inventory/instructions.go
+ create mode 100644 github-mcp-server/pkg/inventory/instructions_test.go
+ create mode 100644 github-mcp-server/pkg/inventory/prompts.go
+ create mode 100644 github-mcp-server/pkg/inventory/registry.go
+ create mode 100644 github-mcp-server/pkg/inventory/registry_test.go
+ create mode 100644 github-mcp-server/pkg/inventory/resources.go
+ create mode 100644 github-mcp-server/pkg/inventory/server_tool.go
+ create mode 100644 github-mcp-server/pkg/inventory/server_tool_test.go
+ create mode 100644 github-mcp-server/pkg/lockdown/lockdown.go
+ create mode 100644 github-mcp-server/pkg/lockdown/lockdown_test.go
+ create mode 100644 github-mcp-server/pkg/log/io.go
+ create mode 100644 github-mcp-server/pkg/log/io_test.go
+ create mode 100644 github-mcp-server/pkg/observability/metrics/metrics.go
+ create mode 100644 github-mcp-server/pkg/observability/metrics/noop_sink.go
+ create mode 100644 github-mcp-server/pkg/observability/metrics/noop_sink_test.go
+ create mode 100644 github-mcp-server/pkg/observability/observability.go
+ create mode 100644 github-mcp-server/pkg/observability/observability_test.go
+ create mode 100644 github-mcp-server/pkg/octicons/icons/apps-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/apps-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/beaker-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/beaker-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/bell-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/bell-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/book-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/book-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/check-circle-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/check-circle-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/code-square-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/code-square-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/codescan-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/codescan-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/comment-discussion-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/comment-discussion-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/copilot-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/copilot-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/dependabot-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/dependabot-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/file-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/file-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-branch-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-branch-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-commit-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-commit-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-merge-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-merge-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-pull-request-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/git-pull-request-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/issue-opened-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/issue-opened-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/logo-gist-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/logo-gist-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/mark-github-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/mark-github-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/organization-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/organization-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/people-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/people-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/person-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/person-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/project-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/project-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/repo-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/repo-forked-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/repo-forked-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/repo-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/shield-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/shield-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/shield-lock-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/shield-lock-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/star-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/star-fill-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/star-fill-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/star-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/tag-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/tag-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/tools-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/tools-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/workflow-dark.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons/workflow-light.png
+ create mode 100644 github-mcp-server/pkg/octicons/icons_data_uris.txt
+ create mode 100644 github-mcp-server/pkg/octicons/octicons.go
+ create mode 100644 github-mcp-server/pkg/octicons/octicons_benchmark_test.go
+ create mode 100644 github-mcp-server/pkg/octicons/octicons_test.go
+ create mode 100644 github-mcp-server/pkg/octicons/required_icons.txt
+ create mode 100644 github-mcp-server/pkg/raw/raw.go
+ create mode 100644 github-mcp-server/pkg/raw/raw_test.go
+ create mode 100644 github-mcp-server/pkg/sanitize/sanitize.go
+ create mode 100644 github-mcp-server/pkg/sanitize/sanitize_test.go
+ create mode 100644 github-mcp-server/pkg/scopes/fetcher.go
+ create mode 100644 github-mcp-server/pkg/scopes/fetcher_test.go
+ create mode 100644 github-mcp-server/pkg/scopes/map.go
+ create mode 100644 github-mcp-server/pkg/scopes/map_test.go
+ create mode 100644 github-mcp-server/pkg/scopes/scopes.go
+ create mode 100644 github-mcp-server/pkg/scopes/scopes_test.go
+ create mode 100644 github-mcp-server/pkg/tooldiscovery/search.go
+ create mode 100644 github-mcp-server/pkg/tooldiscovery/search_test.go
+ create mode 100644 github-mcp-server/pkg/toolvalidation/readonlyhint.go
+ create mode 100644 github-mcp-server/pkg/toolvalidation/readonlyhint_test.go
+ create mode 100644 github-mcp-server/pkg/translations/translations.go
+ create mode 100644 github-mcp-server/pkg/utils/api.go
+ create mode 100644 github-mcp-server/pkg/utils/api_test.go
+ create mode 100644 github-mcp-server/pkg/utils/result.go
+ create mode 100644 github-mcp-server/pkg/utils/token.go
+ create mode 100644 github-mcp-server/script/build-ui
+ create mode 100644 github-mcp-server/script/conformance-test
+ create mode 100644 github-mcp-server/script/fetch-icons
+ create mode 100644 github-mcp-server/script/generate-docs
+ create mode 100644 github-mcp-server/script/get-discussions
+ create mode 100644 github-mcp-server/script/get-me
+ create mode 100644 github-mcp-server/script/licenses
+ create mode 100644 github-mcp-server/script/licenses-check
+ create mode 100644 github-mcp-server/script/lint
+ create mode 100644 github-mcp-server/script/list-scopes
+ create mode 100644 github-mcp-server/script/prettyprint-log
+ create mode 100644 github-mcp-server/script/print-mcp-diff-configs/main.go
+ create mode 100644 github-mcp-server/script/tag-release
+ create mode 100644 github-mcp-server/script/test
+ create mode 100644 github-mcp-server/server.json
+ create mode 100644 github-mcp-server/third-party-licenses.darwin.md
+ create mode 100644 github-mcp-server/third-party-licenses.linux.md
+ create mode 100644 github-mcp-server/third-party-licenses.windows.md
+ create mode 100644 github-mcp-server/third-party/github.com/aymerick/douceur/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/fsnotify/fsnotify/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/github/github-mcp-server/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/go-chi/chi/v5/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/go-viper/mapstructure/v2/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/google/go-github/v89/github/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/google/go-querystring/query/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/google/jsonschema-go/jsonschema/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/gorilla/css/scanner/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/inconshreveable/mousetrap/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/josephburnett/jd/v2/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/lithammer/fuzzysearch/fuzzy/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/microcosm-cc/bluemonday/LICENSE.md
+ create mode 100644 github-mcp-server/third-party/github.com/modelcontextprotocol/go-sdk/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/muesli/cache2go/LICENSE.txt
+ create mode 100644 github-mcp-server/third-party/github.com/pelletier/go-toml/v2/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/sagikazarmark/locafero/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/segmentio/asm/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/segmentio/encoding/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/shurcooL/githubv4/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/shurcooL/graphql/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/sourcegraph/conc/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/spf13/afero/LICENSE.txt
+ create mode 100644 github-mcp-server/third-party/github.com/spf13/cast/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/spf13/cobra/LICENSE.txt
+ create mode 100644 github-mcp-server/third-party/github.com/spf13/pflag/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/spf13/viper/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/subosito/gotenv/LICENSE
+ create mode 100644 github-mcp-server/third-party/github.com/yosida95/uritemplate/v3/LICENSE
+ create mode 100644 github-mcp-server/third-party/go.yaml.in/yaml/v3/LICENSE
+ create mode 100644 github-mcp-server/third-party/go.yaml.in/yaml/v3/NOTICE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/net/html/LICENSE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/oauth2/LICENSE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/sync/errgroup/LICENSE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/sys/LICENSE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/text/LICENSE
+ create mode 100644 github-mcp-server/third-party/golang.org/x/time/rate/LICENSE
+ create mode 100644 github-mcp-server/ui/package-lock.json
+ create mode 100644 github-mcp-server/ui/package.json
+ create mode 100644 github-mcp-server/ui/scripts/build.mjs
+ create mode 100644 github-mcp-server/ui/src/apps/get-me/App.tsx
+ create mode 100644 github-mcp-server/ui/src/apps/get-me/index.html
+ create mode 100644 github-mcp-server/ui/src/apps/issue-write/App.tsx
+ create mode 100644 github-mcp-server/ui/src/apps/issue-write/index.html
+ create mode 100644 github-mcp-server/ui/src/apps/pr-edit/App.tsx
+ create mode 100644 github-mcp-server/ui/src/apps/pr-edit/index.html
+ create mode 100644 github-mcp-server/ui/src/apps/pr-write/App.tsx
+ create mode 100644 github-mcp-server/ui/src/apps/pr-write/index.html
+ create mode 100644 github-mcp-server/ui/src/components/AppProvider.tsx
+ create mode 100644 github-mcp-server/ui/src/components/FeedbackFooter.tsx
+ create mode 100644 github-mcp-server/ui/src/components/MarkdownEditor.tsx
+ create mode 100644 github-mcp-server/ui/src/hooks/useMcpApp.ts
+ create mode 100644 github-mcp-server/ui/src/lib/toolResult.ts
+ create mode 100644 github-mcp-server/ui/src/vite-env.d.ts
+ create mode 100644 github-mcp-server/ui/tsconfig.json
+ create mode 100644 github-mcp-server/ui/vite.config.ts
+ create mode 100644 pdb/fac.json
+ create mode 100644 pdb/ix.json
+ create mode 100644 pdb/ixfac.json
+ create mode 100644 pdb/ixlan.json
+ create mode 100644 pdb/netfac.json
+ create mode 100644 pdb/netixlan.json
+ create mode 100644 qesis-mcp-archive/RDL Strategy for agents and AI Governability.md
+ create mode 100644 qesis-mcp-archive/database_system_in_ord_.ipynb
+ create mode 100644 qesis-mcp-archive/progit.pdf
+ create mode 100644 qesis-mcp/.claude/DORA_ROI_BASELINE.md
+ create mode 100644 qesis-mcp/.claude/Governance_AI_Alignment_Blueprint.md
+ create mode 100644 qesis-mcp/.claude/MODELING_LAYERS_MDA.md
+ create mode 100644 qesis-mcp/.claude/RDL Strategy for agents and AI Governability.md
+ create mode 100644 qesis-mcp/.claude/SYNTHESIS_PHD_PRIVATE_MARKET.md
+ create mode 100644 qesis-mcp/.claude/launch.json
+ create mode 100644 qesis-mcp/.gitattributes
+ create mode 100644 qesis-mcp/.github/workflows/production-integrity-probe.yml
+ create mode 100644 qesis-mcp/.github/workflows/production-probe.yml
+ create mode 100644 qesis-mcp/.github/workflows/qesis-integrity.yml
+ create mode 100644 qesis-mcp/.github/workflows/release-binding.yml
+ create mode 100644 qesis-mcp/.gitignore
+ create mode 100644 qesis-mcp/.nvmrc
+ create mode 100644 qesis-mcp/04_Workspace_Handshakes/handshake_latest.json
+ create mode 100644 qesis-mcp/AUTHORS.md
+ create mode 100644 qesis-mcp/CLAUDE.md
+ create mode 100644 qesis-mcp/CODEBOOK.md
+ create mode 100644 qesis-mcp/DEPLOY.md
+ create mode 100644 qesis-mcp/Digital Twin R&D/ISO42001_FinServ_Tracker.xlsx
+ create mode 100644 qesis-mcp/Digital Twin R&D/QESIS_Ecosystem_Architecture_v1.md
+ create mode 100644 qesis-mcp/LICENSE
+ create mode 100644 qesis-mcp/README.md
+ create mode 100644 qesis-mcp/STIR_Governance_Dashboard.html
+ create mode 100644 qesis-mcp/_to_delete/graphify-out.zip
+ create mode 100644 qesis-mcp/_to_delete/graphify_src_DELETE_ME.tar.gz
+ create mode 100644 qesis-mcp/agent_analyst_fix_headers.py
+ create mode 100644 qesis-mcp/agent_architect_format_html.py
+ create mode 100644 qesis-mcp/agent_architect_migrate_pg.py
+ create mode 100644 qesis-mcp/agent_architect_promote_v85.py
+ create mode 100644 qesis-mcp/agent_architect_update_ledger.py
+ create mode 100644 qesis-mcp/agent_scout_license_audit.py
+ create mode 100644 qesis-mcp/api/__init__.py
+ create mode 100644 qesis-mcp/api/fsqca.py
+ create mode 100644 qesis-mcp/api/index.py
+ create mode 100644 qesis-mcp/api/pack/download.ts
+ create mode 100644 qesis-mcp/api/telemetry.py
+ create mode 100644 qesis-mcp/audit_licenses.py
+ create mode 100644 qesis-mcp/audit_phase2_completion.py
+ create mode 100644 qesis-mcp/console.html
+ create mode 100644 qesis-mcp/content/notion-archives/Bibliothek 7f2aa828e08683c5a70c017284a6ebd6.md
+ create mode 100644 qesis-mcp/content/notion-archives/Erste Schritte (1) 26faa828e0868033805dd8f7b3befbb3.md
+ create mode 100644 qesis-mcp/content/notion-archives/Erste Schritte 26faa828e08680b5bfc0d0c18e7899a2.md
+ create mode 100644 qesis-mcp/content/notion-archives/Home 139d97977ab94ead8a2818b7eff33fee.md
+ create mode 100644 qesis-mcp/content/notion-archives/Home-Ansichten de97468d06e048b9a10d1a4a97bd9cd6.md
+ create mode 100644 qesis-mcp/content/notion-archives/Meine Aufgaben 5814301464db47d59381b24ff48b2fd1.md
+ create mode 100644 qesis-mcp/content/notion-archives/People d3daa828e08682dfb0d8014512d331ec.md
+ create mode 100644 qesis-mcp/content/notion-archives/Portfolio 26faa828e08680c9bae5f6c34d9f85a0.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ Ops Tickets 74a6605432c949909c35e57c59038eb5.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/ENTSO-E Transparency API token not registered 3abaa828e086810682ced25fc5c25a10.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/KPI table stale since it was seeded 3abaa828e0868108bdb4fff210eb2972.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/Operational database is zero bytes 3abaa828e08681579ce6ed2426a75901.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ session close 2026-07-31 v8 3 serving, thre 3aeaa828e086811eb895fd82eaf0729d.md
+ create mode 100644 qesis-mcp/content/notion-archives/QESIS+ v8 3 deployment record, 2026-07-31 3aeaa828e08681d9852cfb8c0c981ec1.md
+ create mode 100644 "qesis-mcp/content/notion-archives/QESIS+ \342\200\224 Digital Twin OS \302\267 Command Board 3aaaa828e086817a8d38d857e2a9c22a.md"
+ create mode 100644 qesis-mcp/content/notion-archives/Rodrigo Batista Silva 26faa828e08680748fdbc9354d16d9d0.md
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-27 (evening) \342\200\224 Agent Ecosystem v1  3aaaa828e08681f5b3b4fed024780f92.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-27 (late) \342\200\224 Ecosystem v1 1 COUNSEL 3aaaa828e086813fbd1debca4a9d05d1.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-27 (night) \342\200\224 Intake executed, Data 3aaaa828e08681b6a929deb462cfe304.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-28 (2) \342\200\224 Dashboard v2 map, motion, 3aaaa828e0868133ad60ddaff57357b4.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-28 (3) \342\200\224 Dashboard v3 attribution, 3abaa828e08681329c2fc79897a59e20.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-28 (4, close) \342\200\224 Trilemma lineage + 3abaa828e08681e29114e7724c4a8215.md"
+ create mode 100644 "qesis-mcp/content/notion-archives/Session 2026-07-28 \342\200\224 STIR Governance Dashboard shi 3aaaa828e08681ac83c7c9ea8fe5904d.md"
+ create mode 100644 qesis-mcp/content/notion-archives/Untitled 26faa828e08680ef969cce0ae3465b55.md
+ create mode 100644 qesis-mcp/content/notion-archives/Untitled 3abaa828e0868080ac6fcbc5b6bc7d56.md
+ create mode 100644 qesis-mcp/content/notion-archives/Untitled 3abaa828e0868145b3d3ebcede483b9a.md
+ create mode 100644 qesis-mcp/content/notion-archives/Untitled 3abaa828e08681e486d8c1063ece6494.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams 447b4f2a61714bc1bac66312d1c6531e.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Cable feature geodata (D-011 D-013 gap) 3aaaa828e086814e8a12eba05134f764.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Canonical database (SQLite + CSV lineage layer) 3aaaa828e08681669a47f88e14a6f562.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Custom MCP write-path server (FastMCP + Postgres) 3aaaa828e0868106a1bfc6fb3c5595f1.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/GitHub publication layer (sovereign-infra) 3aaaa828e086818fb12bf35c4244159e.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/ISO 42001 EU AI Act audit assessment 3aaaa828e086814e9326fb832f564ec1.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Live open-data connections (Aqueduct, ENTSO-E, Cop 3aaaa828e08681249c01ca54cb3a1391.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Policy documents (AI Policy, Ethics, Governance, D 3aaaa828e0868101920ee8b2c7ef893f.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Power BI dashboard views 3aaaa828e0868155825ef3b1713da716.md
+ create mode 100644 qesis-mcp/content/notion-archives/Workstreams/Provenance register & dedupe 3aaaa828e086817392d7e7084c88823c.md
+ create mode 100644 qesis-mcp/dashboard/Components/ProvenanceExplorer.tsx
+ create mode 100644 qesis-mcp/dashboard/Components/RetrievalPlayground.tsx
+ create mode 100644 qesis-mcp/data/DATA_MAP.json
+ create mode 100644 qesis-mcp/data/RELEASES.json
+ create mode 100644 qesis-mcp/data/axes/cse_percolation.json
+ create mode 100644 qesis-mcp/data/axes/ember_ese_evidence.json
+ create mode 100644 qesis-mcp/data/axes/emodnet_cse_evidence.json
+ create mode 100644 qesis-mcp/data/axes/fidelity_full_sample.json
+ create mode 100644 qesis-mcp/data/axes/odi_capacity_bounds.json
+ create mode 100644 qesis-mcp/data/axes/u02_restatement.json
+ create mode 100644 qesis-mcp/data/axes/u07_odi_override_export.json
+ create mode 100644 qesis-mcp/data/axes/v9_1_sdi_scaffold.json
+ create mode 100644 qesis-mcp/data/axes/v9_sfc_scaffold.json
+ create mode 100644 qesis-mcp/data/chain_attestation.json
+ create mode 100644 qesis-mcp/data/chain_spine.jsonl
+ create mode 100644 qesis-mcp/data/domains.json
+ create mode 100644 qesis-mcp/data/endpoints.json
+ create mode 100644 qesis-mcp/data/frames_v9_1.json
+ create mode 100644 qesis-mcp/data/fsqca/equifinality_v85.json
+ create mode 100644 qesis-mcp/data/qesis_graph.json
+ create mode 100644 qesis-mcp/data/qesis_v8.json
+ create mode 100644 qesis-mcp/data/vintage_lineage.json
+ create mode 100644 qesis-mcp/docs/DIMENSIONAL_MAPPING_v8.5.md
+ create mode 100644 qesis-mcp/docs/MASTER_ECOSYSTEM_SPEC_v8.4.md
+ create mode 100644 qesis-mcp/docs/MASTER_ECOSYSTEM_SPEC_v8.5.md
+ create mode 100644 qesis-mcp/docs/ci-notes.md
+ create mode 100644 qesis-mcp/docs/fsqca.md
+ create mode 100644 qesis-mcp/dummy.ts
+ create mode 100644 qesis-mcp/eval/evaluation.xml
+ create mode 100644 qesis-mcp/graphify-out/.graphify_analysis.json
+ create mode 100644 qesis-mcp/graphify-out/.graphify_root
+ create mode 100644 qesis-mcp/graphify-out/GRAPH_REPORT.md
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/0139296973d499247aca7e31b282fba94ce066a447aabfbdc5f4194885697319.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/0170a84304f9dad974fb37bbe78b4bb9848f1cd999bd29c4e29867735ec20a9f.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/01e1b138f2585d6ffd63bab3b8946d11e39d887278b69e7b86d22d6f834e4df4.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/09aad271b4d5adead83cad8317f86d3973fca98288b45cad65441f15f5857e29.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/0ed7325dde08fe45f031f3975ec3e8c91b11c4fd19ec40b159553a74a80c74b0.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/109f275b481bc128771623d35f8e6fea76c32e4aa7e189c4391ff4d14e500b62.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/1392c153a1e8a25194adfdb8e24be6a0e2208f90e024b8c872987d21aa92a816.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/16c4c5bea2ee4483218e3ce5fe0f62eb5e12836a160d87cb20ed514ec29fefec.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/22754bf24cf7ff50a8b4664df2aafd7ff798ddadd40a654b8e5cad3b912d3df0.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/24ab19ffb5e427076a37327df0a16fcc9d2fabc7c10b52f87eb8c97c92699258.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/2a8a26805f823d70a2a07daa1452cdb9c063008f5cc3b10f0aae996949a2efca.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/2d4e6d9b6376ffdd277a30810faf3646420b240e9d3ad524c2730c364f441828.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/340c9e022ba8e1bde0fd547b14041e4a88ee4d068e4272fd8a48df2fed08e7c3.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/34d209c291f44e9003f403e2005d4a6b9bb4239a26cc0dcac5befaffcaa3d9c9.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/38606adbc18f173869ed0642c9a05bec33d404b17ca878bec0ae3a7f5f36e1c7.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/3e57c65831d91b1e2589f41baa1436783692e9b7a5771fa3de1565337ba507b9.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/423325008437c80ee3a3ffa54f7a5dfe38e290766890a95ffeb29da7138ce145.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/4e74728ce881dde02d6ba899bc0b7a8e185b0e7f4b49a7e45bfcb857cc438872.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/4f2c8965a9dad5194d1a98e50b27a42ad6f97a248f569cd59bcd79b255dfc60e.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/51e6c6631304491a1ea429c9f7caa10edcf81f65a8913e21e916a752e9422191.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/5574969ed74724d0a61a6c2c085efc04ed04935a5e518bc9d710b27f65fc06b8.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/567dacd64d57232203290813666398aa0dbbdb4567f18dfd4ae3981e9e2683f4.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/59d9ee1d5a9c59532ff0b327fe534e9f1eab9a5e36ad80ab0f6bbbafe0ea133f.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/5a61ca77d012a9b80673e26b207686cbc24fbdcdbaf6881fd59ade59b78c3253.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/5d88971abdf518ab94f733877e3564e976a5a6f3ef14bfe6952a0b47d5cf34ef.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/5d9dd7f440d96c1f3112af7696074a2f83c51b74750faf06e7f284526192ee4d.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/5e1ab8d674a639289c08e3765abb6524f29a96bf219485386dfa3687211f3ae3.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/64666269265e4c0933dbc75ea9cf50cbcdc3c2da9e37a1422094a75513cf1f98.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/6a77cc6c381fb1aeb5c75f30e01ed08f659ea40371fba5604dfa69fc2271118c.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/6daf42713a30ffb635e1f512a0209bb17274f6821898ed62d0419dc427657eb4.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/730c7af364fdbcb8d69c98eb268d8b75a845898e2acf031d7c736ab1b2e6056b.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/74fdc1bdb34b7daaca447ac005dbdb6e4891541d78a8b6b68d3600bd44d34d37.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/7573b9dedd208d5d3ab9e886ba843147459fc7191492a26fa63a09f485087c33.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/7899f05e53e3823d0c1f2f66045add013d4f15bb001c32daed7bcca3ad3e87d9.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/7aa4e7f38b3dba2dbd8aa11e52ef51d3ecb3aa334d25dd42fbfe26160c7383ff.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/7b481268b9c97aafe0394eb8292bceb846a65cd0379e56fba98c034078da6a8c.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/7e4d1acdf86f25f90bc6cc0150aaf67c2055971f94d48a802f857a925e3909fd.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/902413907b6244000750f52de2866de14c5c6c02c3d4fae178102e5a9482afbd.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/917caf1798a3a455f6b695bc8f792ff2872140ce712737f95da68adf6c547213.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/9ce9c4ccf2101d95a3d61b26a8689de238f9b1ca0c5e4a1d09a52f62346c1ede.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/9ecfb9715b00be8a0100d7379bda8aba4b410cdff0e815165eb8f092031594cd.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/a69382bb897c19fedd44181b44748184aafc3be4e5e1c5533348162285a1cc85.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/a6cca6e07cb33f4d7501d8ba426033ef7065593bc1f7f43bd3c92afdc09a5b32.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/a87ebba8e61f839b7654c448f08fbf10706b068fc00ff53a14ea14bde00d1000.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/ac7a3c242631e2ffbb5b9314ce843c09452871cca281f28a84b479cf143a0813.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/ae5c1cd5651ac12f77fc0b796d480f174d8d3a9bcc8b9bf634119597db17372f.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/b0d2c3056dd7ebfb754fa58a87cc5d977411229d73529f72c17edf0aa000330e.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/b6ca41f1d14e26c137a0f1430977a3ae45e9e2fa9d7067d67f60286251b1cfa4.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/b7bd25fc869825d87dfaee5d7b1e21cd55e105b51b0a41c02686909931f55cd6.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/b833e12c2802b4ff435ebcce46366b71912c86c02e80fc5ad3b6e2a004734918.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/bbc2733852de35d5d01fdce2a43ba5cc372ef1aeda3d7c4cc65e179d0abf4172.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/bd48c277353be23532b8e0aa74e538cf7129a695bc1a8565a68ac0d264f519e9.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/c21cdb56d0b45aa1804ba442ec2530a3646c89747e5d611b27b7d9d7d03817e7.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/c3d12262b926ea0d9c90174f6415827709e0d54a24aa37055afbe632405fe816.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/c54de97e4bc11cf0d52ec704104febe3bf69bdb8f843224eb3c54697b592b8f8.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/caa07562aaf6ee015dcae2920302bba9db3f46b58930aa1441e02174635ee522.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/d509f934eb772442bd3e76eab5fa0f6d67fc6d30efb8fce802817f4d14d52fe3.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/d66a1f565a4ee3f41487a3dcf3078a10ac2a729a433d90a49c9ec903e0e023a6.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/d70d574721ff0819182e662fb13c0461ddf2db59c374ef3ee299b13360f7157c.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/d8d1bb49ad78ae0df694ae1eea72f17c2cf0df1e10436e3ef4fa087470432d1b.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/d9753e882ff8d5011df2463dc5adf165103cc9f67611c19809ce613a8a5cdf39.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/dd376e85923b8ce8ab95a82a7cffb799c07e66a72ab1556f230a1e0eb53eee61.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/e0e4332d7336848b0c357de6418c2583a51443464a913cbb4f0858280f0cffc6.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/e2cb844c752be379b22339e24b82db6ef6555f6045c312a84bec32f47b762434.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/e67981edf1637bc14c0d06fa77dbc19c08216c627b2e28bf54672003b94a17a0.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/eb4b7d9d9460c592e9b1096faa82281791b5b7cde6f4b79d28166fb1ff0c57e8.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/ee0ac82b4eb116e3be7382027c553ff754ace998b7888e9aa1b97e52f7f8ba9c.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/f47b1be42414aa961fda42e3d923735047197db2b0ec6c30411c62fa3c4928b6.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/f505c27d9389ee93a36165a89f28ed8a865dbe25c7f14626e556f04fafae26af.json
+ create mode 100644 qesis-mcp/graphify-out/cache/ast/v0.9.43/f784aa0e9fe179ad6d74642d97adf3db8c7d336f671d35b221f5a3ebebd9e6b3.json
+ create mode 100644 qesis-mcp/graphify-out/cache/stat-index.json
+ create mode 100644 qesis-mcp/graphify-out/graph.json
+ create mode 100644 qesis-mcp/graphify-out/manifest.json
+ create mode 100644 qesis-mcp/index.html
+ create mode 100644 qesis-mcp/infrastructure_mcp.py
+ create mode 100644 qesis-mcp/install-production-probe.ps1
+ create mode 100644 qesis-mcp/lib/data-parser.ts
+ create mode 100644 qesis-mcp/locate_db.py
+ create mode 100644 qesis-mcp/locate_json.py
+ create mode 100644 qesis-mcp/mcp_payload.json
+ create mode 100644 qesis-mcp/method.html
+ create mode 100644 qesis-mcp/my-agent/.gitignore
+ create mode 100644 qesis-mcp/my-agent/.vercelignore
+ create mode 100644 qesis-mcp/my-agent/AGENTS.md
+ create mode 100644 qesis-mcp/my-agent/CLAUDE.md
+ create mode 100644 qesis-mcp/my-agent/DORA_ROI_BASELINE.md
+ create mode 100644 qesis-mcp/my-agent/Governance_AI_Alignment_Blueprint.md
+ create mode 100644 qesis-mcp/my-agent/MODELING_LAYERS_MDA.md
+ create mode 100644 qesis-mcp/my-agent/RDL Strategy for agents and AI Governability.md
+ create mode 100644 qesis-mcp/my-agent/SYNTHESIS_PHD_PRIVATE_MARKET.md
+ create mode 100644 qesis-mcp/my-agent/agent/agent.ts
+ create mode 100644 qesis-mcp/my-agent/agent/channels/eve.ts
+ create mode 100644 qesis-mcp/my-agent/agent/instructions.md
+ create mode 100644 qesis-mcp/my-agent/package-lock.json
+ create mode 100644 qesis-mcp/my-agent/package.json
+ create mode 100644 qesis-mcp/my-agent/tsconfig.json
+ create mode 100644 qesis-mcp/ops/BACKLOG_AND_COMPLIANCE.md
+ create mode 100644 qesis-mcp/ops/D-103_STATUS.md
+ create mode 100644 qesis-mcp/ops/D-108_SAU_CSE_PROVENANCE.md
+ create mode 100644 qesis-mcp/ops/D-110_KG_FSQCA_ASSESSMENT.md
+ create mode 100644 qesis-mcp/ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md
+ create mode 100644 qesis-mcp/ops/DEPLOYMENT_AUDIT_2026-08-02.md
+ create mode 100644 qesis-mcp/ops/DISPATCH_BOARD_2026-08-14.md
+ create mode 100644 qesis-mcp/ops/DORA_ROI_BASELINE.md
+ create mode 100644 qesis-mcp/ops/EDA_VS_BATCH_BENCHMARK.json
+ create mode 100644 qesis-mcp/ops/ENDPOINT_DECLARATION_PROPAGATION.md
+ create mode 100644 qesis-mcp/ops/EOD_2026-08-05.md
+ create mode 100644 qesis-mcp/ops/Governance_AI_Alignment_Blueprint.md
+ create mode 100644 qesis-mcp/ops/HANDOFF_2026-08-09_LAND_THE_LOCK.md
+ create mode 100644 qesis-mcp/ops/LESSONS_LEDGER.md
+ create mode 100644 qesis-mcp/ops/MILESTONE_v8.6.md
+ create mode 100644 qesis-mcp/ops/MODELING_LAYERS_MDA.md
+ create mode 100644 qesis-mcp/ops/OFFICIAL_STATUS_REPORT_2026-08-11.md
+ create mode 100644 qesis-mcp/ops/RDL Strategy for agents and AI Governability.md
+ create mode 100644 qesis-mcp/ops/SESSION_REPORT_2026-08-08.md
+ create mode 100644 qesis-mcp/ops/SOURCE_ACQUISITION_REGISTER.md
+ create mode 100644 qesis-mcp/ops/SPONSORSHIP_REGISTER.md
+ create mode 100644 qesis-mcp/ops/STATUS_REPORT_STEP7_2026-08-09.md
+ create mode 100644 qesis-mcp/ops/SYNTHESIS_PHD_PRIVATE_MARKET.md
+ create mode 100644 qesis-mcp/ops/V86_INTEGRITY_PATCH_VERIFICATION.md
+ create mode 100644 qesis-mcp/ops/V9.0_PATH_AND_ROUTING.md
+ create mode 100644 qesis-mcp/ops/VINTAGE_LINEAGE.md
+ create mode 100644 qesis-mcp/ops/VISUALISATION_SPEC.md
+ create mode 100644 qesis-mcp/ops/dag_execution_latest.log
+ create mode 100644 qesis-mcp/ops/prototypes/V1_effective_weights.html
+ create mode 100644 qesis-mcp/overview.html
+ create mode 100644 qesis-mcp/package-lock.json
+ create mode 100644 qesis-mcp/package.json
+ create mode 100644 qesis-mcp/public/index.html
+ create mode 100644 qesis-mcp/pytest.ini
+ create mode 100644 qesis-mcp/qesis_agents/orchestration_gate.py
+ create mode 100644 qesis-mcp/qesis_endpoints.py
+ create mode 100644 qesis-mcp/requirements-extra.txt
+ create mode 100644 qesis-mcp/requirements.txt
+ create mode 100644 qesis-mcp/scripts/append_chain_entry.py
+ create mode 100644 qesis-mcp/scripts/bench_eda_vs_batch.py
+ create mode 100644 qesis-mcp/scripts/build_eval.py
+ create mode 100644 qesis-mcp/scripts/build_graph.py
+ create mode 100644 qesis-mcp/scripts/build_landing.py
+ create mode 100644 qesis-mcp/scripts/build_v8_4.py
+ create mode 100644 qesis-mcp/scripts/bump_vintage.py
+ create mode 100644 qesis-mcp/scripts/compute_fidelity.py
+ create mode 100644 qesis-mcp/scripts/compute_odi_bounds.py
+ create mode 100644 qesis-mcp/scripts/coupling.py
+ create mode 100644 qesis-mcp/scripts/dag_engine.py
+ create mode 100644 qesis-mcp/scripts/fsqca_equifinality.py
+ create mode 100644 qesis-mcp/scripts/fsqca_runner.py
+ create mode 100644 qesis-mcp/scripts/fsqca_variant_probe.py
+ create mode 100644 qesis-mcp/scripts/ingest_ember.py
+ create mode 100644 qesis-mcp/scripts/ingest_emodnet.py
+ create mode 100644 qesis-mcp/scripts/ops/Complete-V91-Rebase.ps1
+ create mode 100644 qesis-mcp/scripts/ops/Repair-GitHub.ps1
+ create mode 100644 qesis-mcp/scripts/percolation_cse.py
+ create mode 100644 qesis-mcp/scripts/probe_remote.py
+ create mode 100644 qesis-mcp/scripts/prove_axis_sfc_contract.py
+ create mode 100644 qesis-mcp/scripts/prove_release_gate.py
+ create mode 100644 qesis-mcp/scripts/retrieval_manifest.json
+ create mode 100644 qesis-mcp/scripts/run_fsqca.R
+ create mode 100644 qesis-mcp/scripts/scout_sfc_intake.py
+ create mode 100644 qesis-mcp/scripts/shapelite.py
+ create mode 100644 qesis-mcp/scripts/smoke_server.py
+ create mode 100644 qesis-mcp/scripts/test_gate.py
+ create mode 100644 qesis-mcp/scripts/test_http.py
+ create mode 100644 qesis-mcp/scripts/test_routes.py
+ create mode 100644 qesis-mcp/scripts/vercel_gate.py
+ create mode 100644 qesis-mcp/scripts/verify_action_pinning.py
+ create mode 100644 qesis-mcp/scripts/verify_axis_sfc.py
+ create mode 100644 qesis-mcp/scripts/verify_chain.py
+ create mode 100644 qesis-mcp/scripts/verify_dashboard.py
+ create mode 100644 qesis-mcp/scripts/verify_domains.py
+ create mode 100644 qesis-mcp/scripts/verify_endpoints.py
+ create mode 100644 qesis-mcp/scripts/verify_index.py
+ create mode 100644 qesis-mcp/scripts/verify_production.py
+ create mode 100644 qesis-mcp/scripts/verify_release.py
+ create mode 100644 qesis-mcp/scripts/verify_served_contract.py
+ create mode 100644 qesis-mcp/scripts/verify_vintage_pairing.py
+ create mode 100644 qesis-mcp/server.py
+ create mode 100644 qesis-mcp/telegeography_connector.py
+ create mode 100644 qesis-mcp/test_client.py
+ create mode 100644 qesis-mcp/tests/test_fsqca_integration.py
+ create mode 100644 qesis-mcp/tests/test_telemetry.py
+ create mode 100644 qesis-mcp/tsconfig.json
+ create mode 100644 qesis-mcp/v86_reseal.py
+ create mode 100644 qesis-mcp/var/qesis_fallback_dump.sql
+ create mode 100644 qesis-mcp/vercel.json
+ create mode 100644 qesis-mcp/workers/fsqca_runner.py
+ create mode 100644 scripts/orchestrator.py
+ create mode 100644 scripts/vercel_promote_helper.sh
+ create mode 100644 sovereign-infra/.claude/agents/analyst.md
+ create mode 100644 sovereign-infra/.claude/agents/architect.md
+ create mode 100644 sovereign-infra/.claude/agents/counsel.md
+ create mode 100644 sovereign-infra/.claude/agents/herald.md
+ create mode 100644 sovereign-infra/.claude/agents/scout.md
+ create mode 100644 sovereign-infra/.claude/agents/sentinel.md
+ create mode 100644 sovereign-infra/.env.example
+ create mode 100644 sovereign-infra/.gitattributes
+ create mode 100644 sovereign-infra/.githooks/commit-msg
+ create mode 100644 sovereign-infra/.githooks/pre-commit
+ create mode 100644 sovereign-infra/.githooks/pre-push
+ create mode 100644 sovereign-infra/.github/workflows/branch-guard.yml
+ create mode 100644 sovereign-infra/.github/workflows/claude.yml
+ create mode 100644 sovereign-infra/.github/workflows/compliance.yml
+ create mode 100644 sovereign-infra/.github/workflows/promote-production.yml
+ create mode 100644 sovereign-infra/.gitignore
+ create mode 100644 sovereign-infra/.mcp.json
+ create mode 100644 sovereign-infra/CHANGELOG.md
+ create mode 100644 sovereign-infra/CITATION_CONCORDANCE.md
+ create mode 100644 sovereign-infra/CLAUDE.md
+ create mode 100644 sovereign-infra/Dockerfile.postgres
+ create mode 100644 sovereign-infra/PUBLISHING_GUIDE.md
+ create mode 100644 sovereign-infra/README.md
+ create mode 100644 sovereign-infra/TOKEN_vercel.txt
+ create mode 100644 sovereign-infra/agents/analyst.md
+ create mode 100644 sovereign-infra/agents/architect.md
+ create mode 100644 sovereign-infra/agents/counsel.md
+ create mode 100644 sovereign-infra/agents/herald.md
+ create mode 100644 sovereign-infra/agents/scout.md
+ create mode 100644 sovereign-infra/agents/sentinel.md
+ create mode 100644 sovereign-infra/design/DESIGN_SYSTEM.md
+ create mode 100644 sovereign-infra/design/HANDOFF.md
+ create mode 100644 sovereign-infra/design/PHILOSOPHY_DAMPED_CASCADE.md
+ create mode 100644 sovereign-infra/design/damped_cascade.html
+ create mode 100644 sovereign-infra/design/tokens.css
+ create mode 100644 sovereign-infra/docker-compose.yml
+ create mode 100644 sovereign-infra/docker_update.ps1
+ create mode 100644 sovereign-infra/init/01_extensions.sql
+ create mode 100644 sovereign-infra/init/02_schema.sql
+ create mode 100644 sovereign-infra/init/03_seed_data.sql
+ create mode 100644 sovereign-infra/init/04_views_functions.sql
+ create mode 100644 sovereign-infra/ops/AGENTIC_ECOSYSTEM_REPORT_2026-07-27.md
+ create mode 100644 sovereign-infra/ops/AGENT_ACCEPTANCE_TESTS.md
+ create mode 100644 sovereign-infra/ops/AMEND_GATE_PR.ps1
+ create mode 100644 sovereign-infra/ops/ARTICLE_14_REGISTER.md
+ create mode 100644 sovereign-infra/ops/AUDIT_2026-07-28.md
+ create mode 100644 sovereign-infra/ops/AUDIT_2026-07-28_FULL.md
+ create mode 100644 sovereign-infra/ops/CITATION_CONCORDANCE.md
+ create mode 100644 sovereign-infra/ops/CITATION_LOG.json
+ create mode 100644 sovereign-infra/ops/CLEARING_PLAN_2026-07-30.md
+ create mode 100644 sovereign-infra/ops/CLOSEOUT_2026-08-01.md
+ create mode 100644 sovereign-infra/ops/COMMIT_HOTFIX.ps1
+ create mode 100644 sovereign-infra/ops/CONNECTIVITY_BATCH_AUDIT_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/CROSS_INDICATOR_SCAN_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/D-107_TICKET_SWEEP.md
+ create mode 100644 sovereign-infra/ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md
+ create mode 100644 sovereign-infra/ops/DAILY_AGENTS.ps1
+ create mode 100644 sovereign-infra/ops/DATA_RESILIENCE.md
+ create mode 100644 sovereign-infra/ops/DEPLOYMENT_STATUS_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/ENTSOE_RESEARCH_ASSESSMENT_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/ENTSOE_RUNBOOK.md
+ create mode 100644 sovereign-infra/ops/ERRATA_D104.md
+ create mode 100644 sovereign-infra/ops/FINISH_PUSH.ps1
+ create mode 100644 sovereign-infra/ops/FIX_CI.ps1
+ create mode 100644 sovereign-infra/ops/FIX_LIC1.ps1
+ create mode 100644 sovereign-infra/ops/FIX_ROUTING.ps1
+ create mode 100644 sovereign-infra/ops/GCP_RUNBOOK.md
+ create mode 100644 sovereign-infra/ops/GOVERNANCE.md
+ create mode 100644 sovereign-infra/ops/GRID_AUDIT_AND_PROPOSAL_ASSESSMENT_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/HANDOFF_CLAUDE_CODE_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/HOTFIX.ps1
+ create mode 100644 sovereign-infra/ops/INC-20260731-01.md
+ create mode 100644 sovereign-infra/ops/INC-20260813-01.md
+ create mode 100644 sovereign-infra/ops/LESSONS_LEDGER.md
+ create mode 100644 sovereign-infra/ops/LICENCE_CLASSIFICATION.json
+ create mode 100644 sovereign-infra/ops/MONETIZATION_PLAYBOOK.md
+ create mode 100644 sovereign-infra/ops/MORNING_2026-07-29.md
+ create mode 100644 sovereign-infra/ops/MORNING_2026-07-30.md
+ create mode 100644 sovereign-infra/ops/MORNING_2026-08-02.md
+ create mode 100644 sovereign-infra/ops/MORNING_2026-08-03.md
+ create mode 100644 sovereign-infra/ops/OPERATIONS_MANUAL.md
+ create mode 100644 sovereign-infra/ops/RELEASE.ps1
+ create mode 100644 sovereign-infra/ops/RELEASE_V9_REAL.ps1
+ create mode 100644 sovereign-infra/ops/REMEDIATION_v8.4.md
+ create mode 100644 sovereign-infra/ops/RENDER_CONTRACT.md
+ create mode 100644 sovereign-infra/ops/RESOLVE_PR44.ps1
+ create mode 100644 sovereign-infra/ops/RESPECIFY.ps1
+ create mode 100644 sovereign-infra/ops/RUNBOOK.md
+ create mode 100644 sovereign-infra/ops/RUN_ME_v8.7.ps1
+ create mode 100644 sovereign-infra/ops/RUN_ME_v8.7_step2.ps1
+ create mode 100644 sovereign-infra/ops/SHIP.ps1
+ create mode 100644 sovereign-infra/ops/SHIP_DEPLOY_GATE.ps1
+ create mode 100644 sovereign-infra/ops/SHIP_IDENTITY.ps1
+ create mode 100644 sovereign-infra/ops/SHIP_SCOUT_SFC.ps1
+ create mode 100644 sovereign-infra/ops/SHIP_V9.ps1
+ create mode 100644 sovereign-infra/ops/SOURCE_ACQUISITION_REGISTER.md
+ create mode 100644 sovereign-infra/ops/SPONSORSHIP_REGISTER.md
+ create mode 100644 sovereign-infra/ops/STATUS_REPORT_2026-07-29.md
+ create mode 100644 sovereign-infra/ops/STATUS_REPORT_STEP7_2026-08-09.md
+ create mode 100644 sovereign-infra/ops/STATUS_REPORT_v9.0_2026-08-13.md
+ create mode 100644 sovereign-infra/ops/TECHNICAL_DOCUMENTATION.md
+ create mode 100644 sovereign-infra/ops/TICKETS.json
+ create mode 100644 sovereign-infra/ops/VALIDATION_REPORT_CSOVE_AND_V83_2026-07-31.md
+ create mode 100644 sovereign-infra/ops/VERCEL_RUNBOOK.md
+ create mode 100644 sovereign-infra/ops/VINTAGE_LINEAGE.md
+ create mode 100644 sovereign-infra/ops/WRITING_STYLE.md
+ create mode 100644 sovereign-infra/ops/analysis/2026-08-01_D-103_fsqca_rerun.md
+ create mode 100644 sovereign-infra/ops/analysis/D-103_fsqca_rerun.json
+ create mode 100644 sovereign-infra/ops/analysis/D-109_fsqca_5cond.json
+ create mode 100644 sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.freeze.json
+ create mode 100644 sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.json
+ create mode 100644 sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.freeze.json
+ create mode 100644 sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.json
+ create mode 100644 sovereign-infra/ops/reports/2026-07-28.md
+ create mode 100644 sovereign-infra/ops/reports/2026-07-29.md
+ create mode 100644 sovereign-infra/ops/reports/2026-07-30.md
+ create mode 100644 sovereign-infra/ops/reports/2026-07-31.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-01.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-02.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-03.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-13.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-14.md
+ create mode 100644 sovereign-infra/ops/reports/2026-08-15.md
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-07-28.json
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-07-29.json
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-07-30.json
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-07-31.json
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-08-01.json
+ create mode 100644 sovereign-infra/ops/reports/ACCEPTANCE_2026-08-13.json
+ create mode 100644 sovereign-infra/ops/schema/01_compliance_schema.sql
+ create mode 100644 sovereign-infra/ops/schema/02_telemetry_schema.sql
+ create mode 100644 sovereign-infra/ops/vintage_lineage.json
+ create mode 100644 sovereign-infra/pgadmin/servers.json
+ create mode 100644 sovereign-infra/qesis_agents/__init__.py
+ create mode 100644 sovereign-infra/qesis_agents/__main__.py
+ create mode 100644 sovereign-infra/qesis_agents/acceptance.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/__init__.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/_citation_scan.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/analyst.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/architect.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/counsel.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/herald.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/scout.py
+ create mode 100644 sovereign-infra/qesis_agents/agents/sentinel.py
+ create mode 100644 sovereign-infra/qesis_agents/cli.py
+ create mode 100644 sovereign-infra/qesis_agents/cloud.py
+ create mode 100644 sovereign-infra/qesis_agents/compliance.py
+ create mode 100644 sovereign-infra/qesis_agents/config.py
+ create mode 100644 sovereign-infra/qesis_agents/corpus.py
+ create mode 100644 sovereign-infra/qesis_agents/fsqca.py
+ create mode 100644 sovereign-infra/qesis_agents/guardrails.py
+ create mode 100644 sovereign-infra/qesis_agents/mcp_server.py
+ create mode 100644 sovereign-infra/qesis_agents/orchestrator.py
+ create mode 100644 sovereign-infra/qesis_agents/probes.py
+ create mode 100644 sovereign-infra/qesis_agents/propagate.py
+ create mode 100644 sovereign-infra/qesis_agents/rag.py
+ create mode 100644 sovereign-infra/qesis_agents/render_gate.py
+ create mode 100644 sovereign-infra/qesis_agents/runtime.py
+ create mode 100644 sovereign-infra/qesis_agents/store.py
+ create mode 100644 sovereign-infra/qesis_agents/structured_data.py
+ create mode 100644 sovereign-infra/qesis_agents/style.py
+ create mode 100644 sovereign-infra/qesis_agents/warehouse.py
+ create mode 100644 sovereign-infra/qesis_cloud.py
+ create mode 100644 sovereign-infra/qesis_timeevolution_load.sql
+ create mode 100644 sovereign-infra/scripts/agentic_failure_fsqca.py
+ create mode 100644 sovereign-infra/scripts/backup_all.py
+ create mode 100644 sovereign-infra/scripts/bind_release.py
+ create mode 100644 sovereign-infra/scripts/build_concordance.py
+ create mode 100644 sovereign-infra/scripts/build_console.py
+ create mode 100644 sovereign-infra/scripts/build_method_page.py
+ create mode 100644 sovereign-infra/scripts/build_site.py
+ create mode 100644 sovereign-infra/scripts/classify_licences.py
+ create mode 100644 sovereign-infra/scripts/collect_status.py
+ create mode 100644 sovereign-infra/scripts/drive_mcp.py
+ create mode 100644 sovereign-infra/scripts/final_check.py
+ create mode 100644 sovereign-infra/scripts/finish_ecosystem.ps1
+ create mode 100644 sovereign-infra/scripts/load_data.py
+ create mode 100644 sovereign-infra/scripts/mcp_launch.py
+ create mode 100644 sovereign-infra/scripts/morning_protocol.py
+ create mode 100644 sovereign-infra/scripts/probe_production.py
+ create mode 100644 sovereign-infra/scripts/push_vault.sh
+ create mode 100644 sovereign-infra/scripts/rag_query.py
+ create mode 100644 sovereign-infra/scripts/reclassify_docs.py
+ create mode 100644 sovereign-infra/scripts/register_assets.py
+ create mode 100644 sovereign-infra/scripts/rerun_fsqca_d103.py
+ create mode 100644 sovereign-infra/scripts/scan_credentials.py
+ create mode 100644 sovereign-infra/scripts/setup_entsoe.ps1
+ create mode 100644 sovereign-infra/scripts/setup_vercel_token.ps1
+ create mode 100644 sovereign-infra/scripts/show_fsqca.py
+ create mode 100644 sovereign-infra/scripts/stage_v85_fsqca.py
+ create mode 100644 sovereign-infra/scripts/telemetry_pgvector.py
+ create mode 100644 sovereign-infra/scripts/test_render_gates.py
+ create mode 100644 sovereign-infra/scripts/test_ticket_ids.py
+ create mode 100644 sovereign-infra/scripts/ticket_bridge.py
+ create mode 100644 sovereign-infra/scripts/vercel_checks.py
+ create mode 100644 sovereign-infra/scripts/vercel_promote.py
+ create mode 100644 sovereign-infra/scripts/vercel_promote_helper.sh
+ create mode 100644 sovereign-infra/scripts/verify_chain.py
+ create mode 100644 sovereign-infra/scripts/verify_js_port.py
+ create mode 100644 sovereign-infra/scripts/verify_licences.py
+ create mode 100644 sovereign-infra/scripts/verify_surfaces.py
+ create mode 100644 sovereign-infra/scripts/wire_desktop.py
+ create mode 100644 sovereign-infra/site/console.html
+ create mode 100644 sovereign-infra/site/index.html
+ create mode 100644 sovereign-infra/site/method.html
+ create mode 100644 sovereign-infra/site/vercel.json
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # ==============================================================================
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 2. LOGIN BEI GITHUB & ABRECHNUNGSFREIER CLOUD-START
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # ==============================================================================
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "Öffne sicheres GitHub-Login-Fenster im Browser..." -ForegroundColor Green
+Öffne sicheres GitHub-Login-Fenster im Browser...
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Startet den Login über den Webbrowser
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh auth login --web
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+
+! First copy your one-time code: F910-EE18
+Press Enter to open https://github.com/login/device in your browser...
+✓ Authentication complete.
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+✓ Logged in as rodrigoesl92-cloud
+! You were already logged in to this account
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # Erstellt das private Repository und lädt Ihren STIR-Code hoch
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh repo create "qesis-stir-ecosystem" --private --source=. --push
+GraphQL: Name already exists on this account (createRepository)
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "HERZLICHEN GLÜCKWUNSCH! Ihr Ökosystem läuft jetzt autark 24/7 in der GitHub-Cloud!" -ForegroundColor Green
+HERZLICHEN GLÜCKWUNSCH! Ihr Ökosystem läuft jetzt autark 24/7 in der GitHub-Cloud!
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "Opening secure GitHub authentication portal in your browser..." -ForegroundColor Green
+Opening secure GitHub authentication portal in your browser...
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 1. Start the secure web-browser login flow
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh auth login --web
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+
+! First copy your one-time code: 125D-BCD2
+Press Enter to open https://github.com/login/device in your browser...
+✓ Authentication complete.
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+✓ Logged in as rodrigoesl92-cloud
+! You were already logged in to this account
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 2. Create the private cloud repository and upload your STIR ecosystem
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> gh repo create "qesis-stir-ecosystem" --private --source=. --push
+GraphQL: Name already exists on this account (createRepository)
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> Write-Host "CONGRATULATIONS! Your ecosystem is now operating autonomously 24/7 in the GitHub Cloud!" -ForegroundColor Green
+CONGRATULATIONS! Your ecosystem is now operating autonomously 24/7 in the GitHub Cloud!
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 1. Bind your local folder to your existing online GitHub directory
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git remote add origin "https://github.com" -ErrorAction SilentlyContinue
+error: unknown switch `E'
+usage: git remote add [<options>] <name> <url>
+
+    -f, --[no-]fetch      fetch the remote branches
+    --[no-]tags           import all tags and associated objects when fetching
+                          or do not fetch any tag at all (--no-tags)
+    -t, --[no-]track <branch>
+                          branch(es) to track
+    -m, --[no-]master <branch>
+                          master branch
+    --[no-]mirror[=(push|fetch)]
+                          set up remote as a mirror to push to or fetch from
+
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> # 2. Safely upload your entire file pack to the cloud branch
+PS C:\Users\Lenovo\QESIS_STIR_Cloud> git push -u origin main --force
+Enumerating objects: 1220, done.
+Counting objects: 100% (1220/1220), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (1118/1118), done.
+Writing objects: 100% (1220/1220), 25.89 MiB | 2.16 MiB/s, done.
+Total 1220 (delta 191), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (191/191), done.
+To https://github.com/rodrigoesl92-cloud/qesis-stir-ecosystem.git
+ + 95686d0...8a6829f main -> main (forced update)
+branch 'main' set up to track 'origin/main'.
+PS C:\Users\Lenovo\QESIS_STIR_Cloud>

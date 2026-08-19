@@ -1,0 +1,113 @@
+{
+ "vintage": "v9.0 (2026-08-13)",
+ "generated_by": "scripts/build_percolation_block.py",
+ "reads": "data/axes/cse_percolation.json",
+ "recomputes": false,
+ "authority": "PUB-1. Closes the second limb of L-056.",
+ "graph": {
+  "cities": 912,
+  "cables": 343,
+  "edges": 1489,
+  "components": 76,
+  "articulation_cities": 88,
+  "articulation_reproduces_published": true,
+  "note": "88 articulation cities recomputed against 88 published, overlap 88. An independent rebuild agreeing exactly is the reason the rest of this block is citable."
+ },
+ "finding": {
+  "label": "Robust yet fragile",
+  "headline_campaign": "betweenness_recalc",
+  "critical_node": "Porthcurno, United Kingdom",
+  "tipping_point_removals": 13,
+  "tipping_point_share_of_network": 0.0143,
+  "cities_severed_in_one_step": 278,
+  "lcc_before_tip": 594,
+  "lcc_after_tip": 316,
+  "pair_connectivity_before": 0.4394,
+  "pair_connectivity_after": 0.2214,
+  "targeted_at_13_removals": 0.3465,
+  "random_at_13_removals": 0.6732,
+  "random_at_88_removals": 0.5864,
+  "statement": "Robust-yet-fragile confirmed. The first twelve targeted removals cost 31 cities between them. The thirteenth, Porthcurno, severs 278. Random removal of 88 cities, 6.8 times more nodes, costs 14 percent of the giant component. The static articulation set understates this because articulation structure regenerates under attack: it plateaus at 0.3904 and never reaches the half-collapse threshold."
+ },
+ "two_numbers_that_are_not_the_same_number": {
+  "single_step_severance": {
+   "at_removal": 13,
+   "cities_severed": 278,
+   "meaning": "The largest one-step loss. Removal 13 takes the giant component from 594 cities to 316."
+  },
+  "half_collapse_threshold": {
+   "at_removal": 19,
+   "lcc_share": 0.3421,
+   "relative_to_baseline": 0.4992,
+   "meaning": "The removal at which the giant component first falls below half its baseline. It is a different quantity from the single-step severance and the two are published side by side so neither is quoted as the other."
+  }
+ },
+ "campaigns": {
+  "articulation_betweenness": {
+   "steps": 88,
+   "lcc_share_start": 0.6853,
+   "lcc_share_end": 0.3904,
+   "half_collapse": null,
+   "reached_half_collapse": false
+  },
+  "betweenness_static": {
+   "steps": 88,
+   "lcc_share_start": 0.6853,
+   "lcc_share_end": 0.2215,
+   "half_collapse": {
+    "steps": 76,
+    "lcc_share": 0.2434,
+    "relative_to_baseline": 0.3552
+   },
+   "reached_half_collapse": true
+  },
+  "degree": {
+   "steps": 88,
+   "lcc_share_start": 0.6853,
+   "lcc_share_end": 0.1425,
+   "half_collapse": {
+    "steps": 73,
+    "lcc_share": 0.2971,
+    "relative_to_baseline": 0.4335
+   },
+   "reached_half_collapse": true
+  },
+  "betweenness_recalc": {
+   "steps": 88,
+   "lcc_share_start": 0.6853,
+   "lcc_share_end": 0.0526,
+   "half_collapse": {
+    "steps": 19,
+    "lcc_share": 0.3421,
+    "relative_to_baseline": 0.4992
+   },
+   "reached_half_collapse": true
+  },
+  "random_mean": {
+   "steps": 88,
+   "lcc_share_start": 0.6853,
+   "lcc_share_end": 0.5864,
+   "half_collapse": null,
+   "reached_half_collapse": false
+  }
+ },
+ "why_the_static_set_understates_it": "The articulation_betweenness campaign never reaches half collapse: it plateaus at lcc_share 0.3904 across 88 removals. Articulation structure REGENERATES under attack, so a set computed once against the intact graph stops describing the graph after the first removal. The recalculating campaign is the honest one and it is the campaign the headline belongs to.",
+ "limitations": [
+  {
+   "id": "P-01",
+   "statement": "This is a topological result on a cable graph of 912 cities and 343 cables. It measures what disconnects, not what fails. No traffic volume, no capacity, no restoration time and no route diversity above the physical layer enters it.",
+   "effect": "Severance is a claim about connectivity, never about outage."
+  },
+  {
+   "id": "P-02",
+   "statement": "Targeted removal assumes an adversary with full topology knowledge and free choice of target. That is an upper bound on adversarial damage, not an expectation.",
+   "effect": "Read the targeted curves as a bound and the random curve as a base rate."
+  },
+  {
+   "id": "P-03",
+   "statement": "The cable graph is built from the same EMODnet and SubmarineMap composition that U-08 records as differing inside and outside the EU. The percolation inherits that asymmetry.",
+   "effect": "Cross-region comparison of chokepoint counts carries a method difference."
+  }
+ ],
+ "falsifier": "Popper standing order. This finding is refuted if an independent cable topology of comparable coverage produces a targeted-removal curve whose largest single-step severance is within the range of its own random-removal curve, or if the 88 articulation cities fail to reproduce from that topology. It is not refuted by a different critical node: which city sits at the tip is a property of the release, the robust-yet-fragile shape is the claim."
+}

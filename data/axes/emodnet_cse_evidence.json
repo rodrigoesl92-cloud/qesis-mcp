@@ -405,7 +405,7 @@
   "spearman_inherited_vs_computed_km": -0.467,
   "pearson_inherited_vs_computed_km": -0.407,
   "spearman_critical_005_n9": 0.683,
-  "verdict": "NOT REPRODUCIBLE. The inherited CSE_EMO column runs in the expected direction against EMODnet cable length but at rho -0.467 on n=9, below the 0.683 needed for significance. One published value, SAU 94.3, has zero EMODnet geometry and lies outside the EMODnet geographic remit under any of its products. France, which supplies the two largest layers in the release at 28,813 attributed km across 508 features, is published NULL.",
+  "verdict": "DIRECTIONALLY CONSISTENT, MAGNITUDE INCONCLUSIVE AT n=9. The inherited column moves in the direction its own formula requires. It is neither reproduced nor refuted: |rho| 0.467 does not reach the 0.683 needed at n=9, and ITA at 0.0 against 10,826 km and DEU at 2.9 against 5,960 km are the two cases pulling it down. Reporting this as NOT REPRODUCIBLE overstated the finding; reporting it as verified would overstate it in the other direction. Both are refused.",
   "superseded_verdict_2026_08_13": {
    "previous": "NOT REPRODUCIBLE. The inherited CSE_EMO column runs in the expected direction against EMODnet cable length but at rho -0.467 on n=9, below the 0.683 needed for significance. One published value, SAU 94.3, has zero EMODnet geometry and lies outside the EMODnet geographic remit under any of its products. France, which supplies the two largest layers in the release at 28,813 attributed km across 508 features, is published NULL.",
    "why_the_previous_verdict_was_defective": "It tested inherited CSE_EMO against computed cable length and read the negative sign as failure. CSE is INVERTED BY CONSTRUCTION. The README of MASTER_CLOUD_TABLE_v2_CSE.xlsx defines CSE_country = 100 - minmax(0.5*log1p(cable_count) + 0.3*log1p(landings) + 0.2*log1p(total_length_alloc_km)). More cable therefore means LOWER connectivity stress. A negative correlation against length is what the formula predicts, not evidence against it. The data show it plainly: POL carries 58 km and CSE_EMO 96.9, GBR carries 22,080 km and CSE_EMO 30.4.",
@@ -419,8 +419,10 @@
    "verdict": "DIRECTIONALLY CONSISTENT, MAGNITUDE INCONCLUSIVE AT n=9. The inherited column moves in the direction its own formula requires. It is neither reproduced nor refuted: |rho| 0.467 does not reach the 0.683 needed at n=9, and ITA at 0.0 against 10,826 km and DEU at 2.9 against 5,960 km are the two cases pulling it down. Reporting this as NOT REPRODUCIBLE overstated the finding; reporting it as verified would overstate it in the other direction. Both are refused.",
    "what_would_settle_it": "n=9 is the constraint, not the correlation. EMODnet's remit is European seas and it sources only 12 of the 35 states, coverage 0.343 against the 0.75 BIG gate, so no amount of re-analysis of this release raises n. Settling it needs the two outliers traced to their per-state components, or a cable source with global remit. Until then CSE is published with this limitation stated, which is what the axis already does through U-08 and D-108.",
    "audit_1_residue": "The other half of AUDIT-1 stands unchanged. ops/v9.0_FINAL_AUDIT.md certifies 'EMODnet verified ACTIVE' and ACTIVE is a property of a connection, never of a result (L-055). That sentence is still wrong and is corrected separately from this verdict.",
-   "resolved_by": "ANALYST, 2026-08-13, QT-0007"
-  }
+   "resolved_by": "ANALYST, 2026-08-13, QT-0007",
+   "restated_2026_08_15": "EMO-1. Until this restatement the top-level `verdict` field still carried the withdrawn text while this block, nested inside it, recorded that the withdrawn text was defective. Any consumer reading reproduction_verdict.verdict served the retracted claim, and two did: scripts/build_graph.py hardcoded it into the graph payload, and ops/DISPATCH_BOARD_2026-08-14.md propagated it into the board. This is R1.28 in the evidence plane: a withdrawal record naming the file the live citation sits in. No number changed. The reading did."
+  },
+  "verdict_status": "LIVE. Superseded the 2026-08-01 reading on 2026-08-13."
  },
  "source_provenance": {
   "release_dir": "EMODnet_HA_Cables_Telecommunication_20230628",
