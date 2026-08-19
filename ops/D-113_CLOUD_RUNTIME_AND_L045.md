@@ -1,6 +1,6 @@
 # D-113: the cloud runtime, and the decision L-045 has been waiting for
 
-**Status:** Proposed. **Date:** 2026-08-15. **Author:** COUNSEL.
+**Status:** ACCEPTED, signed by the operator 2026-08-19. **Date:** 2026-08-15. **Author:** COUNSEL.
 **Signs:** HUMAN. No agent signs a `D-`.
 **Closes:** L-045, open since 2026-07-29.
 **Supersedes nothing. Amends no boundary in G-03, G-04, G-06 or G-07.**
@@ -35,10 +35,10 @@ behind a credential, COUNSEL names the file and does not open it (G-03).
 | Source of record, both repos | GitHub | Microsoft Azure | US | `origin` remotes |
 | Evidence-plane mirror | OneDrive | Microsoft | US | operator-supplied share link, 2026-08-15 |
 | Agent runtime, this session | Anthropic | AWS | US | Claude |
-| Database | **UNDETERMINED** | unknown | unknown | `database_string.txt`, deliberately unopened |
+| Database | Neon (`eu-central-1`) | AWS | US vendor, EU region | Operator-declared D-1, 2026-08-19. Not verified by COUNSEL: the connection string is not opened (G-03) |
 | Signing key custody | local `.env` | operator machine | ES | `FSQCA_ED25519_PRIV_B64`, name read, value never |
 
-**Concentration, stated plainly.** Four of the six determined layers resolve to
+**Concentration, stated plainly, recomputed at n=6 on 2026-08-19.** ODI 50.0, FPE 100.0, RGD 50.0. Adding the database changed the concentration barely at all, and the reason is the finding: Neon is managed Postgres running on AWS, so it is not a sixth vendor, it is a third AWS layer. Recording it as its own substrate would have manufactured a diversification that does not exist. Five of the six determined layers resolve to
 **two** US hyperscalers, and one vendor, Microsoft, holds the source of record,
 the CI, the self-heal loop and the evidence mirror simultaneously. That is not a
 diversified posture. It is a single-vendor dependency across every plane except
@@ -161,11 +161,11 @@ for a published one. Publication is a separate change set requiring SENTINEL
 
 | Id | Action | Owner |
 |---|---|---|
-| `ACT-1` | Determine the database provider and jurisdiction from `database_string.txt` and record it in §1. COUNSEL will not open the file (G-03) | **HUMAN** |
+| `ACT-1` | **CLOSED 2026-08-19.** Operator declared Neon, `eu-central-1`. Recorded as declared rather than measured. Opens SX-04: FPE is computed on vendor jurisdiction while the data rests in the EU, and whether platform exposure belongs at the vendor or at the region is a real question the state axis never had to answer | closed |
 | `ACT-2` | Sign or refuse this decision | **HUMAN** |
 | `ACT-3` | Run `scripts/self_exposure.py`, read the numbers, then rule on publication | HUMAN, then SENTINEL |
 | `ACT-4` | Move the chain spine and the release attestations to a second, independent custody. Narrow diversification: these are the unrecoverable artefacts | ARCHITECT proposes, HUMAN approves |
-| `ACT-5` | Rotate `FSQCA_ED25519_PRIV_B64` out of a plaintext `.env` into the platform secret store. Rotation is never an agent action (G-03) | **HUMAN** |
+| `ACT-5` | **Gate shipped 2026-08-19**, `scripts/verify_no_plaintext_secrets.py`, wired into CI and the Vercel pre-build gate with four fixtures. The gate proves `.env` stays untracked and covered; it cannot move the key. Injecting it into GitHub Actions and Vercel and rotating it remains a human act (G-03) | **HUMAN** |
 | `ACT-6` | Confirm the OneDrive mirror is read-only export and not the writable evidence plane. D-027 and G-03 forbid a writable plane on a sync target, because provider-side version history survives local deletion | **HUMAN** |
 
 `ACT-5` and `ACT-6` are the two items on this page that are security findings

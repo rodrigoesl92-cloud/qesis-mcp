@@ -13,6 +13,7 @@ import json
 import subprocess
 import sys
 import tempfile
+import pathlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -611,6 +612,58 @@ def check_graph(results: list[tuple[str, bool]]) -> None:
         results.append((f"caught: {name}", caught))
 
 
+SECRETS_GATE = ROOT / "scripts" / "verify_no_plaintext_secrets.py"
+
+
+def run_secrets_gate(root) -> tuple[int, str]:
+    r = subprocess.run([sys.executable, str(SECRETS_GATE), "--root", str(root)],
+                       capture_output=True, text=True)
+    return r.returncode, (r.stdout + r.stderr)
+
+
+def check_secrets(results: list[tuple[str, bool]]) -> None:
+    """D-2. Two fixtures it must refuse, two it must accept.
+
+    The accept cases are not padding. This gate's first working run produced two
+    false positives out of three findings, `NON_SOURCE_KEYS` and
+    `CREDENTIAL_FILES`, both collections whose names contain a secret word. A
+    secrets gate that cries wolf is switched off by the third week (L-063), so
+    the accept fixtures pin the discrimination rather than trusting it.
+
+    The `os.getenv` case is the sharper one. The first repair excluded any value
+    containing a collection separator, which silenced a real PG_PASSWORD line and
+    would have silenced a getenv default carrying an actual secret. It is here so
+    that repair cannot be reintroduced.
+    """
+    if not SECRETS_GATE.exists():
+        results.append(("secrets: gate present", False))
+        return
+    import tempfile
+    ign = ".env\n.env.local\ndatabase_string.txt\n"
+
+    cases = [
+        ("secrets: literal API_KEY refused",
+         'API_KEY = "sk_live_9f3a2b7c4d1e8a6f"\n', ign, 1),
+        ("secrets: .gitignore coverage gap refused", "", "unrelated\n", 1),
+        ("secrets: env reference accepted",
+         'PG_PASSWORD = os.getenv("PGPASSWORD", "postgres")\n', ign, 0),
+        ("secrets: name-shaped collection accepted",
+         'NON_SOURCE_KEYS = {"rule", "provenance_note"}\n'
+         'CREDENTIAL_FILES = [".env", ".env.local"]\n', ign, 0),
+    ]
+    for name, content, ignore, want in cases:
+        d = pathlib.Path(tempfile.mkdtemp())
+        (d / "c.py").write_text(content, encoding="utf-8")
+        (d / ".gitignore").write_text(ignore, encoding="utf-8")
+        rc, out = run_secrets_gate(d)
+        ok = (rc != 0) if want else (rc == 0)
+        # A refusal must never print the value it refused (G-03).
+        if want and "sk_live_9f3a2b7c4d1e8a6f" in out:
+            ok = False
+            print("      LEAK: the gate printed the value it was guarding")
+        results.append((name, ok))
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -665,6 +718,7 @@ def main() -> int:
     check_contract(extra)
     check_endpoints(extra)
     check_graph(extra)
+    check_secrets(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

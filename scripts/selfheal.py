@@ -55,6 +55,8 @@ CONTROLS = [
     ("verify_vintage_pairing", ["scripts/verify_vintage_pairing.py"]),
     ("verify_axis_sfc",        ["scripts/verify_axis_sfc.py", "--quiet"]),
     ("verify_action_pinning",  ["scripts/verify_action_pinning.py"]),
+    ("verify_secrets",         ["scripts/verify_no_plaintext_secrets.py", "--quiet"]),
+    ("kill_switch",            ["scripts/kill_switch.py"]),
     ("build_graph_check",      ["scripts/build_graph.py", "--check"]),
     ("build_percolation_check", ["scripts/build_percolation_block.py", "--check"]),
     ("self_exposure_check",    ["scripts/self_exposure.py", "--check"]),
@@ -143,6 +145,24 @@ REMEDIES = {
                "measured coverage. The declared degradation is WITHHELD WITH "
                "CAUSE. Values are withheld, never imputed (D-007).",
         "degrade": "withhold_with_cause",
+    },
+    "verify_secrets": {
+        "class": "C",
+        "why": "A reachable secret is never remediated by an agent. Deleting the "
+               "line does not un-disclose the value, and cloud sync retains "
+               "provider-side history that survives local deletion, so rotation "
+               "is the only remedy and rotation is a human act (G-03, G-04).",
+        "escalate_with": "python scripts/verify_no_plaintext_secrets.py",
+        "severity": "CRITICAL",
+    },
+    "kill_switch": {
+        "class": "B",
+        "why": "A non-zero exit here means the switch is engaged, which is the "
+               "operator's decision working rather than a defect. The loop halts "
+               "before this registry is consulted; the entry exists so the "
+               "control appears in the reported set rather than being invisible "
+               "when it is doing its job.",
+        "degrade": "halt",
     },
     "verify_action_pinning": {
         "class": "C",
@@ -273,12 +293,34 @@ def promotion_policy(state: dict) -> tuple[bool, str]:
     fires on anything less than a fully green control set removes the damper
     without replacing it.
     """
+    # Article 14 Decision 5 outranks Decision 25. A signed promotion policy does
+    # not survive an engaged kill switch, and the order of these two checks is
+    # the whole content of "the stop control clears first".
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("_ks", ROOT / "scripts" / "kill_switch.py")
+    _ks = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ks)
+    engaged, channel, _ = _ks.state()
+    if engaged:
+        return False, f"KILL SWITCH ENGAGED via {channel}. Decision 5 outranks Decision 25."
+
     signed = (OPS / "G-07_PROMOTION_POLICY_SIGNED.json")
     if not signed.exists():
         return False, ("promotion policy unsigned. Article 14 Decision 25 and "
                        "G-07 section 4 are the instrument. Escalating instead.")
     if state["failed"] or state["escalations"]:
         return False, "control set not fully green"
+
+    # A class B degradation whose DECLARED degradation is block_promotion must
+    # block it. Without this the policy read only failures and escalations, so
+    # verify_vintage_pairing could degrade to block_promotion and promotion would
+    # proceed anyway: the registry declared a consequence and the policy did not
+    # read it. That is a rule described and not applied (L-054), committed inside
+    # the function whose entire job is to apply rules.
+    blockers = [d["control"] for d in state["degraded"]
+                if d.get("degradation") == "block_promotion"]
+    if blockers:
+        return False, ("declared block_promotion degradation on "
+                       + ", ".join(blockers))
     return True, "policy signed and predicate holds"
 
 
@@ -295,6 +337,25 @@ def main() -> int:
              "failed": [], "benign": []}
 
     print(f"selfheal {now}  mode={state['mode']}\n")
+
+    # Decision 5 before everything. A loop that checks its stop control after it
+    # has started repairing has not got a stop control, it has got a regret.
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("_ks", ROOT / "scripts" / "kill_switch.py")
+    _ks = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ks)
+    ks_engaged, ks_channel, ks_detail = _ks.state()
+    state["kill_switch"] = {"engaged": ks_engaged, "channel": ks_channel, "detail": ks_detail}
+    if ks_engaged:
+        state["verdict"] = "HALTED"
+        state["promotion"] = {"proceed": False,
+                              "reason": f"kill switch engaged via {ks_channel}"}
+        print(f"  !!  KILL SWITCH ENGAGED via {ks_channel}. No repair, no commit, no promotion.")
+        print("      Production keeps serving its last verified deployment.")
+        if not args.report_only:
+            REPORT.write_text(json.dumps(state, indent=1) + "\n", encoding="utf-8")
+        # Exit 0. An engaged switch is the operator's decision working, not a
+        # failure, and paging on it would train him to ignore the page (L-063).
+        return 0
 
     # Preflight before any control runs. A loop that cannot land its own repair
     # must know that before it starts repairing, not after.

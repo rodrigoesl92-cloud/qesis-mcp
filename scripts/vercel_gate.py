@@ -50,6 +50,9 @@ GATES = [
     ("build_landing",    ["scripts/build_landing.py", "--check"]),
     ("verify_domains",   ["scripts/verify_domains.py"]),
     ("verify_chain",     ["scripts/verify_chain.py"]),
+    # D-2. Stdlib only, so it runs here before install, and a build that would
+    # publish a reachable secret is skipped rather than shipped.
+    ("verify_secrets",   ["scripts/verify_no_plaintext_secrets.py", "--quiet"]),
 ]
 
 
@@ -91,6 +94,19 @@ def branch_guard() -> bool:
 
 def main() -> int:
     print("QESIS+ pre-build gate. exit 1 builds, exit 0 skips (Vercel semantics).")
+
+    # Article 14 Decision 5, checked before the branch and before the gates.
+    # An engaged switch means production keeps serving its last verified
+    # deployment, which is the same failure mode this file already applies to a
+    # failing gate set and for the same reason.
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("_ks", ROOT / "scripts" / "kill_switch.py")
+    _ks = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ks)
+    engaged, channel, _ = _ks.state()
+    if engaged:
+        print(f"  KILL SWITCH ENGAGED via {channel}. Build refused.")
+        return BUILD_IGNORED
+
     if not branch_guard():
         return BUILD_IGNORED
     failed: list[str] = []
