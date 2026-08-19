@@ -32,6 +32,14 @@ concurrency:
   group: selfheal-${{ github.ref }}
   cancel-in-progress: false
 
+# Article 14 Decision 5, the emergency channel. Set the repository variable
+# QESIS_KILL_SWITCH to 1 in Settings, Secrets and variables, Actions, and every
+# run halts within the hour with no clone, no git and no laptop. An emergency
+# control that requires a working development environment is not an emergency
+# control.
+env:
+  QESIS_KILL_SWITCH: ${{ vars.QESIS_KILL_SWITCH }}
+
 jobs:
   heal:
     runs-on: ubuntu-latest

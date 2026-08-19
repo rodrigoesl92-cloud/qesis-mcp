@@ -53,8 +53,19 @@ SUBSTRATE = {
                         "evidence": "operator share link 2026-08-15"},
     "agent_runtime": {"vendor": "Anthropic", "substrate": "AWS", "juris": "US",
                       "evidence": "this process"},
-    "database": {"vendor": None, "substrate": None, "juris": None,
-                 "evidence": "database_string.txt, deliberately unopened (G-03)"},
+    # D-1, operator-declared 2026-08-19. COUNSEL did not open database_string.txt
+    # and cannot verify this row against the connection string (G-03). It is
+    # recorded as declared, not as measured, and the distinction is carried in
+    # `evidence` so a later reader is not misled about how it was established.
+    #
+    # `substrate` is AWS, not "Neon". Neon is a managed Postgres vendor that runs
+    # on AWS, so recording it as its own substrate would manufacture a
+    # diversification that does not exist. The axis measures where the compute
+    # physically sits, exactly as HOSTS_REGION_OF does for a state.
+    "database": {"vendor": "Neon", "substrate": "AWS", "juris": "US",
+                 "region": "eu-central-1", "region_juris": "EU",
+                 "evidence": "operator-declared D-1, 2026-08-19. Not verified by "
+                             "COUNSEL: the connection string is not opened (G-03)."},
 }
 
 
@@ -184,7 +195,16 @@ def build() -> dict:
              "statement": "Four of seven axes carry no value. Three are withheld because no "
                           "analogue exists at source and one is undetermined behind a credential.",
              "effect": "The composite is withheld and the three measured axes are read singly."},
-            {"id": "SX-03",
+            {"id": "SX-04",
+             "statement": "FPE is computed on VENDOR jurisdiction, not region. The database sits "
+                          "in eu-central-1 while Neon is US-incorporated, so the data rests in the "
+                          "EU under a US corporate reach. Both facts are recorded; only the vendor "
+                          "one enters the axis.",
+             "effect": "FPE stays 100.0. Whether platform exposure should be measured at the "
+                       "vendor or at the region is a real modelling question the state axis has "
+                       "never had to answer, because a state's cloud regions and their operators "
+                       "are recorded separately. It is opened here, not settled."},
+        {"id": "SX-03",
              "statement": "Declaring an exposure does not reduce it. If either hyperscaler "
                           "withdraws service the index goes dark regardless of this document.",
              "effect": "Only D-113 ACT-4, second custody for the chain spine and attestations, "

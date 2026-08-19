@@ -1,0 +1,19 @@
+{
+ "engaged": false,
+ "authority": "Article 14 Decision 5, signed 2026-08-19. Implemented by scripts/kill_switch.py.",
+ "engaged_by": null,
+ "engaged_at": null,
+ "reason": null,
+ "how_to_engage": {
+  "emergency": "Set repository variable QESIS_KILL_SWITCH=1 in GitHub Settings, Secrets and variables, Actions. No clone, no git, no laptop. Takes effect on the next run, at most one hour.",
+  "deliberate": "Set engaged to true in this file, fill engaged_by, engaged_at and reason, commit and push. Versioned and reviewable.",
+  "note": "Either channel engages. Both must be clear to proceed."
+ },
+ "what_it_stops": [
+  "scripts/selfheal.py performs no repair and lands no commit",
+  "promotion_policy() returns False regardless of how green the control set is",
+  "scripts/vercel_gate.py refuses the build, so production keeps serving its last verified deployment"
+ ],
+ "what_it_does_not_stop": "The served endpoint stays up. An instrument that cannot verify itself keeps showing the last thing it could verify rather than going dark or going wrong. Taking production down is a separate act with a separate blast radius and it is not delegated to a boolean.",
+ "fails_safe": "An unparseable version of this file is treated as ENGAGED. A stop control that fails open is not a stop control."
+}

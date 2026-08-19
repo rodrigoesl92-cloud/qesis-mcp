@@ -56,6 +56,18 @@ jobs:
         # exists to keep catching.
         run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
 
+      - name: Kill switch is clear
+        # Article 14 Decision 5. Checked before any other gate, because a run that
+        # verifies an artefact while the operator is trying to stop the system is
+        # answering a question nobody asked.
+        run: python scripts/kill_switch.py
+
+      - name: No plaintext secret is reachable
+        # D-2. Stdlib only. Prints the file, the line and the variable NAME, and
+        # never the value, not even truncated (G-03). A gate that leaks what it
+        # guards in order to prove it found it is worse than no gate.
+        run: python scripts/verify_no_plaintext_secrets.py
+
       - name: Integrity gate
         run: python scripts/verify_index.py
 
