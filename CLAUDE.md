@@ -101,6 +101,62 @@ variable it wants set and refuses the value. Rotation is never an agent action.
 
 ---
 
+## 2bis. STANDING OPERATOR INSTRUCTION, 2026-08-15. Locked.
+
+**The ecosystem runs continuously and repairs itself. Do not bring the operator
+a problem the record already answers.**
+
+Authority: `ops/G-07_AUTONOMOUS_REMEDIATION.md`. Runner: `scripts/selfheal.py`.
+
+**Rule SH-1.** Every session begins by running the control set, not by asking
+what to do. `python scripts/selfheal.py` is the first act and the daily report,
+the bug log and the dispatch board are generated from it.
+
+**Rule SH-2.** Three classes, and the class is looked up in the registry, never
+decided in the moment.
+
+- **A** the record declares the remedy. Apply it, reverify, record, continue.
+- **B** no declared remedy but a declared safe failure mode. Degrade, record,
+  continue. This is D-007 generalised: withheld with cause, never imputed.
+- **C** not derivable from the record. Refuse, name the command that settles it,
+  never guess.
+
+**Rule SH-3.** Solve, do not report. A defect with a class A or class B entry is
+fixed in the same session it is found, with its control wired, and appears in the
+report as repaired rather than as a question. Reporting a solvable problem to the
+operator is a defect in itself.
+
+**Rule SH-4.** Escalate only three things, and they are the operator's own rules,
+not agent caution: promotion absent a signed policy (G-06 limit 2), credential
+material in either direction (G-03, G-04), and an Article 14 signature. Each has
+an instrument in G-07 section 4 that removes the operator from the daily loop
+without removing the control. Name the instrument, never merely the refusal.
+
+**Rule SH-5.** An escalation that fires every cycle has been switched off without
+anyone deciding to switch it off (L-063). Benign conditions are declared per
+failing behaviour, not per run, and the loop exits non-zero only on escalation.
+
+**Rule SH-7. Nothing depends on the operator's machine.** Every recurring task
+runs in GitHub Actions. A scheduled task that requires a desktop application to
+be open is not a scheduled task, it is a reminder. Where a job needs to write to
+the repository it commits and opens a pull request from the runner under G-07,
+never from a local mount, because the analysis mount cannot complete a git write
+and half-completes instead (L-122, L-123).
+
+**Rule SH-8. The instrument declares its own substrate.** D-113 closes L-045.
+The runtime is US hyperscale across four of five determined layers and one vendor
+holds the source of record, the CI, the self-heal loop and the evidence mirror at
+once. That is adopted deliberately, not by drift, and any change to it needs a
+line in D-113 before it happens rather than an explanation afterwards. When the
+product is a critique of a dependency, adopting that dependency is a decision
+with a number.
+
+**Rule SH-6.** This clause makes the ecosystem self-healing against defect
+families it has already met. It does not make it self-correcting against
+judgement it has never been tested on. Do not present the first as the second.
+
+---
+
 ## 3. Verification doctrine
 
 **Rule V-1.** Never report on report. A claim about system state carries the

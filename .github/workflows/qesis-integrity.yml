@@ -72,6 +72,26 @@ jobs:
         # the committed mirror of its lineage register.
         run: python scripts/verify_vintage_pairing.py
 
+      - name: Knowledge graph reproduces from the index
+        # KG-1. The graph is derived from data/qesis_v8.json and from nothing
+        # else, so a graph that no longer matches a fresh build means either the
+        # index moved without the graph or the graph was edited by hand. Both
+        # are the same defect: a derived artefact that stopped deriving.
+        #
+        # The schema fixtures this gate needs live in scripts/test_gate.py under
+        # check_graph and run in the step below. That sentence was in
+        # build_graph.py's docstring before the fixtures existed, which is the
+        # defect this pairing closes: a gate naming fixtures that were not there.
+        run: python scripts/build_graph.py --check
+
+      - name: Percolation block reproduces from the evidence
+        # PUB-1. The published finding is derived from
+        # data/axes/cse_percolation.json and recomputes nothing. This fails if
+        # the evidence moved without the artefact, or if the artefact was edited
+        # by hand. A publication step that drifts from its evidence is how a
+        # withdrawn verdict outlives its withdrawal (EMO-1).
+        run: python scripts/build_percolation_block.py --check
+
       - name: Gate self-test (mutation)
         # A gate that only ever passes proves nothing. This injects each defect
         # class it must catch and fails the build if the gate misses one.

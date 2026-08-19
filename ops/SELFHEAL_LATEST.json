@@ -1,0 +1,108 @@
+{
+ "generated_utc": "2026-08-19T14:27:40.800504+00:00",
+ "mode": "repair",
+ "controls": [
+  {
+   "name": "verify_index",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "GATE PASSED: index is publishable."
+   ]
+  },
+  {
+   "name": "verify_chain",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "CHAIN CHECK PASSED: the attestation reproduces from the committed spine."
+   ]
+  },
+  {
+   "name": "verify_vintage_pairing",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "PAIRING CHECK PASSED: the served vintage is recorded."
+   ]
+  },
+  {
+   "name": "verify_axis_sfc",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    ""
+   ]
+  },
+  {
+   "name": "verify_action_pinning",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "SEC-1 PASS"
+   ]
+  },
+  {
+   "name": "build_graph_check",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "OK   graph matches a fresh build at v9.0 (2026-08-13)"
+   ]
+  },
+  {
+   "name": "build_percolation_check",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "OK   percolation block matches a fresh build at v9.0 (2026-08-13)"
+   ]
+  },
+  {
+   "name": "self_exposure_check",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "OK   instrument self-exposure matches a fresh build"
+   ]
+  },
+  {
+   "name": "build_eval_check",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "eval set is in sync with v9.0 (2026-08-13) (16 pairs)."
+   ]
+  },
+  {
+   "name": "build_landing_check",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "landing page is in sync with the index."
+   ]
+  },
+  {
+   "name": "test_gate",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "Gate is trustworthy."
+   ]
+  }
+ ],
+ "repaired": [],
+ "degraded": [],
+ "escalations": [],
+ "failed": [],
+ "benign": [],
+ "git_writes": {
+  "safe": true,
+  "detail": "git writes complete on this filesystem"
+ },
+ "promotion": {
+  "proceed": false,
+  "reason": "promotion policy unsigned. Article 14 Decision 25 and G-07 section 4 are the instrument. Escalating instead."
+ },
+ "verdict": "GREEN"
+}

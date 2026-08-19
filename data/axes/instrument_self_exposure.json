@@ -1,0 +1,119 @@
+{
+ "generated_utc": "2026-08-19T14:27:39.966290+00:00",
+ "generated_by": "scripts/self_exposure.py",
+ "authority": "D-113, closing L-045",
+ "served": false,
+ "publication_status": "COMPUTED, NOT PUBLISHED. Operator ruling 2026-08-15. This artefact lives in the evidence plane only. Publication is a separate change set requiring SENTINEL gate_publication and the operator reading these numbers first.",
+ "subject": "The QESIS+ instrument itself, scored on its own axes",
+ "vintage_scored_against": "v9.0 (2026-08-13)",
+ "substrate": {
+  "served_endpoint": {
+   "vendor": "Vercel",
+   "substrate": "AWS",
+   "juris": "US",
+   "evidence": "vercel.json, qesis-mcp.vercel.app"
+  },
+  "ci_and_selfheal": {
+   "vendor": "GitHub Actions",
+   "substrate": "Microsoft Azure",
+   "juris": "US",
+   "evidence": ".github/workflows/*, ubuntu-latest"
+  },
+  "source_of_record": {
+   "vendor": "GitHub",
+   "substrate": "Microsoft Azure",
+   "juris": "US",
+   "evidence": "origin remotes, both repos"
+  },
+  "evidence_mirror": {
+   "vendor": "OneDrive",
+   "substrate": "Microsoft",
+   "juris": "US",
+   "evidence": "operator share link 2026-08-15"
+  },
+  "agent_runtime": {
+   "vendor": "Anthropic",
+   "substrate": "AWS",
+   "juris": "US",
+   "evidence": "this process"
+  },
+  "database": {
+   "vendor": null,
+   "substrate": null,
+   "juris": null,
+   "evidence": "database_string.txt, deliberately unopened (G-03)"
+  }
+ },
+ "axes": {
+  "ODI": {
+   "value": 52.0,
+   "status": "MEASURED",
+   "method": "Herfindahl over substrate shares, one unit per determined layer, n=5. Identical construction to the state axis.",
+   "components": {
+    "AWS": 2,
+    "Microsoft": 3
+   }
+  },
+  "FPE": {
+   "value": 100.0,
+   "status": "MEASURED",
+   "method": "Share of determined layers outside the operator's jurisdiction (ES). 100 by construction, and that is the finding rather than an artefact."
+  },
+  "RGD": {
+   "value": 60.0,
+   "status": "MEASURED",
+   "method": "Share of determined layers held by the single largest vendor. Largest holds 3 of 5."
+  },
+  "CSE": {
+   "value": null,
+   "status": "WITHHELD",
+   "cause": "SOURCE_RESOLUTION",
+   "cause_statement": "The instrument is not a territory and has no cable landings. There is no analogue at the axis's own resolution, so no value exists at source. Mechanically this is the SOURCE_RESOLUTION case the D-111 `regions` frame carries for HKG and SGP, and the shared mechanism must not be read as a shared entity type: they are regions, this is an instrument, and neither is a state."
+  },
+  "WSE": {
+   "value": null,
+   "status": "WITHHELD",
+   "cause": "SOURCE_RESOLUTION",
+   "cause_statement": "Water stress is a catchment property. A software instrument has no catchment. Datacentre water draw is a property of the vendor's estate, not of this instrument, and attributing it here would be imputation."
+  },
+  "REE": {
+   "value": null,
+   "status": "WITHHELD",
+   "cause": "SOURCE_RESOLUTION",
+   "cause_statement": "Rare-earth exposure is a supply-chain property of hardware the instrument does not own. Inheriting the vendor's figure would attribute someone else's measurement to this entity."
+  },
+  "ESE": {
+   "value": null,
+   "status": "UNDETERMINED",
+   "cause": "CREDENTIAL_BOUND",
+   "cause_statement": "Electricity substrate exposure requires the database and compute regions, and the database provider sits behind database_string.txt, which COUNSEL does not open (G-03). Settled by ACT-1, a human act."
+  }
+ },
+ "composite": {
+  "value": null,
+  "status": "WITHHELD",
+  "coverage": 0.25,
+  "big_gate": 0.75,
+  "passes_big_gate": false,
+  "statement": "Weighted coverage 0.25 against the 0.75 gate. The instrument is held to the same threshold as the 32 states and it does not clear it, so no composite is emitted. Scoring itself under a looser rule than the 32 states would destroy the comparison it exists to make."
+ },
+ "finding": "Four of five determined layers resolve to two US hyperscalers, and one vendor holds the source of record, the CI, the self-heal loop and the evidence mirror at once. Measured ODI 52.0, FPE 100.0, RGD 60.0. On the three axes where the instrument has a genuine analogue, it scores as a concentrated, foreign-dependent, single-vendor substrate. That is the honest reading and it is the reason D-113 exists.",
+ "limitations": [
+  {
+   "id": "SX-01",
+   "statement": "The instrument chose the axes, the weights and the anchors it is scored on. The number is checkable; the framing is not. An entity scoring itself under rules it wrote is not in the epistemic position of the 32 states, which did not consent to being scored at all.",
+   "effect": "This is a demonstration of method, never a peer comparison. It must never be sorted into a table with the `states` frame or the `regions` frame. D-111 forbids pooling even those two with each other, and this is a third thing again."
+  },
+  {
+   "id": "SX-02",
+   "statement": "Four of seven axes carry no value. Three are withheld because no analogue exists at source and one is undetermined behind a credential.",
+   "effect": "The composite is withheld and the three measured axes are read singly."
+  },
+  {
+   "id": "SX-03",
+   "statement": "Declaring an exposure does not reduce it. If either hyperscaler withdraws service the index goes dark regardless of this document.",
+   "effect": "Only D-113 ACT-4, second custody for the chain spine and attestations, changes a physical fact."
+  }
+ ],
+ "falsifier": "Refuted if an independent reviewer, given the published axis definitions and this substrate table, computes a materially different ODI, FPE or RGD. Not refuted by disagreement about whether the instrument should be scored at all, which is a question about SX-01 and is conceded there."
+}

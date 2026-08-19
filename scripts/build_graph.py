@@ -31,21 +31,44 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "data" / "qesis_v8.json"
 OUT = ROOT / "data" / "qesis_graph.json"
 
-#: Declared domain and range per edge type. An edge whose endpoints do not match
-#: its declaration is a build failure, not a warning. This table IS the ontology.
+#: KG-5. Node kinds that are RECORDS ABOUT the world, never parts of it.
+#: A dataset does not carry traffic and a vintage does not land a cable. Declared
+#: here rather than inferred from a name, because inferring it from a name is how
+#: `CSE_VALUE_SOURCED_FROM` came to look like infrastructure in revision A.
+PROVENANCE_KINDS = {"CableSourceDataset", "Vintage", "WithholdingCause"}
+
+#: Declared domain, range and PLANE per edge type. An edge whose endpoints do not
+#: match its declaration is a build failure, not a warning. This table IS the
+#: ontology.
+#:
+#: The plane is the distinction the whole D-110 revision B correction turns on,
+#: and until 2026-08-15 it lived in comments here and in prose in the assessment,
+#: which is a rule described rather than applied (L-054). Domain and range alone
+#: block the revision A defect structurally, because CHOKEPOINT_IN is declared
+#: LandingCity to CableNetwork and a CableSourceDataset cannot appear on it. That
+#: is an accident of the current node set, not a stated commitment: add one
+#: dataset node typed as a LandingCity and the structural block evaporates while
+#: every declaration still reads as satisfied. The plane states the commitment.
+#:
+#:   physical    an assertion about infrastructure that exists in the world
+#:   provenance  an assertion about where a value came from, or about the record
+#:   analytic    a relation between measurement constructs, not between things
 EDGE_SCHEMA = {
-    "HOSTS_REGION_OF": ("State", "Provider"),
-    "SOLE_PROVIDER": ("State", "Provider"),
+    "HOSTS_REGION_OF": ("State", "Provider", "physical"),
+    "SOLE_PROVIDER": ("State", "Provider", "physical"),
     # PROVENANCE edge, not a physical one. v1 of this file typed dataset names as
     # infrastructure nodes, so "single cable source" read as "one cable route"
     # while meaning "one dataset supplied the value". A provenance edge wearing a
     # physical edge's clothes. Corrected 2026-08-13, D-110 rev B.
-    "CSE_VALUE_SOURCED_FROM": ("State", "CableSourceDataset"),
+    "CSE_VALUE_SOURCED_FROM": ("State", "CableSourceDataset", "provenance"),
     # The real cable plane, from data/axes/cse_percolation.json.
-    "CHOKEPOINT_IN": ("LandingCity", "CableNetwork"),
-    "COUPLED_WITH": ("Axis", "Axis"),
-    "WITHHELD_UNDER": ("State", "WithholdingCause"),
-    "SUPERSEDES": ("Vintage", "Vintage"),
+    "CHOKEPOINT_IN": ("LandingCity", "CableNetwork", "physical"),
+    # Axes are constructs. A coupling between two of them is a statement about
+    # measurement, and reading it as a statement about the world is the category
+    # error the plane exists to name.
+    "COUPLED_WITH": ("Axis", "Axis", "analytic"),
+    "WITHHELD_UNDER": ("State", "WithholdingCause", "provenance"),
+    "SUPERSEDES": ("Vintage", "Vintage", "provenance"),
 }
 
 NON_SOURCE_KEYS = {"rule", "provenance_note"}
@@ -137,6 +160,19 @@ def build() -> dict:
     hosts_chokepoint = {name_to_iso[n] for n in chokepoint_countries if n in name_to_iso}
     conjunctive = sorted(set(sole_p) & hosts_chokepoint)
 
+    # EMO-1. Read the EMODnet verdict from the evidence file rather than
+    # retyping it here. Where the file records a supersession, the superseding
+    # verdict is the live one: a block that carries its own replacement nested
+    # inside it has withdrawn the outer text, and a consumer reading only the
+    # outer field serves a claim the evidence plane has already retracted.
+    emo = json.loads(
+        (ROOT / "data" / "axes" / "emodnet_cse_evidence.json").read_text(encoding="utf-8"))
+    rv = emo.get("reproduction_verdict") or {}
+    superseding = next((v for k, v in rv.items()
+                        if k.startswith("superseded_verdict_") and isinstance(v, dict)), None)
+    emo_verdict = (superseding or rv).get("verdict", "")
+    emo_cov = rv.get("coverage")
+
     by_source: dict[str, int] = {}
     for e in edges:
         if e["type"] == "CSE_VALUE_SOURCED_FROM":
@@ -154,7 +190,25 @@ def build() -> dict:
             "availability-zone counts are missing for 27 of 35 states (U-04). It "
             "is jurisdictional single-sourcing, not a claim about where that "
             "state's workloads run. This sentence travels with every use."),
-        "edge_schema": {k: {"domain": v[0], "range": v[1]} for k, v in EDGE_SCHEMA.items()},
+        "edge_schema": {k: {"domain": v[0], "range": v[1], "plane": v[2]}
+                        for k, v in EDGE_SCHEMA.items()},
+        "planes": {
+            "declared": sorted({v[2] for v in EDGE_SCHEMA.values()}),
+            "provenance_kinds": sorted(PROVENANCE_KINDS),
+            "rule": (
+                "A physical edge may not resolve to a provenance node kind. A "
+                "dataset does not carry traffic and a vintage does not land a "
+                "cable. Enforced in validate(), fixtures in "
+                "scripts/test_gate.py::check_graph."),
+            "why": (
+                "Domain and range say what a type connects. The plane says what "
+                "kind of assertion it is. Revision A of this file typed dataset "
+                "names as infrastructure, so 'single cable source' read as 'one "
+                "cable route' while meaning 'one dataset supplied the value'. "
+                "Domain and range block that today only because no dataset node "
+                "is typed as a LandingCity, which is a fact about the current "
+                "node set and not a commitment."),
+        },
         "counts": {"nodes": len(nodes), "edges": len(edges),
                    "by_kind": {k: sum(1 for n in nodes if n["kind"] == k)
                                for k in sorted({n["kind"] for n in nodes})},
@@ -193,10 +247,18 @@ def build() -> dict:
                     "A PROVENANCE count, not an infrastructure one. The non-EU "
                     "SubmarineMap-only rule is a documented and audited disposition: "
                     "data/axes/emodnet_cse_evidence.json records EMODnet release "
-                    "20230628 at coverage 0.3429 against the 0.75 BIG gate with "
-                    "verdict NOT REPRODUCIBLE at rho -0.467. The disposition is in "
-                    "the evidence plane. It is not an unrecorded single point of "
-                    "failure and must not be presented as one."),
+                    "20230628 at coverage " + f"{emo_cov}" + " against the 0.75 BIG "
+                    "gate. The disposition is in the evidence plane. It is not an "
+                    "unrecorded single point of failure and must not be presented "
+                    "as one."),
+                # EMO-1. This verdict is READ, never retyped. The previous version
+                # of this line hardcoded "NOT REPRODUCIBLE at rho -0.467", which the
+                # evidence file itself had superseded on 2026-08-13: CSE is inverted
+                # by construction, so a negative correlation against cable length is
+                # what the formula predicts, not evidence against it. A verdict
+                # copied into a second file is a second chance to be wrong, and the
+                # copy outlived the original by two days.
+                "verdict": emo_verdict,
                 "source": "data/axes/emodnet_cse_evidence.json"},
         },
         "nodes": nodes,
@@ -206,7 +268,17 @@ def build() -> dict:
 
 def validate(g: dict) -> list[str]:
     """Every gate owns one fixture it must refuse and one it must accept (V-2).
-    Fixtures live in scripts/test_gate.py; this is the assertion they exercise."""
+
+    Fixtures live in scripts/test_gate.py under `check_graph`, which imports
+    this function directly rather than shelling out to the CLI, because
+    `validate` is the assertion under test and driving the CLI would test the
+    CLI. One accept fixture, the unmutated build, and three refuse fixtures:
+    a provenance edge retyped onto the physical plane, an edge type absent
+    from EDGE_SCHEMA, and a range violation whose domain still holds.
+
+    This sentence was here before those fixtures were. From 2026-08-15 it is a
+    claim that can be falsified by `grep -c check_graph scripts/test_gate.py`.
+    """
     kind = {n["id"]: n["kind"] for n in g["nodes"]}
     fails = []
     for e in g["edges"]:
@@ -214,13 +286,26 @@ def validate(g: dict) -> list[str]:
         if decl is None:
             fails.append(f"undeclared edge type {e['type']}")
             continue
-        dom, rng = decl
+        dom, rng, plane = decl
         if kind.get(e["source"]) != dom:
             fails.append(f"{e['type']}: source {e['source']} is "
                          f"{kind.get(e['source'])}, declared domain {dom}")
         if kind.get(e["target"]) != rng:
             fails.append(f"{e['type']}: target {e['target']} is "
                          f"{kind.get(e['target'])}, declared range {rng}")
+
+        # KG-5. The plane check, applied to the RESOLVED endpoints rather than to
+        # the declaration, so it catches a violation that a correct-looking
+        # declaration would hide: retyping a node's kind while leaving the edge
+        # declaration untouched passes domain and range and fails here.
+        if plane == "physical":
+            for end in ("source", "target"):
+                k = kind.get(e[end])
+                if k in PROVENANCE_KINDS:
+                    fails.append(
+                        f"{e['type']}: plane physical but {end} {e[end]} resolves "
+                        f"to {k}, a provenance kind. A record about the world is "
+                        f"not a part of it.")
     return fails
 
 

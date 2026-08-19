@@ -53,8 +53,46 @@ GATES = [
 ]
 
 
+PRODUCTION_BRANCH = "main"
+
+
+def branch_guard() -> bool:
+    """G-01b in code. Production is replaced only by a promotion event.
+
+    Root cause of the hourly Production probe failures, runs 221 through 229 and
+    counting: this gate checked artefact quality and never checked WHICH BRANCH
+    was being promoted. Any branch whose gates passed was built, and Vercel
+    aliased production to it, so `deployment_commit` bound to a feature branch
+    while `verify_production.py` compared it against main's HEAD. The probe was
+    right every hour for nine hours and the thing it was right about was this
+    function's absence.
+
+    Preview deployments are untouched and should be: reviewing a branch on a URL
+    is the point of them. Only the PRODUCTION alias is restricted.
+
+    Returns True when the build may continue.
+    """
+    import os
+    env = os.environ.get("VERCEL_ENV", "")
+    ref = os.environ.get("VERCEL_GIT_COMMIT_REF", "")
+    if env != "production":
+        print(f"  branch guard: VERCEL_ENV={env or 'unset'}, not a production build, allowed")
+        return True
+    if ref == PRODUCTION_BRANCH:
+        print(f"  branch guard: production build from {ref}, allowed")
+        return True
+    print(f"  branch guard: REFUSED. production build requested from {ref!r}, "
+          f"and only {PRODUCTION_BRANCH!r} may bind the production alias (G-01b).")
+    print("  Production keeps serving the last good deployment. That is the")
+    print("  correct failure mode: an instrument that cannot verify which commit")
+    print("  it is serving should keep serving the one it could.")
+    return False
+
+
 def main() -> int:
     print("QESIS+ pre-build gate. exit 1 builds, exit 0 skips (Vercel semantics).")
+    if not branch_guard():
+        return BUILD_IGNORED
     failed: list[str] = []
     for name, argv in GATES:
         r = subprocess.run([sys.executable, *argv], cwd=ROOT,
