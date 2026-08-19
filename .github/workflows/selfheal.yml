@@ -25,7 +25,13 @@ on:
       - ".github/workflows/selfheal.yml"
 
 permissions:
-  contents: read
+  # SH-7 needs write: the loop commits its own class A repairs, pushes a branch
+  # and opens a pull request. The previous declaration was `contents: read` with
+  # a step three lines below that ran `git push`, which GitHub reports as a
+  # runtime 403 in a log nobody reads. verify_workflow_contract.py C-1 now
+  # refuses that combination at review time instead (L-133).
+  contents: write
+  pull-requests: write
   issues: write
 
 concurrency:
