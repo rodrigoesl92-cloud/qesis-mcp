@@ -56,6 +56,13 @@ jobs:
         # exists to keep catching.
         run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
 
+      - name: Workflow contract holds
+        # Closes the "green locally, red in CI" class after its third occurrence
+        # in one week. Asserts that every mutating step declares the permission
+        # it needs, that every referenced script exists, and that the CI set and
+        # the local control set are reconciled rather than merely similar.
+        run: python scripts/verify_workflow_contract.py
+
       - name: Kill switch is clear
         # Article 14 Decision 5. Checked before any other gate, because a run that
         # verifies an artefact while the operator is trying to stop the system is

@@ -664,6 +664,62 @@ def check_secrets(results: list[tuple[str, bool]]) -> None:
         results.append((name, ok))
 
 
+WF_GATE = ROOT / "scripts" / "verify_workflow_contract.py"
+
+
+def check_workflow_contract(results: list[tuple[str, bool]]) -> None:
+    """Two fixtures for the gate that closes the local-green CI-red class.
+
+    The refuse fixture is the 2026-08-19 failure itself: a workflow that runs
+    `git push` under `contents: read`. The accept fixture carries a comment
+    inside the permissions block, because the gate's own block reader treated a
+    comment as end-of-structure and reported a workflow as lacking a permission
+    it plainly granted. Three parser defects in one gate, all the same shape, so
+    both halves are pinned rather than one.
+    """
+    if not WF_GATE.exists():
+        results.append(("workflow: gate present", False))
+        return
+    import tempfile, os
+
+    def run(wf_text: str) -> int:
+        d = pathlib.Path(tempfile.mkdtemp())
+        (d / ".github" / "workflows").mkdir(parents=True)
+        (d / ".github" / "workflows" / "w.yml").write_text(wf_text, encoding="utf-8")
+        (d / "scripts").mkdir()
+        # The gate resolves ROOT from its own location, so it is copied in.
+        (d / "scripts" / "verify_workflow_contract.py").write_text(
+            WF_GATE.read_text(encoding="utf-8"), encoding="utf-8")
+        (d / "scripts" / "selfheal.py").write_text(
+            "CONTROLS = [\n    (\"x\", [\"scripts/verify_index.py\"]),\n]\n", encoding="utf-8")
+        (d / "scripts" / "verify_index.py").write_text("", encoding="utf-8")
+        r = subprocess.run([sys.executable, str(d / "scripts" / "verify_workflow_contract.py")],
+                           capture_output=True, text=True)
+        return r.returncode
+
+    refuse = """name: w
+permissions:
+  contents: read
+jobs:
+  j:
+    steps:
+      - run: git push origin x
+"""
+    accept = """name: w
+permissions:
+  # a comment inside the block is not the end of the block
+  contents: write
+jobs:
+  j:
+    steps:
+      - run: git push origin x
+      - run: python scripts/verify_index.py
+      - run: python scripts/selfheal.py
+"""
+    results.append(("workflow: git push under contents:read refused", run(refuse) != 0))
+    results.append(("workflow: comment in permissions block accepted", run(accept) == 0))
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -719,6 +775,7 @@ def main() -> int:
     check_endpoints(extra)
     check_graph(extra)
     check_secrets(extra)
+    check_workflow_contract(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

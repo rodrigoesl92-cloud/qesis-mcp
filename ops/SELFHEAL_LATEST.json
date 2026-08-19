@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-08-19T15:15:21.393729+00:00",
+ "generated_utc": "2026-08-19T18:49:05.429673+00:00",
  "mode": "repair",
  "controls": [
   {
@@ -44,6 +44,14 @@
   },
   {
    "name": "verify_secrets",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    ""
+   ]
+  },
+  {
+   "name": "verify_workflow",
    "status": "PASS",
    "exit": 0,
    "tail": [

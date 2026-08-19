@@ -56,6 +56,7 @@ CONTROLS = [
     ("verify_axis_sfc",        ["scripts/verify_axis_sfc.py", "--quiet"]),
     ("verify_action_pinning",  ["scripts/verify_action_pinning.py"]),
     ("verify_secrets",         ["scripts/verify_no_plaintext_secrets.py", "--quiet"]),
+    ("verify_workflow",        ["scripts/verify_workflow_contract.py", "--quiet"]),
     ("kill_switch",            ["scripts/kill_switch.py"]),
     ("build_graph_check",      ["scripts/build_graph.py", "--check"]),
     ("build_percolation_check", ["scripts/build_percolation_block.py", "--check"]),
@@ -145,6 +146,17 @@ REMEDIES = {
                "measured coverage. The declared degradation is WITHHELD WITH "
                "CAUSE. Values are withheld, never imputed (D-007).",
         "degrade": "withhold_with_cause",
+    },
+    "verify_workflow": {
+        "class": "C",
+        "why": "A workflow whose declared permissions disagree with what its "
+               "steps do, or whose script set has drifted from the local control "
+               "set, is a governance defect rather than a drifted artefact. "
+               "Rewriting a permissions block automatically would let the loop "
+               "widen its own authority, which is the one thing G-07 refuses "
+               "outright.",
+        "escalate_with": "python scripts/verify_workflow_contract.py",
+        "severity": "HIGH",
     },
     "verify_secrets": {
         "class": "C",
