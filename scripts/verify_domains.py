@@ -21,6 +21,9 @@ import re
 import sys
 from pathlib import Path
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parent.parent
 DOMAINS = json.loads((ROOT / "data" / "domains.json").read_text(encoding="utf-8"))
 
@@ -56,12 +59,11 @@ def files():
             if p.is_file():
                 yield p
             elif p.is_dir():
-                for f in p.rglob(pat):
-                    if any(s in f.parts for s in SKIP_DIRS):
-                        continue
-                    if f.name in SKIP_FILES:
-                        continue
-                    yield f
+                # Shared walker. rglob stats every entry before the skip list can
+                # exclude it, so an unreadable subtree killed the gate on a path
+                # the skip list existed to avoid (L-131, L-138).
+                from _walk import iter_files
+                yield from iter_files(p, (pat,), SKIP_DIRS, SKIP_FILES)
 
 
 def main() -> int:
