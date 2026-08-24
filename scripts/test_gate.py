@@ -664,6 +664,127 @@ def check_secrets(results: list[tuple[str, bool]]) -> None:
         results.append((name, ok))
 
 
+
+LEDGER_GATE = ROOT / "scripts" / "verify_ledger_singleton.py"
+
+
+def check_ledger_singleton(results: list[tuple[str, bool]]) -> None:
+    """V-2 for verify_ledger_singleton.py, wired rather than described.
+
+    L-142: the gate shipped with five fixtures, a `--selftest` entry point, and a
+    docstring stating that this file calls it. This file did not. Nothing in the
+    repository referenced the gate at all, so the property it exists to assert,
+    that a duplicate lesson id is a build failure (L-073), was still enforced by
+    prose alone in the one place that had just been given code. That is L-054
+    committed inside the change set written to close L-054, which is the most
+    expensive place available for it.
+
+    The fixtures live in the gate because they are its own accept-and-refuse pair.
+    This function asserts that they RUN, and that the gate passes against the real
+    ledger. Two different questions: the selftest proves the gate can still catch
+    a duplicate, the live run proves the ledger currently holds none.
+    """
+    if not LEDGER_GATE.exists():
+        results.append(("ledger singleton: gate present", False))
+        return
+
+    def run(args: list[str]) -> int:
+        return subprocess.run([sys.executable, str(LEDGER_GATE), *args],
+                              capture_output=True, text=True).returncode
+
+    results.append(("ledger singleton: selftest, its own accept and refuse pair",
+                    run(["--selftest"]) == 0))
+    results.append(("ledger singleton: live ledger holds no duplicate id",
+                    run(["--quiet"]) == 0))
+
+
+RETRIEVAL_GATE = ROOT / "scripts" / "verify_retrieval_corpus.py"
+RETRIEVAL_MANIFEST = ROOT / "scripts" / "retrieval_manifest.json"
+
+
+def check_retrieval_corpus(results: list[tuple[str, bool]]) -> None:
+    """SA-006 to SA-008 made executable. Scope decides, and both scopes are pinned.
+
+    The gate's first version refused a restricted file outright, in every context.
+    That was wrong: a copyright reservation governs transmission, not private
+    reading, and refusing a locally held document forbade the operator from using
+    material publishers had deliberately sent him. The fixtures below pin the
+    correction so it cannot regress in either direction.
+
+    The pair that matters is the same WEF file appearing twice: ADMITTED to
+    private analysis and REFUSED from served retrieval. A gate that only refuses
+    is broken in the safe direction, not correct, and a gate that only admits has
+    stopped being a gate. Both failures are asserted here rather than trusted.
+    """
+    if not RETRIEVAL_GATE.exists():
+        results.append(("retrieval corpus: gate present", False))
+        return
+    if not RETRIEVAL_MANIFEST.exists():
+        results.append(("retrieval corpus: manifest present", False))
+        return
+
+    def run(files, scope, manifest=RETRIEVAL_MANIFEST) -> tuple[int, str]:
+        p = subprocess.run(
+            [sys.executable, str(RETRIEVAL_GATE), "--manifest", str(manifest),
+             "--scope", scope, "--files", *files],
+            capture_output=True, text=True)
+        return p.returncode, p.stdout + p.stderr
+
+    WEF = "WEF_Energy_Transition_Index_2026_260818_133013.pdf"
+    OECD = "vulnerabilities in the semicondutor supply chain_OECD.pdf"
+    VENDOR = "ibm-ai-governance-ebook.pdf"
+
+    cases = [
+        # The correction, both halves of it.
+        ("retrieval: WEF verbatim refused from serving",
+         [WEF], "served_verbatim", 1, "SA-006"),
+        ("retrieval: WEF admitted to private analysis",
+         [WEF], "private_analysis", 0, "ADMIT"),
+        # The operator's point, pinned: citing a published figure and
+        # publishing a statistic derived from it is accepted academic use.
+        ("retrieval: WEF admitted to academic citation",
+         [WEF], "academic_citation", 0, "ADMIT"),
+        # The operator's pool declaration, SA-008. A newsletter-acquired vendor
+        # document with no enumerated entry is his to read and not ours to serve.
+        ("retrieval: pool vendor doc admitted to private analysis",
+         [VENDOR], "private_analysis", 0, "SA-008 pool"),
+        ("retrieval: pool vendor doc refused from served retrieval",
+         [VENDOR], "served_verbatim", 1, "defaults to REFUSE"),
+        # Open licence passes everywhere. Without this the gate could be a
+        # blanket refuser and still look correct.
+        ("retrieval: OECD CC BY 4.0 served verbatim",
+         [OECD], "served_verbatim", 0, "ADMIT"),
+        # Quarantine overrides the pool declaration in both scopes.
+        ("retrieval: _RESTRICTED_ quarantine refused even privately",
+         ["some_RESTRICTED_file.pdf"], "private_analysis", 1, "quarantine"),
+    ]
+    for name, files, scope, want_rc, expect in cases:
+        rc, out = run(files, scope)
+        ok = (rc != 0) if want_rc else (rc == 0)
+        if expect not in out:
+            ok = False
+        results.append((name, ok))
+
+    # Deleting the policy block must break the build, not silence the gate.
+    d = pathlib.Path(tempfile.mkdtemp())
+    stripped = json.loads(RETRIEVAL_MANIFEST.read_text(encoding="utf-8"))
+    stripped.pop("corpus_policy", None)
+    m = d / "retrieval_manifest.json"
+    m.write_text(json.dumps(stripped), encoding="utf-8")
+    rc, out = run([OECD], "served_verbatim", m)
+    results.append(("retrieval: manifest without corpus_policy refused",
+                    rc != 0 and "declares no corpus_policy" in out))
+
+    # An undefined scope has no default and may not be assumed into one.
+    stripped2 = json.loads(RETRIEVAL_MANIFEST.read_text(encoding="utf-8"))
+    stripped2["corpus_policy"]["scopes"].pop("served_verbatim", None)
+    m2 = d / "no_scope.json"
+    m2.write_text(json.dumps(stripped2), encoding="utf-8")
+    rc, out = run([OECD], "served_verbatim", m2)
+    results.append(("retrieval: undefined scope refused",
+                    rc != 0 and "declares no scope" in out))
+
+
 WF_GATE = ROOT / "scripts" / "verify_workflow_contract.py"
 
 
@@ -776,6 +897,8 @@ def main() -> int:
     check_graph(extra)
     check_secrets(extra)
     check_workflow_contract(extra)
+    check_retrieval_corpus(extra)
+    check_ledger_singleton(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

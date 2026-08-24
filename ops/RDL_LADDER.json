@@ -1,0 +1,125 @@
+{
+ "_doc": "RDL ladder state. Occurrence counts by family, and the rung each family has reached. Written by scripts/rdl.py, read by CI.",
+ "families": {
+  "git_lock_family": {
+   "occurrences": 4,
+   "rung": 4,
+   "owner": "ARCHITECT",
+   "family_hash": "da0333d2499910fc110b56994a3362e9df37770a51f8dae4e4b06e84eb8412eb",
+   "last_signature": "sovereign-infra/.git/index.lock dated 2026-08-20 13:59, and qesis-mcp/.git/index.lock created 17:36 by this session's own diagnostic git call. git add -A returned 'Unable to create index.lock: File exists'; the failure was redirected into a log; the next line asked whether anything was staged, correctly received no, and reported a clean tree.",
+   "last_seen": "2026-08-24T16:19:59Z",
+   "prior_evidence": "L-115, L-122, L-123",
+   "lesson_ids": [
+    "L-153"
+   ],
+   "ci_blocking": true,
+   "gate_required": true,
+   "decision_required": true,
+   "cleared": {
+    "gate": "scripts/git_unlock.py",
+    "reason": "Enumerates the full L-115 lock set plus per-branch ref locks, refuses where it cannot unlink, and runs before staging in the lander. The occurrence that opened rung 4 cannot recur silently.",
+    "when": "2026-08-24T17:10:56Z"
+   }
+  },
+  "guard_not_executed": {
+   "occurrences": 5,
+   "rung": 4,
+   "owner": "ARCHITECT",
+   "family_hash": "e25fdf6b34a293d14a8b4ee0c8646245668e699062b4477d79d8a143e5937301",
+   "last_signature": "tasklist found no git.exe so the guard passed, and the lock that actually blocked the operation was four days old with no owning process. The guard measured process liveness where the property that mattered was file presence.",
+   "last_seen": "2026-08-24T16:20:00Z",
+   "prior_evidence": "L-108, L-109, L-114, L-115",
+   "lesson_ids": [
+    "L-154"
+   ],
+   "ci_blocking": true,
+   "gate_required": true,
+   "decision_required": true,
+   "cleared": {
+    "gate": "scripts/git_unlock.py",
+    "reason": "Guards now state the property they need: staging is verified by counting the index rather than by trusting the exit code of git add, and the lock guard checks file presence rather than process liveness.",
+    "when": "2026-08-24T17:10:56Z"
+   }
+  },
+  "success_literal_not_measured": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
+   "last_signature": "The closing banner was a literal emitted unconditionally, while the measured results were 'Required status check qesis-integrity is expected' on one repository and 'Auto merge is not allowed for this repository' on the other.",
+   "last_seen": "2026-08-24T16:20:00Z",
+   "prior_evidence": "L-100",
+   "lesson_ids": [
+    "L-155"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false,
+   "cleared": {
+    "gate": "scripts/build_ops_report.py",
+    "reason": "Closing summaries are constructed from measured results in both the lander and the report generator; no stock success sentence remains.",
+    "when": "2026-08-24T17:10:56Z"
+   }
+  },
+  "duplicate_id_from_stale_accessor": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "fee2bcc12c8e53e6a3002162e72c93ea304254052d4075347b84b5775e3bbc6a",
+   "last_signature": "next_lesson_id() read verify_ledger_singleton.py, which reads the ledger. The three entries were being written to a pending file, not to the ledger, so the maximum never advanced and all three commands allocated the same id. An id is allocated the moment it is written anywhere a later process will read it, and the allocator was counting only the committed store.",
+   "last_seen": "2026-08-24T16:20:00Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-156"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "superseded_artifact_left_runnable": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "a068e14fee379051dcb59247c93a4664b3a776f2384aa1e25eb8b337e48f9ebe",
+   "last_signature": "LAND_EVERYTHING.bat revision 2 and LAND_EVERYTHING_FINAL.bat revision 3 were both executable in the same directory. The operator double-clicked the first. Revision 2 carried the tangled-branch strategy revision 3 existed to replace, so sovereign-infra PR 35 was reopened on the same unmergeable branch and the DAG defect repeated. The fix had been written and was not the file that ran.",
+   "last_seen": "2026-08-24T17:01:38Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-157"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "gate_blocks_on_history_not_delta": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "64b8502ee4ff56a26dab53cdb40654f1a59579bf529ea1e4c337a6468e388fd0",
+   "last_signature": "qesis-integrity is a required status check on main. The gate failed on historical constants rather than on the delta introduced by the change under review, so it would have failed every run forever and made every future pull request unmergeable. The only available remedy would have been switching the gate off, which is L-063 reached by construction rather than by neglect. Verified before landing: the gate returned exit 1 against a ledger whose defects were all already recorded.",
+   "last_seen": "2026-08-24T17:29:22Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-158"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "obeyed_without_counsel": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "COUNSEL",
+   "family_hash": "261b209bea59024675107647b98ad6ba6c954344e85ef63ea077d04232931f01",
+   "last_signature": "The operator instructed removal because the GitHub API had rejected --auto. The rejection was caused by enablePullRequestAutoMerge being toggled off in the repository settings, not by the flag being wrong, and on a branch with a required status check --auto is the only strategy that can succeed because it queues the merge behind the check. Removing it converted a settings problem into a permanent merge failure, and PR 72 is the measured consequence. The operator is not a specialist in this and said so; supplying that reasoning was the job.",
+   "last_seen": "2026-08-24T17:29:23Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-159"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  }
+ }
+}

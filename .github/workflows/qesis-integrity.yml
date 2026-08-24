@@ -193,6 +193,21 @@ jobs:
       - name: Outbound endpoints are declared once
         run: python scripts/verify_endpoints.py
 
+      # RDL ladder, rung 3. Standing operator instruction of 2026-08-24: agents
+      # handle occurrences 1 through 3 autonomously, and the third occurrence of
+      # a defect family makes its gate a release blocker. This is the step that
+      # makes the third rung mean something, and it is deliberately here in the
+      # release gate rather than in the hourly self-heal loop: a family stays at
+      # rung 3 until its gate lands, so in the loop it would escalate on every
+      # single run, and L-063 records that an escalation firing every cycle has
+      # been switched off without anyone deciding to switch it off.
+      #
+      # Clearing a family is not a matter of editing the count. It is landing the
+      # gate with its refuse fixture and its accept fixture, then resetting the
+      # rung with a stated reason, which is auditable in ops/RDL_LADDER.json.
+      - name: RDL ladder has no family at rung 3
+        run: python scripts/rdl.py ci-blocking
+
       - name: Summary
         if: always()
         run: |
