@@ -1,14 +1,30 @@
 {
  "_doc": "Accepted RDL ladder state. scripts/rdl.py ci-blocking fails only on families that are new at rung 3 or above, or that have escalated above the rung recorded here. History does not fail a build; regressions do.",
- "accepted_at": "2026-08-24T17:28:05Z",
- "reason": "Ladder state as landed on 2026-08-24. git_lock_family and guard_not_executed reached rung 4 in this session and their gate, scripts/git_unlock.py, landed in the same change set. Accepted so the gate measures future regressions rather than failing forever on its own first entries.",
+ "accepted_at": "2026-08-24T17:43:54Z",
+ "reason": "Accepting claim_from_proxy_not_resource at rung 4, 2026-08-24. Fourth occurrence of a claim made from a proxy rather than the resource; the corrected classifier landed in the same change set. A D- is owed on this family and is listed for the operator.",
  "families": {
+  "claim_from_proxy_not_resource": {
+   "rung": 4,
+   "occurrences": 4,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-161"
+   ]
+  },
   "duplicate_id_from_stale_accessor": {
    "rung": 1,
    "occurrences": 1,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-156"
+   ]
+  },
+  "gate_blocks_on_history_not_delta": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-158"
    ]
   },
   "git_lock_family": {
@@ -27,12 +43,21 @@
     "L-154"
    ]
   },
+  "obeyed_without_counsel": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "COUNSEL",
+   "lesson_ids": [
+    "L-159"
+   ]
+  },
   "success_literal_not_measured": {
-   "rung": 2,
-   "occurrences": 2,
+   "rung": 3,
+   "occurrences": 3,
    "owner": "ARCHITECT",
    "lesson_ids": [
-    "L-155"
+    "L-155",
+    "L-160"
    ]
   },
   "superseded_artifact_left_runnable": {

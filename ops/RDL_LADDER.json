@@ -42,23 +42,24 @@
    }
   },
   "success_literal_not_measured": {
-   "occurrences": 2,
-   "rung": 2,
+   "occurrences": 3,
+   "rung": 3,
    "owner": "ARCHITECT",
    "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "The closing banner was a literal emitted unconditionally, while the measured results were 'Required status check qesis-integrity is expected' on one repository and 'Auto merge is not allowed for this repository' on the other.",
-   "last_seen": "2026-08-24T16:20:00Z",
-   "prior_evidence": "L-100",
+   "last_signature": "Merged was set true when gh pr merge --auto returned zero. Arming succeeds immediately; the merge itself happens only when the required status check reports green. The closing summary therefore printed 'Both repositories are on main. Nothing further is required.' about two pull requests that had not merged.",
+   "last_seen": "2026-08-24T17:40:59Z",
+   "prior_evidence": "L-100, L-155",
    "lesson_ids": [
-    "L-155"
+    "L-155",
+    "L-160"
    ],
-   "ci_blocking": false,
+   "ci_blocking": true,
    "gate_required": true,
    "decision_required": false,
    "cleared": {
     "gate": "scripts/build_ops_report.py",
-    "reason": "Closing summaries are constructed from measured results in both the lander and the report generator; no stock success sentence remains.",
-    "when": "2026-08-24T17:10:56Z"
+    "reason": "Third occurrence landed its gate in the same change set: LAND_EVERYTHING_FINAL.ps1 now carries Armed and Merged as separate fields, the summary prints on main, armed and stuck as three distinct counts, and it states explicitly that ARMED is a queued merge rather than a completed one.",
+    "when": "2026-08-24T17:41:29Z"
    }
   },
   "duplicate_id_from_stale_accessor": {
@@ -120,6 +121,26 @@
    "ci_blocking": false,
    "gate_required": false,
    "decision_required": false
+  },
+  "claim_from_proxy_not_resource": {
+   "occurrences": 4,
+   "rung": 4,
+   "owner": "ARCHITECT",
+   "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
+   "last_signature": "branch-guard.yml routed on parent count: two or more parents meant pull_request_merge, anything else meant direct_push. Only the merge-commit strategy produces two parents. G-06 Rule 2-4 mandates rebase and forbids squash, so every correctly executed merge in this ecosystem landed as direct_push and opened an audit issue. sovereign-infra issue 37 for commit 3a81552 is the first instance, and it would have recurred on every future merge.",
+   "last_seen": "2026-08-24T17:43:27Z",
+   "prior_evidence": "L-104, L-111, L-143",
+   "lesson_ids": [
+    "L-161"
+   ],
+   "ci_blocking": true,
+   "gate_required": true,
+   "decision_required": true,
+   "cleared": {
+    "gate": ".github/workflows/branch-guard.yml",
+    "reason": "The classifier now calls repos/{repo}/commits/{sha}/pulls and treats any associated merged pull request as authorised, whatever the merge strategy. Landed in the same change set as the finding.",
+    "when": "2026-08-24T17:43:54Z"
+   }
   }
  }
 }

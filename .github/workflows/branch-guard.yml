@@ -1,0 +1,163 @@
+name: Branch guard
+
+# QT-0009. GitHub refuses both branch protection and rulesets on a private
+# repository without a paid plan, so server-side PREVENTION is unavailable and
+# saying otherwise would be a compliance claim we cannot support.
+#
+# What is available for nothing is DETECTION and ATTRIBUTION, which is what
+# EU AI Act Art. 12 actually asks for: an event log that makes an unauthorised
+# change visible and traceable. So the control is layered rather than absent:
+#
+#   Layer 1, preventive, local   .githooks/pre-push refuses the push outright
+#   Layer 2, detective, server   this workflow, which cannot stop the write but
+#                                fails loudly and opens an issue naming who did
+#                                it and when
+#   Layer 3, attribution         signature and author verification on every
+#                                commit that lands on main
+#   Layer 4, audit              the finding is written back into the ticket
+#                                board by the morning protocol
+#
+# A detective control is weaker than a preventive one and this file says so
+# rather than dressing it up. It becomes preventive the day the repository goes
+# public under Decision 21, at which point rulesets cost nothing.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  # Needed to ask GitHub whether this commit arrived through a pull request.
+  # Parent count cannot answer that question: see the classifier below.
+  pull-requests: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - name: Classify how this commit reached main
+        id: classify
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha="${{ github.sha }}"
+          subject=$(git log -1 --format=%s "$sha")
+          author=$(git log -1 --format='%an <%ae>' "$sha")
+          parents=$(git log -1 --format=%P "$sha" | wc -w)
+
+          # Parent count is a PROXY for "came through a pull request" and it is
+          # the wrong proxy. Only the MERGE-COMMIT strategy produces two parents.
+          # A REBASE merge replays the commit onto main with ONE parent and the
+          # original subject, and a SQUASH merge produces one parent too. G-06
+          # Rule 2-4 mandates rebase and forbids squash, so under this project's
+          # own governance every correctly executed merge landed here as
+          # "direct_push" and opened an issue. An alarm that fires on every
+          # correct action is switched off by whoever is tired of it, which is
+          # L-063, reached by construction rather than by neglect.
+          #
+          # The authoritative answer comes from asking GitHub whether the commit
+          # is associated with a merged pull request. That is the resource
+          # itself rather than a proxy for it.
+          route="direct_push"
+          if [ "$parents" -ge 2 ]; then
+            route="pull_request_merge"
+          elif printf '%s' "$subject" | grep -qiE '^(merge pull request|merge branch)'; then
+            route="pull_request_merge"
+          else
+            # gh is preinstalled on the runner. --jq returns the merged state of
+            # every pull request containing this commit; any "true" means the
+            # commit arrived by a merge, whatever the strategy.
+            merged=$(gh api "repos/${{ github.repository }}/commits/$sha/pulls" \
+                       --jq '[.[] | select(.merged_at != null)] | length' 2>/dev/null || echo 0)
+            if [ "${merged:-0}" -ge 1 ]; then
+              route="pull_request_merge"
+              echo "Associated with $merged merged pull request(s); rebase or squash strategy."
+            else
+              # Withheld with cause rather than imputed: if the API could not be
+              # reached we do not silently downgrade to "authorised".
+              echo "No merged pull request found for $sha, or the API was unreachable."
+            fi
+          fi
+
+          echo "route=$route" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "author=$author" >> "$GITHUB_OUTPUT"
+          echo "subject=$subject" >> "$GITHUB_OUTPUT"
+          echo "Route: $route"
+          echo "Author: $author"
+          echo "Subject: $subject"
+
+      - name: Verify the commit carries a ticket reference
+        id: ticket
+        run: |
+          subject=$(git log -1 --format=%s "${{ github.sha }}")
+          body=$(git log -1 --format=%b "${{ github.sha }}")
+          if printf '%s %s' "$subject" "$body" | grep -qE '\bQT-[0-9]{4}\b'; then
+            echo "linked=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::no QT-#### ticket referenced; the audit trail does not join up here"
+          fi
+
+      - name: Record the finding
+        if: steps.classify.outputs.route == 'direct_push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = "${{ steps.classify.outputs.sha }}";
+            const author = "${{ steps.classify.outputs.author }}";
+            const subject = `${{ toJSON(steps.classify.outputs.subject) }}`;
+            const linked = "${{ steps.ticket.outputs.linked }}";
+            const title = `Branch guard: direct push to main (${sha.substring(0,7)})`;
+            const body = [
+              "A commit reached `main` without passing through a pull request.",
+              "",
+              `- Commit: \`${sha}\``,
+              `- Author: ${author}`,
+              `- Subject: ${subject}`,
+              `- Ticket referenced: ${linked === "true" ? "yes" : "no"}`,
+              "",
+              "This is a detective finding, not a block. GitHub refuses branch",
+              "protection and rulesets on a private repository without a paid",
+              "plan, so this workflow cannot prevent the write. It records it.",
+              "",
+              "If this was you and you meant it, close this issue with a one line",
+              "reason and it becomes the audit record. If it was not you, treat it",
+              "as a SEV2 integrity incident and follow the incident procedure.",
+              "",
+              "_Opened automatically by the branch guard. QT-0009._"
+            ].join("\n");
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ["branch-guard", "audit"]
+            });
+            core.notice(`Direct push recorded and issue opened for ${sha.substring(0,7)}`);
+
+      - name: Summary
+        run: |
+          {
+            echo "### Branch guard"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Route | \`${{ steps.classify.outputs.route }}\` |"
+            echo "| Ticket referenced | ${{ steps.ticket.outputs.linked }} |"
+            echo "| Commit | \`${{ steps.classify.outputs.sha }}\` |"
+            echo ""
+            if [ "${{ steps.classify.outputs.route }}" = "direct_push" ]; then
+              echo "Direct push to main. Recorded as a finding with an issue opened."
+              echo "Prevention lives in \`.githooks/pre-push\` locally, and becomes"
+              echo "server-side the day this repository goes public under Decision 21."
+            else
+              echo "Reached main through a pull request. Authorised path."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
