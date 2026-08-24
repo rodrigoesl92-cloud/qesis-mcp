@@ -70,7 +70,20 @@ EXEMPT = {
     "prove_release_gate.py": "falsification suite for the release binding, run at release not at heal",
     "selfheal.py": "IS the loop. A control set that contains its own runner recurses.",
     "verify_production.py": "probes the live endpoint; the loop reads committed artefacts",
+    "build_ops_report.py": "a generator, not a gate. It reports the control set and cannot "
+    "also be a member of it without asserting its own output. The gate it depends on, "
+    "verify_ledger_singleton.py, IS in CONTROLS and is where a ledger defect fails.",
+    "rdl.py": "the ladder executor. `rdl.py ci-blocking` is a RELEASE gate and belongs in "
+    "qesis-integrity.yml, not in the hourly loop. A family at rung 3 stays at rung 3 until "
+    "its gate lands, so putting it in CONTROLS would escalate on every run, and L-063 says "
+    "an escalation that fires every cycle has been switched off without anyone deciding to "
+    "switch it off. The loop reports the ladder; the release refuses on it.",
 }
+# git_unlock.py was briefly listed above and removed the same session: no
+# workflow runs it, so an exemption for it is dead, and C-3's own message is
+# right that a dead exemption hides the next real one. It is a host-side repair
+# invoked by the lander, which is not CI. L-048: the target state for EXEMPT is
+# empty, and it does not get padded with entries that were never needed.
 
 
 def local_controls() -> set[str]:

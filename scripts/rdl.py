@@ -1,0 +1,457 @@
+#!/usr/bin/env python3
+"""RDL engine. The escalation ladder, executed rather than described.
+
+Standing operator instruction, 2026-08-24, locked:
+
+    Agents handle occurrences 1 through 3 autonomously. The ladder is wired into
+    ARCHITECT's event-driven telemetry. Every failure is hashed to
+    ops/LESSONS_LEDGER.md and to var/qesis_ops.sqlite so the system learns
+    permanently. Pipeline defects and CI failures are ARCHITECT's, and are routed
+    there without being shown to the operator.
+
+The ladder, from CLAUDE.md section 5, now with an executor behind it:
+
+    rung 1  first occurrence          record an L- entry
+    rung 2  second occurrence         wire a gate with two fixtures (V-2)
+    rung 3  third occurrence          the gate becomes a CI release blocker
+    rung 4  fourth occurrence         the control is in the wrong layer, open a D-
+
+Classification is by **epistemic move**, not by artefact (L-118). The family key
+is therefore a short stable string like `guard_not_executed` or `git_lock_family`,
+never a filename. Four instances across four file types escalate as four.
+
+Two things this module refuses to do:
+
+  It never allocates a lesson id by reading the tail of the ledger. The tail is
+  not sorted, because entries are filed when written and not when the event
+  happened, so the tail cannot answer the question (L-151). Ids come from
+  verify_ledger_singleton.py, the accessor that enumerates them.
+
+  It never runs a git command. This module is imported by sessions that may be
+  executing on the analysis mount, where any git invocation takes `.git/index.lock`
+  and abandons it, manufacturing the blocker it would then report (L-122, L-123,
+  L-150). Where a repair needs git, this module writes it into the host lander
+  instead and says so.
+
+Usage:
+    python scripts/rdl.py record --family git_lock_family \
+        --signature "index.lock present, no git process" \
+        --evidence "LAND_EVERYTHING_LOG.txt: Unable to create index.lock" \
+        --owner ARCHITECT --title "the stale lock broke the lander"
+    python scripts/rdl.py status
+    python scripts/rdl.py ci-blocking      # exit 1 if any family is at rung 3
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import sqlite3
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+LEDGER = ROOT / "ops" / "LESSONS_LEDGER.md"
+LADDER = ROOT / "ops" / "RDL_LADDER.json"
+PENDING = ROOT / "ops" / "RDL_PENDING_APPEND.md"
+
+#: Candidate store locations. The store lives outside OneDrive by D-027 and L-001,
+#: but the repository pairing means it may sit beside either checkout.
+STORES = [
+    Path(r"C:\Users\Lenovo\OneDrive\sovereign-infra\var\qesis_ops.sqlite"),
+    ROOT / "var" / "qesis_ops.sqlite",
+    ROOT.parent / "sovereign-infra" / "var" / "qesis_ops.sqlite",
+]
+
+#: Routing. The operator's instruction of 2026-08-24: pipeline defects and CI
+#: failures are ARCHITECT's and are never shown to the operator. SENTINEL keeps
+#: integrity and QA (Rule 1-1). COUNSEL keeps money and law.
+ROUTING = {
+    "pipeline": "ARCHITECT",
+    "ci": "ARCHITECT",
+    "build": "ARCHITECT",
+    "git": "ARCHITECT",
+    "lock": "ARCHITECT",
+    "workflow": "ARCHITECT",
+    "integrity": "SENTINEL",
+    "gate": "SENTINEL",
+    "qa": "SENTINEL",
+    "licence": "COUNSEL",
+    "contract": "COUNSEL",
+}
+
+DDL = """
+CREATE TABLE IF NOT EXISTS qesis_rdl_defects (
+    seq          INTEGER PRIMARY KEY AUTOINCREMENT,
+    family       TEXT NOT NULL,
+    family_hash  TEXT NOT NULL,
+    signature    TEXT NOT NULL,
+    evidence     TEXT NOT NULL,
+    owner        TEXT NOT NULL,
+    occurrence   INTEGER NOT NULL,
+    rung         INTEGER NOT NULL,
+    action       TEXT NOT NULL,
+    lesson_id    TEXT,
+    prev_hash    TEXT NOT NULL,
+    entry_hash   TEXT NOT NULL,
+    recorded_at  TEXT NOT NULL
+);
+"""
+
+
+def now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def family_hash(family: str) -> str:
+    return hashlib.sha256(f"rdl:{family}".encode()).hexdigest()
+
+
+def route(family: str, owner: str | None) -> str:
+    if owner:
+        return owner.upper()
+    low = family.lower()
+    for key, agent in ROUTING.items():
+        if key in low:
+            return agent
+    return "ARCHITECT"
+
+
+def find_store() -> Path | None:
+    return next((p for p in STORES if p.exists()), None)
+
+
+def reserved_ids() -> set[int]:
+    """Ids already allocated into a pending append but not yet in the ledger.
+
+    Added 2026-08-24 after the first run of this executor issued L-150 three
+    times. The accessor reads the ledger, the pending entries are not in the
+    ledger yet, so the maximum never advanced and the module built to prevent
+    the L-073 duplicate-id failure produced three of them in one command.
+
+    An id is allocated the moment it is written anywhere a later process will
+    read it, so the allocator counts reservations and not only the committed
+    store. This also picks up ids reserved by another agent's pending file, which
+    is how COUNSEL's scheduled sweep and this executor stay out of each other's
+    range without either of them locking the ledger (L-152).
+    """
+    out: set[int] = set()
+    ops = ROOT / "ops"
+    if not ops.is_dir():
+        return out
+    for f in sorted(ops.glob("RDL_PENDING*.md")):
+        text = f.read_text(encoding="utf-8", errors="replace")
+        out |= {int(m) for m in re.findall(r"\*\*L-(\d{3})", text)}
+        # COUNSEL's sweep writes "provisionally L-150" in prose rather than as an
+        # entry header, so a reservation in either shape is honoured.
+        out |= {int(m) for m in re.findall(r"[Pp]rovisionally L-(\d{3})", text)}
+    return out
+
+
+def next_lesson_id() -> tuple[int, str]:
+    """Allocate from the accessor plus outstanding reservations. Never the tail.
+
+    The tail of the ledger is not sorted, because entries are filed when written
+    and not when the event happened, so it cannot answer this question at all
+    (L-151).
+    """
+    try:
+        p = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "verify_ledger_singleton.py"), "--json"],
+            capture_output=True, text=True, timeout=120, check=False, cwd=ROOT,
+        )
+        doc = json.loads(p.stdout)
+        ledger_max = int(doc["max"])
+    except Exception as exc:
+        # Refuse rather than guess. A guessed id is the L-073 build failure.
+        raise SystemExit(
+            f"RDL REFUSES: cannot allocate a lesson id from the accessor ({exc}). "
+            "Reading the tail of the ledger is not a fallback, it is L-151."
+        )
+    res = reserved_ids()
+    nxt = max([ledger_max] + sorted(res)) + 1
+    how = f"verify_ledger_singleton.py .max={ledger_max}"
+    if res:
+        how += f" plus {len(res)} reserved in ops/RDL_PENDING*.md, highest L-{max(res):03d}"
+    return nxt, how
+
+
+def ladder_state() -> dict:
+    if LADDER.exists():
+        return json.loads(LADDER.read_text(encoding="utf-8"))
+    return {"_doc": "RDL ladder state. Occurrence counts by family, and the rung "
+            "each family has reached. Written by scripts/rdl.py, read by CI.",
+            "families": {}}
+
+
+def occurrences(fam: str) -> int:
+    """Count prior occurrences from the store when reachable, ladder file otherwise."""
+    store = find_store()
+    if store:
+        try:
+            con = sqlite3.connect(f"file:{store}?mode=ro", uri=True)
+            con.execute(DDL.replace("CREATE TABLE IF NOT EXISTS", "CREATE TEMP TABLE IF NOT EXISTS"))
+            n = con.execute(
+                "SELECT COUNT(*) FROM qesis_rdl_defects WHERE family=?", (fam,)
+            ).fetchone()[0]
+            con.close()
+            return int(n)
+        except sqlite3.OperationalError:
+            pass  # table absent on first run, fall through
+    return int(ladder_state()["families"].get(fam, {}).get("occurrences", 0))
+
+
+def rung_for(occ: int) -> tuple[int, str]:
+    if occ <= 1:
+        return 1, "record an L- entry"
+    if occ == 2:
+        return 2, "wire a gate with one refuse fixture and one accept fixture (V-2)"
+    if occ == 3:
+        return 3, "the gate becomes a CI release blocker"
+    return 4, "the control sits in the wrong layer, open a D- decision"
+
+
+def append_pending(entry: str) -> None:
+    """Hold the ledger text for the host lander to append.
+
+    Not appended directly, because a concurrent session may be writing the same
+    file and a lost update to the ledger is invisible to verify_ledger_singleton,
+    which compares ids and not text (L-152).
+    """
+    head = "" if PENDING.exists() else (
+        "# RDL pending append\n\nWritten by `scripts/rdl.py`. The host lander "
+        "appends these to `ops/LESSONS_LEDGER.md`, re-reading the accessor for "
+        "the id immediately before the write, then deletes this file.\n\n---\n\n"
+    )
+    with PENDING.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(head + entry.rstrip() + "\n\n")
+
+
+LOCK = ROOT / "ops" / ".rdl.lock"
+LOCK_STALE_SECONDS = 900
+
+
+def acquire(holder: str = "rdl") -> None:
+    """Advisory lock naming the holder and the start time. L-152.
+
+    Two sessions wrote one working tree on 2026-08-24 and neither could see the
+    other, producing a duplicated CONTROLS entry that no control detected. A loop
+    that repairs a tree it does not exclusively hold is not idempotent however
+    idempotent each remedy is, because idempotence is a property of a remedy
+    applied to a known state and concurrency removes the known state.
+    """
+    import os
+    import time
+    if LOCK.exists():
+        try:
+            doc = json.loads(LOCK.read_text(encoding="utf-8"))
+            age = time.time() - float(doc.get("epoch", 0))
+        except Exception:
+            age = LOCK_STALE_SECONDS + 1
+            doc = {"holder": "unreadable"}
+        if age < LOCK_STALE_SECONDS:
+            raise SystemExit(
+                f"RDL REFUSES: ops/.rdl.lock held by {doc.get('holder')} since "
+                f"{doc.get('started')} ({age:.0f}s ago). Another writer is live on "
+                "this working tree. Refusing to mutate. This is L-152 applied."
+            )
+    LOCK.write_text(json.dumps(
+        {"holder": holder, "pid": os.getpid(), "started": now(),
+         "epoch": __import__("time").time()}), encoding="utf-8", newline="\n")
+
+
+def release() -> None:
+    # Truncate rather than unlink: the mount may refuse unlink, and a
+    # half-deleted lock would read as held forever.
+    if LOCK.exists():
+        LOCK.write_text("{}", encoding="utf-8", newline="\n")
+
+
+def remote_touches_ledger() -> str:
+    """Pre-append remote check, requested by the operator 2026-08-24.
+
+    If an open pull request already touches the ledger, a local append will
+    collide with it on merge. Reported, never guessed: where `gh` is absent or
+    unauthenticated this returns an empty string and the caller proceeds, because
+    a missing tool is not evidence of a clean remote (D-007).
+    """
+    try:
+        p = subprocess.run(
+            ["gh", "pr", "list", "--state", "open", "--json", "number,files",
+             "--jq", '[.[] | select(.files[]?.path | test("LESSONS_LEDGER")) | .number] | join(",")'],
+            capture_output=True, text=True, timeout=60, check=False, cwd=ROOT,
+        )
+        return p.stdout.strip() if p.returncode == 0 else ""
+    except Exception:
+        return ""
+
+
+def record(family: str, signature: str, evidence: str, owner: str | None,
+           title: str, rule: str, prior: int = 0, prior_evidence: str = "") -> dict:
+    """Record one occurrence and apply the rung it earns.
+
+    `prior` seeds a family that was occurring before this executor existed. It is
+    accepted only with `prior_evidence` naming the L- ids that record those
+    occurrences, because an unevidenced prior count is a way to jump a family up
+    the ladder without anything having happened, which is the ladder's own
+    version of gate-gaming.
+    """
+    fam = family.strip().lower().replace(" ", "_")
+    if prior and not prior_evidence:
+        raise SystemExit(
+            "RDL REFUSES: --prior needs --prior-evidence naming the L- ids that "
+            "record those occurrences. An unevidenced prior count is not history."
+        )
+    occ = max(occurrences(fam), prior) + 1
+    rung, action = rung_for(occ)
+    agent = route(fam, owner)
+    lid, how = next_lesson_id()
+
+    entry = (
+        f"**L-{lid:03d} · {datetime.now(timezone.utc).date()} · {title}** "
+        f"{signature} **Evidence:** {evidence} "
+        f"**Family:** `{fam}`, occurrence {occ}, ladder rung {rung}."
+        + (f" Prior occurrences evidenced by {prior_evidence}. " if prior_evidence else " ")
+        + f"**Rule:** {rule} "
+        + f"**Routed to {agent}** by the RDL routing table, not by a human triage step. "
+        + f"**Ladder action, applied not proposed:** {action}."
+    )
+    append_pending(entry)
+
+    st = ladder_state()
+    fams = st["families"]
+    prev = fams.get(fam, {})
+    fams[fam] = {
+        "occurrences": occ,
+        "rung": rung,
+        "owner": agent,
+        "family_hash": family_hash(fam),
+        "last_signature": signature,
+        "last_seen": now(),
+        "prior_evidence": prior_evidence or prev.get("prior_evidence", ""),
+        "lesson_ids": prev.get("lesson_ids", []) + [f"L-{lid:03d}"],
+        "ci_blocking": rung >= 3,
+        "gate_required": rung >= 2,
+        "decision_required": rung >= 4,
+    }
+    LADDER.write_text(json.dumps(st, indent=1) + "\n", encoding="utf-8", newline="\n")
+
+    rec = {
+        "family": fam, "family_hash": family_hash(fam), "signature": signature,
+        "evidence": evidence, "owner": agent, "occurrence": occ, "rung": rung,
+        "action": action, "lesson_id": f"L-{lid:03d}", "recorded_at": now(),
+        "id_allocated_by": how,
+    }
+    write_store(rec)
+    return rec
+
+
+def write_store(rec: dict) -> None:
+    """Hash-chain the record into the operational store when it is writable."""
+    store = find_store()
+    if store is None:
+        rec["store"] = "NOT REACHABLE, ladder file carries the state"
+        return
+    try:
+        con = sqlite3.connect(store, timeout=10)
+        con.execute(DDL)
+        row = con.execute(
+            "SELECT entry_hash FROM qesis_rdl_defects ORDER BY seq DESC LIMIT 1"
+        ).fetchone()
+        prev = row[0] if row else "0" * 64
+        payload = json.dumps(
+            {k: rec[k] for k in sorted(rec) if k != "store"}, sort_keys=True
+        )
+        eh = hashlib.sha256((prev + payload).encode()).hexdigest()
+        con.execute(
+            "INSERT INTO qesis_rdl_defects (family,family_hash,signature,evidence,"
+            "owner,occurrence,rung,action,lesson_id,prev_hash,entry_hash,recorded_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            (rec["family"], rec["family_hash"], rec["signature"], rec["evidence"],
+             rec["owner"], rec["occurrence"], rec["rung"], rec["action"],
+             rec["lesson_id"], prev, eh, rec["recorded_at"]),
+        )
+        con.commit()
+        con.close()
+        rec["store"] = str(store)
+        rec["entry_hash"] = eh
+    except Exception as exc:
+        # D-027 and L-001: the store may sit on a mount that refuses SQLite
+        # locking. That is a declared safe failure, class B, never an escalation.
+        rec["store"] = f"DEGRADED, not written: {type(exc).__name__}: {exc}"
+
+
+def cmd_status() -> int:
+    st = ladder_state()
+    fams = st["families"]
+    if not fams:
+        print("RDL ladder: 0 families recorded. Zero is zero.")
+        return 0
+    print(f"RDL ladder: {len(fams)} families")
+    for fam, d in sorted(fams.items(), key=lambda kv: -kv[1]["occurrences"]):
+        flags = []
+        if d.get("gate_required"):
+            flags.append("GATE REQUIRED")
+        if d.get("ci_blocking"):
+            flags.append("CI BLOCKING")
+        if d.get("decision_required"):
+            flags.append("D- REQUIRED")
+        print(f"  {fam:28s} occ {d['occurrences']}  rung {d['rung']}  "
+              f"{d['owner']:9s} {' '.join(flags)}")
+        print(f"    {', '.join(d.get('lesson_ids', []))}")
+    store = find_store()
+    print(f"  store: {store if store else 'NOT REACHABLE from here'}")
+    return 0
+
+
+def cmd_ci_blocking() -> int:
+    """Rung 3. Exit non-zero so a workflow step can gate on it."""
+    st = ladder_state()
+    blocking = {f: d for f, d in st["families"].items() if d.get("ci_blocking")}
+    if not blocking:
+        print("RDL: no family at rung 3. CI is not blocked by the ladder.")
+        return 0
+    print(f"RDL CI BLOCK: {len(blocking)} famil(y/ies) at rung 3 or above")
+    for f, d in blocking.items():
+        print(f"  {f}: occurrence {d['occurrences']}, owner {d['owner']}, "
+              f"lessons {', '.join(d.get('lesson_ids', []))}")
+    print("Third occurrence makes the gate a release blocker. Clear the family by "
+          "landing its gate and its two fixtures, then reset the rung with a reason.")
+    return 1
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    r = sub.add_parser("record")
+    r.add_argument("--family", required=True)
+    r.add_argument("--signature", required=True)
+    r.add_argument("--evidence", required=True)
+    r.add_argument("--title", required=True)
+    r.add_argument("--rule", required=True)
+    r.add_argument("--owner")
+    r.add_argument("--prior", type=int, default=0,
+                   help="occurrences of this family that predate this executor")
+    r.add_argument("--prior-evidence", default="",
+                   help="the L- ids that record those prior occurrences")
+    sub.add_parser("status")
+    sub.add_parser("ci-blocking")
+    a = ap.parse_args()
+
+    if a.cmd == "status":
+        return cmd_status()
+    if a.cmd == "ci-blocking":
+        return cmd_ci_blocking()
+    rec = record(a.family, a.signature, a.evidence, a.owner, a.title, a.rule,
+                 a.prior, a.prior_evidence)
+    print(json.dumps(rec, indent=1))
+    print(f"\nrung {rec['rung']}: {rec['action']}")
+    print(f"routed to {rec['owner']}, not to the operator")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

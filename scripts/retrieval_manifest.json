@@ -11,8 +11,204 @@
     "k_fixed": 5
   },
   "sources": [
-    "ENTSO-E",
-    "Ember",
-    "EMODnet"
-  ]
+    {
+      "name": "ENTSO-E",
+      "tier": "OFFICIAL",
+      "role": "grid adequacy, ERAA"
+    },
+    {
+      "name": "Ember",
+      "tier": "OFFICIAL",
+      "role": "ESE carbon intensity"
+    },
+    {
+      "name": "EMODnet",
+      "tier": "OFFICIAL",
+      "role": "CSE cable component, EU states"
+    },
+    {
+      "name": "World Economic Forum",
+      "tier": "OFFICIAL",
+      "role": "external benchmark and foresight signal. ESE convergent validity, WSE falsifier U-09, ODI prior art",
+      "register_entry": "SA-006",
+      "vintages_held": {
+        "Energy Transition Index": "2026, 16th edition, June 2026",
+        "Deepening Divides": "June 2026",
+        "From Minerals to Megawatts": "December 2025",
+        "Top 10 Emerging Technologies": "2026, 14th edition, June 2026",
+        "Chief Economists Outlook": "May 2026"
+      },
+      "watch": "The 2026 ETI added AI readiness and clean technology minerals supply chain exposure. Re-read the indicator list at every edition: the boundary between this instrument and QESIS+ has already moved once."
+    },
+    {
+      "name": "OECD",
+      "tier": "OFFICIAL",
+      "role": "semiconductor production database papers. Canonical unit for wafer fabrication capacity, and prior art on concentration by economy",
+      "register_entry": "SA-005",
+      "vintages_held": {
+        "The chip landscape, STI Policy Paper No. 188": "December 2025"
+      }
+    }
+  ],
+  "corpus_policy": {
+    "version": "1.3",
+    "added": "2026-08-21",
+    "revised": "2026-08-21, operator instruction: WEF is an OFFICIAL source, used for reference and academic analysis, which is accepted and expected scholarly use. The scopes are narrowed accordingly.",
+    "authority": "ops/SOURCE_ACQUISITION_REGISTER.md entries SA-004 to SA-008; SA-1 and SA-2; D-111 licence posture",
+    "enforced_by": "scripts/verify_retrieval_corpus.py, falsified by check_retrieval_corpus in scripts/test_gate.py",
+    "supersedes_note": "Three corrections, all COUNSEL's, recorded rather than quietly rewritten. v1.0 refused a restricted file outright in every context: that read a reproduction-and-transmission reservation as a bar on private reading, which it is not. v1.1 defaulted the whole pool to REFUSE on an undeclared licence: that ignored SA-2, under which the operator's declaration of the acquisition channel is evidence, and SA-001, which already settled that publisher newsletter distribution is publication by the publisher. v1.2 still treated any served index touching WEF as restricted: that conflated CITING a published figure with REPUBLISHING the publication. Quoting figures with attribution, and computing and reporting derived statistics, is accepted and expected academic use and needs no permission. What a reservation actually reaches is substantial verbatim reproduction. The scopes below say so.",
+    "scopes": {
+      "academic_citation": {
+        "what_it_is": "Citing a published figure with attribution, and computing, reporting and publishing statistics derived from it. Covers the index, the served MCP surface, the dashboard, the paper and any public artefact that references a source rather than reproducing it.",
+        "default": "ADMIT",
+        "default_reason": "This is the normal scholarly use of a published source and it requires no permission from the publisher. Attribution is the obligation, not consent. An instrument built to be checked by reviewers must be able to cite what it was checked against."
+      },
+      "private_analysis": {
+        "what_it_is": "A corpus held on the operator's own machine and queried only by him or by agents acting for him. Nothing leaves the machine.",
+        "default": "ADMIT",
+        "default_reason": "Reading a document one lawfully holds is not reproduction or transmission, and indexing it for one's own retrieval is reading with a machine."
+      },
+      "served_verbatim": {
+        "what_it_is": "Serving substantial verbatim text or reproducing a source's tables to a third party: a public retrieval index that returns source passages, a republished ranking table, a redistributed PDF.",
+        "default": "REFUSE",
+        "default_reason": "This is the one thing a redistribution reservation actually reaches. It is also the only scope where the publisher's terms and this ecosystem's interest can diverge, so it is the only one that needs a gate."
+      }
+    },
+    "rule": "Scope decides, and only one scope restricts anything. Citing a figure is not reproducing a publication, and holding a file is not transmitting it. What a reservation reaches is handing substantial verbatim text onward, so that is what served_verbatim guards and nothing else is gated.",
+    "sources": [
+      {
+        "pattern": "WEF_*",
+        "publisher": "World Economic Forum",
+        "register_entry": "SA-006",
+        "acquisition_channel": "PUBLISHER_NEWSLETTER",
+        "reason": "OFFICIAL source. Cite its figures freely with attribution and publish statistics derived from them: that is accepted and expected academic use. Hold and index it privately. Do not republish the ranking tables or serve substantial verbatim passages, which is the one act the reservation reaches.",
+        "tier": "OFFICIAL",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "REFUSE",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "*World_Economic_Forum*",
+        "publisher": "World Economic Forum",
+        "register_entry": "SA-006",
+        "acquisition_channel": "PUBLISHER_NEWSLETTER",
+        "reason": "Same reservation, alternate filename form.",
+        "tier": "OFFICIAL",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "REFUSE",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "Mind The Agentic Action Gap*",
+        "publisher": "Forrester Research",
+        "register_entry": "SA-007",
+        "acquisition_channel": "PUBLISHER_NEWSLETTER",
+        "reason": "Single-use reprint, identified as one in its own filename and URL. The framework may be applied anywhere. The report text may not be handed onward.",
+        "tier": "COMPLEMENTARY",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "REFUSE",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "*reprint*",
+        "publisher": "various",
+        "register_entry": "SA-007",
+        "acquisition_channel": "PUBLISHER_NEWSLETTER",
+        "reason": "A reprint is licensed to one recipient by construction.",
+        "tier": "COMPLEMENTARY",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "REFUSE",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "*OECD*",
+        "publisher": "Organisation for Economic Co-operation and Development",
+        "register_entry": "SA-005",
+        "acquisition_channel": "PUBLIC_PORTAL_DOWNLOAD",
+        "licence": "CC BY 4.0",
+        "reason": "Open licence, attribution required. No restriction in either scope.",
+        "tier": "OFFICIAL",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "ADMIT",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "GEOGRAPHICAL DISTRIBUTION OF WAFER FABRICATION CAPACITY*",
+        "publisher": "Organisation for Economic Co-operation and Development",
+        "register_entry": "SA-005",
+        "acquisition_channel": "PUBLIC_PORTAL_DOWNLOAD",
+        "licence": "CC BY 4.0",
+        "reason": "OECD STI Policy Paper No. 188, DSTI/DPC/CIIE(2025)1/FINAL.",
+        "tier": "OFFICIAL",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "ADMIT",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "vulnerabilities in the semicondutor supply chain_OECD*",
+        "publisher": "Organisation for Economic Co-operation and Development",
+        "register_entry": "SA-005",
+        "acquisition_channel": "PUBLIC_PORTAL_DOWNLOAD",
+        "licence": "CC BY 4.0",
+        "reason": "OECD publication under the same open licence. The filename spelling is the operator's and is matched as it exists on disk.",
+        "tier": "OFFICIAL",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "ADMIT",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "QESIS_*",
+        "publisher": "R. Batista Silva",
+        "register_entry": "n/a",
+        "acquisition_channel": "own work",
+        "licence": "own work",
+        "reason": "Authored inside this ecosystem.",
+        "tier": "OWN",
+        "academic_citation": "ADMIT",
+        "served_verbatim": "ADMIT",
+        "private_analysis": "ADMIT"
+      },
+      {
+        "pattern": "*_RESTRICTED*",
+        "publisher": "various",
+        "register_entry": "n/a",
+        "acquisition_channel": "unknown",
+        "reason": "Explicit local quarantine marking. Refused in both scopes on the name, so a file can be pulled out of circulation without a register round trip. This is the one pattern that overrides the pool declaration.",
+        "tier": "COMPLEMENTARY",
+        "academic_citation": "REFUSE",
+        "served_verbatim": "REFUSE",
+        "private_analysis": "REFUSE"
+      }
+    ],
+    "pool_declaration": {
+      "register_entry": "SA-008",
+      "scope": "Digital Twin R&D",
+      "acquisition_channel": "PUBLISHER_NEWSLETTER",
+      "declared_by": "R. Batista Silva, operator, 2026-08-21",
+      "statement": "The material in this pool was received from its publishers through their own newsletter, marketing and SEO distribution. The operator did not circumvent a control, breach a term or pay. Under SA-2 that testimony is evidence, and under SA-001's reasoning distribution to a list the publisher invited the public to join is an act of publication by the publisher.",
+      "effect": "Every file in this pool is ADMITTED to academic_citation and private_analysis unless it carries the _RESTRICTED_ quarantine marking. served_verbatim stays decided per source.",
+      "why_this_is_not_a_blanket_waiver": "It settles possession and use, which is what the acquisition channel is for. It does not overwrite an explicit stated term, and SA-001 already says so: raw redistribution follows the publisher's stated terms. That is why WEF and Forrester still fail served_retrieval while passing private_analysis.",
+      "default_tier": "COMPLEMENTARY",
+      "default_tier_reason": "A file with no enumerated entry arrived through the pool and is practice material by default. Promoting a source to OFFICIAL is an operator act and is recorded per source, never inferred from the folder it sits in."
+    },
+    "precedence": "A _RESTRICTED_ marking wins over everything. Otherwise the first matching source entry decides, and a file matching no entry falls to the scope default: ADMIT for private_analysis under the pool declaration, REFUSE for served_retrieval.",
+    "source_tiers": {
+      "OFFICIAL": {
+        "what_it_is": "A source of record. Its figures may be cited as evidence in the index, the served surface and the paper, and its vintage is tracked so a new edition is a scheduled event rather than a surprise.",
+        "publishers": [
+          "World Economic Forum",
+          "OECD"
+        ],
+        "obligation": "Carries a vintage in this manifest. A new edition is a change to check against, not a file to drop in the folder."
+      },
+      "COMPLEMENTARY": {
+        "what_it_is": "Practice and operations material. It informs how the ecosystem is built and run. It is never cited as evidence for a measurement or a finding.",
+        "publishers": [
+          "vendor, analyst and practitioner publications received through publisher newsletter and marketing distribution"
+        ],
+        "obligation": "May shape a design decision. May not support a claim about the world. The Forrester action gap framework is the worked example: the framework is applied, the report is not cited as evidence."
+      },
+      "why_the_tier_is_not_a_licence": "Tier is epistemic standing inside this ecosystem. It is assigned by the operator and it governs what a source may be used FOR. Licence is assigned by the publisher and governs what may be handed onward. Designating the World Economic Forum an official source does not license republication of its tables, which is why SA-006 still refuses served_retrieval while admitting private_analysis and while the ETI figures are cited freely as derived aggregates. The two fields answer different questions and neither overrides the other."
+    }
+  }
 }

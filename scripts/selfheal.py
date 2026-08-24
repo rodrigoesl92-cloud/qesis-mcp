@@ -40,6 +40,7 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -49,6 +50,9 @@ REPORT = OPS / "SELFHEAL_LATEST.json"
 
 
 # ── the control set. V-4: audit the set, never one member of it. ────────────
+#: The capability probe's filename. Fixed, never timestamped (L-142).
+PROBE_NAME = ".selfheal_probe"
+
 CONTROLS = [
     ("verify_index",           ["scripts/verify_index.py"]),
     ("verify_chain",           ["scripts/verify_chain.py"]),
@@ -57,6 +61,13 @@ CONTROLS = [
     ("verify_action_pinning",  ["scripts/verify_action_pinning.py"]),
     ("verify_secrets",         ["scripts/verify_no_plaintext_secrets.py", "--quiet"]),
     ("verify_workflow",        ["scripts/verify_workflow_contract.py", "--quiet"]),
+    # L-146, L-147. The ledger existed in two repositories and the copies named
+    # two different lessons under L-119 and L-120 for four days. L-073 has made a
+    # duplicate id a build failure since it was written and nothing failed,
+    # because no control had ever been pointed at the ledger itself. R3 degrades
+    # when the sibling repository is not checked out, which is the normal state
+    # under CI and is not an escalation.
+    ("verify_ledger_singleton", ["scripts/verify_ledger_singleton.py", "--quiet"]),
     ("kill_switch",            ["scripts/kill_switch.py"]),
     ("build_graph_check",      ["scripts/build_graph.py", "--check"]),
     ("build_percolation_check", ["scripts/build_percolation_block.py", "--check"]),
@@ -65,6 +76,26 @@ CONTROLS = [
     ("build_landing_check",    ["scripts/build_landing.py", "--check"]),
     ("test_gate",              ["scripts/test_gate.py"]),
 ]
+
+
+def _assert_controls_unique() -> None:
+    """L-152, exposure 1. Two sessions both added verify_ledger_singleton to
+    CONTROLS on 2026-08-24 and the list held it twice. That raises no syntax
+    error, runs the gate twice, and double counts it in the totals the G-07
+    section 4.1 promotion predicate reads, which "every control returns PASS"
+    then satisfies twice. Nothing in the ecosystem detected it. This does."""
+    names = [n for n, _ in CONTROLS]
+    dupes = sorted({n for n in names if names.count(n) > 1})
+    if dupes:
+        raise SystemExit(
+            "SELFHEAL REFUSES: duplicate control(s) in CONTROLS: "
+            + ", ".join(dupes)
+            + ". A duplicated control inflates the count the promotion predicate "
+              "reads. L-152."
+        )
+
+
+_assert_controls_unique()
 
 
 # ── the remedy registry. This IS the autonomy boundary, and it is data. ─────
@@ -184,6 +215,21 @@ REMEDIES = {
                "credential.",
         "escalate_with": "gh api repos/<owner>/<repo>/commits/<tag> --jq .sha",
     },
+    "verify_ledger_singleton": {
+        "class": "C",
+        "why": "A duplicate lesson id has been a build failure since L-073, and "
+               "the ledger is the canonical record every later session reads as "
+               "fact. There is no mechanical remedy: renumbering an id strands "
+               "every document that cites it, which is the same harm G-02 gives "
+               "the concordance to prevent, and merging two entries under one id "
+               "destroys the one of them that was not a copy. An undeclared gap "
+               "is settled by writing the reason into ops/LEDGER_GAPS.json, and "
+               "the reason is knowledge the runner does not have. Withheld with "
+               "cause rather than imputed (D-007).",
+        "escalate_with": "python scripts/verify_ledger_singleton.py   "
+                         "(R1 duplicate, R2 undeclared gap, R3 sibling drift)",
+        "severity": "HIGH",
+    },
     "test_gate": {
         "class": "C",
         "why": "The gate self-test failing means a control stopped catching what "
@@ -246,7 +292,15 @@ def git_writes_safe() -> tuple[bool, str]:
     all**, including read-only ones, because `status`, `add` and `diff` all take
     the index lock and all leave it behind.
     """
-    probe = ROOT / ".git" / f".selfheal_probe_{int(datetime.now().timestamp())}"
+    # FIXED name, not a timestamped one. L-142: the first version stamped the
+    # probe with `int(datetime.now().timestamp())`, so on the one filesystem the
+    # probe exists to detect, every run created a file it could not remove and
+    # fourteen accumulated inside `.git`. A diagnostic whose failure path grows
+    # without bound is L-063 arriving from the other side: not an alarm nobody
+    # reads, litter nobody attributes. A fixed name overwrites its predecessor,
+    # so the leak is bounded at one file and the create-then-unlink probe still
+    # measures exactly the capability that fails, which is UNLINK (L-122).
+    probe = ROOT / ".git" / PROBE_NAME
     if not (ROOT / ".git").is_dir():
         return False, "no .git directory reachable from here"
     try:
@@ -336,6 +390,50 @@ def promotion_policy(state: dict) -> tuple[bool, str]:
     return True, "policy signed and predicate holds"
 
 
+
+def action_gap(state: dict) -> dict:
+    """The agentic action gap, instrumented on what this loop already emits.
+
+    Forrester, Mind The Agentic Action Gap (2026), defines the gap as the distance
+    between an agent-generated insight and a value-driving action, measured on
+    friction, time to action, and adoption. The loop was already emitting the
+    numerator and the denominator of all three and aggregating none of them, so
+    this is instrumentation rather than a new measurement.
+
+    Friction is the count of findings that cannot be executed without a human:
+    class C escalations plus unclassified failures. That is the count the loop
+    exists to drive to zero.
+
+    The empty denominator is deliberately null and not 1.0. A run with no findings
+    has no execution rate, and a loop that reports a perfect rate on an empty
+    denominator is asserting rather than measuring (L-055).
+    """
+    detected = [c for c in state["controls"] if c.get("status") == "FAIL"]
+    applied = [r for r in state["repaired"] if r.get("applied")]
+    held = [r for r in applied if r.get("ok")]
+    times = [r["seconds_to_action"] for r in applied
+             if r.get("seconds_to_action") is not None]
+    return {
+        "definition": "Forrester, Mind The Agentic Action Gap (2026). Framework "
+                      "applied; the report itself is a single-use reprint and is "
+                      "neither redistributed nor indexed (SA-007).",
+        "friction_points": len(state["escalations"]) + len(state["failed"]),
+        "friction_is": "class C escalations plus unclassified failures, which are "
+                       "exactly the findings a human must execute",
+        "time_to_action_seconds": {
+            "measured_repairs": len(times),
+            "total": round(sum(times), 3) if times else 0.0,
+            "slowest": round(max(times), 3) if times else 0.0,
+            "note": "null in dry-run and report-only mode, where nothing is applied",
+        },
+        "unmodified_execution_rate": (round(len(held) / len(detected), 4)
+                                      if detected else None),
+        "unmodified_execution_is": f"{len(held)} repairs held over "
+                                   f"{len(detected)} findings this run",
+        "empty_denominator_reads_as": "null, never 1.0",
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
@@ -384,11 +482,23 @@ def main() -> int:
         strays = list((ROOT / ".git" / "objects").glob("*/tmp_obj_*"))
         if strays:
             state["degraded"][-1]["stray_objects"] = len(strays)
+        # The loop reports the litter git leaves and must report its own on the
+        # same line of reasoning, or it is holding the tool to a standard it
+        # exempts itself from. L-142.
+        probes = sorted(p.name for p in (ROOT / ".git").glob(".selfheal_probe*"))
+        legacy = [n for n in probes if n != PROBE_NAME]
+        if probes:
+            state["degraded"][-1]["stray_probes"] = len(probes)
+            state["degraded"][-1]["legacy_probes"] = len(legacy)
         print(f"  !!  git writes UNSAFE here: {gw_why}")
         print(f"      repairs land in the working tree, commit from the host")
         if strays:
             print(f"      {len(strays)} stray tmp_obj_* in .git/objects, "
                   f"clear with: git prune ; git gc")
+        if legacy:
+            print(f"      {len(legacy)} legacy timestamped probe(s) in .git from "
+                  f"before L-142, clear from the HOST with: "
+                  f"Remove-Item .git\\.selfheal_probe_*")
     print()
 
     for name, cmd in CONTROLS:
@@ -398,6 +508,7 @@ def main() -> int:
             print(f"  ..  {name:24s} absent from this checkout")
             continue
         rc, out = run(cmd)
+        _t_detect = time.monotonic()
         all_benign, reasons = (benign_reasons(name, out) if rc != 0 else (False, []))
         if all_benign:
             # Every failing behaviour is a declared environmental condition. The
@@ -427,14 +538,16 @@ def main() -> int:
             if args.dry_run or args.report_only:
                 print(f"      class A, would run {rem['run'][0]}")
                 state["repaired"].append({"control": name, "applied": False,
-                                          "would_run": rem["run"][0], "why": rem["why"]})
+                                          "would_run": rem["run"][0], "why": rem["why"],
+                                          "seconds_to_action": None})
                 continue
             rc2, _ = run(rem["run"])
             ok = rc2 == 0
             if ok and rem.get("reverify"):
                 ok = run(cmd)[0] == 0
             state["repaired"].append({"control": name, "applied": True, "ok": ok,
-                                      "ran": rem["run"][0], "why": rem["why"]})
+                                      "ran": rem["run"][0], "why": rem["why"],
+                                      "seconds_to_action": round(time.monotonic() - _t_detect, 3)})
             print(f"      class A repaired via {rem['run'][0]}: "
                   f"{'reverified' if ok else 'STILL FAILING, escalating'}")
             if not ok:
@@ -456,6 +569,8 @@ def main() -> int:
     ok_promote, why = promotion_policy(state)
     state["promotion"] = {"proceed": ok_promote, "reason": why}
 
+    state["action_gap"] = action_gap(state)
+
     green = not state["failed"] and not state["escalations"]
     state["verdict"] = ("GREEN" if green and not state["degraded"] else
                         "DEGRADED" if green else "ESCALATED")
@@ -465,6 +580,12 @@ def main() -> int:
 
     print(f"\n  verdict {state['verdict']}   repaired {len(state['repaired'])}   "
           f"degraded {len(state['degraded'])}   escalations {len(state['escalations'])}")
+    _ag = state["action_gap"]
+    _rate = _ag["unmodified_execution_rate"]
+    print(f"  action gap: friction {_ag['friction_points']}   "
+          f"time to action {_ag['time_to_action_seconds']['total']}s over "
+          f"{_ag['time_to_action_seconds']['measured_repairs']} repairs   "
+          f"unmodified execution {'n/a (no findings)' if _rate is None else f'{_rate:.0%}'}")
     print(f"  promotion: {'PROCEED' if ok_promote else 'HELD'}  ({why})")
     for e in state["escalations"]:
         print(f"    [{e['severity']}] {e['control']}: {e['command']}")

@@ -1,0 +1,92 @@
+feat(intake): apply the 2026-08-19 R&D batch adjudication
+
+Twelve documents entered Digital Twin R&D on 2026-08-19. Zero cleared an
+ingestion contract for any axis, which is the gate working. The value in the
+batch is a licence constraint, an external benchmark and one instrument, and
+this change set applies all three.
+
+SA-005 to SA-008, the licence layer. Scope decides, and only one scope restricts
+anything. Citing a published figure with attribution and publishing statistics
+derived from it is accepted and expected academic use, needing no permission.
+Holding a file one lawfully received is not transmission. What a redistribution
+reservation reaches is substantial verbatim reproduction, and that is all the gate
+guards.
+
+  academic_citation  default ADMIT    30 of 30 pool files
+  private_analysis   default ADMIT    30 of 30 pool files
+  served_verbatim    default REFUSE   WEF and Forrester refused, OECD admitted
+
+WEF and OECD are declared OFFICIAL sources and now sit in the manifest beside
+Ember, EMODnet and ENTSO-E, with the editions held recorded per work and a watch
+line on the ETI indicator list. Vendor and practitioner material is COMPLEMENTARY:
+it shapes how the ecosystem is built, and it is never cited as evidence.
+
+  scripts/retrieval_manifest.json   three scopes, source tiers, SA-008 pool
+                                    declaration, WEF and OECD as sources
+  scripts/verify_retrieval_corpus.py --scope
+  scripts/test_gate.py              nine fixtures, including the same WEF file
+                                    admitted to citation, admitted to private
+                                    analysis, and refused only from verbatim
+                                    serving, so no correction can regress
+  .gitignore                        var/restricted/, per the L-124 remedy
+
+Three corrections landed in one day and all three were COUNSEL's: reading a
+reproduction reservation as a bar on private reading, defaulting the pool to
+REFUSE against SA-2, and conflating citation with republication. Each is recorded
+as a dated superseding entry in the register rather than quietly rewritten.
+
+ETI 2026, the benchmark. The WEF Energy Transition Index covers 33 of the 35
+sample states, ratio 0.9429; HKG and TWN are absent and are two of the three
+already withheld under BIG. Used as an external convergent validity check on
+ESE, never as an input and never as an fsQCA outcome.
+
+  ESE against ETI system performance, n=33
+  Spearman rho -0.4946  p 0.003437
+  Pearson  r   -0.5494  p 0.000927
+  verdict CORROBORATED
+
+The prediction was declared before the run and the gate exits non-zero if rho is
+non-negative or under 0.30 in magnitude. Sign predicted, magnitude moderate:
+convergent validity without redundancy. It corroborates ESE, a diagnostic axis
+excluded from the composite under D-044, and not the headline number.
+
+  scripts/eti_extract.py            local extraction, refuses to write to any
+                                    published plane
+  scripts/verify_eti_convergence.py coefficients only, no ETI score or rank
+  data/axes/eti_convergence_evidence.json
+
+Forrester, the instrument. The agentic action gap is instrumented on what the
+self heal loop already emitted and never aggregated: friction points, time to
+action, unmodified execution rate. An empty denominator reads null, never 1.0,
+because a loop reporting a perfect rate on no findings is asserting rather than
+measuring (L-055).
+
+  scripts/selfheal.py               action_gap()
+
+U-09, the falsifier. The WSE long horizon projection carried an undeclared
+assumption that data centre cooling stays water intensive to 2080. Passive
+radiative cooling is a named substitution pathway against it, so the assumption
+and its falsifier are written down under the Popper standing order.
+
+  scripts/build_index.py            uncertainty ledger U-09
+
+Register. ops/SOURCE_ACQUISITION_REGISTER.md v1.1 appends SA-005 OECD (CC BY
+4.0, open), SA-006 WEF (derived aggregates only) and SA-007 Forrester (reprint,
+framework applicable, report not indexable). Appended under SA-3; the SA-004
+count sentence is superseded by a dated note rather than edited.
+
+Not done, and named rather than left to be discovered:
+
+  - The index is not rebuilt or republished. U-09 sits in the writer, not the
+    payload. N1 forbids index bytes changing under an unchanged label, so it
+    lands at the next vintage bump. Promotion stays a human act under G-06.
+  - GEN-1 is not closed and U-09 inherits it. The served ledger carries enriched
+    text only build_v8_4.py produces, and that script aborts past v8.3, so the
+    block has been hand carried since v8.4. U-09 will not reach the served
+    ledger until GEN-1 is settled.
+  - Not paired to sovereign-infra. That working copy was unreachable from the
+    analysis mount. The register carries a single_repo_reason section naming the
+    debt, because under Rule 2-1 silence is not an exemption.
+
+Evidence: ops/RD_INTAKE_ASSESSMENT_2026-08-21.md
+Landing:  ops/LAND_2026-08-21.md

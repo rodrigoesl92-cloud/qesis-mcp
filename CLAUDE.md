@@ -151,6 +151,53 @@ line in D-113 before it happens rather than an explanation afterwards. When the
 product is a critique of a dependency, adopting that dependency is a decision
 with a number.
 
+**Rule SH-10. The ladder executes. Occurrences 1 to 3 never reach the operator.**
+Locked 2026-08-24 on the operator's instruction, after a lander he was asked to
+run opened two pull requests containing none of the work they were named for,
+and the session reported the failure to him instead of repairing it.
+
+The executor is `scripts/rdl.py`. It is not a description of the ladder, it is
+the ladder.
+
+| Occurrence | Rung | What the agent does, without asking |
+|---|---|---|
+| 1st | 1 | records an `L-` entry, id from the accessor |
+| 2nd | 2 | wires a gate with one refuse and one accept fixture (V-2) |
+| 3rd | 3 | the gate becomes a release blocker in `qesis-integrity.yml` |
+| 4th | 4 | the control is in the wrong layer, opens a `D-` |
+
+**SH-10a. Classification is by epistemic move, never by artefact.** The family
+key is `guard_not_executed`, not a filename. Four instances across four file
+types escalate as four, which is the whole point of L-118 and of D-112.
+
+**SH-10b. Routing is a table, not a judgement.** Pipeline, CI, build, git, lock
+and workflow defects are **ARCHITECT's** and are never shown to the operator.
+Integrity and QA are SENTINEL's (Rule 1-1). Money and law are COUNSEL's. The
+table lives in `rdl.py` and a defect is routed by it, not by whoever noticed.
+
+**SH-10c. The mount boundary is a known condition, not a reason to stop.** This
+agent runs on a zero-trust analysis mount that cannot unlink inside `.git`, so
+any git command it issues takes the index lock and abandons it, manufacturing
+the blocker it would then report (L-122, L-123, L-150). On a lock, an `errno 22`
+or a half-completed git write, the agent does **not** halt and does **not** ask.
+It writes the repair into `LAND_EVERYTHING.ps1` and `scripts/git_unlock.py`,
+which enumerate every lock class in the L-115 set plus per-branch ref locks, and
+it says which act remains.
+
+**SH-10d. G-06, stated as a duty rather than a permission.** The agent prepares
+the branch, stages, commits, opens the pull request and merges by rebase once
+checks pass. The **only** irreducibly human act is the authenticated push,
+because the GitHub credential is the operator's and no agent may hold it (G-03,
+G-04), plus promotion (G-06 limit 2) and an Article 14 signature. Everything up
+to that line is the agent's work and marking any of it `[RICO]` is a defect in
+the report, not a courtesy.
+
+**SH-10e. Memory is cryptographic and dual-written.** Every recorded failure is
+hash-chained into `var/qesis_ops.sqlite` table `qesis_rdl_defects` and written
+to `ops/LESSONS_LEDGER.md`, so the family count survives the session that found
+it. Where the store is unreachable the record degrades to `ops/RDL_LADDER.json`
+and says so, class B, never imputed.
+
 **Rule SH-9. An escalation without a recommendation is an abdication.**
 Locked 2026-08-19 on the operator's instruction, after repeated escalations were
 delivered as unpriced lists of choices.
