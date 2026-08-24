@@ -123,3 +123,18 @@ _to_delete/
 # Any tool that GUARDS credentials is named here explicitly.
 !scripts/verify_no_plaintext_secrets.py
 !scripts/scan_credentials.py
+
+# 2026-08-21. Restricted upstream material, held locally and never committed.
+# SA-006 (World Economic Forum) and SA-007 (Forrester reprint) permit derived
+# aggregates only, and the WEF reservation names "any information storage and
+# retrieval system" explicitly, so the restriction binds the retrieval layer and
+# not only the citation.
+#
+# Ignored as a DIRECTORY, not by the names of the files that happen to sit in it
+# today. That is the L-124 remedy applied at the point the lesson names: ignoring
+# by enumerated filename protects exactly the files you thought of. Anything that
+# must not leave this machine goes in var/restricted/ and needs no new rule.
+#
+# `scripts/eti_extract.py` writes here and refuses to write under data/, public/,
+# content/ or docs/. The gate is the refusal, not this line.
+var/restricted/

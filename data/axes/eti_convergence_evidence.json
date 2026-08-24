@@ -1,0 +1,46 @@
+{
+ "benchmark": {
+  "edition": "16th edition, June 2026, in collaboration with Accenture",
+  "instrument": "system performance sub-index, 22 indicators, 60 percent of the ETI",
+  "licence": "All rights reserved. Derived aggregates only, acquisition register SA-006.",
+  "population": "120 countries",
+  "publisher": "World Economic Forum",
+  "source_file_sha256": "f404ebcdf01e346ad3d5caf62731f74a02cd296f59ecc595682a299af9eacfa4",
+  "work": "Energy Transition Index 2026"
+ },
+ "coverage": {
+  "absent_cause": "HKG and TWN are absent from the ETI population. They are two of the three states already withheld from the QESIS+ composite under BIG.",
+  "absent_from_benchmark": [
+   "HKG",
+   "TWN"
+  ],
+  "benchmark_covers": 33,
+  "dropped_no_ese": [],
+  "paired_n": 33,
+  "ratio": 0.9429,
+  "sample_n": 35
+ },
+ "generated_by": "scripts/verify_eti_convergence.py",
+ "id": "ETI_CONVERGENCE",
+ "index_sha256": "8009815e4c19132048bf285cf6622cc864e7bc090fc31627b09ce0145463647d",
+ "index_vintage": "v9.0 (2026-08-13)",
+ "prediction": {
+  "authority": "Popper standing order, ANALYST mandate",
+  "falsified_if": "spearman_rho >= 0, or abs(spearman_rho) < 0.3",
+  "statement": "ESE is a stress axis and ETI system performance is a performance score, so convergent validity predicts a negative rank correlation."
+ },
+ "result": {
+  "n": 33,
+  "pearson_p_two_sided": 0.000927,
+  "pearson_r": -0.5494,
+  "spearman_p_two_sided": 0.003437,
+  "spearman_rho": -0.4946,
+  "verdict": "CORROBORATED"
+ },
+ "role": "EXTERNAL BENCHMARK. Not an axis, not an input, not an fsQCA outcome.",
+ "what_this_does_not_license": [
+  "It does not license using ETI as an input to the composite. ETI is itself a weighted composite and the QESIS+ composite is derived from published axes at build time, never carried.",
+  "It does not license using ETI as the fsQCA outcome. D-110 KG-4 requires an outcome from outside the index, and ESE already consumes World Bank SAIDI, so an energy-security outcome shares inputs with the conditions.",
+  "It is a statement about ESE, which is a DIAGNOSTIC axis excluded from the composite under D-044. It corroborates ESE, not the headline number."
+ ]
+}

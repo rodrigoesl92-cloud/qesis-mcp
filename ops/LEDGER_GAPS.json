@@ -1,0 +1,23 @@
+{
+  "_doc": "Declared absent lesson ids. R2 of scripts/verify_ledger_singleton.py fails the build on any absent id that is NOT declared here. An id is declared absent with a reason, or the gate refuses. D-007 generalised: a gap is a finding with a cause, never a hole nobody named.",
+  "_authority": "ops/LESSONS_LEDGER.md is the single canonical store, mirrored byte-identical across qesis-mcp and sovereign-infra. CLAUDE.md section 0 and section 5 step 4.",
+  "_reconciled": "2026-08-24, sha256 f92cde35e43659a765e7010a031a95494ad2924bc4c35105d074c4061a0bc226, 127 entries, 127 unique ids",
+  "declared_absent": [
+    {
+      "from": "L-083",
+      "to": "L-098",
+      "reason": "Load-bearing in code and absent from the store since 2026-08-13. Recorded by L-103, restated by L-111. qesis-integrity.yml still explains two of its own design decisions by citing L-092 and L-093. These sixteen must be written from the code that cites them; they are declared here so the gate reports a known debt instead of failing every run on a condition nobody is acting on. L-063: an escalation that fires every cycle has been switched off without anyone deciding to switch it off.",
+      "owner": "ARCHITECT",
+      "opened": "2026-08-13",
+      "closes_when": "each id is written as an entry, then removed from this list"
+    },
+    {
+      "from": "L-125",
+      "to": "L-125",
+      "reason": "Allocated and never written. Found during the 2026-08-24 singleton reconciliation. Cause not yet established; the id is cited nowhere, so this is an allocation that lost its entry rather than a rule that lost its record.",
+      "owner": "ARCHITECT",
+      "opened": "2026-08-24",
+      "closes_when": "the entry is written, or the id is formally retired with a line saying so"
+    }
+  ]
+}
