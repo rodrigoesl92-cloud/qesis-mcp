@@ -74,6 +74,10 @@ CONTROLS = [
     ("self_exposure_check",    ["scripts/self_exposure.py", "--check"]),
     ("build_eval_check",       ["scripts/build_eval.py", "--check"]),
     ("build_landing_check",    ["scripts/build_landing.py", "--check"]),
+    # Every model, every session type, reads ops/ECOSYSTEM_STATE.json and
+    # ops/PATH_REGISTRY.json before asserting anything. Those files are only
+    # trustworthy if a stale copy fails the build, so the check joins the set.
+    ("ecosystem_state_check",  ["scripts/build_ecosystem_state.py", "--check"]),
     ("test_gate",              ["scripts/test_gate.py"]),
 ]
 
@@ -107,6 +111,14 @@ _assert_controls_unique()
 # class C  cannot be derived from the record. Escalate with the command that
 #          would settle it, never with a guess.
 REMEDIES = {
+    "ecosystem_state_check": {
+        "class": "A",
+        "why": "The state and path files are derived from the repository and "
+               "recompute nothing. A drift means the artefact stopped deriving, "
+               "and regenerating is the declared remedy and is idempotent.",
+        "run": ["scripts/build_ecosystem_state.py"],
+        "reverify": True,
+    },
     "build_graph_check": {
         "class": "A",
         "why": "The graph is derived from the index and from nothing else, so a "

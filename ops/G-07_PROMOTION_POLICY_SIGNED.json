@@ -1,18 +1,49 @@
 {
- "signed_by": "R. Batista Silva",
- "signed_at": "2026-08-19",
- "authority": "Article 14 Decision 25, cleared after Decision 5. G-07 section 4.1.",
- "instrument": "scripts/selfheal.py promotion_policy()",
- "predicate": [
-  "Article 14 Decision 5 kill switch is CLEAR on both channels, checked first and outranking everything below",
-  "every control in the declared set returns PASS or PASS_WITH_BENIGN",
-  "zero escalations and zero unclassified failures in the same run",
-  "index_sha256 equals the sha of data/qesis_v8.json at the commit being promoted, and that commit is reachable from main",
-  "no uncertainty_ledger entry of severity high changed since the last promotion without a paired concordance row",
-  "the chain attestation reproduces from the committed spine in the same run"
- ],
- "why_narrow": "The Article 14 failure analysis found CON * RET * HIT * MCP surviving the consistency cutoff at 0.822 WITH the human gate present. Human oversight is a damper, not an immunity. A promotion policy that fires on anything less than a fully green control set removes the damper without replacing it.",
- "decision_5_precedence": "An engaged kill switch returns False from promotion_policy() before this file is read. Decision 5 outranks Decision 25 and the order of those two checks is the whole content of 'the stop control clears first'.",
- "revocation": "Delete this file, or engage the kill switch by either channel. Deleting it returns the ecosystem to HELD, which is where it stood before 2026-08-19 and is a safe resting state rather than a degraded one.",
- "counsel_note": "COUNSEL recommended signing Decision 5 alone first and reading the rest before signing 25. The operator signed the sequence in one act. This file records that COUNSEL shipped the kill switch as a working lever in the same change set rather than as a signature, because activating autonomous promotion against an unimplemented stop control would have removed the only damper the failure analysis says is insufficient on its own."
+  "_doc": "Signed promotion policy under G-07 section 4.1. Human-on-the-Loop applied to promotion exactly as G-06 Rule 2-4 applied it to merge. While this file is absent, promotion_policy() in scripts/selfheal.py returns False and the runner escalates to the operator on every cycle. With it present and the predicate holding, promotion proceeds automatically and no further human act is required.",
+
+  "signed_by": "R. Batista Silva",
+  "signed_at": "2026-08-24",
+  "signature_basis": "Explicit operator instruction of 2026-08-24, decision 4 of seven put to him in the closeout: 'I SIGN this is the instrument SH-4 names to remove me from the daily loop without removing the control.' Transcribed here by COUNSEL and recorded as the basis, per the pattern used for D-053 where both design options were selected by the accountable human in session and transcribed.",
+  "scope": "Promotion to production of the served QESIS+ index and its generated surfaces. It does NOT extend to G-03 or G-04 credential handling, and it does NOT extend to an Article 14 signature. Those remain human acts and this file does not touch them.",
+
+  "predicate": [
+    {
+      "id": "P1",
+      "rule": "Every control in the self-heal set returns PASS or PASS_WITH_BENIGN.",
+      "why": "A subset that passes is compatible with certifying entirely the wrong object. L-100 and L-102."
+    },
+    {
+      "id": "P2",
+      "rule": "Zero escalations and zero unclassified failures in the same run.",
+      "why": "A class C failure is by definition not derivable from the record, so it cannot be disposed of by a policy written before it happened."
+    },
+    {
+      "id": "P3",
+      "rule": "index_sha256 equals the sha256 of data/qesis_v8.json at the commit being promoted, and that commit is reachable from main.",
+      "why": "L-101: a hash computed over what was intended rather than over what landed is a function of the host platform. L-099: gating before writing certifies the old artefact."
+    },
+    {
+      "id": "P4",
+      "rule": "No uncertainty_ledger entry of severity high changed since the last promotion without a paired concordance row.",
+      "why": "G-01 pairing. A severity change with no concordance row is a published claim moving with nothing recording why."
+    },
+    {
+      "id": "P5",
+      "rule": "The chain attestation reproduces from the committed spine in the same run.",
+      "why": "EU AI Act Article 12. A promotion on an unreproducible chain publishes a record-keeping failure."
+    },
+    {
+      "id": "P6",
+      "rule": "The RDL delta gate reports zero regressions, and the ledger singleton gate passes.",
+      "why": "Added 2026-08-24. Both are required status checks in qesis-integrity.yml. A promotion that outruns them promotes an unverified record. SH-10f."
+    }
+  ],
+
+  "outranked_by": {
+    "kill_switch": "Article 14 Decision 5 outranks Decision 25. An engaged kill switch refuses promotion regardless of this signature, and the order of those two checks is the whole content of 'the stop control clears first'. scripts/kill_switch.py is evaluated before this file is read.",
+    "human_oversight_is_a_damper": "The Article 14 failure analysis found CON * RET * HIT * MCP surviving the consistency cutoff at 0.822 WITH the human gate present. This policy narrows to a fully green control set precisely because a looser predicate would remove the damper without replacing it."
+  },
+
+  "revocation": "Delete this file, or set enabled to false. Either returns promotion_policy() to False and the runner resumes escalating on every cycle. Revocation is a human act and needs no justification.",
+  "enabled": true
 }

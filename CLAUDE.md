@@ -1,3 +1,19 @@
+> **BEFORE ANYTHING ELSE, EVERY MODEL, EVERY SESSION TYPE.**
+> Opus, Sonnet, Fable, a scheduled sweep, a Cowork session, Claude Code: read
+> **`SESSION_START.md`** in this repository root, then `ops/PATH_REGISTRY.json`
+> (where everything is) and `ops/ECOSYSTEM_STATE.json` (what is true now). Both
+> are generated, both fail the build when stale, and neither may be hand-edited.
+> They exist because on 2026-08-24 five consecutive sessions asserted false
+> things about this ecosystem, every one of them by reasoning from a proxy
+> instead of querying the thing. D-115.
+>
+> **The ecosystem runs with the operator's machine switched off.** Every
+> recurring task is a GitHub Actions cron: `selfheal.yml` hourly at :17, which
+> repairs, commits, opens a pull request AND merges it under G-06 Rule 2-4;
+> `qesis-integrity.yml` daily at 06:00; `daily-ops-report.yml` daily at 06:20;
+> the production probes hourly. Nothing in that list needs a desktop. A task that
+> requires an application to be open is a reminder, not a schedule. SH-7.
+
 # CLAUDE.md, QESIS+ session lock for `qesis-mcp`
 
 **v2.0 · 2026-08-09 · Authored by COUNSEL, corrected after audit failure L-076
