@@ -1,6 +1,6 @@
 # ADR D-112: classify RDL defects by epistemic move, not by artefact
 
-**Status:** Proposed
+**Status:** APPROVED and EXECUTED. Signed by R. Batista Silva, 2026-08-24.
 **Date:** 2026-08-15
 **Deciders:** HUMAN (Rico) signs. SENTINEL confirms the control. ARCHITECT wires it.
 **Opened by:** L-118, fourth-rung condition. Authored by COUNSEL.

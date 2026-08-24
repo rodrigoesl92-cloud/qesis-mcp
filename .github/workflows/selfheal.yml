@@ -197,7 +197,20 @@ jobs:
           git push origin "$BR"
           gh pr create --base main --head "$BR" \
             --title "selfheal: land class A repairs from run ${{ github.run_id }}" \
-            --body "Automated under G-07. Class A remedies only, each reverified before commit. Review the control set in \`ops/SELFHEAL_LATEST.json\`. Merge with \`--rebase\`, never squash (G-05)."
+            --body "Automated under G-07. Class A remedies only, each reverified before commit. Review the control set in \`ops/SELFHEAL_LATEST.json\`. Rebase merge only, never squash (G-05, G-06 Rule 2-4)."
+
+          # And MERGE it. Opening a pull request and stopping is not autonomy:
+          # with the operator's machine off, class A repairs would queue as open
+          # pull requests indefinitely and the loop would heal nothing. G-06
+          # Rule 2-4 states that an agent MAY merge a remediation pull request
+          # once its checks pass, and --auto is what waits for the required
+          # status check rather than demanding an immediate merge (L-159).
+          # This does NOT promote; promotion is G-06 limit 2 and stays human.
+          num=$(gh pr list --head "$BR" --state open --json number --jq '.[].number')
+          if [ -n "$num" ]; then
+            gh pr merge "$num" --rebase --auto \
+              || echo "::warning::auto-merge unavailable on $num; the pull request stays open"
+          fi
 
       - name: Fail the run on escalation
         if: steps.heal.outcome == 'failure'

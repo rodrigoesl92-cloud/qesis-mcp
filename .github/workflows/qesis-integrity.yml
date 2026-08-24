@@ -205,6 +205,11 @@ jobs:
       # Clearing a family is not a matter of editing the count. It is landing the
       # gate with its refuse fixture and its accept fixture, then resetting the
       # rung with a stated reason, which is auditable in ops/RDL_LADDER.json.
+      # The bootstrap every session reads must be true, or it is a trap rather
+      # than a control. A stale copy fails here.
+      - name: Ecosystem state and path registry are not stale
+        run: python scripts/build_ecosystem_state.py --check
+
       - name: RDL ladder has no family at rung 3
         run: python scripts/rdl.py ci-blocking
 
