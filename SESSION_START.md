@@ -1,12 +1,15 @@
 # Read this first. Every model, every session, no exceptions.
 
-> **2026-08-24 handover, evening revision.** Read `ops/HANDOVER_2026-08-24.md`
-> before anything else. It states what is true, what is not, the four root
-> causes of the evening audit (L-169 to L-172, D-116), and the two files the
-> operator double-clicks: `AUDIT_ECOSYSTEM.bat` measures everything and changes
-> nothing; `LAND_EVERYTHING_FINAL.bat` repairs the ledger mirror, runs every
-> gate in both repositories, lands the work, and ends with the audit. Both live
-> in the `sovereign-infra` root, `C:\Users\Lenovo\OneDrive\sovereign-infra`.
+> **2026-08-26 handover.** Read `ops/HANDOVER_2026-08-26.md` before anything
+> else. It states what is on `main` (PR 76 and PR 41 merged by rebase), what the
+> 00:00Z lander run did against what it said, the three defects recorded and
+> repaired (L-175 to L-177), and the one file the operator double-clicks:
+> `LAND_EVERYTHING_FINAL.bat`, revision 6, which judges itself, reads its
+> landing from `LANDING_MANIFEST.json`, carries only the session's delta, and
+> ends with the audit. `AUDIT_ECOSYSTEM.bat` measures everything and changes
+> nothing. Both live in the `sovereign-infra` root,
+> `C:\Users\Lenovo\OneDrive\sovereign-infra`. The 2026-08-24 handover is
+> superseded in full.
 
 Opus, Sonnet, Fable, a scheduled sweep, a Cowork session, Claude Code. Same
 procedure. This file exists because on 2026-08-24 five sessions in a row asserted
@@ -74,10 +77,15 @@ on the agent for the mechanism; withholding it is not deference. SH-10g, L-159.
 One file, one double-click:
 `C:\Users\Lenovo\OneDrive\sovereign-infra\LAND_EVERYTHING_FINAL.bat`
 
-It clears every git lock class, appends pending lessons, validates both release
-gates, cuts each branch **directly from `origin/main`** so it carries one commit
-and rebases cleanly, pushes, opens the pull requests and arms rebase auto-merge.
-It never runs `git clean -fd` or `git reset --hard`.
+It judges itself first (`scripts/verify_lander_contract.py`: the shell parses
+nothing, L-176), reads the branch and the messages from `LANDING_MANIFEST.json`
+beside it, installs any pending workflow, clears every git lock class, appends
+pending lessons, validates both release gates, cuts each branch **directly from
+`origin/main`**, carries **only the delta this session made** (`landing_base.py`,
+L-177) so a runner's commits on `main` survive the click, pushes, opens the pull
+requests, merges by rebase once CI is green, and syncs the disk to `main`. It
+never runs `git clean -fd` or `git reset --hard`. A session that prepares a
+landing writes the manifest; a lander without one refuses to run.
 
 The **only** irreducibly human act in it is the authenticated push, because the
 GitHub credential is the operator's and no agent may hold it.

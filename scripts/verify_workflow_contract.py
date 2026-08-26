@@ -38,7 +38,18 @@ WHAT IT ASSERTS, AND WHY EACH IS EARNED
       name). Only IGNORED-on-disk fails: that is the L-135 class, a file git
       silently skips. Index membership alone was the wrong predicate (L-173).
 
+  C-5 REQUIREMENTS INSTALL IS GUARDED OR SATISFIED. Every `pip install -r X`
+      in a workflow names a file that exists in THIS repository, or the same
+      `run:` block guards it with `[ -f X ]` (or `test -f X`). selfheal.yml is
+      paired byte-identical into sovereign-infra, which has no requirements.txt;
+      the unguarded step failed there in eight seconds every hour and the loop
+      never reached a control (L-175). Third occurrence of the family
+      paired_what_is_not_pairable (L-170, L-171), so this check is a release
+      blocker: both integrity workflows run this gate, and the gate runs its
+      own fixtures before it judges anything (V-2).
+
 Usage:  python scripts/verify_workflow_contract.py [--quiet]
+        python scripts/verify_workflow_contract.py --selftest
 """
 from __future__ import annotations
 
@@ -181,6 +192,101 @@ def workflow_steps(text: str) -> list[tuple[int, str]]:
     return [(i, l) for i, l in enumerate(text.splitlines(), 1)]
 
 
+#: C-5. `pip install ... -r FILE` or `--requirement FILE`, one capture: the file.
+REQ_RE = re.compile(r"\bpip\s+install\b[^\n]*?\s(?:-r|--requirement)[\s=]+([^\s;&|)]+)")
+
+
+def run_blocks(text: str) -> list[tuple[int, str]]:
+    """Every `run:` block in a workflow as (line number, body text).
+
+    A scalar `run: cmd` is one line. A literal or folded `run: |` block is every
+    following line indented deeper than the `run` key, blank lines included. The
+    key's column is what ends the block, not the first blank line: the block
+    reader that stopped at a blank line is the L-134 shape, a parser that reads
+    part of a structure and reports confidently on all of it.
+    """
+    lines = text.splitlines()
+    blocks: list[tuple[int, str]] = []
+    i = 0
+    while i < len(lines):
+        m = re.match(r"^(\s*)(-\s+)?run:\s*(.*)$", lines[i])
+        if not m:
+            i += 1
+            continue
+        key_col = len(m.group(1)) + (len(m.group(2)) if m.group(2) else 0)
+        rest = m.group(3).strip()
+        if rest and not rest[0] in "|>":
+            blocks.append((i + 1, rest))
+            i += 1
+            continue
+        body: list[str] = []
+        j = i + 1
+        while j < len(lines):
+            line = lines[j]
+            if not line.strip():
+                body.append("")
+                j += 1
+                continue
+            if len(line) - len(line.lstrip()) <= key_col:
+                break
+            body.append(line)
+            j += 1
+        blocks.append((i + 1, "\n".join(body)))
+        i = j
+    return blocks
+
+
+def requirement_findings(wf_name: str, text: str, root: Path) -> list[str]:
+    """C-5 over one workflow text against one repository root. Pure."""
+    out: list[str] = []
+    for lineno, body in run_blocks(text):
+        for m in REQ_RE.finditer(body):
+            req = m.group(1).strip("'\"")
+            if "$" in req or "{{" in req:
+                continue  # an expression; not decidable here, and not a literal claim
+            if (root / req).exists():
+                continue
+            guard = re.compile(r"(?:\[\[?\s*-[fes]\s+" + re.escape(req) + r"\s*\]\]?|\btest\s+-[fes]\s+"
+                               + re.escape(req) + r"\b)")
+            if guard.search(body):
+                continue
+            out.append(f"C-5 {wf_name}:{lineno} installs `-r {req}` and this repository has no "
+                       f"{req}; the step runs unguarded and fails before any control runs. "
+                       f"Guard the block with `[ -f {req} ]` or add the file. A workflow paired "
+                       f"into a repository must not assume that repository's files (L-175).")
+    return out
+
+
+def selftest() -> int:
+    """V-2 fixtures for C-5: one refuse, two accept. Run before every judgement."""
+    import tempfile
+    root = Path(tempfile.mkdtemp())
+    unguarded = ("jobs:\n  j:\n    steps:\n      - name: Install runtime\n"
+                 "        run: python -m pip install --quiet -r requirements.txt\n"
+                 "      - run: echo done\n")
+    guarded = ("jobs:\n  j:\n    steps:\n      - name: Install runtime\n"
+               "        run: |\n"
+               "          if [ -f requirements.txt ]; then\n"
+               "            python -m pip install --quiet -r requirements.txt\n"
+               "          fi\n"
+               "      - run: echo done\n")
+    cases = [
+        ("C-5 refuses an unguarded `-r requirements.txt` where the file is absent",
+         len(requirement_findings("w.yml", unguarded, root)) == 1),
+        ("C-5 accepts the same install inside `[ -f requirements.txt ]`",
+         requirement_findings("w.yml", guarded, root) == []),
+    ]
+    (root / "requirements.txt").write_text("", encoding="utf-8")
+    cases.append(("C-5 accepts an unguarded install where the file exists",
+                  requirement_findings("w.yml", unguarded, root) == []))
+    ok = all(v for _, v in cases)
+    for name, v in cases:
+        print(f"  {'PASS' if v else 'FAIL'}  {name}")
+    print(f"workflow contract selftest: {sum(v for _, v in cases)}/{len(cases)} fixtures "
+          + ("hold" if ok else "FAILED"))
+    return 0 if ok else 1
+
+
 def declared_permissions(text: str) -> dict[str, str]:
     """Top-level `permissions:` block. Job-level blocks override and are read too."""
     perms: dict[str, str] = {}
@@ -216,6 +322,21 @@ def declared_permissions(text: str) -> dict[str, str]:
 
 def main() -> int:
     quiet = "--quiet" in sys.argv
+    if "--selftest" in sys.argv:
+        return selftest()
+    # The gate proves its own fixtures before it judges the repository. A gate
+    # whose fixtures fail has no standing to pass anything (V-2), and running
+    # them here means the evidence plane, which has no test_gate.py, proves
+    # them in its own CI too.
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        st = selftest()
+    if st != 0:
+        print(buf.getvalue(), end="")
+        print("WORKFLOW CONTRACT FAILED: the gate's own fixtures do not hold")
+        return 1
     fails: list[str] = []
     if not WORKFLOWS.is_dir():
         print("FAIL .github/workflows is not a directory")
@@ -238,6 +359,9 @@ def main() -> int:
     for wf in sorted(WORKFLOWS.glob("*.yml")):
         text = wf.read_text(encoding="utf-8")
         perms = declared_permissions(text)
+
+        # C-5
+        fails.extend(requirement_findings(wf.name, text, ROOT))
 
         for lineno, line in workflow_steps(text):
             # C-1

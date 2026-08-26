@@ -115,6 +115,11 @@ def section_a(skip_slow: bool) -> None:
             ("RDL delta gate", "scripts/rdl.py ci-blocking"),
             ("workflow contract", "scripts/verify_workflow_contract.py"),
             ("self-heal fixtures", "scripts/selfheal.py --selftest"),
+            # The lander is judged too (L-176, L-177): it must parse nothing,
+            # read its landing from the manifest and restore only the delta.
+            ("lander contract", "scripts/verify_lander_contract.py"),
+            ("landing base fixtures", "scripts/landing_base.py --selftest"),
+            ("landing manifest fixtures", "scripts/landing_manifest.py --selftest"),
         ]
         for name, script in checks:
             if (repo / script.split()[0]).exists():

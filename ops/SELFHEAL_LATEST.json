@@ -1,6 +1,6 @@
 {
- "generated_utc": "2026-08-24T15:34:07.022994+00:00",
- "mode": "repair",
+ "generated_utc": "2026-08-26T00:09:40.479491+00:00",
+ "mode": "dry-run",
  "controls": [
   {
    "name": "verify_index",
@@ -52,10 +52,10 @@
   },
   {
    "name": "verify_workflow",
-   "status": "FAIL",
-   "exit": 1,
+   "status": "PASS",
+   "exit": 0,
    "tail": [
-    "  C-4 scripts/verify_ledger_singleton.py is in the selfheal control set and is NOT TRACKED. The loop runs it locally and CI cannot."
+    ""
    ]
   },
   {
@@ -115,43 +115,27 @@
    ]
   },
   {
-   "name": "test_gate",
-   "status": "PASS_WITH_BENIGN",
+   "name": "ecosystem_state_check",
+   "status": "PASS",
    "exit": 0,
    "tail": [
-    "GATE IS NOT TRUSTWORTHY: it missed a defect it must catch."
+    "ECOSYSTEM STATE CHECK PASSED"
+   ]
+  },
+  {
+   "name": "test_gate",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "Gate is trustworthy."
    ]
   }
  ],
  "repaired": [],
- "degraded": [
-  {
-   "control": "git_write_capability",
-   "degradation": "host_only_git",
-   "why": "Repairs are written to the working tree and NOT committed from here. can create but CANNOT UNLINK inside .git: Operation not permitted. Git writes will half-complete and litter .git/objects. Leftover probe: .selfheal_probe Class B: the safe failure mode is declared, so the loop degrades and continues rather than escalating. The work is not lost, it is unlanded, and those are different states (L-062).",
-   "stray_objects": 1,
-   "stray_probes": 15,
-   "legacy_probes": 14
-  }
- ],
- "escalations": [
-  {
-   "control": "verify_workflow",
-   "severity": "HIGH",
-   "why": "A workflow whose declared permissions disagree with what its steps do, or whose script set has drifted from the local control set, is a governance defect rather than a drifted artefact. Rewriting a permissions block automatically would let the loop widen its own authority, which is the one thing G-07 refuses outright.",
-   "command": "python scripts/verify_workflow_contract.py"
-  }
- ],
+ "degraded": [],
+ "escalations": [],
  "failed": [],
- "benign": [
-  {
-   "control": "test_gate",
-   "all_benign": true,
-   "detail": [
-    "X   contract: NOT CHECKED, verifier cannot run (CONTRACT CHECK FAILED: -> Local runtime lacks mcp/pydantic, so verify_served_contract cannot import server.py. CI installs requirements.txt before the gates."
-   ]
-  }
- ],
+ "benign": [],
  "kill_switch": {
   "engaged": false,
   "channel": "file",
@@ -176,16 +160,16 @@
   }
  },
  "git_writes": {
-  "safe": false,
-  "detail": "can create but CANNOT UNLINK inside .git: Operation not permitted. Git writes will half-complete and litter .git/objects. Leftover probe: .selfheal_probe"
+  "safe": true,
+  "detail": "git writes complete on this filesystem"
  },
  "promotion": {
-  "proceed": false,
-  "reason": "control set not fully green"
+  "proceed": true,
+  "reason": "policy signed and predicate holds"
  },
  "action_gap": {
   "definition": "Forrester, Mind The Agentic Action Gap (2026). Framework applied; the report itself is a single-use reprint and is neither redistributed nor indexed (SA-007).",
-  "friction_points": 1,
+  "friction_points": 0,
   "friction_is": "class C escalations plus unclassified failures, which are exactly the findings a human must execute",
   "time_to_action_seconds": {
    "measured_repairs": 0,
@@ -193,9 +177,9 @@
    "slowest": 0.0,
    "note": "null in dry-run and report-only mode, where nothing is applied"
   },
-  "unmodified_execution_rate": 0.0,
-  "unmodified_execution_is": "0 repairs held over 1 findings this run",
+  "unmodified_execution_rate": null,
+  "unmodified_execution_is": "0 repairs held over 0 findings this run",
   "empty_denominator_reads_as": "null, never 1.0"
  },
- "verdict": "ESCALATED"
+ "verdict": "GREEN"
 }
