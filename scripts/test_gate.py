@@ -909,6 +909,20 @@ jobs:
     results.append(("workflow: guarded requirements install accepted (C-5)", run(guarded) == 0))
 
 
+def check_audit_writer(results: list[tuple[str, bool]]) -> None:
+    """The audit report meets the doctrine it will be gated by (L-178), and the
+    checks it asserts come from the workflow files (L-179). Its own fixtures."""
+    gate = ROOT / "scripts" / "audit_ecosystem.py"
+    if not gate.exists():
+        results.append(("audit: writer present", False))
+        return
+    r = subprocess.run([sys.executable, str(gate), "--selftest"], capture_output=True, text=True)
+    results.append(("audit: report renders doctrine-clean and refuses an em dash (L-178)",
+                    r.returncode == 0 and "4/4" in r.stdout))
+    results.append(("audit: owned checks are read from the workflow files (L-179)",
+                    "owned checks" in r.stdout and "PASS  audit: owned" in r.stdout))
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -965,6 +979,7 @@ def main() -> int:
     check_graph(extra)
     check_secrets(extra)
     check_workflow_contract(extra)
+    check_audit_writer(extra)
     check_retrieval_corpus(extra)
     check_ledger_singleton(extra)
     check_ecosystem_state(extra)

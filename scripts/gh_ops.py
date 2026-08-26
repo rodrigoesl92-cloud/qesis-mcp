@@ -27,6 +27,14 @@ Subcommands:
     pr-number print the open pull request number on --head of --repo, or nothing
     pr-state  print MERGED, OPEN or CLOSED for --pr of --repo, from GitHub's own
               state field; the lander claims ON MAIN from this word only (D-116)
+    owned     print the check-run names this repository's own workflows produce
+              (each job's name, or its id), the set proof and the audit assert
+
+2026-08-26, after the 01:08Z landing (L-179): proof and the audit judged main
+by a keyword filter over check names ("integrity", "heal", "binding"), so the
+evidence plane's `verify` job (compliance.yml: doctrine gate, credential scans)
+was invisible to both, red on main under a GREEN verdict. The set of checks the
+ecosystem owns is read from the workflow files, never from a list of words.
 
 Evening 2026-08-24, from the run log of Self-heal loop #132 (qesis-mcp,
 00b0c95): the loop pushed `selfheal/32763154920` and then died on
@@ -219,6 +227,44 @@ def close_settled_escalations(repo: str, slug: str) -> None:
                                                      else f"close failed: {out.splitlines()[0] if out else ''}"))
 
 
+def owned_check_names(root: Path) -> set[str]:
+    """Check-run names GitHub produces for this repository's own workflows.
+
+    A check run is named after the job's `name:` when one is set, else after the
+    job id. Both are included so a name that GitHub renders differently still
+    matches something; an owned name with no run on a commit is reported, not
+    failed, because schedule-only and path-filtered workflows do not run on
+    every push. Parsed by indentation from the YAML, no yaml module needed on
+    the host (the same reading preflight.py does).
+    """
+    names: set[str] = set()
+    wdir = root / ".github" / "workflows"
+    if not wdir.is_dir():
+        return names
+    for wf in sorted(wdir.glob("*.yml")):
+        in_jobs, job_id, job_name = False, None, None
+        for line in wf.read_text(encoding="utf-8", errors="replace").splitlines():
+            if re.match(r"^jobs:\s*$", line):
+                in_jobs = True
+                continue
+            if in_jobs and line and not line[0].isspace():
+                in_jobs = False
+            if not in_jobs:
+                continue
+            m = re.match(r"^  ([A-Za-z0-9_-]+):\s*$", line)
+            if m:
+                if job_id:
+                    names.update({job_id, job_name} - {None})
+                job_id, job_name = m.group(1), None
+                continue
+            m = re.match(r"^    name:\s*(.+?)\s*$", line)
+            if m and job_id and job_name is None and "${{" not in m.group(1):
+                job_name = m.group(1).strip("\"'")
+        if job_id:
+            names.update({job_id, job_name} - {None})
+    return names
+
+
 def proof() -> int:
     print("PROOF. Fetched from GitHub just now. Not a claim.")
     print()
@@ -250,18 +296,31 @@ def proof() -> int:
             msg = (commit.get("commit", {}).get("message", "") or "").splitlines()[0][:60]
             print(f"    main {sha}  {msg}")
 
-            runs, err = gh_json("api", f"repos/{slug}/commits/main/check-runs")
-            seen = {}
+            runs, err = gh_json("api", f"repos/{slug}/commits/main/check-runs?per_page=100")
+            owned = owned_check_names(PATHS[repo]) if PATHS[repo].exists() else set()
+            if not owned:
+                # No checkout to read the workflows from: fall back to the old
+                # keyword filter and SAY so, rather than silently asserting less.
+                print("    (workflow files not readable here; asserting integrity, heal and binding only)")
+            seen: dict[str, tuple[str, str]] = {}
             for cr in ((runs or {}).get("check_runs") or []):
                 name = cr.get("name", "")
-                if any(k in name.lower() for k in ("integrity", "heal", "binding")):
-                    seen.setdefault(name, cr.get("conclusion"))
+                keep = (name in owned) if owned else any(
+                    k in name.lower() for k in ("integrity", "heal", "binding"))
+                if keep:
+                    # The newest run per name decides; GitHub lists newest first.
+                    seen.setdefault(name, (cr.get("status") or "", cr.get("conclusion") or ""))
             if not seen:
                 print("    main checks: none reported yet")
-            for name, concl in sorted(seen.items()):
+            for name, (status, concl) in sorted(seen.items()):
+                if status != "completed":
+                    print(f"    main check  {name}: {status} (not finished at read time)")
+                    continue
                 print(f"    main check  {name}: {concl}")
                 if concl != "success":
                     clean = False
+            for name in sorted(owned - set(seen)):
+                print(f"    main check  {name}: no run on this commit (schedule- or path-triggered)")
 
         issues, _ = gh_json("issue", "list", "--repo", slug, "--state", "open",
                             "--json", "number")
@@ -270,9 +329,9 @@ def proof() -> int:
         print()
 
     print("  VERDICT: " + (
-        "every integrity, self-heal and binding check on main reports success in "
+        "every completed check the ecosystem owns reports success on main in "
         "both repositories." if clean else
-        "at least one check on main is not success, or a value could not be read. "
+        "at least one owned check on main is not success, or a value could not be read. "
         "The lines above name it. Not glossed."))
     return 0 if clean else 1
 
@@ -326,11 +385,17 @@ def main() -> int:
     a4 = sub.add_parser("pr-state")
     a4.add_argument("--repo", required=True)
     a4.add_argument("--pr", required=True)
+    a5 = sub.add_parser("owned")
+    a5.add_argument("--root", default=".")
     a = ap.parse_args()
     if a.cmd == "pr-number":
         return pr_number(a.repo, a.head)
     if a.cmd == "pr-state":
         return pr_state(a.repo, a.pr)
+    if a.cmd == "owned":
+        for n in sorted(owned_check_names(Path(a.root))):
+            print(n)
+        return 0
     return amputate(a.keep) if a.cmd == "amputate" else proof()
 
 

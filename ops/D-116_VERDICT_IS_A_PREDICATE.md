@@ -41,7 +41,20 @@ notice that a green row carried a red value. A reader is not a control.
 5. **Required means required.** Whether a status check gates `main` is read
    from the branch ruleset, never from a name filter. A required check with no
    run is FAIL (L-092: a required check that never reports blocks forever and
-   shows nothing red). A check that is not required is INFO by rule 3.
+   shows nothing red). A check that is not required is INFO by rule 3, unless
+   rule 6 applies.
+6. **Owned means asserted.** Amended 2026-08-26, L-179. A check produced by a
+   workflow THIS repository carries in `.github/workflows` is asserted on
+   `main` whether or not the ruleset requires it: a completed owned check that
+   is not `success` is FAIL. The set is read from the workflow files (each
+   job's name or id, `gh_ops.py owned`), never from a list of words. An owned
+   check with no run on the commit, or one not finished at read time, is
+   reported and not failed, because schedule- and path-triggered jobs do not
+   run on every push. Only a check from an integration the ecosystem does not
+   own (Cloud Build, Vercel) stays INFO. The 01:08Z landing was GREEN by rules
+   1 to 5 while `verify` (compliance.yml: the doctrine gate, the credential
+   scans) was red on the evidence plane's `main`; it was invisible because a
+   keyword filter stood where the resource should have been.
 
 ## Where it is applied
 
@@ -53,8 +66,8 @@ notice that a green row carried a red value. A reader is not a control.
 - `LAND_EVERYTHING_FINAL.ps1`: the closing summary is built from measured
   results and ends by running the audit, so the lander's last word is the
   audit's verdict, not its own.
-- `scripts/gh_ops.py proof`: unchanged in shape, and it is the audit that is
-  authoritative when the two disagree.
+- `scripts/gh_ops.py proof`: prints every owned check on `main` (rule 6), and it is
+  the audit that is authoritative when the two disagree.
 
 ## What this does not decide
 

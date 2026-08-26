@@ -35,6 +35,7 @@ Exit 0 only when no row is FAIL. Anything else exits 1 and the report names the
 predicate that failed.
 
 Usage:  python scripts/audit_ecosystem.py [--skip-slow]
+        python scripts/audit_ecosystem.py --selftest
 """
 from __future__ import annotations
 
@@ -55,6 +56,44 @@ HEALTH = "https://qesis-mcp.vercel.app/health"
 LANDING = "https://qesis-mcp.vercel.app/"
 
 rows: list[dict] = []
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def _load(name: str, path: Path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def owned_checks(root: Path) -> set[str]:
+    """The check-run names this repository's own workflows produce (gh_ops.py)."""
+    try:
+        return _load("_gh_ops", ROOT / "scripts" / "gh_ops.py").owned_check_names(root)
+    except Exception:
+        return set()
+
+
+def doctrine_hits(text: str) -> list[str]:
+    """Blocking writing-doctrine hits in a report text, as 'rule@line' strings.
+
+    The report is prose that compliance.yml scans with qesis_agents/style.py in
+    the evidence plane; it must pass the gate it will meet (L-178). The doctrine
+    module is used when it is reachable; otherwise the em dash rule, the one
+    that fired, is applied directly so the check never silently vanishes.
+    """
+    for cand in (ROOT / "qesis_agents" / "style.py", INFRA / "qesis_agents" / "style.py",
+                 QESIS / "qesis_agents" / "style.py"):
+        if cand.exists():
+            try:
+                style = _load("_style", cand)
+                return [f"{h.get('rule')}@{h.get('line')}" for h in style.scan(text)["blocking"]]
+            except Exception:
+                break
+    import re
+    return [f"em_dash@{i}" for i, line in enumerate(text.splitlines(), 1)
+            if re.search(r"(?<![0-9])[\u2014\u2013](?![0-9])", line)]
 
 
 def _sh(cmd, cwd: Path, timeout: int) -> tuple[int, str]:
@@ -240,8 +279,27 @@ def section_c() -> dict:
                 lines.append(f"REQUIRED {c}: {concl}")
                 if concl != "success":
                     failed.append(f"{c}={concl}")
+            # D-116 rule 6 (L-179): a check produced by a workflow THIS repository
+            # owns is asserted whether or not the ruleset requires it. Only a
+            # check from an integration the ecosystem does not own is INFO.
+            # Not finished at read time is reported, never failed; no run on this
+            # commit is reported, never failed (schedule- and path-triggered jobs).
+            owned = owned_checks(root_for) - set(contexts)
+            lines.append("owned by this repository's workflows: " + (", ".join(sorted(owned)) or "none readable"))
+            for name in sorted(owned):
+                cr = latest.get(name)
+                if cr is None:
+                    lines.append(f"OWNED {name}: no run on this commit")
+                    continue
+                if (cr.get("status") or "") != "completed":
+                    lines.append(f"OWNED {name}: {cr.get('status')} (not finished at read time; rerun the audit)")
+                    continue
+                concl = cr.get("conclusion") or "no conclusion"
+                lines.append(f"OWNED {name}: {concl}")
+                if concl != "success":
+                    failed.append(f"{name}={concl} (owned, not required)")
             for name, cr in sorted(latest.items()):
-                if name not in contexts:
+                if name not in contexts and name not in owned:
                     lines.append(f"informational {name[:60]}: {cr.get('conclusion') or cr.get('status')}")
             if not contexts:
                 # Fall back to the names the ecosystem owns, and say so.
@@ -255,12 +313,14 @@ def section_c() -> dict:
                         "ruleset unreadable; every ecosystem-owned check on main is success"
                         if owned else "no check on main could be evaluated", lines)
             if failed:
-                return ("FAIL", "every REQUIRED status check on main must be success; not: "
-                        + ", ".join(failed), lines)
-            return ("PASS", f"all {len(contexts)} required check(s) on main are success; other "
-                    "check runs (e.g. Cloud Build) are informational, not required", lines)
+                return ("FAIL", "every REQUIRED status check and every completed check this repository "
+                        "OWNS must be success on main (D-116 rules 5 and 6); not: " + ", ".join(failed), lines)
+            return ("PASS", f"all {len(contexts)} required check(s) and every completed owned check on "
+                    "main are success; integrations the ecosystem does not own (e.g. Cloud Build) "
+                    "are informational", lines)
 
-        measure(f"{repo}: required checks on main",
+        root_for = QESIS if repo == "qesis-mcp" else INFRA
+        measure(f"{repo}: required and owned checks on main",
                 ["gh", "api", f"repos/{slug}/commits/main/check-runs?per_page=100"],
                 QESIS, checks_pred)
 
@@ -309,10 +369,10 @@ def section_d(facts: dict) -> None:
 
 
 # ----------------------------------------------------------------------------- E
-def write_report() -> int:
+def render_report(rows: list[dict], stamp: str) -> str:
+    """The report text. Prose in it meets the writing doctrine it will be gated by."""
     bad = [r for r in rows if r["verdict"] == "FAIL"]
     info = [r for r in rows if r["verdict"] == "INFO"]
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines = [
         "# QESIS+ full ecosystem audit",
         "",
@@ -338,10 +398,27 @@ def write_report() -> int:
     if bad:
         lines += ["## What is failing", ""]
         for r in bad:
+            # No em dash: this line is prose and compliance.yml's doctrine gate
+            # refused the report on main for exactly that character (L-178).
             lines.append(f"- **{r['label']}**: {r['basis']}"
-                         + (f" — `{r['tail'][-1][:160]}`" if r["tail"] else ""))
+                         + (f", last line: `{r['tail'][-1][:160]}`" if r["tail"] else ""))
         lines.append("")
-    text = "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n"
+
+
+def write_report() -> int:
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    text = render_report(rows, stamp)
+    hits = doctrine_hits(text)
+    if hits:
+        # The report meets the gate it will be scanned by, or it says so as a
+        # FAIL row of its own and the verdict cannot be GREEN (L-178). The hit
+        # is named by rule and line, never quoted, so the row cannot re-offend.
+        row("audit report meets the writing doctrine", "scripts/audit_ecosystem.py", QESIS, 1,
+            [f"blocking: {', '.join(hits[:8])}"], "FAIL",
+            "gate: qesis_agents/style.py blocking hits over the rendered report must be zero (W-1, L-178)")
+        text = render_report(rows, stamp)
+    bad = [r for r in rows if r["verdict"] == "FAIL"]
     for repo in (QESIS, INFRA):
         if repo.exists():
             (repo / "ops").mkdir(exist_ok=True)
@@ -350,11 +427,46 @@ def write_report() -> int:
     return 1 if bad else 0
 
 
+def selftest() -> int:
+    """V-2 fixtures for the report writer (L-178) and the owned-check reader (L-179)."""
+    fail_row = {"label": "x: a failing gate", "cmd": "python scripts/x.py", "exit": 1,
+                "tail": ["last line of output"], "cwd": "C:/x", "verdict": "FAIL",
+                "basis": "gate: exit code is the contract"}
+    text = render_report([fail_row], "2026-08-26T00:00:00Z")
+    offending = text.replace(", last line:", " \u2014 last line:")
+    cases = [
+        ("report writer: a FAIL row with a tail renders without an em dash",
+         "\u2014" not in text and ", last line: `last line of output`" in text),
+        ("report writer: the doctrine check refuses a rendered em dash",
+         any(h.startswith("em_dash") for h in doctrine_hits(offending))),
+        ("report writer: the doctrine check accepts the rendered report",
+         doctrine_hits(text) == []),
+    ]
+    import tempfile
+    root = Path(tempfile.mkdtemp())
+    (root / ".github" / "workflows").mkdir(parents=True)
+    (root / ".github" / "workflows" / "c.yml").write_text(
+        "name: Continuous compliance verification\non: [push]\njobs:\n  verify:\n"
+        "    runs-on: ubuntu-latest\n    steps:\n      - run: true\n  heal:\n    name: Self-heal\n"
+        "    runs-on: ubuntu-latest\n    steps:\n      - run: true\n", encoding="utf-8")
+    owned = owned_checks(root)
+    cases.append(("owned checks: job ids and job names are read from the workflow files",
+                  {"verify", "heal", "Self-heal"} <= owned))
+    for name, ok in cases:
+        print(f"  {'PASS' if ok else 'FAIL'}  audit: {name}")
+    n = sum(ok for _, ok in cases)
+    print(f"audit selftest: {n}/{len(cases)} fixtures " + ("hold" if n == len(cases) else "FAILED"))
+    return 0 if n == len(cases) else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--skip-slow", action="store_true",
                     help="skip preflight and the self-heal dry run (minutes each)")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+    if a.selftest:
+        return selftest()
     print("QESIS+ FULL ECOSYSTEM AUDIT")
     print("=" * 60)
     section_a(a.skip_slow)
