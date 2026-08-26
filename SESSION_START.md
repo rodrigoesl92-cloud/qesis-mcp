@@ -1,5 +1,13 @@
 # Read this first. Every model, every session, no exceptions.
 
+> **2026-08-24 handover, evening revision.** Read `ops/HANDOVER_2026-08-24.md`
+> before anything else. It states what is true, what is not, the four root
+> causes of the evening audit (L-169 to L-172, D-116), and the two files the
+> operator double-clicks: `AUDIT_ECOSYSTEM.bat` measures everything and changes
+> nothing; `LAND_EVERYTHING_FINAL.bat` repairs the ledger mirror, runs every
+> gate in both repositories, lands the work, and ends with the audit. Both live
+> in the `sovereign-infra` root, `C:\Users\Lenovo\OneDrive\sovereign-infra`.
+
 Opus, Sonnet, Fable, a scheduled sweep, a Cowork session, Claude Code. Same
 procedure. This file exists because on 2026-08-24 five sessions in a row asserted
 things about this ecosystem that were false, and every one of them was false in
@@ -13,7 +21,8 @@ seconds and they replace guessing.
 
 ```
 python scripts/build_ecosystem_state.py --check    # is the bootstrap current
-python scripts/verify_ledger_singleton.py          # is the memory sound
+python scripts/verify_ledger_singleton.py          # is the memory sound, and in sync with its mirror
+python scripts/ledger_sync.py --check              # if not: what differs, and whether a script may repair it
 python scripts/rdl.py status                       # what has already gone wrong
 python scripts/selfheal.py                         # SH-1, the control set
 ```

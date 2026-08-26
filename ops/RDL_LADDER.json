@@ -22,44 +22,41 @@
    }
   },
   "guard_not_executed": {
-   "occurrences": 5,
+   "occurrences": 6,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "e25fdf6b34a293d14a8b4ee0c8646245668e699062b4477d79d8a143e5937301",
-   "last_signature": "tasklist found no git.exe so the guard passed, and the lock that actually blocked the operation was four days old with no owning process. The guard measured process liveness where the property that mattered was file presence.",
-   "last_seen": "2026-08-24T16:20:00Z",
+   "last_signature": "verify_ledger_singleton.py held a fixed list of sovereign-infra paths as the sibling. Run from sovereign-infra the first path that existed was its own ledger, so R3 printed sibling agrees for a mirror that had been one byte out of sync since 18:49Z: a session had rewritten the qesis-mcp copy through the file bridge without the trailing newline, bypassing rdl_append.py. The audit then reported the same defect as one PASS and one FAIL, the lander aborted on the FAIL, and no component could repair a divergence it could only name.",
+   "last_seen": "2026-08-24T19:43:36Z",
    "prior_evidence": "L-108, L-109, L-114, L-115",
    "lesson_ids": [
-    "L-154"
+    "L-154",
+    "L-169"
+   ],
+   "ci_blocking": true,
+   "gate_required": true,
+   "decision_required": true
+  },
+  "success_literal_not_measured": {
+   "occurrences": 4,
+   "rung": 4,
+   "owner": "ARCHITECT",
+   "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
+   "last_signature": "audit_ecosystem.py marked main check conclusions PASS on sovereign-infra while the value it had just fetched read heal: failure and qesis-integrity: failure, and marked open pull requests PASS while listing PR 71 as CONFLICTING DIRTY; it forced the row's exit to 0 by hand. The row's verdict came from the exit status of gh, an operation, and never from a predicate over the value the operation returned. The report was built to be the thing the operator opens instead of trusting a sentence, and its own verdict column was a sentence.",
+   "last_seen": "2026-08-24T19:43:36Z",
+   "prior_evidence": "L-100, L-155",
+   "lesson_ids": [
+    "L-155",
+    "L-160",
+    "L-172"
    ],
    "ci_blocking": true,
    "gate_required": true,
    "decision_required": true,
    "cleared": {
-    "gate": "scripts/git_unlock.py",
-    "reason": "Guards now state the property they need: staging is verified by counting the index rather than by trusting the exit code of git add, and the lock guard checks file presence rather than process liveness.",
-    "when": "2026-08-24T17:10:56Z"
-   }
-  },
-  "success_literal_not_measured": {
-   "occurrences": 3,
-   "rung": 3,
-   "owner": "ARCHITECT",
-   "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "Merged was set true when gh pr merge --auto returned zero. Arming succeeds immediately; the merge itself happens only when the required status check reports green. The closing summary therefore printed 'Both repositories are on main. Nothing further is required.' about two pull requests that had not merged.",
-   "last_seen": "2026-08-24T17:40:59Z",
-   "prior_evidence": "L-100, L-155",
-   "lesson_ids": [
-    "L-155",
-    "L-160"
-   ],
-   "ci_blocking": true,
-   "gate_required": true,
-   "decision_required": false,
-   "cleared": {
-    "gate": "scripts/build_ops_report.py",
-    "reason": "Third occurrence landed its gate in the same change set: LAND_EVERYTHING_FINAL.ps1 now carries Armed and Merged as separate fields, the summary prints on main, armed and stuck as three distinct counts, and it states explicitly that ARMED is a queued merge rather than a completed one.",
-    "when": "2026-08-24T17:41:29Z"
+    "gate": "scripts/audit_ecosystem.py",
+    "reason": "Fourth occurrence opened D-116 (a verdict is a predicate over a parsed value, never the exit status of the fetch) and landed it: audit_ecosystem.py has exactly two row constructors, gate() and measure(); every measurement carries its predicate on the row, unparseable is FAIL, no predicate is INFO, required checks come from the branch ruleset.",
+    "when": "2026-08-24T19:44:12Z"
    }
   },
   "duplicate_id_from_stale_accessor": {
@@ -123,24 +120,119 @@
    "decision_required": false
   },
   "claim_from_proxy_not_resource": {
-   "occurrences": 4,
+   "occurrences": 7,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
-   "last_signature": "branch-guard.yml routed on parent count: two or more parents meant pull_request_merge, anything else meant direct_push. Only the merge-commit strategy produces two parents. G-06 Rule 2-4 mandates rebase and forbids squash, so every correctly executed merge in this ecosystem landed as direct_push and opened an audit issue. sovereign-infra issue 37 for commit 3a81552 is the first instance, and it would have recurred on every future merge.",
-   "last_seen": "2026-08-24T17:43:27Z",
-   "prior_evidence": "L-104, L-111, L-143",
+   "last_signature": "SH-7 and selfheal.yml assert that the runner commits a class A repair, pushes a branch, opens a pull request and merges it. Self-heal loop run 132 on qesis-mcp (commit 00b0c95, 2026-08-24T18:34Z) reached verdict GREEN with one repair, pushed selfheal/32763154920, and died at gh pr create with 'GitHub Actions is not permitted to create or approve pull requests'. That is the repository setting Settings, Actions, General, Workflow permissions, 'Allow GitHub Actions to create and approve pull requests', which is off in both repositories. The capability was asserted from the design and from the permissions block in YAML; the run that would have falsified it was red and its log was never read. The branch stayed as litter and the daily ops report, which opens a pull request the same way, cannot land from a runner either.",
+   "last_seen": "2026-08-24T20:51:44Z",
+   "prior_evidence": "L-104, L-111, L-143, L-161",
    "lesson_ids": [
-    "L-161"
+    "L-161",
+    "L-162",
+    "L-173",
+    "L-174"
    ],
    "ci_blocking": true,
    "gate_required": true,
-   "decision_required": true,
+   "decision_required": true
+  },
+  "paired_what_is_not_pairable": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "ed169288d47537e9d595e705c7e3f2b5ce4b7c6a467bc9d15d6d72c5ee0f918f",
+   "last_signature": "selfheal.py loaded scripts/kill_switch.py unconditionally before reading any control, and the file existed only in qesis-mcp, so every hourly heal run in sovereign-infra died on FileNotFoundError and reported as an escalation. verify_workflow_contract.py C-4 read the twelve control scripts that gate the served index and do not exist in the evidence plane as NOT TRACKED, and C-3 had no exemption for the two scripts compliance.yml runs there, so verify_workflow escalated as well. The stop control of Article 14 Decision 5 was therefore absent from the evidence plane entirely. controls_present() had declared the asymmetry harmless without the code above and below it having been tested in the second repository.",
+   "last_seen": "2026-08-24T19:43:36Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-163",
+    "L-171"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
+  },
+  "stale_artifact_left_live": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "65589db0dfdf12cdd374b187da7c4b9c36b7d8c48deb33415dec170dea46699e",
+   "last_signature": "The amputation step named PR 34 and 35 literally and covered only sovereign-infra. qesis-mcp PRs 71, 72, 73 and 75 accumulated, each with auto-merge armed and conflicts, each producing check runs and notifications for work nobody intended to land. The operator was shown a red PR 71 four rounds after it was superseded, while being told the task was finished. A cleanup keyed to numbers someone typed is not a cleanup.",
+   "last_seen": "2026-08-24T18:22:45Z",
+   "prior_evidence": "L-157",
+   "lesson_ids": [
+    "L-164"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
+  },
+  "reasoned_from_memory_not_docs": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "a46a57ce7f6c71b09a424a4300d0164e7daa649a0e322d99cc4d2bc8c666b668",
+   "last_signature": "The agent reasoned about auto-merge, required status checks and rebase provenance from memory. The official documentation states plainly that all merge conflicts must be resolved before a pull request can merge and that the merge button is deactivated until they are, which means arming auto-merge on a conflicted branch produces a pull request that can never fire. GitHub also publishes mergeStateStatus, an enum that answers exactly the question the agent kept guessing at: CLEAN, UNSTABLE, BLOCKED, BEHIND, DIRTY, DRAFT, UNKNOWN. Reading it once would have removed every merge failure of 2026-08-24.",
+   "last_seen": "2026-08-24T18:25:08Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-165"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "gate_cannot_be_satisfied": {
+   "occurrences": 3,
+   "rung": 3,
+   "owner": "ARCHITECT",
+   "family_hash": "65b1d8ddf5c6251d77cb597bbb0209889842b1deeac062f0059b00cdb68e3f69",
+   "last_signature": "ECOSYSTEM_STATE.json carries repository, which build_ecosystem_state.py sets to ROOT.name. The file is generated once and mirrored into both repositories, and the checkout name differs between them by construction, so --check passed in qesis-mcp and failed in sovereign-infra on identical bytes. sovereign-infra's required status check qesis-integrity went red on main and stayed red, and its preflight failed with it. The L-166 repair one hour earlier had moved the measured blocks out of the comparison and left this one in.",
+   "last_seen": "2026-08-24T19:43:36Z",
+   "prior_evidence": "L-158",
+   "lesson_ids": [
+    "L-166",
+    "L-170"
+   ],
+   "ci_blocking": true,
+   "gate_required": true,
+   "decision_required": false,
    "cleared": {
-    "gate": ".github/workflows/branch-guard.yml",
-    "reason": "The classifier now calls repos/{repo}/commits/{sha}/pulls and treats any associated merged pull request as authorised, whatever the merge strategy. Landed in the same change set as the finding.",
-    "when": "2026-08-24T17:43:54Z"
+    "gate": "scripts/build_ecosystem_state.py",
+    "reason": "Third occurrence landed its gate in the same change set: build_ecosystem_state.py --selftest accepts drift in every volatile field including the checkout name and refuses a moved canonical path, a dropped hard constraint, and an absent or unreadable file; it runs as a step in qesis-integrity.yml of both repositories and inside test_gate.py.",
+    "when": "2026-08-24T19:44:12Z"
    }
+  },
+  "shell_built_the_query": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "94f468b92ba047e425a95eed80786fafcc3181c10ef14e4d92778a1d42a450af",
+   "last_signature": "The lander passed '.[] | \"(.number) (.headRefName)\"' to gh from PowerShell. PowerShell expanded and split it, gh answered 'unknown arguments, please quote all values that have spaces', and the loop then attempted to close pull requests on branches literally named gh.exe, In, +, Usage:, --app and every flag in gh's help text. Forty failed attempts, zero amputations, and the PROOF block printed help text instead of state.",
+   "last_seen": "2026-08-24T18:51:47Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-167"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "bot_identity_blocked_the_deploy": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "065534564cb1f5da2df65849550a9771344db40c9d64ecabacd100e9fc2dd92f",
+   "last_signature": "selfheal.yml set user.email to selfheal@qesis.invalid. RFC 2606 reserves .invalid precisely so it never resolves, and Vercel refuses to deploy a commit whose author it cannot identify: 'The commit author email (selfheal@qesis.invalid) is not a valid email address. This prevents Vercel from identifying the commit author and allowing the deployment.' The operator was shown that dialog and told to fix his own git config, which was never the failing identity.",
+   "last_seen": "2026-08-24T18:51:47Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-168"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
   }
  }
 }

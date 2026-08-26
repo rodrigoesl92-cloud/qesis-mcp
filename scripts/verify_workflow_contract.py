@@ -32,6 +32,12 @@ WHAT IT ASSERTS, AND WHY EACH IS EARNED
       Silence is not an exemption. An exemption is a named entry with a stated
       reason, and the target state for EXEMPT is empty (L-048).
 
+  C-4 LOCAL SET REACHABILITY. Every script in the selfheal control set is
+      tracked, or untracked and not ignored (the lander's `git add -A` will
+      stage it), or absent from this repository (out of scope, reported by
+      name). Only IGNORED-on-disk fails: that is the L-135 class, a file git
+      silently skips. Index membership alone was the wrong predicate (L-173).
+
 Usage:  python scripts/verify_workflow_contract.py [--quiet]
 """
 from __future__ import annotations
@@ -78,6 +84,16 @@ EXEMPT = {
     "its gate lands, so putting it in CONTROLS would escalate on every run, and L-063 says "
     "an escalation that fires every cycle has been switched off without anyone deciding to "
     "switch it off. The loop reports the ladder; the release refuses on it.",
+    # The evidence plane's own CI scripts (sovereign-infra/compliance.yml). One
+    # runner and one contract serve both repositories, so the contract has to
+    # know both script sets or it fails the repository it never visited (L-171).
+    "build_concordance.py": "a generator with a --check mode, run by compliance.yml (G-02). "
+    "A concordance drift is a build-time finding against the served index, which the "
+    "evidence plane does not carry, so the hourly loop cannot evaluate it there.",
+    "scan_credentials.py": "sovereign-infra's history-aware credential scan. It runs `git log`, "
+    "and the loop may execute on the analysis mount, where any git command takes and "
+    "abandons .git/index.lock (L-122, L-123). It runs on the runner in compliance.yml, where "
+    "git is safe, and its findings are class C there exactly as verify_secrets is here.",
 }
 # git_unlock.py was briefly listed above and removed the same session: no
 # workflow runs it, so an exemption for it is dead, and C-3's own message is
@@ -104,6 +120,31 @@ def local_controls() -> set[str]:
     # nonsense, which is worse than failing to parse (L-134).
     block = text.split("CONTROLS = [", 1)[-1].split("\n]", 1)[0]
     return set(re.findall(r"scripts/([A-Za-z0-9_]+\.py)", block))
+
+
+def ignored_by_git(rel: str) -> bool | None:
+    """Would `git add -A` skip this path? True ignored, False not, None unknown.
+
+    THE RESOURCE, NOT THE PROXY (L-173). Whether CI will have a file is decided
+    by two things: it is tracked, or it is untracked and NOT ignored, in which
+    case the lander's `git add -A` stages it. Membership in the index is a proxy
+    for the second case and a wrong one: a control script added in this change
+    set is never in the index before the lander stages it, so a C-4 that read
+    only `git ls-files` refused every new control script forever, exactly the
+    gate no correct action can satisfy (SH-10f). `git check-ignore` reads the
+    ignore rules and writes nothing.
+    """
+    import subprocess
+    try:
+        r = subprocess.run(["git", "check-ignore", "-q", "--", rel], cwd=ROOT,
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if r.returncode == 0:
+        return True
+    if r.returncode == 1:
+        return False
+    return None
 
 
 def tracked_scripts() -> tuple[set[str], str]:
@@ -183,6 +224,16 @@ def main() -> int:
     controls = local_controls()
     tracked, mode = tracked_scripts()
     ci_scripts: set[str] = set()
+    will_stage: list[str] = []
+
+    def reach_status(name: str, mode: str) -> str:
+        """absent | ignored | will_stage, for a script git does not track."""
+        if not (ROOT / "scripts" / name).exists():
+            return "absent"
+        if mode != "git ls-files":
+            return "will_stage"  # no git here; on disk is all that can be known
+        ign = ignored_by_git(f"scripts/{name}")
+        return "ignored" if ign else "will_stage"
 
     for wf in sorted(WORKFLOWS.glob("*.yml")):
         text = wf.read_text(encoding="utf-8")
@@ -202,13 +253,17 @@ def main() -> int:
             for m in re.finditer(r"python\s+scripts/([A-Za-z0-9_]+\.py)", line):
                 name = m.group(1)
                 if name not in tracked:
-                    on_disk = (ROOT / "scripts" / name).exists()
-                    why = ("exists on disk but is NOT TRACKED, so CI will not have "
-                           "it. Check `git check-ignore -v` before assuming a "
-                           "rename is needed." if on_disk else
-                           "does not exist at all")
-                    fails.append(f"C-2 {wf.name}:{lineno} references scripts/{name}, "
-                                 f"which {why}")
+                    status = reach_status(name, mode)
+                    if status == "absent":
+                        fails.append(f"C-2 {wf.name}:{lineno} references scripts/{name}, "
+                                     "which does not exist at all")
+                    elif status == "ignored":
+                        fails.append(f"C-2 {wf.name}:{lineno} references scripts/{name}, "
+                                     "which exists on disk, is NOT TRACKED, and is IGNORED "
+                                     "by .gitignore: `git add -A` will skip it and CI will "
+                                     "not have it (L-135). `git check-ignore -v` names the rule.")
+                    else:
+                        will_stage.append(name)
                 ci_scripts.add(name)
 
     # C-3, reconciliation
@@ -223,10 +278,28 @@ def main() -> int:
     # C-4. Every script the LOCAL control set depends on must be tracked too.
     # A control that runs locally from an untracked file is a control CI does
     # not have, and the loop would report green on a set the runner cannot run.
+    #
+    # Two conditions, and only one is a finding. ON DISK BUT UNTRACKED is the
+    # L-135 class: local green, CI red, nothing said so. ABSENT ENTIRELY is
+    # scope: one control set serves both repositories, and selfheal.py's
+    # controls_present() reports an absent script as out of scope rather than
+    # as a failure. The first version of this check conflated the two and
+    # produced twelve findings in sovereign-infra for scripts that gate the
+    # served index and have never belonged there (L-171). Scope is reported
+    # by name, so it is never silent, and never failed, so it is never noise.
+    out_of_scope: list[str] = []
     for name in sorted(controls):
-        if name not in tracked:
-            fails.append(f"C-4 scripts/{name} is in the selfheal control set and "
-                         f"is NOT TRACKED. The loop runs it locally and CI cannot.")
+        if name in tracked:
+            continue
+        status = reach_status(name, mode)
+        if status == "ignored":
+            fails.append(f"C-4 scripts/{name} is in the selfheal control set, is on disk, "
+                         "is NOT TRACKED, and is IGNORED by .gitignore, so `git add -A` "
+                         "skips it and CI cannot run it (L-135). `git check-ignore -v` names the rule.")
+        elif status == "absent":
+            out_of_scope.append(name)
+        else:
+            will_stage.append(name)
 
     # A dead exemption hides the next real one, so it is a finding. It is scoped
     # to exemptions whose script EXISTS: an exemption naming a script that is not
@@ -249,6 +322,14 @@ def main() -> int:
         print(f"OK   workflow contract holds: {len(ci_scripts)} CI scripts, "
               f"{len(controls)} local controls, {len(EXEMPT)} declared exemptions, "
               f"tracked via {mode}")
+        if out_of_scope:
+            print(f"     scope: {len(out_of_scope)} control script(s) absent from this "
+                  "repository, out of scope here per selfheal.controls_present(): "
+                  + ", ".join(out_of_scope))
+        if will_stage:
+            print(f"     untracked, not ignored: {len(will_stage)} script(s) on disk that "
+                  "`git add -A` will stage, so CI will have them once this change set lands: "
+                  + ", ".join(sorted(set(will_stage))))
     return 0
 
 

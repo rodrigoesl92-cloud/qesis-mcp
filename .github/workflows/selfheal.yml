@@ -182,7 +182,7 @@ jobs:
           fi
           BR="selfheal/${{ github.run_id }}"
           git config user.name  "qesis-selfheal[bot]"
-          git config user.email "selfheal@qesis.invalid"
+          git config user.email "rodrigoesl92-cloud@users.noreply.github.com"
           git checkout -b "$BR"
           git add -A
           git commit -m "fix(selfheal): land class A repairs from run ${{ github.run_id }}
@@ -195,9 +195,19 @@ jobs:
           See ops/SELFHEAL_LATEST.json for the control set and the verdict.
           Authority G-07. No promotion, no direct push to main."
           git push origin "$BR"
-          gh pr create --base main --head "$BR" \
+          # Run #132 of 2026-08-24 pushed this branch and then died here with
+          # "GitHub Actions is not permitted to create or approve pull requests":
+          # Settings > Actions > General > Workflow permissions, the checkbox
+          # "Allow GitHub Actions to create and approve pull requests", off. A
+          # branch nobody can open a pull request for is litter, so it is
+          # removed again and the setting is named in the error (L-174).
+          if ! gh pr create --base main --head "$BR" \
             --title "selfheal: land class A repairs from run ${{ github.run_id }}" \
-            --body "Automated under G-07. Class A remedies only, each reverified before commit. Review the control set in \`ops/SELFHEAL_LATEST.json\`. Rebase merge only, never squash (G-05, G-06 Rule 2-4)."
+            --body "Automated under G-07. Class A remedies only, each reverified before commit. Review the control set in \`ops/SELFHEAL_LATEST.json\`. Rebase merge only, never squash (G-05, G-06 Rule 2-4)."; then
+            echo "::error::the loop repaired a derived artefact and cannot open the pull request to land it. Repository setting required: Settings > Actions > General > Workflow permissions > 'Allow GitHub Actions to create and approve pull requests'. The pushed branch $BR is deleted again so it does not accumulate (L-174)."
+            git push origin --delete "$BR" || true
+            exit 1
+          fi
 
           # And MERGE it. Opening a pull request and stopping is not autonomy:
           # with the operator's machine off, class A repairs would queue as open

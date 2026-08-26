@@ -162,7 +162,8 @@ def next_lesson_id() -> tuple[int, str]:
     try:
         p = subprocess.run(
             [sys.executable, str(ROOT / "scripts" / "verify_ledger_singleton.py"), "--json"],
-            capture_output=True, text=True, timeout=120, check=False, cwd=ROOT,
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            timeout=120, check=False, cwd=ROOT,
         )
         doc = json.loads(p.stdout)
         ledger_max = int(doc["max"])
@@ -189,7 +190,15 @@ def ladder_state() -> dict:
 
 
 def occurrences(fam: str) -> int:
-    """Count prior occurrences from the store when reachable, ladder file otherwise."""
+    """Count prior occurrences: the HIGHER of the store and the ladder file.
+
+    A record made where the store was unreachable (analysis mount, CI) lands in
+    the ladder file only, class B. If the next host-side record read the store
+    alone it would count fewer occurrences than the ladder shows and re-issue a
+    lower rung, which is the ladder forgetting on purpose. Neither source may
+    lower the count the other has already established.
+    """
+    from_ladder = int(ladder_state()["families"].get(fam, {}).get("occurrences", 0))
     store = find_store()
     if store:
         try:
@@ -199,10 +208,10 @@ def occurrences(fam: str) -> int:
                 "SELECT COUNT(*) FROM qesis_rdl_defects WHERE family=?", (fam,)
             ).fetchone()[0]
             con.close()
-            return int(n)
+            return max(int(n), from_ladder)
         except sqlite3.OperationalError:
             pass  # table absent on first run, fall through
-    return int(ladder_state()["families"].get(fam, {}).get("occurrences", 0))
+    return from_ladder
 
 
 def rung_for(occ: int) -> tuple[int, str]:

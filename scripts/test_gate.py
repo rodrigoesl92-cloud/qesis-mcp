@@ -694,8 +694,49 @@ def check_ledger_singleton(results: list[tuple[str, bool]]) -> None:
 
     results.append(("ledger singleton: selftest, its own accept and refuse pair",
                     run(["--selftest"]) == 0))
-    results.append(("ledger singleton: live ledger holds no duplicate id",
+    # Labelled for what it measures. The old label said "holds no duplicate id"
+    # while the exit code also carried R2 and R3, so on 2026-08-24 a one-byte
+    # mirror drift was reported as a duplicate-id miss (L-169).
+    results.append(("ledger singleton: live ledger passes R1, R2, and R3 where a sibling is reachable",
                     run(["--quiet"]) == 0))
+
+
+ECOSYSTEM_GATE = ROOT / "scripts" / "build_ecosystem_state.py"
+SELFHEAL = ROOT / "scripts" / "selfheal.py"
+
+
+def check_ecosystem_state(results: list[tuple[str, bool]]) -> None:
+    """V-2 for the bootstrap gate, wired at rung 3 of gate_cannot_be_satisfied.
+
+    Three occurrences of the same move: a staleness check compared something
+    that legitimately differs between runs or machines (L-158, L-166, L-170).
+    The gate's own fixtures accept volatile drift, including the checkout name,
+    and refuse a moved canonical path, a dropped hard constraint, an absent or
+    unreadable file. This step makes them a release blocker.
+    """
+    if not ECOSYSTEM_GATE.exists():
+        results.append(("ecosystem state: gate present", False))
+        return
+    r = subprocess.run([sys.executable, str(ECOSYSTEM_GATE), "--selftest"],
+                       capture_output=True, text=True)
+    results.append(("ecosystem state: selftest, volatile drift accepted, contract drift refused",
+                    r.returncode == 0))
+
+
+def check_selfheal_runner(results: list[tuple[str, bool]]) -> None:
+    """V-2 for the runner, wired at rung 2 of paired_what_is_not_pairable (L-171).
+
+    The runner must survive a partial checkout with no kill switch module and
+    still honour the stop control's channels, and must refuse a duplicated
+    control name.
+    """
+    if not SELFHEAL.exists():
+        results.append(("selfheal: runner present", False))
+        return
+    r = subprocess.run([sys.executable, str(SELFHEAL), "--selftest"],
+                       capture_output=True, text=True)
+    results.append(("selfheal: selftest, partial checkout tolerated, duplicate control refused",
+                    r.returncode == 0))
 
 
 RETRIEVAL_GATE = ROOT / "scripts" / "verify_retrieval_corpus.py"
@@ -899,6 +940,8 @@ def main() -> int:
     check_workflow_contract(extra)
     check_retrieval_corpus(extra)
     check_ledger_singleton(extra)
+    check_ecosystem_state(extra)
+    check_selfheal_runner(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

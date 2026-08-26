@@ -23,6 +23,7 @@ disagrees with a fresh measurement, exactly like build_graph and build_eval.
 Usage:
     python scripts/build_ecosystem_state.py
     python scripts/build_ecosystem_state.py --check
+    python scripts/build_ecosystem_state.py --selftest   # V-2 fixtures
 """
 from __future__ import annotations
 
@@ -224,9 +225,36 @@ def _strip_volatile(x):
     The same argument covers ledger and ladder facts on a partial checkout, so
     those are compared only when both sides carry them.
     """
+    # Everything MEASURED is stripped. This is the correction that matters.
+    #
+    # The first version compared the whole file, including ledger_facts and
+    # ladder_facts. Those move whenever the ledger or the ladder moves, and the
+    # lander regenerates the state BEFORE appending new lesson entries, so the
+    # committed copy was stale the instant it was written. CI then failed on
+    # every single run with "ECOSYSTEM_STATE.json disagrees with a fresh
+    # measurement", which is a gate no correct action can satisfy: exactly the
+    # deadlock SH-10f was written about, rebuilt one file later.
+    #
+    # What --check must actually guard is the STATIC CONTRACT a session reads at
+    # start: where the repositories are, which lookalike paths are decoys, and
+    # the hard constraints. Those do not move between runs. The measured block
+    # stays IN the file, carries its own timestamp, and is informational.
+    #
+    # `repository` joined the set on 2026-08-24 evening (L-170). It is the NAME
+    # OF THE CHECKOUT DIRECTORY, so it differs between the two repositories by
+    # construction, and the same generated file is mirrored into both. Comparing
+    # it made --check pass in qesis-mcp and fail in sovereign-infra on identical
+    # bytes, which is the third occurrence of a gate no correct action could
+    # satisfy: L-158, L-166, and this. The file still records it; it is a
+    # measurement of where the file was generated, not a contract.
+    VOLATILE = {
+        "generated_utc", "probe", "repository",
+        "ledger", "rdl_ladder", "served_vintage",
+        "rdl_pending_append", "decision_documents_present",
+        "promotion_policy_signed",
+    }
     if isinstance(x, dict):
-        return {k: _strip_volatile(v) for k, v in x.items()
-                if k not in ("generated_utc", "probe")}
+        return {k: _strip_volatile(v) for k, v in x.items() if k not in VOLATILE}
     if isinstance(x, list):
         return [_strip_volatile(v) for v in x]
     return x
@@ -238,25 +266,90 @@ def canon(d: dict) -> str:
     return json.dumps(_strip_volatile(json.loads(json.dumps(d))), sort_keys=True)
 
 
+def check_files(fresh: dict) -> list[str]:
+    """Compare committed copies against fresh measurements on the static contract only."""
+    bad = []
+    for path, doc in fresh.items():
+        if not path.exists():
+            bad.append(f"{path.name} is absent")
+            continue
+        try:
+            have = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            bad.append(f"{path.name} is unreadable: {exc}")
+            continue
+        if canon(have) != canon(doc):
+            bad.append(f"{path.name} disagrees with a fresh measurement")
+    return bad
+
+
+def selftest() -> int:
+    """V-2. The check must ACCEPT a copy that differs only in what legitimately
+    moves between machines and runs, and must REFUSE a copy whose static
+    contract moved. Both halves, or the gate is a coin."""
+    import copy as _copy
+    import tempfile
+    fails: list[str] = []
+    state, registry = build_state(), build_registry()
+    with tempfile.TemporaryDirectory() as d:
+        sp, rp = Path(d) / "ECOSYSTEM_STATE.json", Path(d) / "PATH_REGISTRY.json"
+
+        # ACCEPT: volatile drift only. Another repository, another clock,
+        # another filesystem, another ledger hash, another vintage.
+        s2, r2 = _copy.deepcopy(state), _copy.deepcopy(registry)
+        s2["repository"] = "some-other-checkout-name"
+        s2["generated_utc"] = "1999-01-01T00:00:00Z"
+        s2["ledger"] = {"entries": 0, "sha256": "0" * 64, "status": "FAIL"}
+        s2["served_vintage"] = "v0.0"
+        s2["rdl_pending_append"] = []
+        r2["generated_utc"] = "1999-01-01T00:00:00Z"
+        for entry in r2["canonical"].values():
+            entry["probe"] = {"exists": True, "kind": "dir", "entries": 999}
+        sp.write_text(json.dumps(s2), encoding="utf-8")
+        rp.write_text(json.dumps(r2), encoding="utf-8")
+        if check_files({sp: state, rp: registry}):
+            fails.append("volatile-only drift was refused")
+
+        # REFUSE: a canonical path moved.
+        r3 = _copy.deepcopy(registry)
+        r3["canonical"]["sovereign-infra"]["path"] = r"C:\Users\Lenovo\sovereign-infra"
+        rp.write_text(json.dumps(r3), encoding="utf-8")
+        if not check_files({rp: registry}):
+            fails.append("a moved canonical path was accepted")
+
+        # REFUSE: a hard constraint dropped.
+        s3 = _copy.deepcopy(state)
+        s3["hard_constraints"] = s3["hard_constraints"][:-1]
+        sp.write_text(json.dumps(s3), encoding="utf-8")
+        if not check_files({sp: state}):
+            fails.append("a dropped hard constraint was accepted")
+
+        # REFUSE: absent and unreadable.
+        rp.unlink()
+        if not check_files({rp: registry}):
+            fails.append("an absent registry was accepted")
+        sp.write_text("{not json", encoding="utf-8")
+        if not check_files({sp: state}):
+            fails.append("an unreadable state file was accepted")
+
+    for f in fails:
+        print(f"SELFTEST FAIL: {f}")
+    print("ECOSYSTEM STATE SELFTEST: " + ("PASSED, 5 fixtures" if not fails else "FAILED"))
+    return 1 if fails else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+
+    if a.selftest:
+        return selftest()
 
     fresh = {STATE: build_state(), REGISTRY: build_registry()}
     if a.check:
-        bad = []
-        for path, doc in fresh.items():
-            if not path.exists():
-                bad.append(f"{path.name} is absent")
-                continue
-            try:
-                have = json.loads(path.read_text(encoding="utf-8"))
-            except Exception as exc:
-                bad.append(f"{path.name} is unreadable: {exc}")
-                continue
-            if canon(have) != canon(doc):
-                bad.append(f"{path.name} disagrees with a fresh measurement")
+        bad = check_files(fresh)
         for b in bad:
             print(f"  STALE  {b}")
         print("ECOSYSTEM STATE CHECK " + ("FAILED" if bad else "PASSED"))
