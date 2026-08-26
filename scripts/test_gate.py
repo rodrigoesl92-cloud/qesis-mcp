@@ -881,6 +881,33 @@ jobs:
     results.append(("workflow: git push under contents:read refused", run(refuse) != 0))
     results.append(("workflow: comment in permissions block accepted", run(accept) == 0))
 
+    # C-5, L-175. The fixture root has no requirements.txt, exactly like the
+    # evidence plane, and the refuse text is the step that failed there hourly.
+    unguarded = """name: w
+jobs:
+  j:
+    steps:
+      - name: Install runtime
+        run: python -m pip install --quiet -r requirements.txt
+      - run: python scripts/verify_index.py
+      - run: python scripts/selfheal.py
+"""
+    guarded = """name: w
+jobs:
+  j:
+    steps:
+      - name: Install runtime
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install --quiet -r requirements.txt
+          fi
+      - run: python scripts/verify_index.py
+      - run: python scripts/selfheal.py
+"""
+    results.append(("workflow: unguarded requirements install with no file refused (C-5)",
+                    run(unguarded) != 0))
+    results.append(("workflow: guarded requirements install accepted (C-5)", run(guarded) == 0))
+
 
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.

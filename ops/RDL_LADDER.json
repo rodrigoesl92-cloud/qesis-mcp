@@ -138,20 +138,26 @@
    "decision_required": true
   },
   "paired_what_is_not_pairable": {
-   "occurrences": 2,
-   "rung": 2,
+   "occurrences": 3,
+   "rung": 3,
    "owner": "ARCHITECT",
    "family_hash": "ed169288d47537e9d595e705c7e3f2b5ce4b7c6a467bc9d15d6d72c5ee0f918f",
-   "last_signature": "selfheal.py loaded scripts/kill_switch.py unconditionally before reading any control, and the file existed only in qesis-mcp, so every hourly heal run in sovereign-infra died on FileNotFoundError and reported as an escalation. verify_workflow_contract.py C-4 read the twelve control scripts that gate the served index and do not exist in the evidence plane as NOT TRACKED, and C-3 had no exemption for the two scripts compliance.yml runs there, so verify_workflow escalated as well. The stop control of Article 14 Decision 5 was therefore absent from the evidence plane entirely. controls_present() had declared the asymmetry harmless without the code above and below it having been tested in the second repository.",
-   "last_seen": "2026-08-24T19:43:36Z",
+   "last_signature": "selfheal.yml step 'Install runtime' runs 'python -m pip install -r requirements.txt' unguarded. qesis-mcp has requirements.txt; sovereign-infra has none. In sovereign-infra the heal job failed in eight seconds, every hour and on every push, before a single control ran, and the run list read as a red loop rather than as a missing file. The workflow was carried across as one file because SH-7 wants one runner serving both repositories, and nothing asked whether every path the file names exists on both sides. The same move as L-170 (a checkout name mirrored as a contract) and L-171 (a script imported that exists in one repository only).",
+   "last_seen": "2026-08-26T00:51:26Z",
    "prior_evidence": "",
    "lesson_ids": [
     "L-163",
-    "L-171"
+    "L-171",
+    "L-175"
    ],
-   "ci_blocking": false,
+   "ci_blocking": true,
    "gate_required": true,
-   "decision_required": false
+   "decision_required": false,
+   "cleared": {
+    "gate": "scripts/verify_workflow_contract.py",
+    "reason": "C-5 refuses an unguarded requirements install whose file is absent from this repository; the gate runs in both integrity workflows and proves its three fixtures before judging (L-175)",
+    "when": "2026-08-26T00:51:38Z"
+   }
   },
   "stale_artifact_left_live": {
    "occurrences": 2,
@@ -205,19 +211,25 @@
    }
   },
   "shell_built_the_query": {
-   "occurrences": 1,
-   "rung": 1,
+   "occurrences": 2,
+   "rung": 2,
    "owner": "ARCHITECT",
    "family_hash": "94f468b92ba047e425a95eed80786fafcc3181c10ef14e4d92778a1d42a450af",
-   "last_signature": "The lander passed '.[] | \"(.number) (.headRefName)\"' to gh from PowerShell. PowerShell expanded and split it, gh answered 'unknown arguments, please quote all values that have spaces', and the loop then attempted to close pull requests on branches literally named gh.exe, In, +, Usage:, --app and every flag in gh's help text. Forty failed attempts, zero amputations, and the PROOF block printed help text instead of state.",
-   "last_seen": "2026-08-24T18:51:47Z",
+   "last_signature": "LAND_EVERYTHING_FINAL.ps1 revision 5 read the pull request number with 'gh pr list --json number | ConvertFrom-Json | Select-Object -ExpandProperty number'. On PowerShell 5.1 ConvertFrom-Json emits the array as ONE Object[] item, Select-Object saw no 'number' property, the variable stayed empty, and every step keyed on it was skipped: merge_pr.py, ci_feedback.py, the MERGED read-back. Both pushes had succeeded. The summary line was built from the empty variable and said NOTHING DONE for both repositories. Second occurrence of the shell interpreting structured data: L-167 was PowerShell expanding a jq expression before gh saw it.",
+   "last_seen": "2026-08-26T00:51:26Z",
    "prior_evidence": "",
    "lesson_ids": [
-    "L-167"
+    "L-167",
+    "L-176"
    ],
    "ci_blocking": false,
-   "gate_required": false,
-   "decision_required": false
+   "gate_required": true,
+   "decision_required": false,
+   "cleared": {
+    "gate": "scripts/verify_lander_contract.py",
+    "reason": "LC-1 to LC-5 refuse a lander that parses JSON, hands gh a query, carries non-ASCII, hardcodes its landing or restores the whole tree; seven fixtures; the lander runs it on itself first (L-176)",
+    "when": "2026-08-26T00:51:38Z"
+   }
   },
   "bot_identity_blocked_the_deploy": {
    "occurrences": 1,
@@ -229,6 +241,21 @@
    "prior_evidence": "",
    "lesson_ids": [
     "L-168"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "disk_snapshot_taken_as_repository": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "b6120a90a36de40abb21ae5afba8b558a146f1748171a77b074ca5cf1501091f",
+   "last_signature": "Revision 5 captured the working tree as a holding commit, cut the branch from origin/main and ran 'git checkout <snapshot> -- .', restoring every tracked file from the operator's disk. The disk is the source of the session's changes, not of the repository: the self-heal loop and the daily ops report commit to main from a runner (SH-7, G-07), and the setting that lets them is now on (L-174). The next click would have reverted each of those commits with a green summary. Found by reading the lander before its next run, not from a loss; nothing had ever landed from a runner, so nothing had been reverted yet.",
+   "last_seen": "2026-08-26T00:51:26Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-177"
    ],
    "ci_blocking": false,
    "gate_required": false,

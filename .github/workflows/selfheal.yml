@@ -62,7 +62,18 @@ jobs:
         # verifier cannot import server.py and reports a benign condition that
         # is only benign locally. In CI it would be a real gap wearing a benign
         # label, which is the worst available outcome for a suppression rule.
-        run: python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+        #
+        # Guarded, because this file is paired byte-identical into a repository
+        # that has no requirements.txt. Unguarded, the step failed there in eight
+        # seconds every hour and the loop never reached a single control (L-175).
+        # Same guard as daily-ops-report.yml; verify_workflow_contract.py C-5
+        # refuses an unguarded requirements install in any workflow.
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install --quiet --disable-pip-version-check -r requirements.txt
+          else
+            echo "no requirements.txt in this repository; the runtime is the standard library"
+          fi
 
       - name: Diagnose only
         # Two passes on purpose. The first records what the ecosystem looked like

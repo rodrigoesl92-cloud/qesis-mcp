@@ -1,7 +1,7 @@
 {
  "_doc": "Accepted RDL ladder state. scripts/rdl.py ci-blocking fails only on families that are new at rung 3 or above, or that have escalated above the rung recorded here. History does not fail a build; regressions do.",
- "accepted_at": "2026-08-24T19:44:12Z",
- "reason": "2026-08-24 evening, after the singleton, bootstrap, runner and audit repairs landed with their fixtures. gate_cannot_be_satisfied enters at rung 3 with build_ecosystem_state.py --selftest as its blocker in both integrity workflows; success_literal_not_measured moves to rung 4 with D-116 written and audit_ecosystem.py rebuilt on predicates; guard_not_executed and paired_what_is_not_pairable advance one occurrence each with their gates (verify_ledger_singleton.py ten fixtures and ledger_sync.py; selfheal.py --selftest and the C-4 scope rule).",
+ "accepted_at": "2026-08-26T00:51:45Z",
+ "reason": "2026-08-26 after the 00:00Z landing: paired_what_is_not_pairable reaches rung 3 with L-175 and its blocker is verify_workflow_contract.py C-5, a step of both integrity workflows, proven by three fixtures that run before every judgement; shell_built_the_query reaches rung 2 with L-176 and verify_lander_contract.py (seven fixtures); disk_snapshot_taken_as_repository enters at rung 1 with L-177 and landing_base.py, repaired in the same change set. No family is accepted without its gate on disk.",
  "families": {
   "bot_identity_blocked_the_deploy": {
    "rung": 1,
@@ -13,11 +13,21 @@
   },
   "claim_from_proxy_not_resource": {
    "rung": 4,
-   "occurrences": 5,
+   "occurrences": 7,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-161",
-    "L-162"
+    "L-162",
+    "L-173",
+    "L-174"
+   ]
+  },
+  "disk_snapshot_taken_as_repository": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-177"
    ]
   },
   "duplicate_id_from_stale_accessor": {
@@ -71,12 +81,13 @@
    ]
   },
   "paired_what_is_not_pairable": {
-   "rung": 2,
-   "occurrences": 2,
+   "rung": 3,
+   "occurrences": 3,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-163",
-    "L-171"
+    "L-171",
+    "L-175"
    ]
   },
   "reasoned_from_memory_not_docs": {
@@ -88,11 +99,12 @@
    ]
   },
   "shell_built_the_query": {
-   "rung": 1,
-   "occurrences": 1,
+   "rung": 2,
+   "occurrences": 2,
    "owner": "ARCHITECT",
    "lesson_ids": [
-    "L-167"
+    "L-167",
+    "L-176"
    ]
   },
   "stale_artifact_left_live": {

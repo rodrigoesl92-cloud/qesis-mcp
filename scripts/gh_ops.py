@@ -24,6 +24,9 @@ Subcommands:
               the checkout, with the command and exit code in the comment
     proof     print the measured state of both repositories and exit non-zero if
               anything is not green
+    pr-number print the open pull request number on --head of --repo, or nothing
+    pr-state  print MERGED, OPEN or CLOSED for --pr of --repo, from GitHub's own
+              state field; the lander claims ON MAIN from this word only (D-116)
 
 Evening 2026-08-24, from the run log of Self-heal loop #132 (qesis-mcp,
 00b0c95): the loop pushed `selfheal/32763154920` and then died on
@@ -45,6 +48,9 @@ from pathlib import Path
 
 OWNER = "rodrigoesl92-cloud"
 REPOS = ["qesis-mcp", "sovereign-infra"]
+#: Branch prefixes the runners land from (selfheal.yml, daily-ops-report.yml).
+#: amputate spares them: they are the loop's work, not stale artefacts (L-177).
+RUNNER_HEADS = ("selfheal/", "ops/report-")
 #: Host checkouts, so an escalation issue can be re-measured on the tree the
 #: fix is about to land from. ops/PATH_REGISTRY.json is the authority.
 PATHS = {
@@ -92,6 +98,14 @@ def amputate(keep: str) -> int:
             num, head = str(pr["number"]), pr["headRefName"]
             if head == keep:
                 print(f"  {repo}: PR {num} on {head} is current, kept")
+                continue
+            # A runner's own landing is live work, not litter. selfheal.yml opens
+            # `selfheal/<run id>` and daily-ops-report.yml opens `ops/report-<date>`
+            # under G-07 and merges by rebase behind the required check. Closing
+            # them here would undo the loop from the operator's machine, the
+            # revision 5 move of L-177 applied to pull requests instead of files.
+            if head.startswith(RUNNER_HEADS):
+                print(f"  {repo}: PR {num} on {head} is a runner landing (G-07), kept")
                 continue
             code, out = gh_run(
                 "pr", "close", num, "--repo", slug, "--comment",
@@ -263,13 +277,60 @@ def proof() -> int:
     return 0 if clean else 1
 
 
+def pr_number(repo: str, head: str) -> int:
+    """Print the number of the first open pull request on `head`, or nothing.
+
+    The lander used to pipe `gh pr list --json number` through ConvertFrom-Json
+    and Select-Object. Windows PowerShell 5.1 emits a JSON array as ONE Object[]
+    pipeline item, so Select-Object saw the array, not its elements, and failed
+    with "the number property cannot be found"; the PR stayed empty and the
+    merge and CI feedback steps were skipped in both repositories. The list is
+    parsed here with json.loads, where a list is a list (L-167 family). Exit 1
+    only when gh itself failed; empty stdout with exit 0 means no open PR.
+    """
+    prs, err = gh_json("pr", "list", "--repo", repo, "--head", head,
+                       "--state", "open", "--limit", "5", "--json", "number")
+    if err:
+        print(f"pr-number: {err}", file=sys.stderr)
+        return 1
+    if prs:
+        print(prs[0]["number"])
+    return 0
+
+
+def pr_state(repo: str, pr: str) -> int:
+    """Print the pull request's state word: MERGED, OPEN or CLOSED.
+
+    The last JSON the lander still parsed in PowerShell was this one. A single
+    object survives ConvertFrom-Json on 5.1, but the rule is simpler than the
+    exception: no gh output is parsed by the shell, ever (L-176). Exit 1 when
+    gh failed or the field is missing; the lander then withholds ON MAIN.
+    """
+    obj, err = gh_json("pr", "view", str(pr), "--repo", repo, "--json", "state,mergedAt")
+    if err or not isinstance(obj, dict) or "state" not in obj:
+        print(f"pr-state: {err or 'no state field in the reply'}", file=sys.stderr)
+        return 1
+    print(str(obj["state"]).upper())
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     a1 = sub.add_parser("amputate")
     a1.add_argument("--keep", required=True)
     sub.add_parser("proof")
+    a3 = sub.add_parser("pr-number")
+    a3.add_argument("--repo", required=True)
+    a3.add_argument("--head", required=True)
+    a4 = sub.add_parser("pr-state")
+    a4.add_argument("--repo", required=True)
+    a4.add_argument("--pr", required=True)
     a = ap.parse_args()
+    if a.cmd == "pr-number":
+        return pr_number(a.repo, a.head)
+    if a.cmd == "pr-state":
+        return pr_state(a.repo, a.pr)
     return amputate(a.keep) if a.cmd == "amputate" else proof()
 
 
