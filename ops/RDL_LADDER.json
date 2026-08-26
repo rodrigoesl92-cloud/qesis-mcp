@@ -22,16 +22,17 @@
    }
   },
   "guard_not_executed": {
-   "occurrences": 6,
+   "occurrences": 7,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "e25fdf6b34a293d14a8b4ee0c8646245668e699062b4477d79d8a143e5937301",
-   "last_signature": "verify_ledger_singleton.py held a fixed list of sovereign-infra paths as the sibling. Run from sovereign-infra the first path that existed was its own ledger, so R3 printed sibling agrees for a mirror that had been one byte out of sync since 18:49Z: a session had rewritten the qesis-mcp copy through the file bridge without the trailing newline, bypassing rdl_append.py. The audit then reported the same defect as one PASS and one FAIL, the lander aborted on the FAIL, and no component could repair a divergence it could only name.",
-   "last_seen": "2026-08-24T19:43:36Z",
+   "last_signature": "audit_ecosystem.py rendered its 'What is failing' bullets with an em dash. The report is committed to ops/AUDIT_REPORT.md in both repositories by the lander, and sovereign-infra's compliance.yml runs qesis_agents/style.py over every .md on every push. The doctrine gate existed and the writer never ran it on its own output, so the 01:08Z landing, green on every required check, carried a red 'verify' onto main. The writer was subject to a gate it did not execute.",
+   "last_seen": "2026-08-26T01:33:26Z",
    "prior_evidence": "L-108, L-109, L-114, L-115",
    "lesson_ids": [
     "L-154",
-    "L-169"
+    "L-169",
+    "L-178"
    ],
    "ci_blocking": true,
    "gate_required": true,
@@ -120,18 +121,19 @@
    "decision_required": false
   },
   "claim_from_proxy_not_resource": {
-   "occurrences": 7,
+   "occurrences": 8,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
-   "last_signature": "SH-7 and selfheal.yml assert that the runner commits a class A repair, pushes a branch, opens a pull request and merges it. Self-heal loop run 132 on qesis-mcp (commit 00b0c95, 2026-08-24T18:34Z) reached verdict GREEN with one repair, pushed selfheal/32763154920, and died at gh pr create with 'GitHub Actions is not permitted to create or approve pull requests'. That is the repository setting Settings, Actions, General, Workflow permissions, 'Allow GitHub Actions to create and approve pull requests', which is off in both repositories. The capability was asserted from the design and from the permissions block in YAML; the run that would have falsified it was red and its log was never read. The branch stayed as litter and the daily ops report, which opens a pull request the same way, cannot land from a runner either.",
-   "last_seen": "2026-08-24T20:51:44Z",
+   "last_signature": "audit_ecosystem.py section C asserted the ruleset's required contexts and treated every other check as informational; gh_ops.py proof filtered check names for the words integrity, heal and binding. compliance.yml's job is named verify, so the doctrine gate, the credential scan and the concordance check were invisible to both readers. The 01:08Z run ended with VERDICT GREEN and PROOF clean while Continuous compliance verification #138 had failed on main. The proxy was a list of words; the resource is the set of jobs in .github/workflows.",
+   "last_seen": "2026-08-26T01:33:26Z",
    "prior_evidence": "L-104, L-111, L-143, L-161",
    "lesson_ids": [
     "L-161",
     "L-162",
     "L-173",
-    "L-174"
+    "L-174",
+    "L-179"
    ],
    "ci_blocking": true,
    "gate_required": true,
