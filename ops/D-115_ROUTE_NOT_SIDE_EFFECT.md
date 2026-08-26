@@ -83,3 +83,30 @@ decision is not applied.
 
 *Status:* EXECUTED in `.github/workflows/branch-guard.yml`, paired across both
 repositories. *Approved by:* R. Batista Silva, 2026-08-24.
+
+---
+
+## Amendment, 2026-08-24 evening, L-173 (sixth instance)
+
+The move recurred inside the tooling that exists to enforce this decision.
+`verify_workflow_contract.py` C-4 decided "CI will have this script" from
+membership in git's index, a locally computed property, when the deciding
+mechanism is git's ignore rules: a file that is untracked and not ignored is
+staged by the lander's `git add -A`, a file that is ignored is skipped silently
+(L-135). Index membership refused every control script new in a change set,
+so the lander aborted in sovereign-infra on `kill_switch.py`. The gate had
+been certified green in a replica with no `.git`, where it silently fell back
+to the filesystem: a proxy certified by a proxy.
+
+**Ruling extended.** The reachability predicate is the mechanism that decides
+reachability: tracked, or untracked and not ignored (`git check-ignore`), or
+absent from the repository. Only ignored-on-disk is a finding. **And a gate is
+certified only in an environment that carries the resource the gate reads.** A
+git-reading gate is proven in a git repository, with the untracked-not-ignored
+case passing and the ignored case refusing, before its result is asserted for
+the host. Wired in `scripts/verify_workflow_contract.py`; proven both ways in a
+git-backed replica on 2026-08-24 before landing.
+
+**Falsifier, extended.** If a gate's certification runs in an environment where
+the gate's own fallback path is what executed, the certification is void and
+this decision is not applied.

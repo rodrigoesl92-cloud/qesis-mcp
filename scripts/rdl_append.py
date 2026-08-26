@@ -26,20 +26,35 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+HEADER = re.compile(r"^\*\*L-(\d{3})", re.M)
+
+
+def _ledgers() -> list[Path]:
+    """Every copy of the one ledger: this one plus the sibling repository's.
+
+    Resolved by the singleton gate's own resolver, so there is ONE definition of
+    where the sibling is (L-169). The previous list here named the decoy stub
+    `C:\\Users\\Lenovo\\sovereign-infra` through ROOT.parent, so a stray copy left
+    there would have been written to as if it were the repository (L-143).
+    """
+    import importlib.util as _ilu
+    spec = _ilu.spec_from_file_location("_vls", ROOT / "scripts" / "verify_ledger_singleton.py")
+    mod = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    mine = ROOT / "ops" / "LESSONS_LEDGER.md"
+    return [mine] + mod.sibling_ledgers(ROOT, mine)
+
+
 #: Both copies of the one ledger. They are kept byte-identical; R3 of the
 #: singleton gate is the control that proves it.
-LEDGERS = [
-    ROOT / "ops" / "LESSONS_LEDGER.md",
-    Path(r"C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md"),
-    ROOT.parent / "sovereign-infra" / "ops" / "LESSONS_LEDGER.md",
-]
-HEADER = re.compile(r"^\*\*L-(\d{3})", re.M)
+LEDGERS = _ledgers()
 
 
 def gate(tag: str) -> int:
     p = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "verify_ledger_singleton.py")],
-        capture_output=True, text=True, timeout=120, check=False, cwd=ROOT,
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+        timeout=120, check=False, cwd=ROOT,
     )
     print(f"  [{tag}] " + (p.stdout.strip().splitlines() or ["no output"])[-1])
     return p.returncode

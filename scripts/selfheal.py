@@ -33,6 +33,7 @@ Usage:
     python scripts/selfheal.py                 diagnose, repair, report
     python scripts/selfheal.py --dry-run       diagnose and report, change nothing
     python scripts/selfheal.py --report-only   emit the report, run no remedy
+    python scripts/selfheal.py --selftest      V-2 fixtures for the runner itself
 """
 from __future__ import annotations
 
@@ -82,13 +83,77 @@ CONTROLS = [
 ]
 
 
-def _assert_controls_unique() -> None:
+def controls_present(root: Path = ROOT) -> list:
+    """The controls whose script actually exists in THIS repository.
+
+    ONE runner serves both repositories. qesis-mcp holds 59 scripts and gates the
+    served index; sovereign-infra holds 42 and is the evidence plane. Running the
+    full list in the evidence plane fails on nineteen scripts that were never
+    supposed to be there, which is what happened on 2026-08-24 when the qesis-mcp
+    workflow was paired across as if it were a governance document.
+
+    A control whose script is absent is REPORTED as out of scope, never silently
+    dropped and never counted as a pass. D-007: withheld with cause. The
+    promotion predicate reads this list, so a missing script cannot inflate a
+    green run into a promotion.
+    """
+    have, absent = [], []
+    for name, cmd in CONTROLS:
+        target = root / cmd[0]
+        (have if target.exists() else absent).append((name, cmd))
+    if absent:
+        print(f"  scope: {len(absent)} control(s) out of scope in this repository, "
+              "script not present: " + ", ".join(n for n, _ in absent))
+    return have
+
+
+def load_kill_switch(root: Path = ROOT) -> tuple[bool, str, dict]:
+    """Article 14 Decision 5, read wherever the runner is.
+
+    L-171. `scripts/kill_switch.py` was loaded unconditionally, and it existed in
+    one repository only. In sovereign-infra the runner died on a FileNotFoundError
+    before reading a single control, the `heal` job failed on every hourly run,
+    and the failure read as an escalation when it was a crash. ONE runner serves
+    both repositories (see controls_present), so the stop control must be read
+    the same way everywhere: the module when it is present, the emergency
+    environment channel directly when it is not, and the absence reported as a
+    degradation rather than swallowed. A stop control that fails closed (crash)
+    is as useless as one that fails open: nothing reads a crashed runner.
+    """
+    import importlib.util as _ilu
+    import os
+    script = root / "scripts" / "kill_switch.py"
+    if script.exists():
+        _spec = _ilu.spec_from_file_location("_ks", script)
+        _ks = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_ks)
+        return _ks.state()
+    env = os.environ.get("QESIS_KILL_SWITCH", "").strip().lower()
+    if env in ("1", "true", "yes", "on"):
+        return True, "environment", {"variable": "QESIS_KILL_SWITCH", "value": env,
+                                     "note": "read directly; scripts/kill_switch.py absent here"}
+    switch = root / "ops" / "KILL_SWITCH.json"
+    if switch.exists():
+        try:
+            d = json.loads(switch.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            return True, "file", {"error": f"unparseable, failing safe: {exc}"}
+        return bool(d.get("engaged") is True), "file", d
+    return False, "absent", {
+        "degraded": "kill_switch_module_absent",
+        "note": "scripts/kill_switch.py and ops/KILL_SWITCH.json are both absent from this "
+                "checkout. The environment channel was read directly and is clear. Pair "
+                "the switch into this repository; a stop control that exists in one "
+                "repository of a pair stops half the ecosystem."}
+
+
+def _assert_controls_unique(controls=None) -> None:
     """L-152, exposure 1. Two sessions both added verify_ledger_singleton to
     CONTROLS on 2026-08-24 and the list held it twice. That raises no syntax
     error, runs the gate twice, and double counts it in the totals the G-07
     section 4.1 promotion predicate reads, which "every control returns PASS"
     then satisfies twice. Nothing in the ecosystem detected it. This does."""
-    names = [n for n, _ in CONTROLS]
+    names = [n for n, _ in (CONTROLS if controls is None else controls)]
     dupes = sorted({n for n in names if names.count(n) > 1})
     if dupes:
         raise SystemExit(
@@ -172,6 +237,13 @@ REMEDIES = {
                "agent can rewrite is not a chain.",
         "escalate_with": "python scripts/verify_chain.py",
         "severity": "CRITICAL",
+        # Both verifiers document exit 2 as COULD NOT CHECK, distinct from exit 1,
+        # a break. In sovereign-infra the store is var/qesis_ops.sqlite, which is
+        # gitignored by D-027, so every runner checkout exits 2. Reading that as
+        # a CRITICAL break escalated on every hourly run, which is the escalation
+        # that fires every cycle and gets ignored (L-063, SH-5). Withheld with
+        # cause instead (D-007): the chain is verified where the store is.
+        "degrade_on_exit": {2: "store_not_reachable_from_this_checkout"},
     },
     "verify_vintage_pairing": {
         "class": "B",
@@ -228,7 +300,16 @@ REMEDIES = {
         "escalate_with": "gh api repos/<owner>/<repo>/commits/<tag> --jq .sha",
     },
     "verify_ledger_singleton": {
-        "class": "C",
+        "class": "A",
+        "run": ["scripts/ledger_sync.py"],
+        "reverify": True,
+        "remedy_scope": "R3 mirror drift that is MECHANICAL: an entry present in one "
+                        "copy only, or a line-ending or trailing-newline difference. "
+                        "scripts/ledger_sync.py takes the union by id and writes every "
+                        "copy in one canonical form. It REFUSES (exit 2, nothing written) "
+                        "a duplicate id, a prelude that differs, or the same id carrying "
+                        "two texts, so those reach the escalation below through the "
+                        "failed reverify rather than being guessed at. L-169.",
         "why": "A duplicate lesson id has been a build failure since L-073, and "
                "the ledger is the canonical record every later session reads as "
                "fact. There is no mechanical remedy: renumbering an id strands "
@@ -374,10 +455,7 @@ def promotion_policy(state: dict) -> tuple[bool, str]:
     # Article 14 Decision 5 outranks Decision 25. A signed promotion policy does
     # not survive an engaged kill switch, and the order of these two checks is
     # the whole content of "the stop control clears first".
-    import importlib.util as _ilu
-    _spec = _ilu.spec_from_file_location("_ks", ROOT / "scripts" / "kill_switch.py")
-    _ks = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ks)
-    engaged, channel, _ = _ks.state()
+    engaged, channel, _ = load_kill_switch()
     if engaged:
         return False, f"KILL SWITCH ENGAGED via {channel}. Decision 5 outranks Decision 25."
 
@@ -446,11 +524,64 @@ def action_gap(state: dict) -> dict:
     }
 
 
+def selftest() -> int:
+    """V-2 for the runner itself, added at rung 2 of paired_what_is_not_pairable.
+
+    ACCEPT: a checkout that carries only part of the control set and no kill
+    switch module. The runner must enumerate what is present, report the rest as
+    out of scope, read the stop control without crashing, and honour the
+    environment channel directly.
+    REFUSE: a duplicated control name, which inflates the count the promotion
+    predicate reads (L-152).
+    """
+    import os
+    import tempfile
+    fails: list[str] = []
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d) / "partial-checkout"
+        (root / "scripts").mkdir(parents=True)
+        (root / "ops").mkdir()
+        (root / "scripts" / "verify_ledger_singleton.py").write_text("", encoding="utf-8")
+        have = controls_present(root)
+        if [n for n, _ in have] != ["verify_ledger_singleton"]:
+            fails.append(f"partial checkout enumerated {[n for n, _ in have]}")
+        engaged, channel, detail = load_kill_switch(root)
+        if engaged or channel != "absent" or not detail.get("degraded"):
+            fails.append(f"absent kill switch was not reported as a degradation: {channel} {detail}")
+        os.environ["QESIS_KILL_SWITCH"] = "1"
+        try:
+            engaged, channel, _ = load_kill_switch(root)
+        finally:
+            os.environ.pop("QESIS_KILL_SWITCH", None)
+        if not engaged or channel != "environment":
+            fails.append("environment channel was not honoured without the module")
+        (root / "ops" / "KILL_SWITCH.json").write_text('{"engaged": true}', encoding="utf-8")
+        engaged, channel, _ = load_kill_switch(root)
+        if not engaged or channel != "file":
+            fails.append("file channel was not honoured without the module")
+        (root / "ops" / "KILL_SWITCH.json").write_text("{broken", encoding="utf-8")
+        engaged, _, _ = load_kill_switch(root)
+        if not engaged:
+            fails.append("an unparseable switch file failed open")
+    try:
+        _assert_controls_unique([("a", ["x.py"]), ("a", ["y.py"])])
+        fails.append("a duplicated control name was accepted")
+    except SystemExit:
+        pass
+    for f in fails:
+        print(f"SELFTEST FAIL: {f}")
+    print("SELFHEAL SELFTEST: " + ("PASSED, 6 fixtures" if not fails else "FAILED"))
+    return 1 if fails else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--report-only", action="store_true")
+    ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
+    if args.selftest:
+        return selftest()
 
     now = datetime.now(timezone.utc).isoformat()
     state = {"generated_utc": now, "mode": ("report-only" if args.report_only
@@ -462,11 +593,13 @@ def main() -> int:
 
     # Decision 5 before everything. A loop that checks its stop control after it
     # has started repairing has not got a stop control, it has got a regret.
-    import importlib.util as _ilu
-    _spec = _ilu.spec_from_file_location("_ks", ROOT / "scripts" / "kill_switch.py")
-    _ks = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ks)
-    ks_engaged, ks_channel, ks_detail = _ks.state()
+    ks_engaged, ks_channel, ks_detail = load_kill_switch()
     state["kill_switch"] = {"engaged": ks_engaged, "channel": ks_channel, "detail": ks_detail}
+    if isinstance(ks_detail, dict) and ks_detail.get("degraded"):
+        state["degraded"].append({"control": "kill_switch",
+                                  "degradation": ks_detail["degraded"],
+                                  "why": ks_detail["note"]})
+        print(f"  !!  kill switch: {ks_detail['note']}")
     if ks_engaged:
         state["verdict"] = "HALTED"
         state["promotion"] = {"proceed": False,
@@ -513,7 +646,7 @@ def main() -> int:
                   f"Remove-Item .git\\.selfheal_probe_*")
     print()
 
-    for name, cmd in CONTROLS:
+    for name, cmd in controls_present():
         script = ROOT / cmd[0]
         if not script.exists():
             state["controls"].append({"name": name, "status": "ABSENT"})
@@ -544,6 +677,18 @@ def main() -> int:
                                     "why": "no registry entry. Unclassified "
                                            "failures are never repaired blind."})
             print(f"      UNCLASSIFIED. Not repaired. Registry has no entry.")
+            continue
+
+        # A documented "could not check" exit is a declared safe failure mode,
+        # not the failure the control exists to catch. Class B by the record.
+        deg = (rem.get("degrade_on_exit") or {}).get(rc)
+        if deg:
+            state["controls"][-1]["status"] = "DEGRADED"
+            state["degraded"].append({"control": name, "degradation": deg,
+                                      "why": f"exit {rc} is documented by the control as "
+                                             "'could not check', not as a finding. Withheld "
+                                             "with cause, never imputed (D-007)."})
+            print(f"      class B degraded safely: {deg}")
             continue
 
         if rem["class"] == "A":

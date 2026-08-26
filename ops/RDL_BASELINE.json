@@ -1,14 +1,23 @@
 {
  "_doc": "Accepted RDL ladder state. scripts/rdl.py ci-blocking fails only on families that are new at rung 3 or above, or that have escalated above the rung recorded here. History does not fail a build; regressions do.",
- "accepted_at": "2026-08-24T17:43:54Z",
- "reason": "Accepting claim_from_proxy_not_resource at rung 4, 2026-08-24. Fourth occurrence of a claim made from a proxy rather than the resource; the corrected classifier landed in the same change set. A D- is owed on this family and is listed for the operator.",
+ "accepted_at": "2026-08-24T19:44:12Z",
+ "reason": "2026-08-24 evening, after the singleton, bootstrap, runner and audit repairs landed with their fixtures. gate_cannot_be_satisfied enters at rung 3 with build_ecosystem_state.py --selftest as its blocker in both integrity workflows; success_literal_not_measured moves to rung 4 with D-116 written and audit_ecosystem.py rebuilt on predicates; guard_not_executed and paired_what_is_not_pairable advance one occurrence each with their gates (verify_ledger_singleton.py ten fixtures and ledger_sync.py; selfheal.py --selftest and the C-4 scope rule).",
  "families": {
-  "claim_from_proxy_not_resource": {
-   "rung": 4,
-   "occurrences": 4,
+  "bot_identity_blocked_the_deploy": {
+   "rung": 1,
+   "occurrences": 1,
    "owner": "ARCHITECT",
    "lesson_ids": [
-    "L-161"
+    "L-168"
+   ]
+  },
+  "claim_from_proxy_not_resource": {
+   "rung": 4,
+   "occurrences": 5,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-161",
+    "L-162"
    ]
   },
   "duplicate_id_from_stale_accessor": {
@@ -27,6 +36,15 @@
     "L-158"
    ]
   },
+  "gate_cannot_be_satisfied": {
+   "rung": 3,
+   "occurrences": 3,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-166",
+    "L-170"
+   ]
+  },
   "git_lock_family": {
    "rung": 4,
    "occurrences": 4,
@@ -37,10 +55,11 @@
   },
   "guard_not_executed": {
    "rung": 4,
-   "occurrences": 5,
+   "occurrences": 6,
    "owner": "ARCHITECT",
    "lesson_ids": [
-    "L-154"
+    "L-154",
+    "L-169"
    ]
   },
   "obeyed_without_counsel": {
@@ -51,13 +70,47 @@
     "L-159"
    ]
   },
+  "paired_what_is_not_pairable": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-163",
+    "L-171"
+   ]
+  },
+  "reasoned_from_memory_not_docs": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-165"
+   ]
+  },
+  "shell_built_the_query": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-167"
+   ]
+  },
+  "stale_artifact_left_live": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-164"
+   ]
+  },
   "success_literal_not_measured": {
-   "rung": 3,
-   "occurrences": 3,
+   "rung": 4,
+   "occurrences": 4,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-155",
-    "L-160"
+    "L-160",
+    "L-172"
    ]
   },
   "superseded_artifact_left_runnable": {

@@ -84,7 +84,7 @@ switch, being independent of the approval gate rather than redundant with it.
 | Repo | Role | Host path |
 |---|---|---|
 | `qesis-mcp` | Served surface, MCP server, index artefact, CI gates, landing page | `C:\Users\Lenovo\qesis-mcp` |
-| `sovereign-infra` | Evidence plane, ops ledgers, agent runtime, governance record | `C:\Users\Lenovo\sovereign-infra` |
+| `sovereign-infra` | Evidence plane, ops ledgers, agent runtime, governance record | `C:\Users\Lenovo\OneDrive\sovereign-infra` (NOT `C:\Users\Lenovo\sovereign-infra`, an empty decoy stub, L-143) |
 
 **Rule 2-1 (G-01).** A change touching vintage, axis definition, provenance or
 citation metadata lands in both repositories in the same change set, or is

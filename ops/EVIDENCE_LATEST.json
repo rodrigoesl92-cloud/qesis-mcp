@@ -1,0 +1,43 @@
+{
+ "entries": [
+  {
+   "command": "python3 scripts/verify_ledger_singleton.py --quiet",
+   "exit": 0,
+   "tail": [
+    "LEDGER SINGLETON CHECK PASSED"
+   ],
+   "at": "2026-08-24T18:58:38Z"
+  },
+  {
+   "command": "python3 scripts/rdl.py ci-blocking",
+   "exit": 0,
+   "tail": [
+    "RDL: git_lock_family at rung 4 is accepted history (baseline rung 4), gate scripts/git_unlock.py landed. Not a regression.",
+    "RDL: guard_not_executed at rung 4 is accepted history (baseline rung 4), gate scripts/git_unlock.py landed. Not a regression.",
+    "RDL: success_literal_not_measured at rung 3 is accepted history (baseline rung 3), gate scripts/build_ops_report.py landed. Not a regression.",
+    "RDL: claim_from_proxy_not_resource at rung 4 is accepted history (baseline rung 4), gate scripts/ci_feedback.py landed. Not a regression.",
+    "RDL DELTA GATE PASSED: 4 accepted, 0 regressions. The ladder introduces no new escalation in this change set."
+   ],
+   "at": "2026-08-24T18:58:39Z"
+  },
+  {
+   "command": "python3 scripts/preflight.py",
+   "exit": 0,
+   "tail": [
+    "  PASS  Coupling reproduces the published values",
+    "  PASS  Serverless entry answers MCP over HTTP",
+    "  PASS  Evaluation set is in sync with the index",
+    "  PASS  Landing page is in sync with the index",
+    "  PASS  Dashboard agrees with the served index",
+    "  PASS  Service identity is declared once",
+    "  PASS  Outbound endpoints are declared once",
+    "  PASS  Ecosystem state and path registry are not stale",
+    "  PASS  RDL ladder has no family at rung 3",
+    "",
+    "PREFLIGHT PASSED: every step CI will run passes on this tree.",
+    "This is not a proxy for CI. It is CI's own step list, executed."
+   ],
+   "at": "2026-08-24T18:58:57Z"
+  }
+ ]
+}
