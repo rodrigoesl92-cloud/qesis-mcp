@@ -296,6 +296,32 @@ def owned_check_names(root: Path) -> set[str]:
     return names
 
 
+def foreign_checks(check_runs: list, owned: set) -> list:
+    """Checks present on a commit that this ecosystem does not own.
+
+    D-116 rule 3 says a check the repository does not own must not block. That
+    was correct and it was quietly read as "must not be mentioned", which is a
+    different claim. The consequence, measured on main at e7647fb: two Cloud Run
+    triggers in a Google Cloud project had been red on every commit, the proof
+    block listed six owned checks and named neither, and the audit printed GREEN.
+    Nothing was wrong with the verdict. Everything was wrong with the silence,
+    because an integration nobody in this ecosystem declared was writing to the
+    repository's own commit status and no artefact here said so. That is L-179
+    inverted: silence read as absence rather than as success.
+
+    Reported, never asserted. The verdict still turns on owned checks only.
+    Newest run per name decides, as GitHub lists newest first.
+    """
+    seen: dict = {}
+    for cr in (check_runs or []):
+        name = str(cr.get("name") or "")
+        if not name or name in owned:
+            continue
+        seen.setdefault(name, (str(cr.get("status") or ""),
+                               str(cr.get("conclusion") or "")))
+    return sorted((n, st, cc) for n, (st, cc) in seen.items())
+
+
 def proof() -> int:
     print("PROOF. Fetched from GitHub just now. Not a claim.")
     print()
@@ -352,6 +378,17 @@ def proof() -> int:
                     clean = False
             for name in sorted(owned - set(seen)):
                 print(f"    main check  {name}: no run on this commit (schedule- or path-triggered)")
+            foreign = foreign_checks((runs or {}).get("check_runs") or [], owned)
+            if foreign:
+                red = [f for f in foreign if f[2] not in ("success", "neutral", "skipped", "")]
+                print(f"    not owned by this ecosystem, reported and never asserted "
+                      f"({len(foreign)} present, {len(red)} not passing):")
+                for name, status, concl in foreign:
+                    print(f"      {name}: {concl or status or 'no state'}")
+                if red:
+                    print("      An integration this ecosystem did not declare is writing to")
+                    print("      this repository's commit status. It does not block, and it is")
+                    print("      not evidence about this ecosystem. Declare it or disconnect it.")
 
         issues, _ = gh_json("issue", "list", "--repo", slug, "--state", "open",
                             "--json", "number")
@@ -669,6 +706,41 @@ def runner_merge_selftest() -> int:
         if not good:
             print(f"        expected {expect}, got {got}: {why}")
     print(f"{ok}/{len(cases)} runner-merge decisions behave as declared")
+    return (0 if ok == len(cases) else 1) | foreign_check_selftest()
+
+
+def foreign_check_selftest() -> int:
+    """The inventory reports what the verdict must ignore (V-2).
+
+    One fixture it must list and one it must not: a foreign check appears
+    whatever its conclusion, and an owned check never appears in the inventory
+    no matter how it concluded. Without the second case the function would pass
+    by listing everything, which is not the claim being made.
+    """
+    owned = {"qesis-integrity", "verify", "heal"}
+    runs = [_rm_ck("qesis-integrity"), _rm_ck("verify", conclusion="failure"),
+            _rm_ck("cloudrun-qesis-mcp-git-europe-west1", conclusion="failure"),
+            _rm_ck("rmgpgab-qesis-mcp-europe-west1", conclusion="failure"),
+            _rm_ck("some-app", status="in_progress", conclusion="")]
+    got = foreign_checks(runs, owned)
+    names = [n for n, _, _ in got]
+    cases = [
+        ("a foreign failing check is reported rather than hidden",
+         "cloudrun-qesis-mcp-git-europe-west1" in names),
+        ("every foreign check is reported, not just the first",
+         "rmgpgab-qesis-mcp-europe-west1" in names and "some-app" in names),
+        ("an owned check never appears in the foreign inventory",
+         "qesis-integrity" not in names and "verify" not in names),
+        ("a foreign check still carries its own state",
+         ("some-app", "in_progress", "") in got),
+        ("no foreign check, no inventory", foreign_checks(
+            [_rm_ck("qesis-integrity"), _rm_ck("heal")], owned) == []),
+    ]
+    ok = 0
+    for label, good in cases:
+        ok += bool(good)
+        print(f"{'PASS' if good else 'FAIL'}  foreign-checks: {label}")
+    print(f"{ok}/{len(cases)} foreign-check behaviours hold")
     return 0 if ok == len(cases) else 1
 
 

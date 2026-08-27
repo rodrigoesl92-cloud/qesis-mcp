@@ -37,6 +37,7 @@ behind a credential, COUNSEL names the file and does not open it (G-03).
 | Agent runtime, this session | Anthropic | AWS | US | Claude |
 | Database | Neon (`eu-central-1`) | AWS | US vendor, EU region | Operator-declared D-1, 2026-08-19. Not verified by COUNSEL: the connection string is not opened (G-03) |
 | Signing key custody | local `.env` | operator machine | ES | `FSQCA_ED25519_PRIV_B64`, name read, value never |
+| **Continuous deployment triggers, UNDECLARED** | **Google Cloud** | **Google** | **europe-west1** | **Found 2026-08-27. Two Cloud Build triggers in project `5c4e8a9a-723a-453e-80d` write check runs onto every `qesis-mcp` commit and have been failing. Nothing in either repository produces them. See ACT-7** |
 
 **Concentration, stated plainly, recomputed at n=6 on 2026-08-19.** ODI 50.0, FPE 100.0, RGD 50.0. Adding the database changed the concentration barely at all, and the reason is the finding: Neon is managed Postgres running on AWS, so it is not a sixth vendor, it is a third AWS layer. Recording it as its own substrate would have manufactured a diversification that does not exist. Five of the six determined layers resolve to
 **two** US hyperscalers, and one vendor, Microsoft, holds the source of record,
@@ -54,6 +55,18 @@ the answer sits behind a credential.
 ## 2. The decision
 
 **Adopt the current posture explicitly, and instrument it.** Do not migrate.
+
+**Re-tested 2026-08-27 against a live request to deploy a container backend to
+Cloud Run in europe-west1.** The refusal stands, for the reason it was written.
+L-044 requires each service to be priced against the specific failure it
+removes. The failure presented was two red checks on a commit page. A container
+backend does not remove that failure, it supplies a build for triggers nobody
+declared, starts a bill, and creates a second surface serving the same index
+while the chain binds exactly one artefact. Disconnecting the triggers removes
+the failure completely and costs nothing. Option A remains available and remains
+a decision, not a configuration: a client or institutional licence requiring EU
+data residency reopens this page, and the database already rests in
+`eu-central-1` under `ACT-1`.
 
 Three options were considered and the reasoning matters more than the verdict.
 
@@ -167,6 +180,10 @@ for a published one. Publication is a separate change set requiring SENTINEL
 | `ACT-4` | Move the chain spine and the release attestations to a second, independent custody. Narrow diversification: these are the unrecoverable artefacts | ARCHITECT proposes, HUMAN approves |
 | `ACT-5` | **Gate shipped 2026-08-19**, `scripts/verify_no_plaintext_secrets.py`, wired into CI and the Vercel pre-build gate with four fixtures. The gate proves `.env` stays untracked and covered; it cannot move the key. Injecting it into GitHub Actions and Vercel and rotating it remains a human act (G-03) | **HUMAN** |
 | `ACT-6` | Confirm the OneDrive mirror is read-only export and not the writable evidence plane. D-027 and G-03 forbid a writable plane on a sync target, because provider-side version history survives local deletion | **HUMAN** |
+
+| `ACT-7` | **Opened 2026-08-27.** Two Cloud Run triggers in Google Cloud project `5c4e8a9a-723a-453e-80d` write to `qesis-mcp` commit status and fail on every commit. Nothing in either repository can build a container: no Dockerfile, no `cloudbuild.yaml`, no Procfile, no `main.py`. They deploy nothing and they are not declared here. **Neither identifier is canonical:** `qesis_agents/cloud.py` fixes the project at `qesis-sovereign-infra` and the region at `europe-west3`, and the checks name a different project and `europe-west1`, so this is a second undeclared connection rather than a misconfiguration of the declared one. **Rule on them: disconnect, or declare with a row above and a container this ecosystem actually builds.** Runnable procedure at `sovereign-infra/ops/GCP_DISCONNECT_TRIGGERS.md`. The account is credentialed, so the act is human under G-03; the visibility is not, and `gh_ops.py foreign_checks` shipped in the same change set that opened this item | **HUMAN** |
+
+| `ACT-8` | **Opened 2026-08-27.** `qesis.eu`, the EU-registered public address, redirects 308 to `www.qesis.eu`, which is NXDOMAIN at the zone's own authoritative nameserver. The registrar counted 768 errors in 1377 queries over 24 hours. The application is healthy: `qesis.qesis.eu` returns 200 with the landed commit and a verified chain. Fix by making `qesis.eu` the primary domain on the Vercel project, which needs no zone edit, or by creating the `www` CNAME to the target Vercel shows for that domain. Credentialed, so human under G-03. The domain also belongs in the footprint table above once it is serving, because a `.eu` registration is the only EU-jurisdiction layer this ecosystem holds | **HUMAN** |
 
 `ACT-5` and `ACT-6` are the two items on this page that are security findings
 rather than governance ones, and they would be true regardless of which cloud the

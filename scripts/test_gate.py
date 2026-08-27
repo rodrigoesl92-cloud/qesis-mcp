@@ -999,6 +999,15 @@ def check_runner_merge(results: list[tuple[str, bool]]) -> None:
     results.append((
         "runner merge: a check the repository does not own does not block (D-116 rule 3)",
         passed("a failing check the repository does not own does not block")))
+    def fc(label: str) -> bool:
+        return f"PASS  foreign-checks: {label}" in out
+
+    results.append((
+        "foreign checks: an undeclared integration is reported, never hidden",
+        fc("a foreign failing check is reported rather than hidden")))
+    results.append((
+        "foreign checks: an owned check never appears in the foreign inventory",
+        fc("an owned check never appears in the foreign inventory")))
 
 
 
@@ -1038,6 +1047,31 @@ def check_blueprint(results: list[tuple[str, bool]]) -> None:
     results.append(("blueprint: the committed page is in sync with the index",
                     c.returncode == 0))
 
+
+
+def check_public_domain(results: list[tuple[str, bool]]) -> None:
+    """The address a buyer types is a surface, and surfaces carry controls.
+
+    Fixtures only. The live assertion is deliberately not wired into the required
+    gate yet, because the address it would assert is currently a dead end and a
+    gate that blocks every landing until a DNS record appears is a worse failure
+    than the one it reports. It flips to blocking in the landing after the record
+    exists, which is a decision recorded rather than a step forgotten.
+    """
+    gate = ROOT / "scripts" / "verify_public_domain.py"
+    if not gate.exists():
+        results.append(("public domain: control present", False))
+        return
+    r = subprocess.run([sys.executable, str(gate), "--selftest"],
+                       capture_output=True, text=True)
+    out = r.stdout + r.stderr
+    results.append(("public domain: every declared behaviour holds",
+                    r.returncode == 0 and "7/7" in out))
+    results.append(("public domain: a redirect into a host with no DNS record is refused",
+                    "PASS  public-domain: a redirect into a host with no DNS record "
+                    "is refused" in out))
+    results.append(("public domain: a 200 that is not this service is not counted as up",
+                    "PASS  public-domain: a 200 that is not this service is refused" in out))
 
 
 def check_reading_contract(results: list[tuple[str, bool]]) -> None:
@@ -1173,6 +1207,7 @@ def main() -> int:
     check_runner_merge(extra)
     check_blueprint(extra)
     check_reading_contract(extra)
+    check_public_domain(extra)
     check_chain_binding(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")

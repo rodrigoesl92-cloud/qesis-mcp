@@ -299,6 +299,66 @@
    "ci_blocking": false,
    "gate_required": false,
    "decision_required": false
+  },
+  "scope_of_verdict_not_stated": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "7421e5fcfa676e55db955e07b4b24fafe4c6e031b5f9215923eb76f12e0aa79a",
+   "last_signature": "gh_ops.py proof and the audit printed GREEN over owned checks while two red foreign checks sat on the same commit, unnamed",
+   "last_seen": "2026-08-27T12:37:37Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-189"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "dependency_not_declared": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "4c8866e5007e4eff3858c2085d2b688342e6bbabf1c3a52067016590f5d7d3c1",
+   "last_signature": "two Cloud Run triggers in an undeclared Google Cloud project write to qesis-mcp commit status",
+   "last_seen": "2026-08-27T12:37:38Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-190"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "surface_added_without_its_control": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "147a0000af6e7075a9245daef3a3505f80f774d2659777891f7425865211369a",
+   "last_signature": "the public domain qesis.eu was a dead end while every gate was green, because the probe asserts the platform alias",
+   "last_seen": "2026-08-27T12:42:39Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-191"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "instruction_repeated_instead_of_delivered": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "9c6ef9d3d7b497d92a719c331531203f9f60ae708317e4db9b3f497928d93dc6",
+   "last_signature": "disconnect the Cloud Build trigger appeared as prose in three consecutive handovers and never became runnable",
+   "last_seen": "2026-08-27T13:10:38Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-192"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
   }
  }
 }
