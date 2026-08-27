@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QESIS+ causal blueprint, v9.0 (2026-08-13)</title>
+<meta name="description" content="The three phases behind the QESIS+ index:
+ what the infrastructural trilemma costs, which agent touched which number, and
+ the equifinality and percolation results with what would refute them.">
+<style>
+:root{
+  --ink:#1c1b19; --ink-2:#4a4744; --ink-3:#78736d;
+  --paper:#faf8f5; --paper-2:#f1ede7; --rule:#ddd6cc;
+  --cool:#3d5a68; --cool-2:#6d8b98;
+  --hot:#c96a5e;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --gap:1.5rem; --measure:74ch;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#ece7e0; --ink-2:#bdb6ad; --ink-3:#8d857c;
+         --paper:#171614; --paper-2:#201e1b; --rule:#35322d;
+         --cool:#8fb0be; --cool-2:#6d8b98; --hot:#e08476; }
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+     line-height:1.55;font-size:16px}
+main{max-width:var(--measure);margin:0 auto;padding:var(--gap) 1.2rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:.2rem 0 .4rem;letter-spacing:-.015em}
+h2{font-size:1.15rem;margin:2.4rem 0 .6rem;letter-spacing:-.01em}
+h3{font-size:.95rem;margin:1.6rem 0 .4rem;color:var(--ink-2)}
+p{margin:.6rem 0;color:var(--ink-2)}
+a{color:var(--cool);text-underline-offset:2px}
+.lede{font-size:1.05rem;color:var(--ink)}
+.tag{display:inline-block;font-family:var(--mono);font-size:.72rem;
+     letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+     border:1px solid var(--rule);border-radius:2px;padding:.15rem .45rem;
+     margin-right:.35rem}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.9rem}
+th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--rule)}
+th{font-weight:600;font-size:.75rem;text-transform:uppercase;
+   letter-spacing:.05em;color:var(--ink-3)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.src{font-size:.75rem;color:var(--ink-3);margin:.3rem 0 0;font-family:var(--mono)}
+.stat{display:flex;flex-wrap:wrap;gap:1.4rem;margin:1rem 0;padding:.9rem 1rem;
+      background:var(--paper-2);border:1px solid var(--rule);border-radius:3px}
+.stat div{min-width:8rem}
+.stat b{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:600;
+        font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat span{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;
+           color:var(--ink-3)}
+.argued b{color:var(--hot)}
+.gap{border-left:2px solid var(--cool);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.gap code{font-family:var(--mono);font-size:.82rem}
+pre{background:var(--paper-2);border:1px solid var(--rule);border-radius:3px;
+    padding:.8rem;overflow-x:auto;font-family:var(--mono);font-size:.8rem;
+    color:var(--ink)}
+footer{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;
+       font-size:.82rem;color:var(--ink-3)}
+.epis{color:var(--cool);font-family:var(--mono);font-size:.8rem}
+
+.phase{border-left:2px solid var(--cool);padding:.1rem 0 .1rem .9rem;margin:1.6rem 0 .6rem}
+.phase h2{margin:.2rem 0 .2rem}
+.phase .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+          text-transform:uppercase;color:var(--ink-3)}
+.figwrap{height:250px;margin:1rem 0;overflow-x:auto}
+.figwrap svg{height:250px;width:100%;min-width:34rem;display:block}
+.b{fill:var(--paper-2);stroke:var(--rule);stroke-width:1}
+.bg{fill:var(--paper-2);stroke:var(--cool);stroke-width:2}
+.t{fill:var(--ink);font-family:var(--mono);font-size:11px}
+.ts{fill:var(--ink-3);font-family:var(--mono);font-size:9.5px}
+.ar{stroke:var(--cool-2);stroke-width:1.5;fill:none}
+.ah{fill:var(--cool-2)}
+td.pos{color:var(--cool)}
+td.neg{color:var(--ink-3)}
+.tip b{color:var(--hot)}
+.tip{display:flex;flex-wrap:wrap;gap:1.4rem;margin:1rem 0;padding:.9rem 1rem;
+     background:var(--paper-2);border:1px solid var(--rule);border-radius:3px}
+.tip div{min-width:8rem}
+.tip b{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:600;
+       font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.tip span{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)}
+.cool b{color:var(--cool)}
+</style>
+</head><body><main>
+
+<p><span class="tag">v9.0 (2026-08-13)</span>
+   <span class="tag">causal blueprint</span>
+   <span class="tag">three phases</span></p>
+
+<h1>Where every number on this endpoint comes from.</h1>
+
+<p class="lede">A dashboard shows results. This page shows the chain: what the
+trilemma costs when it is measured rather than asserted, which agent touched the
+number and where the gate sits, and what would have to be true for the findings
+to be wrong. Read it in order. Each phase is checkable against the artefact
+named under it.</p>
+
+<div class="phase"><span class="k">Phase 1, define</span>
+<h2>The trilemma is a trade-off you can price</h2></div>
+
+<p>Algorithmic independence, hyperscale efficiency and ecological sustainability
+are not three separate budgets. Measured across 32 states the six axes are
+weakly entangled at CR 0.124. Restricted to the states that import their
+energy, their minerals and their hyperscalers, entanglement rises to
+0.176 over 26 states. The trilemma is cheap where the substrate is
+domestic and expensive where it is imported, and the gap between those two
+numbers is the whole claim.</p>
+
+<div class="stat">
+  <div class="cool"><b>0.124</b><span>coupling, global n=32</span></div>
+  <div class="cool"><b>0.176</b><span>coupling, import core n=26</span></div>
+  <div class="cool"><b>0.40</b><span>dominant eigenmode, global</span></div>
+  <div class="cool"><b>0.47</b><span>dominant eigenmode, core</span></div>
+</div>
+
+<div class="scroll"><table>
+<thead><tr><th>Axis pair</th><th class="n">Global r</th><th class="n">Core r</th></tr></thead>
+<tbody><tr><td>FPE and ODI</td><td class="n pos">+0.783</td><td class="n">+0.755</td></tr>
+<tr><td>ODI and ESE</td><td class="n neg">-0.423</td><td class="n">-0.485</td></tr>
+<tr><td>FPE and ESE</td><td class="n neg">-0.385</td><td class="n">-0.445</td></tr>
+<tr><td>WSE and ESE</td><td class="n pos">+0.360</td><td class="n">+0.576</td></tr>
+<tr><td>REE and ESE</td><td class="n neg">-0.281</td><td class="n">-0.304</td></tr>
+<tr><td>WSE and REE</td><td class="n neg">-0.259</td><td class="n">-0.160</td></tr></tbody></table></div>
+<p class="src">The six strongest off-diagonal terms, ranked by absolute value at
+build time from coupling.global.matrix and read across to coupling.core.matrix.
+Sign is the direction, not the strength. Asset: data/qesis_v8.json, vintage
+v9.0 (2026-08-13).</p>
+
+<h3>What the weights actually do</h3>
+<p>A declared weight is an intention. The main effect is what the axis moves in
+practice, estimated as a Pearson correlation ratio over
+32 complete cases with 4000 bootstrap
+resamples. Where the nominal weight falls outside the interval, the published
+weight is not the realised influence and the page says so rather than repeating
+the intention.</p>
+<div class="scroll"><table>
+<thead><tr><th>Axis</th><th class="n">Nominal</th><th class="n">Main effect</th>
+<th class="n">95 percent interval</th><th>Nominal</th></tr></thead>
+<tbody><tr><td>WSE</td><td class="n">0.30</td><td class="n">0.539</td><td class="n">0.331 to 0.724</td><td>OUTSIDE</td></tr>
+<tr><td>CSE</td><td class="n">0.30</td><td class="n">0.407</td><td class="n">0.108 to 0.637</td><td>inside</td></tr>
+<tr><td>ODI</td><td class="n">0.17</td><td class="n">0.024</td><td class="n">0.000 to 0.248</td><td>inside</td></tr>
+<tr><td>REE</td><td class="n">0.15</td><td class="n">0.000</td><td class="n">0.000 to 0.172</td><td>inside</td></tr>
+<tr><td>RGD</td><td class="n">0.08</td><td class="n">0.022</td><td class="n">0.000 to 0.297</td><td>inside</td></tr></tbody></table></div>
+<p class="src">Method: Pearson correlation ratio (main effect Si), Paruolo, Saisana and Saltelli (2013), JRSS-A 176(3), 609-634. For a linear a. Asset: qesis_v8.json
+effective_weights, vintage v9.0 (2026-08-13).</p>
+
+<div class="phase"><span class="k">Phase 2, process</span>
+<h2>Which agent touched the number, and where the gate sits</h2></div>
+
+<p>Four runtimes, one gate. Intake is deliberately permissive and emission is
+deliberately strict, so that everything ambiguous is resolved in one place
+instead of everywhere. The registry is closed at six agents by R-12 and D-019;
+the two not drawn here are HERALD, which publishes only from cleared material,
+and COUNSEL, which owns money and law.</p>
+
+<div class="figwrap">
+<svg viewBox="0 0 760 250" role="img"
+     aria-label="SCOUT intake, then the SENTINEL gate, then ANALYST validation,
+     then ARCHITECT operations, with the gate marked as the only path to
+     publication.">
+  <rect class="b" x="8"   y="60" width="150" height="62" rx="3"/>
+  <rect class="bg" x="196" y="60" width="150" height="62" rx="3"/>
+  <rect class="b" x="384" y="60" width="150" height="62" rx="3"/>
+  <rect class="b" x="572" y="60" width="150" height="62" rx="3"/>
+  <text class="t"  x="20"  y="84">SCOUT</text>
+  <text class="ts" x="20"  y="100">intake, freshness,</text>
+  <text class="ts" x="20"  y="113">licence at source</text>
+  <text class="t"  x="208" y="84">SENTINEL</text>
+  <text class="ts" x="208" y="100">the gate. PASS,</text>
+  <text class="ts" x="208" y="113">REVIEW, BLOCK</text>
+  <text class="t"  x="396" y="84">ANALYST</text>
+  <text class="ts" x="396" y="100">fsQCA, coupling,</text>
+  <text class="ts" x="396" y="113">what would falsify</text>
+  <text class="t"  x="584" y="84">ARCHITECT</text>
+  <text class="ts" x="584" y="100">pipeline, ledgers,</text>
+  <text class="ts" x="584" y="113">the landing</text>
+  <path class="ar" d="M158 91 H188"/><path class="ah" d="M188 86 l10 5 -10 5 z"/>
+  <path class="ar" d="M346 91 H376"/><path class="ah" d="M376 86 l10 5 -10 5 z"/>
+  <path class="ar" d="M534 91 H564"/><path class="ah" d="M564 86 l10 5 -10 5 z"/>
+  <text class="ts" x="196" y="146">nothing reaches the database or the public</text>
+  <text class="ts" x="196" y="159">without passing this box (Rule 1-1)</text>
+  <path class="ar" d="M271 122 V140"/>
+  <text class="ts" x="8"  y="196">Hick: four stages, not seven. Miller: each stage carries three facts.</text>
+  <text class="ts" x="8"  y="212">Postel: SCOUT accepts loosely, SENTINEL emits strictly.</text>
+  <text class="ts" x="8"  y="228">Tesler: the gate's complexity is the system's, never the reader's.</text>
+</svg>
+</div>
+<p class="src">Painted from the stylesheet, never from presentation attributes:
+var() does not resolve inside an attribute (L-047, W-2). Mandates are summarised
+from sovereign-infra/agents/*.md, which remain authoritative.</p>
+
+<h3>Limits the pipeline carries with the data</h3>
+<p>These are not advice in a prompt, where they are deletable. They travel in
+the index as data, and a gate fails the build if a flag arrives without the
+statement that says what it means.</p>
+<div class="scroll"><table>
+<thead><tr><th>Flag</th><th>Statement</th></tr></thead>
+<tbody><tr><td class="epis">theory_informed_limitation</td><td>The directional expectations behind the intermediate solution (DE-v9.0, DE-v9.1) were written by an analyst who had already read the served pathways, so they are not a blind prior. The intermediate solution is reported as theory-informed and must never be described as a pre-registered or blind expectation. Under the primary anchors it is identical to the complex solution at 0.8719 and 0.5782: the declared expectations simplify nothing, which is a null result and is reported as one.</td></tr>
+<tr><td class="epis">trilemma_status</td><td>The Infrastructural Trilemma does not decompose the condition set. HYPER carried both Algorithmic Independence and Hyperscale Efficiency while CABLE and REE mapped to no constraint, and dropping ESC_inv removed the second condition under Ecological Sustainability. It is an interpretive claim in the theory chapter and takes no part in the model, its calibration or its solution. No pathway term, necessity verdict or solution statistic may be described as a trilemma corner.</td></tr>
+<tr><td class="epis">necessity_rule</td><td>consistency_N &gt;= 0.90 AND RoN &gt;= 0.60 AND coverage_N &gt;= 0.60. No condition or negation clears it. A RoN-only rule labelled GCI_inv necessary at consistency_N 0.0217, because RoN rewards rarity.</td></tr></tbody></table></div>
+<p class="src">Asset: qesis_v8.json agent_reading_contract. Read before any
+evaluation of a country profile or pathway membership.</p>
+
+<div class="phase"><span class="k">Phase 3, validate</span>
+<h2>Equifinality, then percolation, then what would refute both</h2></div>
+
+<p>There is no single road to high substrate vulnerability. The conservative
+solution returns 10 sufficient configurations at
+consistency 0.9048 and coverage 0.5807 over
+n=32, with 3 states withheld under
+the Binary Integrity Guard and never imputed. Coverage below one is the point:
+the solution explains the cases it covers and declines the rest.</p>
+
+<div class="scroll"><table>
+<caption class="src" style="text-align:left;caption-side:bottom">
+PRI separates a term that is sufficient for the outcome from one that is equally
+consistent with its negation. 4 of 10 paths sit below
+the 0.75 working convention and are published rather than dropped.</caption>
+<thead><tr><th>Configuration</th><th class="n">Consistency</th><th class="n">PRI</th>
+<th class="n">Coverage</th><th class="n">Cases</th><th>Flag</th></tr></thead>
+<tbody><tr><td class="epis">~WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.8841</td><td class="n">0.6587</td><td class="n">0.1043</td><td class="n">1</td><td>below the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * ~CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.8613</td><td class="n">0.5804</td><td class="n">0.1143</td><td class="n">1</td><td>below the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * ~CABLE * REE * ~HYPER * ESC_inv * GCI_inv</td><td class="n">0.9347</td><td class="n">0.8234</td><td class="n">0.1586</td><td class="n">3</td><td>clears the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * ~CABLE * REE * HYPER * ESC_inv * GCI_inv</td><td class="n">0.9535</td><td class="n">0.9115</td><td class="n">0.1157</td><td class="n">2</td><td>clears the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * ~GCI_inv</td><td class="n">0.9322</td><td class="n">0.8282</td><td class="n">0.1090</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.8273</td><td class="n">0.3032</td><td class="n">0.1016</td><td class="n">1</td><td>DISQUALIFYING: PRI below 0.50</td></tr>
+<tr><td class="epis">WSE * CABLE * REE * ~HYPER * ~ESC_inv * ~GCI_inv</td><td class="n">0.9179</td><td class="n">0.8001</td><td class="n">0.1477</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.8426</td><td class="n">0.4587</td><td class="n">0.1218</td><td class="n">2</td><td>DISQUALIFYING: PRI below 0.50</td></tr>
+<tr><td class="epis">WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.9568</td><td class="n">0.9106</td><td class="n">0.1193</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
+<tr><td class="epis">WSE * CABLE * REE * HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.9602</td><td class="n">0.9328</td><td class="n">0.1232</td><td class="n">2</td><td>clears the 0.75 working convention</td></tr></tbody></table></div>
+<p class="src">Model: WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -&gt; HIGH_SOV_VULN (n=32; freq&gt;=1; incl&gt;=0.80; conservative; one absorption pass). Calibration:
+Ragin direct method, two-sided logistic, sample percentiles 80/50/20. Asset: qesis_v8.json fsqca.solution, vintage
+v9.0 (2026-08-13).</p>
+
+<h3>Nothing is published as necessary</h3>
+<div class="gap"><p>No condition or negation is publishable as necessary under D-109. The highest consistency_N in the set is WSE at 0.7896, below the 0.90 bar, so the conjunctive rule is not reached by any condition. REE, published at 0.916 in thesis section 4.5, returns 0.7033 under the primary anchors with RoN 0.5766 and coverage_N 0.5763, and holds above 0.5 in 29 of 32 cases. It also scores 0.7268 against the negated outcome, highe</p></div>
+<p class="src">Asset: qesis_v8.json fsqca.necessity_verdict. Robustness:
+PARTIAL. Sensitivity ranges implemented; the two robustness families below are declared and not yet computed.. The claim is partial until the two
+declared families run, and it says so here rather than in a footnote.</p>
+
+<h3>Percolation: the network tolerates loss and fails to aim</h3>
+<p>An independent rebuild of the cable topology reproduces the published
+articulation set exactly, 88 of
+88, which is why the rest of this block is citable.
+Over 912 cities and 343 cables, random removal is survivable
+and targeted removal is not. The first twelve targeted removals are cheap. The
+thirteenth is not.</p>
+
+<div class="tip">
+  <div><b>278</b>
+       <span>cities severed at removal 13</span></div>
+  <div class="cool"><b>0.3465</b>
+       <span>pair connectivity, targeted at 13</span></div>
+  <div class="cool"><b>0.6732</b>
+       <span>pair connectivity, random at 13</span></div>
+  <div class="cool"><b>19</b>
+       <span>removals to half collapse</span></div>
+</div>
+
+<p>The two numbers above are not the same quantity and are published side by
+side so neither is quoted as the other. The single step severance is the largest
+one step loss, at removal 13, taking
+the giant component from 594 cities to
+316. Half collapse arrives later, at removal
+19, when the giant component first
+falls below half its baseline. The critical node in this release is
+Porthcurno, United Kingdom, and which city sits at the tip is a property of
+the release rather than the finding.</p>
+<p class="src">Asset: data/qesis_percolation.json, generated by
+scripts/build_percolation_block.py, vintage v9.0 (2026-08-13), authority
+PUB-1. Closes the second limb of L-056.. The source strings finding.statement and falsifier are
+not reproduced on this page: each contains a word on the writing doctrine's
+banned list (W-1). The numbers they describe are all above and the field names
+locate them in the file.</p>
+
+<h3>What would refute this</h3>
+<div class="gap"><p>The percolation finding fails if an independent cable
+topology of comparable coverage produces a targeted removal curve whose largest
+single step severance falls inside the range of its own random removal curve, or
+if the 88 articulation cities fail to reproduce from
+that topology. A different critical node does not refute it. The equifinality
+result fails if the solution does not survive the declared anchor sensitivity,
+which is why both anchor regimes are published and their disagreement is carried
+as data rather than resolved by choosing one.</p></div>
+<p class="src">Popper standing order, ANALYST mandate: every headline finding
+states what would falsify it.</p>
+
+<h2>Reading this page against the endpoint</h2>
+<p>Every figure here is derived at build time from the two assets named in the
+source lines, so this page cannot say something the artefacts do not. The same
+values are served by <code>qesis_get_coupling</code>,
+<code>qesis_get_pathways</code> and <code>qesis_get_integrity</code>, and
+<code>qesis_get_integrity</code> answers which generation you are reading. The
+deployment plane serves what was promoted and the local plane reads the working
+tree; a reader is always told which one they have. That is G-01b working, not a
+defect.</p>
+<p>Nothing you do here is logged, no cookie is set and there is no backend
+behind this page.</p>
+
+<footer>
+<p>QESIS+ v9.0 (2026-08-13). Batista Silva, R. (2026). Liquid Sovereignty.
+ESIC/LSE. Dataset: Sovereign_Infra_Intelligence.</p>
+<p>Generated 2026-08-01T12:20:25Z from
+data/qesis_v8.json and data/qesis_percolation.json. Built by
+scripts/build_blueprint.py, never edited by hand.</p>
+</footer>
+</main></body></html>

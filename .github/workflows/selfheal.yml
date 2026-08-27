@@ -233,6 +233,36 @@ jobs:
               || echo "::warning::auto-merge unavailable on $num; the pull request stays open"
           fi
 
+      - name: Land any runner pull request whose owned checks are green
+        # SH-7 and G-06 Rule 2-4, wired rather than described.
+        #
+        # The loop already arms `--auto` on its OWN pull request, and `--auto`
+        # needs Settings > General > Pull Requests, "Allow auto-merge". Where
+        # that is off it stalls without saying so. `daily-ops-report.yml` had no
+        # landing step at all, so PR 43 of 2026-08-26, the first runner landing
+        # this ecosystem has ever produced, sat open waiting for a person. A
+        # recurring task that ends by asking for a click is a reminder, and SH-7
+        # is the clause that says a reminder is not a schedule. L-180.
+        #
+        # It merges only what is ALREADY green, so it needs no repository
+        # setting and cannot race a check that has not reported. It refuses a
+        # runner landing carrying `.github/`, `scripts/` or any other surface
+        # that decides what may merge: Rule 2-4 delegates remediation, never
+        # authority. It does not promote; promotion is G-06 limit 2 and human.
+        #
+        # The non-zero exit is caught deliberately. A refusal is a real
+        # escalation, and a real escalation that turns this run red EVERY HOUR
+        # until a person acts is L-063, an escalation switched off because
+        # nobody could stand it rather than because anyone decided to. It
+        # surfaces as a warning here; the loop's own issue channel and the daily
+        # ops report are where a standing refusal is meant to be read. SH-5.
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/gh_ops.py runner-merge --repo "${{ github.repository }}" --root . \
+            || echo "::warning::a runner landing was refused or could not be read; the step log names it. Not failed here, because an escalation that fires every cycle gets switched off by exhaustion (L-063, SH-5)."
+
       - name: Fail the run on escalation
         if: steps.heal.outcome == 'failure'
         run: |
