@@ -1,6 +1,6 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-27T07:39:49Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-27T12:03:15Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
@@ -54,8 +54,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 167 max L-184 sha256 8a02cd6807fd
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 167 max L-184 sha256 8a02cd6807fd
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 171 max L-188 sha256 1c3a98557be8
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 171 max L-188 sha256 1c3a98557be8
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -67,7 +67,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 167, unique 167, max L-184, sha256 8a02cd6807fd49d8
+  entries 171, unique 171, max L-188, sha256 1c3a98557be80bab
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -223,8 +223,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 167 max L-184 sha256 8a02cd6807fd
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 167 max L-184 sha256 8a02cd6807fd
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 171 max L-188 sha256 1c3a98557be8
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 171 max L-188 sha256 1c3a98557be8
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -236,7 +236,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 167, unique 167, max L-184, sha256 8a02cd6807fd49d8
+  entries 171, unique 171, max L-188, sha256 1c3a98557be80bab
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -375,7 +375,7 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 114008626e01  feat(ops): runner landings merge themselves, the reader becomes part o
+main e7647fbe6f48  feat(herald): the validator stops being the product, and the label bec
 ```
 
 ### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
@@ -424,7 +424,7 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 6d4f6a14fcbe  feat(ops): pair SEC-1 and the reading contract into the evidence plane
+main 3dfc8d70686b  feat(ops): D-118 rule 8, the label is part of the claim, paired with t
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -438,7 +438,7 @@ required by ruleset unreadable: {"message":"Upgrade to GitHub Pro or make this r
 owned by this repository's workflows: claude, guard, heal, promote, qesis-integrity, report, verify
 OWNED claude: no run on this commit
 OWNED guard: success
-OWNED heal: success
+OWNED heal: no run on this commit
 OWNED promote: no run on this commit
 OWNED qesis-integrity: success
 OWNED report: no run on this commit
@@ -464,7 +464,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 754 entries 0 breaks
-deployment_commit 114008626e01  main 114008626e01
+deployment_commit e7647fbe6f48  main e7647fbe6f48
 tools 8  database connected
 ```
 
