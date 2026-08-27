@@ -39,6 +39,14 @@
       "dest": "/console.html"
     },
     {
+      "src": "/blueprint",
+      "dest": "/blueprint.html"
+    },
+    {
+      "src": "/blueprint.html",
+      "dest": "/blueprint.html"
+    },
+    {
       "src": "/dashboard",
       "dest": "/STIR_Governance_Dashboard.html"
     },

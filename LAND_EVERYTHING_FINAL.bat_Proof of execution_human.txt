@@ -1,0 +1,268 @@
+QESIS+ lander, revision 6, 2026-08-27T07:19:56Z
+Log: C:\Users\Lenovo\OneDrive\sovereign-infra\LAND_EVERYTHING_FINAL_LOG.txt
+
+Preconditions OK.
+
+STEP 00: the lander is judged before it judges anything.
+  OK   lander contract holds for LAND_EVERYTHING_FINAL.ps1: no shell parsing, manifest-driven, selective restore, ASCII
+  LANDING MANIFEST OK: branch feat/land-20260826-observability-and-runner-merge, written 2026-08-26T16:45:00Z
+  Branch for this landing: feat/land-20260826-observability-and-runner-merge
+
+STEP 0a: done. A workflow file only ever reaches .github\workflows through this step, under your click.
+
+STEP 0: ledger mirror. scripts\ledger_sync.py writes the union of entries to every copy.
+  LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
+    canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
+    canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
+  LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
+
+VALIDATION GATE: every gate CI will run, executed here first, in both repositories.
+  [qesis-mcp] singleton gate
+  ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
+    entries 162, unique 162, max L-179, sha256 c770ab5d26e23ee7
+    R1  no duplicate id
+    R2  17 absent ids, all declared
+    R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
+  LEDGER SINGLETON CHECK PASSED
+  [qesis-mcp] regenerate ops\ECOSYSTEM_STATE.json and ops\PATH_REGISTRY.json
+  wrote ops\ECOSYSTEM_STATE.json  sha256 9ca0ebe0fe60b942
+  wrote ops\PATH_REGISTRY.json  sha256 ae2d4928caf12cac
+  [qesis-mcp] preflight: this repository's own CI step list
+  installing requirements, as CI does, before predicting anything
+  PREFLIGHT: 23 runnable step(s) from .github/workflows/qesis-integrity.yml
+  Running what CI runs, in CI's order, on this tree.
+
+    PASS  Workflow contract holds
+    PASS  Kill switch is clear
+    PASS  No plaintext secret is reachable
+    PASS  Integrity gate
+    PASS  Hash chain reproduces from the committed spine
+    PASS  Vintage is paired across both repositories
+    PASS  Knowledge graph reproduces from the index
+    PASS  Percolation block reproduces from the evidence
+    PASS  Gate self-test (mutation)
+    PASS  Server contract smoke test
+    PASS  v9.0 SFC axis status matches its measured coverage
+    PASS  SFC ingestion contract refuses what it names
+    PASS  Public routes are reachable (route AND rewrite)
+    PASS  Served contract is fully implemented by this code
+    PASS  Coupling reproduces the published values
+    PASS  Serverless entry answers MCP over HTTP
+    PASS  Evaluation set is in sync with the index
+    PASS  Landing page is in sync with the index
+    PASS  Dashboard agrees with the served index
+    PASS  Service identity is declared once
+    PASS  Outbound endpoints are declared once
+    PASS  Ecosystem state and path registry are not stale
+    PASS  RDL ladder has no family at rung 3
+
+  PREFLIGHT PASSED: every step CI will run passes on this tree.
+  This is not a proxy for CI. It is CI's own step list, executed.
+  [qesis-mcp] PREFLIGHT PASSED.
+  [sovereign-infra] singleton gate
+  ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
+    entries 162, unique 162, max L-179, sha256 c770ab5d26e23ee7
+    R1  no duplicate id
+    R2  17 absent ids, all declared
+    R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
+  LEDGER SINGLETON CHECK PASSED
+  [sovereign-infra] regenerate ops\ECOSYSTEM_STATE.json and ops\PATH_REGISTRY.json
+  wrote ops\ECOSYSTEM_STATE.json  sha256 9ca0ebe0fe60b942
+  wrote ops\PATH_REGISTRY.json  sha256 ae2d4928caf12cac
+  [sovereign-infra] preflight: this repository's own CI step list
+  PREFLIGHT: 10 runnable step(s) from .github/workflows/qesis-integrity.yml
+  Running what CI runs, in CI's order, on this tree.
+
+    PASS  The lessons ledger is a singleton
+    PASS  The RDL ladder introduces no new escalation
+    PASS  The ecosystem bootstrap is not stale
+    PASS  The ledger gate refuses and accepts what it must
+    PASS  The bootstrap gate refuses and accepts what it must
+    PASS  The self-heal runner survives this repository's script set
+    PASS  The evidence hierarchy holds and its contract refuses
+    PASS  Every third-party action is pinned to a full-length commit
+    PASS  The runner merge decision refuses and accepts what it must
+    PASS  Workflow contract holds for this repository's own script s
+
+  PREFLIGHT PASSED: every step CI will run passes on this tree.
+  This is not a proxy for CI. It is CI's own step list, executed.
+  [sovereign-infra] PREFLIGHT PASSED.
+VALIDATION GATE PASSED in both repositories.
+
+Credential purge, operator decision 6.
+  absent   C:\Users\Lenovo\OneDrive\Portfolio\_to_delete\API KEY.png
+  absent   C:\Users\Lenovo\OneDrive\Portfolio\_to_delete\API KEY.txt
+  absent   C:\Users\Lenovo\OneDrive - ESIC\Archivos de Microsoft Copilot Chat\Desktop\Job Indicators & Research\_to_delete\TOKEN_vercel.txt
+  0 deleted, 3 already gone. Contents were never opened.
+
+  Amputating pull requests whose head is not 'feat/land-20260826-observability-and-runner-merge'.
+    qesis-mcp: 0 open pull requests
+    sovereign-infra: 0 open pull requests
+
+---------------------------------------------------
+Repository: C:\Users\Lenovo\qesis-mcp
+  UNLOCK: qesis-mcp has 0 locks. Zero is zero.
+  store: C:\Users\Lenovo\OneDrive\sovereign-infra\var\qesis_ops.sqlite
+  canonical vintage, derived from the index: v9.0 (2026-08-13)
+    HERALD artifact_ladder: 0 held
+    COUNSEL triage_contract: 0 held
+    held before: 0 in these two classes. Held after, all classes: 1
+    NOT covered by these two rulings, reported rather than swept:
+      HERALD draft: 1
+    ENTSO-E task 1a48c78d: already closed at 2026-08-24T18:07:17Z
+  COMMITTED.
+  RDL APPEND: 5 entr(y/ies) into 2 ledger cop(y/ies)
+    [before] LEDGER SINGLETON CHECK PASSED
+    appended L-180, L-181, L-182, L-183, L-184
+    ledger sha256 8a02cd6807fd49d8, written to 2 cop(y/ies)
+    [after] LEDGER SINGLETON CHECK PASSED
+    cleared RDL_PENDING_APPEND.md: all 5 reserved id(s) are now in the ledger
+  wrote ops\ECOSYSTEM_STATE.json  sha256 9ca0ebe0fe60b942
+  wrote ops\PATH_REGISTRY.json  sha256 ae2d4928caf12cac
+  Fetched origin.
+  654c950df4f481ed0be6628b2abf6f2cccbd31dc
+  landing_base: HEAD, its tree is on origin/main
+  Base for the delta: 654c950df4f481ed0be6628b2abf6f2cccbd31dc
+  Captured 25 uncommitted file(s) as a holding commit.
+  Content snapshot: a77d524be3d75fb750b4292b0a251f9254db7804
+  Delta since the base: 25 changed or added, 0 deleted.
+  Cut feat/land-20260826-observability-and-runner-merge directly from origin/main.
+  25 file(s) differ from origin/main.
+  Committed.
+  Pushed feat/land-20260826-observability-and-runner-merge at 6a49886226a9a1d25c7642d71c1d767ef15f2873.
+  Opened PR 79.
+  MERGE: PR 79 'feat(ops): runner landings merge themselves, the rea'
+    head feat/land-20260826-observability-and-runner-merge  mergeable MERGEABLE  mergeStateStatus BLOCKED
+    GitHub says: mergeable but a required check has not reported yet
+    AUTO-MERGE ARMED on 79. It is queued behind the required
+    check and WILL fire, because the branch is mergeable.
+  CI FEEDBACK: waiting for 'QESIS+ integrity gate' on rodrigoesl92-cloud/qesis-mcp @ feat/land-20260826-observability-and-runner-merge commit 6a49886226a9
+    run 33049733797 is in_progress, waiting
+    run 33049733797 concluded: success
+    CI IS GREEN. Auto-merge will proceed.
+  CI GREEN on 6a49886226a9a1d25c7642d71c1d767ef15f2873.
+  MERGE: PR 79 is MERGED. Nothing to do.
+  PR 79 is MERGED. Read from GitHub, not inferred.
+  Disk synced to origin/main.
+---------------------------------------------------
+Repository: C:\Users\Lenovo\OneDrive\sovereign-infra
+  UNLOCK: sovereign-infra has 0 locks. Zero is zero.
+  wrote ops\ECOSYSTEM_STATE.json  sha256 9ca0ebe0fe60b942
+  wrote ops\PATH_REGISTRY.json  sha256 ae2d4928caf12cac
+  Fetched origin.
+  98f5c3bb85272de97e0fe0ca55fd649d1bd4e98a
+  landing_base: HEAD, its tree is on origin/main
+  Base for the delta: 98f5c3bb85272de97e0fe0ca55fd649d1bd4e98a
+  Captured 26 uncommitted file(s) as a holding commit.
+  Content snapshot: ce03a7080f4cb68124ce524c1d6cf5335910ca51
+  Delta since the base: 26 changed or added, 0 deleted.
+  Cut feat/land-20260826-observability-and-runner-merge directly from origin/main.
+  26 file(s) differ from origin/main.
+  Committed.
+  Pushed feat/land-20260826-observability-and-runner-merge at be7dc13d733fd1435ce2e939316d727c3e40b05e.
+  Opened PR 45.
+  MERGE: PR 45 'feat(ops): pair SEC-1 and the reading contract into '
+    head feat/land-20260826-observability-and-runner-merge  mergeable MERGEABLE  mergeStateStatus UNSTABLE
+    GitHub says: mergeable; a non-required check is not passing
+    MERGED 45 by rebase.
+  CI FEEDBACK: waiting for 'QESIS+ integrity gate' on rodrigoesl92-cloud/sovereign-infra @ feat/land-20260826-observability-and-runner-merge commit be7dc13d733f
+    run 33049878548 concluded: success
+    CI IS GREEN. Auto-merge will proceed.
+  CI GREEN on be7dc13d733fd1435ce2e939316d727c3e40b05e.
+  MERGE: PR 45 is MERGED. Nothing to do.
+  PR 45 is MERGED. Read from GitHub, not inferred.
+  Disk synced to origin/main.
+
+  PROOF. Fetched from GitHub just now. Not a claim.
+
+    rodrigoesl92-cloud/qesis-mcp
+      0 open pull requests
+      main 114008626e01  feat(ops): runner landings merge themselves, the reader beco
+      main check  binding: success
+      main check  guard: success
+      main check  heal: success
+      main check  probe: in_progress (not finished at read time)
+      main check  qesis-integrity: success
+      main check  report: no run on this commit (schedule- or path-triggered)
+      open issues: 0
+
+    rodrigoesl92-cloud/sovereign-infra
+      0 open pull requests
+      main 6d4f6a14fcbe  feat(ops): pair SEC-1 and the reading contract into the evid
+      main check  guard: success
+      main check  heal: success
+      main check  qesis-integrity: success
+      main check  verify: success
+      main check  claude: no run on this commit (schedule- or path-triggered)
+      main check  promote: no run on this commit (schedule- or path-triggered)
+      main check  report: no run on this commit (schedule- or path-triggered)
+      open issues: 0
+
+    VERDICT: every completed check the ecosystem owns reports success on main in both repositories.
+
+===================================================
+RESULT, measured. Nothing below is a stock message.
+
+  qesis-mcp        ON MAIN        staged 25   committed True   pushed True
+  sovereign-infra  ON MAIN        staged 26   committed True   pushed True
+
+  2 on main, 0 armed and waiting for CI, 0 stuck.
+===================================================
+
+AUDIT. The lander does not grade its own work; the audit does (D-116).
+It measures both repositories, the store, GitHub and the live endpoint, and writes
+ops\AUDIT_REPORT.md in both repositories. This takes a few minutes.
+  QESIS+ FULL ECOSYSTEM AUDIT
+  ============================================================
+
+  A. Local gates, both repositories
+    [PASS] qesis-mcp: ledger mirror in sync   exit 0
+    [PASS] qesis-mcp: ledger singleton   exit 0
+    [PASS] qesis-mcp: ledger fixtures   exit 0
+    [PASS] qesis-mcp: ecosystem bootstrap   exit 0
+    [PASS] qesis-mcp: ecosystem fixtures   exit 0
+    [PASS] qesis-mcp: RDL delta gate   exit 0
+    [PASS] qesis-mcp: workflow contract   exit 0
+    [PASS] qesis-mcp: self-heal fixtures   exit 0
+    [PASS] qesis-mcp: lander contract   exit 0
+    [PASS] qesis-mcp: landing base fixtures   exit 0
+    [PASS] qesis-mcp: landing manifest fixtures   exit 0
+    [PASS] qesis-mcp: preflight, CI's own steps   exit 0
+    [PASS] qesis-mcp: self-heal loop, dry run (the `heal` check)   exit 0
+    [PASS] sovereign-infra: ledger mirror in sync   exit 0
+    [PASS] sovereign-infra: ledger singleton   exit 0
+    [PASS] sovereign-infra: ledger fixtures   exit 0
+    [PASS] sovereign-infra: ecosystem bootstrap   exit 0
+    [PASS] sovereign-infra: ecosystem fixtures   exit 0
+    [PASS] sovereign-infra: RDL delta gate   exit 0
+    [PASS] sovereign-infra: workflow contract   exit 0
+    [PASS] sovereign-infra: self-heal fixtures   exit 0
+    [PASS] sovereign-infra: preflight, CI's own steps   exit 0
+    [PASS] sovereign-infra: self-heal loop, dry run (the `heal` check)   exit 0
+
+  B. Operational store
+    [PASS] compliance chain   exit 0
+           chain 754 entries, 0 breaks, 1 held, 13 open tasks
+
+  C. GitHub, fetched now
+    [PASS] qesis-mcp: open pull requests   exit 0
+    [INFO] qesis-mcp: main   exit 0
+    [PASS] qesis-mcp: required and owned checks on main   exit 0
+    [INFO] qesis-mcp: open issues   exit 0
+    [PASS] sovereign-infra: open pull requests   exit 0
+    [INFO] sovereign-infra: main   exit 0
+    [PASS] sovereign-infra: required and owned checks on main   exit 0
+    [INFO] sovereign-infra: open issues   exit 0
+
+  D. Vercel, the design endpoint
+    [PASS] live /health   exit 0
+    [PASS] landing page HTTP   exit 0
+
+  wrote C:\Users\Lenovo\qesis-mcp\ops\AUDIT_REPORT.md
+
+  wrote C:\Users\Lenovo\OneDrive\sovereign-infra\ops\AUDIT_REPORT.md
+  ============================================================
+  VERDICT: GREEN, every predicate holds.
+
+VERDICT: GREEN. Every predicate holds. ops\AUDIT_REPORT.md is the proof.
+Press Enter to close:
