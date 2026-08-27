@@ -1,0 +1,211 @@
+{
+ "_doc": "The evidence hierarchy and the reading contract, as data. Carried in a prompt these are advisory and deletable; carried here they are read by scripts/verify_reading_contract.py and by every agent before it asserts anything. Ratified by the operator 2026-08-26. D-118.",
+ "version": "1.0",
+ "ratified_utc": "2026-08-26",
+ "ratified_by": "Rodrigo Batista Silva, decision holder",
+ "precedence": [
+  {
+   "rank": 1,
+   "tier": "our_documentation",
+   "what": "This ecosystem's own governed files, in the order SESSION_START.md names them.",
+   "members": [
+    "ops/PATH_REGISTRY.json",
+    "ops/ECOSYSTEM_STATE.json",
+    "CLAUDE.md",
+    "sovereign-infra/ops/GOVERNANCE.md",
+    "sovereign-infra/ops/LESSONS_LEDGER.md",
+    "ops/RDL_LADDER.json",
+    "ops/D-*.md",
+    "ops/ARTICLE_14_REGISTER.md",
+    "ops/INC-*.md",
+    "data/DATA_MAP.json"
+   ],
+   "rule": "Nothing below this tier may contradict it without an RDL entry that says so."
+  },
+  {
+   "rank": 2,
+   "tier": "our_documented_sources",
+   "what": "The peer-reviewed and institutional sources this ecosystem has already adopted and cited.",
+   "members": [
+    "ops/SOURCE_REGISTER.md academic_register",
+    "data/CITATION_CONCORDANCE.md",
+    "the licence and provenance blocks of each axis in data/axes/"
+   ],
+   "rule": "A method claim cites one of these or it is not a method claim."
+  },
+  {
+   "rank": 3,
+   "tier": "operator_delivered",
+   "what": "Sources the decision holder hands over directly in a session.",
+   "members": [
+    "ops/SOURCE_REGISTER.md operator_delivered"
+   ],
+   "rule": "Admitted at face value as the operator's own instruction, and written into tier 2 once cited in a landed artefact."
+  },
+  {
+   "rank": 4,
+   "tier": "open_web",
+   "what": "Anything else found online.",
+   "rule": "Last resort. Never used to overturn tiers 1 to 3. Every claim taken from here carries its URL and the date it was read."
+  }
+ ],
+ "planes": {
+  "_why": "G-01b. Four planes, four different questions, and a value read on one is never evidence about another. L-182 is what it costs to forget which one was read.",
+  "artefact": {
+   "question": "what does the index say",
+   "authoritative_reader": "read data/qesis_v8.json on disk, or scripts/verify_index.py",
+   "caching": "none"
+  },
+  "evidence": {
+   "question": "what has already gone wrong and what was decided",
+   "authoritative_reader": "ops/LESSONS_LEDGER.md via scripts/verify_ledger_singleton.py --json, and ops/RDL_LADDER.json via scripts/rdl.py status",
+   "caching": "none"
+  },
+  "delivery": {
+   "question": "what is on main, what merged, which checks are green",
+   "authoritative_reader": "scripts/gh_ops.py proof, or the Chrome bridge against api.github.com and github.com in the operator's own session",
+   "caching": "none",
+   "forbidden_readers": [
+    "WebFetch"
+   ]
+  },
+  "serving": {
+   "question": "what is actually being served to a caller right now",
+   "authoritative_reader": "the Chrome bridge fetching https://qesis-mcp.vercel.app/health against the live origin, or the Vercel API via list_deployments and get_deployment",
+   "caching": "none",
+   "forbidden_readers": [
+    "WebFetch"
+   ]
+  }
+ },
+ "forbidden_readers": {
+  "WebFetch": {
+   "why": "Its own documentation states responses are cached for 15 minutes per URL, and an edge cache can hold a value far longer. A cached response is a proxy for the resource.",
+   "evidence": "L-182. It returned deployment_commit 24a6a80 while the live origin returned 654c950, and an item was placed on the operator that nobody needed to do.",
+   "permitted_use": "Reading prose a human will read. Never the source of a value that appears in a report.",
+   "if_used_anyway": "The value carries the word cached beside it, or it does not appear."
+  }
+ },
+ "assertion_rule": {
+  "statement": "Every asserted value names its plane and the reader that produced it.",
+  "form": "<value> read from <plane> by <reader> at <utc>",
+  "authority": "CLAUDE.md Rule V-1, D-115, D-116 rule 1, D-118."
+ },
+ "academic_register": [
+  {
+   "id": "fleming-1962",
+   "apa": "Fleming, J. M. (1962). Domestic financial policies under fixed and under floating exchange rates. IMF Staff Papers, 9(3), 369-380.",
+   "use": "Co-formulation of the open-economy policy trilemma.",
+   "tier": 2
+  },
+  {
+   "id": "mundell-1963",
+   "apa": "Mundell, R. A. (1963). Capital mobility and stabilization policy under fixed and flexible exchange rates. Canadian Journal of Economics and Political Science, 29(4), 475-485.",
+   "use": "The classical proof that three policy goals cannot coexist. Ancestor of the Infrastructural Trilemma.",
+   "tier": 2
+  },
+  {
+   "id": "rodrik-2011",
+   "apa": "Rodrik, D. (2011). The globalization paradox: Democracy and the future of the world economy. W. W. Norton.",
+   "use": "Political economy trilemma, the second ancestor.",
+   "tier": 2
+  },
+  {
+   "id": "oana-schneider-2021",
+   "apa": "Oana, I. E., & Schneider, C. Q. (2021). Qualitative Comparative Analysis (QCA) with R: A guide for social scientists. Cambridge University Press.",
+   "use": "Robustness protocol, fit- versus case-oriented consistency, PRI gap treatment. Already the declared protocol in fsqca.robustness.",
+   "tier": 2
+  },
+  {
+   "id": "winters-2020",
+   "apa": "Winters, T., Manshreck, T., & Wright, H. (2020). Software engineering at Google: Lessons learned from programming over time. O'Reilly.",
+   "use": "Unmaintained code and unverified generation are liabilities, not assets.",
+   "tier": 2
+  },
+  {
+   "id": "dora-2026",
+   "apa": "Google Cloud DORA. (2026). The ROI of AI-assisted software development: Navigating the J-curve of AI value realization (v. 2026.1). DevOps Research and Assessment, Google Cloud.",
+   "use": "Verification tax, J-curve dip, throughput against instability. The economic argument for every gate in this repository.",
+   "tier": 3
+  },
+  {
+   "id": "datadog-devsecops-2026",
+   "apa": "Datadog. (2026). State of DevSecOps 2026: Balancing velocity and risk across supply chains, CI/CD, and application runtimes. Datadog Research.",
+   "use": "GitHub Actions supply-chain exposure and mandatory commit SHA pinning. The authority behind SEC-1 and behind L-181.",
+   "tier": 3
+  },
+  {
+   "id": "datadog-monitoring-2023",
+   "apa": "Datadog. (2023). Monitoring modern infrastructure: An effective framework for dynamic, cloud-scale environments. Datadog Research.",
+   "use": "Event-driven telemetry, MTTR, symptom-based alerting, work metrics against resource metrics.",
+   "tier": 3
+  },
+  {
+   "id": "kalvar-2026",
+   "apa": "Kalvar, S. (2026). Mastering modern digital workspace management: Enabling the cloud operating model and AI-driven EUC (IDC Spotlight #US54141725). IDC.",
+   "use": "Cloud operating model and policy-driven automation for agentic platforms.",
+   "tier": 3
+  },
+  {
+   "id": "larsen-2023",
+   "apa": "Larsen, N., Stallrich, J., Sengupta, S., Deng, A., Kohavi, R., & Stevens, N. T. (2023). Statistical challenges in online controlled experiments: A review of A/B testing methodology. arXiv:2212.11366.",
+   "use": "Experiment frequency and verification of non-linear outcomes.",
+   "tier": 3
+  },
+  {
+   "id": "stanford-hai-2025",
+   "apa": "Stanford Institute for Human-Centered Artificial Intelligence. (2025). The 2025 AI index report. Stanford University.",
+   "use": "Inference cost deflation and productivity distribution.",
+   "tier": 3
+  },
+  {
+   "id": "eu-ai-act-2024",
+   "apa": "European Union. (2024). Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act). Official Journal of the European Union.",
+   "use": "Article 10 data governance, Article 12 automated record keeping, Article 14 human oversight. Article 14 is the register at sovereign-infra/ops/ARTICLE_14_REGISTER.md.",
+   "tier": 2
+  },
+  {
+   "id": "thaler-v-perlmutter",
+   "apa": "Thaler v. Perlmutter, 687 F. Supp. 3d 140 (D.D.C. 2023), aff'd, No. 23-5233 (D.C. Cir. 2025), cert. denied.",
+   "use": "Human authorship requirement. The basis of AUTHORS.md and of the COUNSEL memo.",
+   "tier": 2
+  },
+  {
+   "id": "cdpa-1988-s9-3",
+   "apa": "United Kingdom. (1988). Copyright, Designs and Patents Act 1988, c. 48, s. 9(3) (computer-generated works).",
+   "use": "The one jurisdiction with a computer-generated-works provision. Under review; no licensing position rests on it.",
+   "tier": 2
+  }
+ ],
+ "empirical_register": [
+  {
+   "id": "climate-trace-2025",
+   "apa": "Climate TRACE. (2025). Global emissions inventory (Version 5.4) [Data set]. https://climatetrace.org",
+   "tier": 2
+  },
+  {
+   "id": "emodnet-2026",
+   "apa": "European Marine Observation and Data Network. (2026). Human activities: Telecommunication cables [Data set]. European Commission.",
+   "axis": "CSE",
+   "tier": 2
+  },
+  {
+   "id": "eurostat-nrg-pc-205",
+   "apa": "Eurostat. (2026). Electricity prices for non-household consumers (nrg_pc_205) [Data set]. European Commission.",
+   "axis": "ESE",
+   "tier": 2
+  },
+  {
+   "id": "aqueduct-4",
+   "apa": "Kuzma, S., Saccoccia, L., & Bierkens, M. F. P. (2023). Aqueduct 4.0: Updated decision-relevant global water risk indicators. World Resources Institute.",
+   "axis": "WSE",
+   "tier": 2
+  },
+  {
+   "id": "oecd-tiva-2025",
+   "apa": "OECD. (2025). Trade in value added (TiVA) [Data set]. OECD Publishing.",
+   "axis": "FPE",
+   "tier": 2
+  }
+ ]
+}

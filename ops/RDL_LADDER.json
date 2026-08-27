@@ -22,17 +22,18 @@
    }
   },
   "guard_not_executed": {
-   "occurrences": 7,
+   "occurrences": 8,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "e25fdf6b34a293d14a8b4ee0c8646245668e699062b4477d79d8a143e5937301",
-   "last_signature": "audit_ecosystem.py rendered its 'What is failing' bullets with an em dash. The report is committed to ops/AUDIT_REPORT.md in both repositories by the lander, and sovereign-infra's compliance.yml runs qesis_agents/style.py over every .md on every push. The doctrine gate existed and the writer never ran it on its own output, so the 01:08Z landing, green on every required check, carried a red 'verify' onto main. The writer was subject to a gate it did not execute.",
-   "last_seen": "2026-08-26T01:33:26Z",
+   "last_signature": "verify_action_pinning.py reported SEC-1 PASS, 18 of 18 pinned, and the statement was true of qesis-mcp and false of the ecosystem. The gate is not present in sovereign-infra at all, where five uses: lines carried mutable tags: actions/checkout@v4 in claude.yml and promote-production.yml, actions/setup-python@v5 and actions/checkout@v4 in compliance.yml, and anthropics/claude-code-action@v1, a third party action in a privileged context. A control that runs in one of two paired repositories is not a control, it is a coincidence. The tag itself proves the vector: v4 of actions/checkout resolved to 34e114876b0b11c390a56381ad16ebd13914f8d5 when qesis-mcp pinned it and resolves to 11d5960a326750d5838078e36cf38b85af677262 today, so the same reference names different code on different days.",
+   "last_seen": "2026-08-26T15:43:12Z",
    "prior_evidence": "L-108, L-109, L-114, L-115",
    "lesson_ids": [
     "L-154",
     "L-169",
-    "L-178"
+    "L-178",
+    "L-181"
    ],
    "ci_blocking": true,
    "gate_required": true,
@@ -121,19 +122,22 @@
    "decision_required": false
   },
   "claim_from_proxy_not_resource": {
-   "occurrences": 8,
+   "occurrences": 11,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
-   "last_signature": "audit_ecosystem.py section C asserted the ruleset's required contexts and treated every other check as informational; gh_ops.py proof filtered check names for the words integrity, heal and binding. compliance.yml's job is named verify, so the doctrine gate, the credential scan and the concordance check were invisible to both readers. The 01:08Z run ended with VERDICT GREEN and PROOF clean while Continuous compliance verification #138 had failed on main. The proxy was a list of words; the resource is the set of jobs in .github/workflows.",
-   "last_seen": "2026-08-26T01:33:26Z",
+   "last_signature": "The change set delivered five workflow files to ops/pending_workflows and I ran verify_workflow_contract.py, which reads .github/workflows, against a tree where step 0a had not yet installed them. It passed, and I recorded that pass as evidence about the tree the lander would judge. The lander installed them and the same gate immediately found C-3: scripts/gh_ops.py runs in CI and is absent from the selfheal control set. The pre-change tree stood proxy for the post-change tree. The technique for avoiding this was already in my hands in the same session: SEC-1 was verified by building a temp tree with the delivered workflows installed, and the identical treatment was not given to the sibling gate.",
+   "last_seen": "2026-08-26T16:39:58Z",
    "prior_evidence": "L-104, L-111, L-143, L-161",
    "lesson_ids": [
     "L-161",
     "L-162",
     "L-173",
     "L-174",
-    "L-179"
+    "L-179",
+    "L-180",
+    "L-182",
+    "L-183"
    ],
    "ci_blocking": true,
    "gate_required": true,
@@ -249,18 +253,19 @@
    "decision_required": false
   },
   "disk_snapshot_taken_as_repository": {
-   "occurrences": 1,
-   "rung": 1,
+   "occurrences": 2,
+   "rung": 2,
    "owner": "ARCHITECT",
    "family_hash": "b6120a90a36de40abb21ae5afba8b558a146f1748171a77b074ca5cf1501091f",
-   "last_signature": "Revision 5 captured the working tree as a holding commit, cut the branch from origin/main and ran 'git checkout <snapshot> -- .', restoring every tracked file from the operator's disk. The disk is the source of the session's changes, not of the repository: the self-heal loop and the daily ops report commit to main from a runner (SH-7, G-07), and the setting that lets them is now on (L-174). The next click would have reverted each of those commits with a green summary. Found by reading the lander before its next run, not from a loss; nothing had ever landed from a runner, so nothing had been reverted yet.",
-   "last_seen": "2026-08-26T00:51:26Z",
+   "last_signature": "data/qesis_v8.json in the qesis-mcp working tree hashed to bbfc66a7594f while the blob at main hashes to 8009815e4c19, the artefact bound in the chain spine and the index_sha256 production serves. The single difference was one extra element in served_contract.tools.qesis_get_integrity, the string field_no_code_builds, present locally and absent from main. verify_index, verify_served_contract, verify_vintage_pairing, coupling and every build check passed on the drifted file, because each reads the working tree and the working tree was self-consistent. Only C5 of verify_chain compares the disk against something the disk cannot edit, and C5 was the one chain rule with no fixture in test_gate.py.",
+   "last_seen": "2026-08-26T16:39:58Z",
    "prior_evidence": "",
    "lesson_ids": [
-    "L-177"
+    "L-177",
+    "L-184"
    ],
    "ci_blocking": false,
-   "gate_required": false,
+   "gate_required": true,
    "decision_required": false
   }
  }

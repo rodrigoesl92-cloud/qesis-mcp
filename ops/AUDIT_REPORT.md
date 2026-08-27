@@ -1,11 +1,11 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-26T01:22:48Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-26T10:39:21Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
 
-## Verdict: GREEN (4 informational)
+## Verdict: GREEN (5 informational)
 
 | # | check | verdict | exit | basis |
 |---|---|---|---|---|
@@ -35,11 +35,11 @@ measurement (D-116, V-5). Nothing here is asserted; V-1.
 | 24 | compliance chain | **PASS** | 0 | predicate: every prev_hash equals the previous entry_hash (0 breaks) |
 | 25 | qesis-mcp: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
 | 26 | qesis-mcp: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
-| 27 | qesis-mcp: required checks on main | **PASS** | 0 | measurement: all 1 required check(s) on main are success; other check runs (e.g. Cloud Build) are informationa |
+| 27 | qesis-mcp: required and owned checks on main | **PASS** | 0 | measurement: all 1 required check(s) and every completed owned check on main are success; integrations the eco |
 | 28 | qesis-mcp: open issues | **INFO** | 0 | measurement: 0 open issue(s), recorded |
-| 29 | sovereign-infra: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
+| 29 | sovereign-infra: open pull requests | **INFO** | 0 | measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it |
 | 30 | sovereign-infra: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
-| 31 | sovereign-infra: required checks on main | **PASS** | 0 | measurement: ruleset unreadable; every ecosystem-owned check on main is success |
+| 31 | sovereign-infra: required and owned checks on main | **PASS** | 0 | measurement: ruleset unreadable; every ecosystem-owned check on main is success |
 | 32 | sovereign-infra: open issues | **INFO** | 0 | measurement: 0 open issue(s), recorded |
 | 33 | live /health | **PASS** | 0 | measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees, and deployment_commit equals main |
 | 34 | landing page HTTP | **PASS** | 0 | measurement: HTTP 200, predicate: 200 |
@@ -54,8 +54,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 160 max L-177 sha256 0a827427384b
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 160 max L-177 sha256 0a827427384b
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -67,7 +67,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 160, unique 160, max L-177, sha256 0a827427384bdc2d
+  entries 162, unique 162, max L-179, sha256 c770ab5d26e23ee7
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -223,8 +223,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 160 max L-177 sha256 0a827427384b
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 160 max L-177 sha256 0a827427384b
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 162 max L-179 sha256 c770ab5d26e2
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -236,7 +236,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 160, unique 160, max L-177, sha256 0a827427384bdc2d
+  entries 162, unique 162, max L-179, sha256 c770ab5d26e23ee7
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -375,23 +375,25 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main e6865f815680  fix(lander): the shell parses nothing, only the session's delta is lan
+main 654c950df4f4  fix(audit): the report meets the doctrine it is gated by, and every ch
 ```
 
-### 27. qesis-mcp: required checks on main  (PASS, exit 0)
+### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
 
 `gh api repos/rodrigoesl92-cloud/qesis-mcp/commits/main/check-runs?per_page=100`  in `C:\Users\Lenovo\qesis-mcp`
 
-Basis: measurement: all 1 required check(s) on main are success; other check runs (e.g. Cloud Build) are informational, not required
+Basis: measurement: all 1 required check(s) and every completed owned check on main are success; integrations the ecosystem does not own (e.g. Cloud Build) are informational
 
 ```
 required by ruleset: qesis-integrity
 REQUIRED qesis-integrity: success
-informational binding: success
+owned by this repository's workflows: binding, guard, heal, probe, report
+OWNED binding: success
+OWNED guard: success
+OWNED heal: success
+OWNED probe: in_progress (not finished at read time; rerun the audit)
+OWNED report: no run on this commit
 informational cloudrun-qesis-mcp-git-europe-west1-rodrigoesl92-cloud-qesis: failure
-informational guard: success
-informational heal: success
-informational probe: in_progress
 informational rmgpgab-qesis-mcp-europe-west1-rodrigoesl92-cloud-qesis-mcp-: failure
 ```
 
@@ -405,14 +407,14 @@ Basis: measurement: 0 open issue(s), recorded
 0 open issues
 ```
 
-### 29. sovereign-infra: open pull requests  (PASS, exit 0)
+### 29. sovereign-infra: open pull requests  (INFO, exit 0)
 
 `gh pr list --repo rodrigoesl92-cloud/sovereign-infra --state open --limit 50 --json number,headRefName,mergeable,mergeStateStatus`  in `C:\Users\Lenovo\qesis-mcp`
 
-Basis: measurement: 0 open pull requests
+Basis: measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it
 
 ```
-0 open pull requests
+PR 43 head ops/report-2026-08-26 MERGEABLE UNSTABLE
 ```
 
 ### 30. sovereign-infra: main  (INFO, exit 0)
@@ -422,10 +424,10 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main ed16369d62ff  fix(lander): revision 6 lands from a manifest and restores only the de
+main 98f5c3bb8527  fix(audit): doctrine-clean report on main and owned checks asserted; D
 ```
 
-### 31. sovereign-infra: required checks on main  (PASS, exit 0)
+### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
 
 `gh api repos/rodrigoesl92-cloud/sovereign-infra/commits/main/check-runs?per_page=100`  in `C:\Users\Lenovo\qesis-mcp`
 
@@ -433,11 +435,15 @@ Basis: measurement: ruleset unreadable; every ecosystem-owned check on main is s
 
 ```
 required by ruleset unreadable: {"message":"Upgrade to GitHub Pro or make this repository public to enable this feature.","documentation_url":"https://docs.github.com/rest/repos/rules#get-rules-for-a-branch","status":"403"}gh: Upgrade to GitHub Pro or make this repository public to enable this feature. (HTTP 403): none readable
+owned by this repository's workflows: claude, guard, heal, promote, qesis-integrity, report, verify
+OWNED claude: no run on this commit
+OWNED guard: success
+OWNED heal: success
+OWNED promote: no run on this commit
+OWNED qesis-integrity: success
+OWNED report: no run on this commit
+OWNED verify: success
 informational cloudrun-sovereign-infra-git-europe-west1-rodrigoesl92-cloud: failure
-informational guard: success
-informational heal: success
-informational qesis-integrity: success
-informational verify: failure
 ```
 
 ### 32. sovereign-infra: open issues  (INFO, exit 0)
@@ -458,7 +464,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 754 entries 0 breaks
-deployment_commit e6865f815680  main e6865f815680
+deployment_commit 654c950df4f4  main 654c950df4f4
 tools 8  database connected
 ```
 

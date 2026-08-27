@@ -27,6 +27,11 @@ Subcommands:
     pr-number print the open pull request number on --head of --repo, or nothing
     pr-state  print MERGED, OPEN or CLOSED for --pr of --repo, from GitHub's own
               state field; the lander claims ON MAIN from this word only (D-116)
+    runner-merge
+              merge by rebase every open pull request that is a runner landing
+              (head prefix AND bot author) and whose owned checks are all green
+              on its head commit; --selftest runs the decision over fixtures
+              with no network and no credential
     owned     print the check-run names this repository's own workflows produce
               (each job's name, or its id), the set proof and the audit assert
 
@@ -59,6 +64,32 @@ REPOS = ["qesis-mcp", "sovereign-infra"]
 #: Branch prefixes the runners land from (selfheal.yml, daily-ops-report.yml).
 #: amputate spares them: they are the loop's work, not stale artefacts (L-177).
 RUNNER_HEADS = ("selfheal/", "ops/report-")
+
+#: The identities the runners land under. Two independent conditions must BOTH
+#: hold before anything merges with nobody in the loop: the head prefix and the
+#: author. Either alone is forgeable. A person can name a branch
+#: `ops/report-2026-08-26`; a bot label can sit on work a person pushed. The
+#: pair cannot be aimed at human work by naming a branch after a runner.
+RUNNER_AUTHORS = ("github-actions", "github-actions[bot]",
+                  "qesis-ops[bot]", "qesis-selfheal[bot]")
+
+#: Paths a runner landing may not carry. A denylist, deliberately, and the
+#: asymmetry is the argument: the set of derived artefacts a class A repair may
+#: rebuild is open and grows with the pipeline, so an allowlist over it would
+#: start refusing correct repairs the week after it was written. The set of
+#: surfaces that decide what is allowed to merge is closed and small. This
+#: refuses exactly the thing that must never happen, which is a loop widening
+#: its own authority with no person present. `.github/` is listed even though
+#: the Actions token already cannot push a workflow change: a control that
+#: rests on a platform default holding is one settings change from absent.
+RUNNER_REFUSED_PREFIXES = (
+    ".github/", "scripts/", "qesis_agents/", "api/", "server.py",
+    "LICENSE", "AUTHORS.md", "CLAUDE.md", "SESSION_START.md",
+    "ops/GOVERNANCE.md", "ops/ARTICLE_14_REGISTER.md", "ops/RDL_BASELINE.json",
+    "ops/pending_workflows/",
+)
+#: Verdicts that stop the loop and are counted as escalation on exit (SH-5).
+REFUSING = ("REFUSE",)
 #: Host checkouts, so an escalation issue can be re-measured on the tree the
 #: fix is about to land from. ops/PATH_REGISTRY.json is the authority.
 PATHS = {
@@ -373,6 +404,274 @@ def pr_state(repo: str, pr: str) -> int:
     return 0
 
 
+
+def runner_merge_decision(pr: dict, checks: list, owned: set) -> tuple[str, str]:
+    """Decide, from values alone, what happens to one open pull request.
+
+    Pure by construction: no network, no clock, no filesystem. That is what
+    makes the fixtures below a test of the decision rather than a test of what
+    GitHub happened to answer on the day the test ran (V-2, and the whole point
+    of L-179: a judgement is only as good as the set it is taken over).
+
+    Returns (verdict, reason), verdict in:
+      SKIP    not a runner landing. This command has no opinion about it.
+      WAIT    it may merge later. Nothing green has been established yet.
+      REFUSE  it must not merge here, and the reason names the act that settles it.
+      MERGE   every check the repository owns is completed and green on this head.
+
+    A check the repository does not own (a Cloud Build status, a third party
+    app) is reported and never asserted: D-116 rule 3, and L-044 already
+    rejected Cloud Build, so its red is noise rather than a finding. A check
+    the repository DOES own is asserted whether or not the branch protection
+    rules require it: D-116 rule 6, which is L-179 stated as a rule.
+    """
+    head = str(pr.get("headRefName") or "")
+    login = str(((pr.get("author") or {}).get("login")) or "")
+    base = str(pr.get("baseRefName") or "")
+
+    if base != "main":
+        return "SKIP", f"base is {base!r}, not main"
+    if not head.startswith(RUNNER_HEADS):
+        return "SKIP", f"head {head!r} carries no runner landing prefix"
+    if login not in RUNNER_AUTHORS:
+        return "SKIP", (f"head {head!r} reads as a runner landing but the author is "
+                        f"{login!r}. Both conditions are required and only one holds.")
+    if pr.get("isDraft"):
+        return "WAIT", "draft"
+
+    carried = [str(f.get("path") or "") for f in (pr.get("files") or [])]
+    if not carried:
+        return "WAIT", ("the file list came back empty. A landing is judged on what it "
+                        "carries, and an unread list is not an empty one.")
+    forbidden = sorted({p for p in carried if p.startswith(RUNNER_REFUSED_PREFIXES)})
+    if forbidden:
+        return "REFUSE", ("carries " + ", ".join(forbidden[:4])
+                          + (" and more" if len(forbidden) > 4 else "")
+                          + ". A runner may land derived artefacts, never the surfaces "
+                            "that decide what is allowed to land. This one is a human "
+                            "review, G-06 Rule 2-4 delegates remediation and not authority.")
+
+    if (str(pr.get("mergeStateStatus") or "").upper() == "DIRTY"
+            or str(pr.get("mergeable") or "").upper() == "CONFLICTING"):
+        return "REFUSE", ("conflicts with main. Auto-merge cannot resolve a conflict, so "
+                          "the remedy is to close it and let the next run cut it again "
+                          "from origin/main. L-165.")
+
+    seen: dict[str, tuple[str, str]] = {}
+    for cr in (checks or []):
+        name = str(cr.get("name") or "")
+        if name in owned:
+            # Newest run per name decides; GitHub lists newest first.
+            seen.setdefault(name, (str(cr.get("status") or ""),
+                                   str(cr.get("conclusion") or "")))
+    if not seen:
+        return "WAIT", ("no check this repository owns has reported on this head. Merging "
+                        "on silence is L-179 inverted: absence read as success.")
+    for name, (status, concl) in sorted(seen.items()):
+        if status != "completed":
+            return "WAIT", f"owned check {name} is {status or 'unreported'}"
+        if concl == "action_required":
+            return "WAIT", (f"owned check {name} is held for workflow approval, which is "
+                            "GitHub's default for a first pull request from an identity. "
+                            "Approving it is a repository act and not a merge.")
+        if concl not in ("success", "neutral", "skipped"):
+            return "REFUSE", f"owned check {name} concluded {concl}"
+
+    ignored = sorted({str(cr.get("name") or "") for cr in (checks or [])} - set(owned))
+    note = (" Not owned, reported and not asserted: " + ", ".join(ignored[:4]) + "."
+            if ignored else "")
+    return "MERGE", (f"{len(seen)} owned check(s) green on "
+                     f"{str(pr.get('headRefOid') or '')[:12]}: "
+                     + ", ".join(sorted(seen)) + "." + note)
+
+
+
+def _root_for(repo: str, explicit: str | None = None) -> "Path | None":
+    """Where this repository's workflow files can be read from.
+
+    Three cases, and they are not interchangeable. On the operator's machine the
+    host checkouts named in PATHS are the tree. On a GitHub runner PATHS does
+    not exist at all, and the checkout the job is running inside IS the
+    repository, which is knowable from the directory name rather than assumed
+    (`/home/runner/work/<repo>/<repo>`). Anywhere else the set of checks this
+    repository owns is unknown, and the caller is told that rather than handed
+    an empty set, which would read like a clean bill. L-179 is exactly the cost
+    of asserting over a set nobody established.
+    """
+    if explicit:
+        p = Path(explicit).resolve()
+        return p if p.is_dir() else None
+    host = PATHS.get(repo)
+    if host and host.exists():
+        return host
+    here = Path(__file__).resolve().parent.parent
+    if here.name == repo and (here / ".github" / "workflows").is_dir():
+        return here
+    return None
+
+
+def runner_merge(only_repo: str | None = None, dry_run: bool = False,
+                 root_override: str | None = None) -> int:
+    """Merge, by rebase, every runner landing whose owned checks are green.
+
+    WHY. SH-7 says nothing depends on the operator's machine. `selfheal.yml`
+    already arms `--auto` on its own pull request, which needs the repository
+    setting Settings > General > Pull Requests > "Allow auto-merge" and stalls
+    silently where that is off. `daily-ops-report.yml` had no landing step at
+    all, so PR 43 of 2026-08-26, the first runner landing this ecosystem has
+    ever produced, waited for a person. A recurring task that ends by asking
+    for a click is a reminder, which is what SH-7 says it is not.
+
+    This merges directly once the checks are ALREADY green, so it needs no
+    repository setting, and falls back to arming `--auto` when the direct merge
+    is refused, which is the SH-10g order: the mechanism before the compliance.
+    Rebase, never squash: squash strands the commit hashes the lineage register
+    cites (G-05, G-06 Rule 2-4). It does not promote. Promotion is G-06 limit 2
+    and stays human.
+    """
+    want = only_repo.split("/")[-1] if only_repo else None
+    print("Runner landings, read from GitHub just now. Not a claim.")
+    print("G-06 Rule 2-4 delegates the merge of a remediation pull request to an")
+    print("agent once its checks pass. Promotion is not delegated and is not")
+    print("attempted here (G-06 limit 2).")
+    print()
+    escalate = False
+    for repo in REPOS:
+        if want and repo != want:
+            continue
+        slug = f"{OWNER}/{repo}"
+        print(f"  {slug}")
+        prs, err = gh_json("pr", "list", "--repo", slug, "--state", "open", "--limit", "50",
+                           "--json", "number,headRefName,baseRefName,author,isDraft,"
+                                     "mergeable,mergeStateStatus,files,headRefOid")
+        if err:
+            print(f"    cannot list pull requests: {err}")
+            escalate = True
+            continue
+        root = _root_for(repo, root_override)
+        owned = owned_check_names(root) if root else set()
+        if not owned:
+            print("    the workflow files are not readable from here, so the set of checks "
+                  "this repository owns is unknown. Nothing merges on an unknown set (L-179).")
+            continue
+        if not prs:
+            print("    0 open pull requests")
+        for pr in (prs or []):
+            num = str(pr.get("number"))
+            oid = str(pr.get("headRefOid") or "")
+            checks = []
+            if oid:
+                runs, e2 = gh_json("api", f"repos/{slug}/commits/{oid}/check-runs?per_page=100")
+                if e2:
+                    print(f"    PR {num}: check runs unreadable, {e2}")
+                    escalate = True
+                    continue
+                checks = (runs or {}).get("check_runs") or []
+            verdict, why = runner_merge_decision(pr, checks, owned)
+            print(f"    PR {num}  {pr.get('headRefName')}  {verdict}: {why}")
+            if verdict in REFUSING:
+                escalate = True
+                continue
+            if verdict != "MERGE":
+                continue
+            if dry_run:
+                print("      --dry-run, not merged")
+                continue
+            code, out = gh_run("pr", "merge", num, "--repo", slug, "--rebase", "--delete-branch")
+            if code == 0:
+                print(f"      PR {num} MERGED by rebase, branch deleted.")
+                continue
+            first = (out.splitlines() or [""])[0]
+            code2, out2 = gh_run("pr", "merge", num, "--repo", slug, "--rebase", "--auto")
+            if code2 == 0:
+                print(f"      direct merge refused ({first}). Auto-merge ARMED; it fires "
+                      "when the branch becomes mergeable.")
+                continue
+            print(f"      NOT MERGED. direct: {first}; auto: {(out2.splitlines() or [''])[0]}")
+            print("      If auto-merge is unavailable the repository setting is "
+                  "Settings > General > Pull Requests, 'Allow auto-merge'. That is the "
+                  "operator's act, G-03 and G-04 by analogy: it widens what the Actions "
+                  "token may do.")
+            escalate = True
+        print()
+    print("  VERDICT: " + (
+        "every runner landing read here is merged, waiting on its own checks, or not a "
+        "runner landing." if not escalate else
+        "at least one runner landing was refused or could not be read. The lines above "
+        "name it. Not glossed."))
+    # SH-5: a benign WAIT must not fire an escalation every cycle. Only a refusal
+    # or an unreadable value exits non-zero.
+    return 1 if escalate else 0
+
+
+def _rm_pr(**kw) -> dict:
+    base = {
+        "number": 43,
+        "headRefName": "ops/report-2026-08-26",
+        "baseRefName": "main",
+        "author": {"login": "github-actions[bot]"},
+        "isDraft": False,
+        "mergeable": "MERGEABLE",
+        "mergeStateStatus": "CLEAN",
+        "files": [{"path": "ops/reports/2026-08-26.md"}],
+        "headRefOid": "0123456789abcdef0123456789abcdef01234567",
+    }
+    base.update(kw)
+    return base
+
+
+def _rm_ck(name: str, status: str = "completed", conclusion: str = "success") -> dict:
+    return {"name": name, "status": status, "conclusion": conclusion}
+
+
+def runner_merge_selftest() -> int:
+    """One fixture the decision must refuse and one it must accept, and then
+    some (V-2). The cases are values, so this runs with no network and no
+    credential, which is the only way a gate over a merge can run in CI at all
+    (G-03, G-04: no credential in either direction, including to test one)."""
+    owned = {"qesis-integrity", "verify", "heal"}
+    green = [_rm_ck("qesis-integrity"), _rm_ck("verify"), _rm_ck("heal"),
+             _rm_ck("cloudrun-qesis-europe-west1", conclusion="failure")]
+    cases = [
+        ("a runner report with every owned check green merges", "MERGE",
+         _rm_pr(), green),
+        ("a failing check the repository does not own does not block", "MERGE",
+         _rm_pr(), [_rm_ck("qesis-integrity"), _rm_ck("verify"), _rm_ck("heal"),
+                    _rm_ck("cloudrun-qesis-europe-west1", conclusion="failure")]),
+        ("a runner branch carrying scripts/ is refused", "REFUSE",
+         _rm_pr(files=[{"path": "ops/reports/2026-08-26.md"},
+                       {"path": "scripts/gh_ops.py"}]), green),
+        ("a runner branch carrying .github/ is refused", "REFUSE",
+         _rm_pr(files=[{"path": ".github/workflows/selfheal.yml"}]), green),
+        ("a red owned check is refused", "REFUSE",
+         _rm_pr(), [_rm_ck("qesis-integrity", conclusion="failure"), _rm_ck("verify")]),
+        ("a conflicting runner landing is refused, close and re-cut", "REFUSE",
+         _rm_pr(mergeStateStatus="DIRTY"), green),
+        ("an unfinished owned check waits", "WAIT",
+         _rm_pr(), [_rm_ck("qesis-integrity", status="in_progress", conclusion="")]),
+        ("no owned check on the head waits, never merges on silence", "WAIT",
+         _rm_pr(), [_rm_ck("cloudrun-qesis-europe-west1", conclusion="failure")]),
+        ("workflow runs held for approval wait", "WAIT",
+         _rm_pr(), [_rm_ck("qesis-integrity", conclusion="action_required")]),
+        ("a human branch named like a runner landing is skipped", "SKIP",
+         _rm_pr(author={"login": "rodrigoesl92-cloud"}), green),
+        ("an ordinary human branch is skipped", "SKIP",
+         _rm_pr(headRefName="fix/land-20260826-runner-merge"), green),
+        ("a runner landing aimed at a base that is not main is skipped", "SKIP",
+         _rm_pr(baseRefName="release/v9.0"), green),
+    ]
+    ok = 0
+    for label, expect, pr, checks in cases:
+        got, why = runner_merge_decision(pr, checks, owned)
+        good = got == expect
+        ok += good
+        print(f"{'PASS' if good else 'FAIL'}  runner-merge: {label}")
+        if not good:
+            print(f"        expected {expect}, got {got}: {why}")
+    print(f"{ok}/{len(cases)} runner-merge decisions behave as declared")
+    return 0 if ok == len(cases) else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -387,11 +686,23 @@ def main() -> int:
     a4.add_argument("--pr", required=True)
     a5 = sub.add_parser("owned")
     a5.add_argument("--root", default=".")
+    a6 = sub.add_parser("runner-merge")
+    a6.add_argument("--repo", default=None,
+                    help="limit to one repository; owner/name or name")
+    a6.add_argument("--dry-run", action="store_true")
+    a6.add_argument("--selftest", action="store_true",
+                    help="run the decision over fixtures; no network, no credential")
+    a6.add_argument("--root", default=None,
+                    help="checkout to read the owned check names from; defaults to "
+                         "the host path, then to this script's own checkout")
     a = ap.parse_args()
     if a.cmd == "pr-number":
         return pr_number(a.repo, a.head)
     if a.cmd == "pr-state":
         return pr_state(a.repo, a.pr)
+    if a.cmd == "runner-merge":
+        return (runner_merge_selftest() if a.selftest
+                else runner_merge(a.repo, a.dry_run, a.root))
     if a.cmd == "owned":
         for n in sorted(owned_check_names(Path(a.root))):
             print(n)

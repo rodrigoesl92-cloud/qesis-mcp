@@ -11,6 +11,15 @@
 > `C:\Users\Lenovo\OneDrive\sovereign-infra`. The 2026-08-24 handover is
 > superseded in full.
 
+> **2026-08-26, second change set.** After the 10:27Z landing, one more is
+> prepared and not yet landed: `ops/SESSION_2026-08-26_STIR_DIRECTIVE.md`. It
+> carries `gh_ops.py runner-merge` (a runner landing merges itself once its
+> owned checks are green, G-06 Rule 2-4), **D-117** and **L-180** behind it,
+> the three-phase causal surface at `public/blueprint.html`, and the COUNSEL
+> record on authorship, copyright and the signature convention. Three things
+> are the operator's and only three, each with its clause, in section 5 of that
+> file. `LANDING_MANIFEST.json` beside the lander describes this change set.
+
 Opus, Sonnet, Fable, a scheduled sweep, a Cowork session, Claude Code. Same
 procedure. This file exists because on 2026-08-24 five sessions in a row asserted
 things about this ecosystem that were false, and every one of them was false in

@@ -79,6 +79,15 @@ CONTROLS = [
     # ops/PATH_REGISTRY.json before asserting anything. Those files are only
     # trustworthy if a stale copy fails the build, so the check joins the set.
     ("ecosystem_state_check",  ["scripts/build_ecosystem_state.py", "--check"]),
+    # C-3 set parity, and both of these are controls in their own right rather
+    # than exemptions. `gh_ops.py runner-merge --selftest` decides over canned
+    # values, so it runs with no network and no credential, which is the only
+    # form in which a gate over a merge can run at all (G-03, G-04). The reading
+    # contract is the same shape: data on disk, a predicate over it, an exit
+    # code. Both entered CI with D-117 and D-118 and both belong in the set the
+    # loop re-runs, not in EXEMPT, whose target state is empty (L-048).
+    ("runner_merge_selftest",  ["scripts/gh_ops.py", "runner-merge", "--selftest"]),
+    ("reading_contract",       ["scripts/verify_reading_contract.py", "--quiet"]),
     ("test_gate",              ["scripts/test_gate.py"]),
 ]
 

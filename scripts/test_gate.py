@@ -923,6 +923,143 @@ def check_audit_writer(results: list[tuple[str, bool]]) -> None:
                     "owned checks" in r.stdout and "PASS  audit: owned" in r.stdout))
 
 
+
+def check_runner_merge(results: list[tuple[str, bool]]) -> None:
+    """The merge decision refuses and accepts what it claims (V-2).
+
+    A gate over a merge cannot call GitHub: CI holds no credential for it and
+    G-03 refuses to supply one even to test whether one works. So the decision
+    is a pure function of values and the fixtures are values, which is also the
+    only form in which "would this have merged?" is answerable before the fact.
+    L-179 is the reason the accept case is not the interesting one: the two
+    that matter are the refusal of a landing carrying its own authority
+    surfaces, and the refusal to read silence as success.
+    """
+    gate = ROOT / "scripts" / "gh_ops.py"
+    if not gate.exists():
+        results.append(("runner merge: gh_ops.py present", False))
+        return
+    r = subprocess.run([sys.executable, str(gate), "runner-merge", "--selftest"],
+                       capture_output=True, text=True)
+    out = r.stdout + r.stderr
+
+    def passed(label: str) -> bool:
+        return f"PASS  runner-merge: {label}" in out
+
+    results.append((
+        "runner merge: a green runner landing merges by rebase (G-06 Rule 2-4)",
+        r.returncode == 0 and passed("a runner report with every owned check green merges")))
+    results.append((
+        "runner merge: a landing carrying scripts/ or .github/ is refused",
+        passed("a runner branch carrying scripts/ is refused")
+        and passed("a runner branch carrying .github/ is refused")))
+    results.append((
+        "runner merge: a human branch named like a runner landing is skipped",
+        passed("a human branch named like a runner landing is skipped")))
+    results.append((
+        "runner merge: silence is never read as success (L-179 inverted)",
+        passed("no owned check on the head waits, never merges on silence")))
+    results.append((
+        "runner merge: a check the repository does not own does not block (D-116 rule 3)",
+        passed("a failing check the repository does not own does not block")))
+
+
+
+def check_blueprint(results: list[tuple[str, bool]]) -> None:
+    """The causal blueprint is generated, and its sync check can fail (V-2).
+
+    A page whose check cannot refuse anything is a page nobody checks. The
+    refusal fixture moves the fsQCA consistency in a copy of the index and
+    asserts the check notices.
+    """
+    gate = ROOT / "scripts" / "build_blueprint.py"
+    if not gate.exists():
+        results.append(("blueprint: generator present", False))
+        return
+    r = subprocess.run([sys.executable, str(gate), "--selftest"],
+                       capture_output=True, text=True)
+    out = r.stdout + r.stderr
+    results.append(("blueprint: a page built from this index passes its own sync check",
+                    r.returncode == 0 and "3/3" in out))
+    results.append(("blueprint: a moved fsQCA consistency is refused by the sync check",
+                    "PASS  blueprint: a moved fsQCA consistency is refused" in out))
+    results.append(("blueprint: the rendered page passes the doctrine scan (W-1, W-2)",
+                    "PASS  blueprint: the rendered page passes the writing and render" in out))
+    c = subprocess.run([sys.executable, str(gate), "--check"], capture_output=True, text=True)
+    results.append(("blueprint: the committed page is in sync with the index",
+                    c.returncode == 0))
+
+
+
+def check_reading_contract(results: list[tuple[str, bool]]) -> None:
+    """The evidence hierarchy is data and its contract refuses (RC-1 to RC-6).
+
+    L-182 is the reason this is a gate and not a habit: a session read the
+    serving plane through a fetch tool that caches, asserted the cached value,
+    and handed the operator work that was already done. A habit dies with the
+    session that had it. ops/SOURCE_PRECEDENCE.json outlives it.
+    """
+    gate = ROOT / "scripts" / "verify_reading_contract.py"
+    if not gate.exists():
+        results.append(("reading contract: gate present", False))
+        return
+    r = subprocess.run([sys.executable, str(gate), "--selftest"], capture_output=True, text=True)
+    out = r.stdout + r.stderr
+    results.append(("reading contract: 12 fixtures, one refusal per rule (RC-1 to RC-6)",
+                    r.returncode == 0 and "12/12" in out))
+    results.append(("reading contract: a cached reader cannot be authoritative (L-182)",
+                    "PASS  reading-contract: a plane that admits a cached reader is refused" in out))
+    results.append(("reading contract: WebFetch cannot be removed from the forbidden table",
+                    "PASS  reading-contract: removing WebFetch from the forbidden table is refused" in out))
+    c = subprocess.run([sys.executable, str(gate), "--quiet"], capture_output=True, text=True)
+    results.append(("reading contract: the committed hierarchy holds", c.returncode == 0))
+
+
+
+def check_chain_binding(results: list[tuple[str, bool]]) -> None:
+    """C5: the served index must be an artefact the spine actually bound.
+
+    check_chain above exercises C1, C2 and C3 and stops there, so the one rule
+    that answers "is the file on this disk the file that was released" had no
+    fixture. On 2026-08-26 the working tree carried an unlanded extra entry in
+    served_contract.tools.qesis_get_integrity; every other gate passed on it,
+    because every other gate reads the working tree and the working tree was
+    self-consistent. Only C5 compares the disk against something the disk cannot
+    edit. L-184.
+
+    The generator's own docstring invites this: --index points at a copy, so the
+    refusal fixture never touches the published artefact.
+    """
+    if not (SPINE.exists() and ATTESTATION.exists() and (ROOT / "data" / "qesis_v8.json").exists()):
+        results.append(("chain binding: artefacts present", False))
+        return
+
+    def run(index_path: Path) -> tuple[int, str]:
+        r = subprocess.run([sys.executable, str(CHAIN_GATE), "--index", str(index_path)],
+                           capture_output=True, text=True)
+        return r.returncode, (r.stdout + r.stderr)
+
+    rc, _ = run(ROOT / "data" / "qesis_v8.json")
+    results.append(("chain binding: the committed index is an attested artefact (C5)", rc == 0))
+
+    d = Path(tempfile.mkdtemp())
+    drifted = d / "drifted.json"
+    doc = json.loads((ROOT / "data" / "qesis_v8.json").read_text(encoding="utf-8"))
+    # The exact shape of the real drift: one extra declared field, nothing else.
+    tools = (doc.get("served_contract") or {}).get("tools") or {}
+    key = next(iter(tools), None)
+    if isinstance(tools.get(key), list):
+        tools[key] = list(tools[key]) + ["field_that_never_landed"]
+    else:
+        doc["_unlanded_local_edit"] = True
+    drifted.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    rc, out = run(drifted)
+    results.append(("chain binding: an unlanded local edit to the index is refused (C5)",
+                    rc != 0 and "C5" in out))
+    drifted.unlink(missing_ok=True)
+    d.rmdir()
+
+
 def check_idempotent() -> bool | None:
     """Two builds from the same sources must agree, timestamp aside.
 
@@ -984,6 +1121,10 @@ def main() -> int:
     check_ledger_singleton(extra)
     check_ecosystem_state(extra)
     check_selfheal_runner(extra)
+    check_runner_merge(extra)
+    check_blueprint(extra)
+    check_reading_contract(extra)
+    check_chain_binding(extra)
     for name, ok in extra:
         print(f"  {'ok ' if ok else 'X  '} {name}")
     passed += sum(1 for _, ok in extra if ok)

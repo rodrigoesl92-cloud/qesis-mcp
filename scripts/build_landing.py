@@ -158,6 +158,8 @@ numbers is the argument.</p>
 rho = C/6 trace-normalised, CR = 1 - S(rho)/ln 6. Coverage {cp['global']['n']}
 of 35 global, {cp['core']['n']} of 35 core. Vintage {esc(doc['vintage'])}.</p>
 
+<p><a href="/blueprint.html">The causal blueprint</a> shows the chain behind these numbers: what the trilemma costs when it is measured, which agent touched which number, and what would have to be true for the findings to be wrong.</p>
+
 <h2>The gap is the finding</h2>
 <p>The Binary Integrity Guard never imputes. A state missing a weighted axis is
 not ranked and not quietly zeroed: it is published as a gap with its coverage
