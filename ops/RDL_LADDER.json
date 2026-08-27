@@ -122,12 +122,12 @@
    "decision_required": false
   },
   "claim_from_proxy_not_resource": {
-   "occurrences": 11,
+   "occurrences": 13,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
-   "last_signature": "The change set delivered five workflow files to ops/pending_workflows and I ran verify_workflow_contract.py, which reads .github/workflows, against a tree where step 0a had not yet installed them. It passed, and I recorded that pass as evidence about the tree the lander would judge. The lander installed them and the same gate immediately found C-3: scripts/gh_ops.py runs in CI and is absent from the selfheal control set. The pre-change tree stood proxy for the post-change tree. The technique for avoiding this was already in my hands in the same session: SEC-1 was verified by building a temp tree with the delivered workflows installed, and the identical treatment was not given to the sibling gate.",
-   "last_seen": "2026-08-26T16:39:58Z",
+   "last_signature": "reported that two fsQCA condition variables carried no served definition after searching only ops, CODEBOOK, README, docs and the index",
+   "last_seen": "2026-08-27T11:31:35Z",
    "prior_evidence": "L-104, L-111, L-143, L-161",
    "lesson_ids": [
     "L-161",
@@ -137,7 +137,9 @@
     "L-179",
     "L-180",
     "L-182",
-    "L-183"
+    "L-183",
+    "L-185",
+    "L-188"
    ],
    "ci_blocking": true,
    "gate_required": true,
@@ -266,6 +268,36 @@
    ],
    "ci_blocking": false,
    "gate_required": true,
+   "decision_required": false
+  },
+  "validator_rendered_as_product": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "d2590d8cc91bc8050058eef0b71ca26e11f0018b3b406e24307fdb61438fa34a",
+   "last_signature": "public/blueprint.html served fsQCA expressions, field names and internal flag keys to an institutional reader",
+   "last_seen": "2026-08-27T09:29:26Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-186"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "restore_lived_only_in_the_process": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "f20a02cf13a32a503d1610662e509517eb1f7274e24bbf5d21b6297f77df93c2",
+   "last_signature": "test_gate.py check_contract mutates the published index in place and its restore lives in a finally block",
+   "last_seen": "2026-08-27T10:17:14Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-187"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
    "decision_required": false
   }
  }

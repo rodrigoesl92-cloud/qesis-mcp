@@ -91,6 +91,32 @@ habit dies with the session that had it.
    and is blocked from writing to one; that is the reason the Actions setting is
    the operator's, and G-03 by analogy is the second reason, not the first.
 
+8. **The label is part of the claim, exactly as the reader is.** Amended
+   2026-08-27 after L-185, the twelfth occurrence of this family and the first
+   inside the artefact plane rather than across a remote one. A value rendered
+   on any surface names the quantity the resource that defines it gives it, and
+   the build asserts the rendered figure against that resource at every point
+   where both speak. Taking a label from a neighbouring field in the same block
+   is the same move as taking a value from a cached reader: the claim came from
+   something that is not the thing. `public/blueprint.html` served 0.3465 and
+   0.6732 as pair connectivity for eleven days. They are giant component shares.
+   The pair connectivity for those two states of the network is 0.4394 and
+   0.2214, sits two fields away in the same block, and reproduces exactly from
+   the curve, which is how the mismatch was found and is now the gate:
+   `build_blueprint.py check_evidence_agreement`, eight assertions, refusing the
+   build rather than the reader.
+
+9. **The repository boundary is not the search boundary.** Amended 2026-08-27
+   after L-188, the thirteenth occurrence. Two fsQCA condition variables were
+   reported as carrying no served definition, and the definition existed the
+   whole time in the thesis database that `scripts/build_index.py` names in its
+   own source. Before reporting that a served value has no definition, follow
+   the writer: open the script that emits the field, read the source path it
+   names, and search that path. The producer of a value is part of the resource.
+   An absence asserted from a partial search is a claim from a proxy, and it
+   cost two rounds of proposed definitions that had to be refused against data
+   before anyone read the view that defines them.
+
 ## What this costs, and why it is worth it
 
 Reading the resource every time is slower than trusting a report. The DORA 2026
@@ -120,4 +146,7 @@ repositories, zero open; `grep -rn uses:` filtered to lines without a 40 hex
 SHA over both workflow directories; `verify_action_pinning.py` exit 1 on the
 tree as installed and exit 0 on the tree with ops/pending_workflows installed;
 `verify_reading_contract.py --selftest` 12 of 12; `test_gate.py` 84 of 84.
-Landed by: pending.
+Landed by: PR 79 in qesis-mcp and PR 45 in sovereign-infra, both merged by
+rebase 2026-08-27T07:26Z. qesis-mcp main 114008626e01 is the production
+deployment dpl_Fce1osfhNxGLah1RaAC8GUbJZ6F7, READY, target production, created
+2026-08-27T07:27:08Z, read from the Vercel API list_deployments this session. Amended 2026-08-27 with rule 8, not yet landed.

@@ -2,10 +2,14 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QESIS+ causal blueprint, v9.0 (2026-08-13)</title>
-<meta name="description" content="The three phases behind the QESIS+ index:
- what the infrastructural trilemma costs, which agent touched which number, and
- the equifinality and percolation results with what would refute them.">
+<title>QESIS+ risk surface, v9.0 (2026-08-13)</title>
+<meta name="description" content="A validation pipeline that publishes what it can
+ certify and withholds what it cannot. The current reading: ten routes to high
+ substrate vulnerability, and a cable network that tolerates random loss and
+ fails under an aimed one.">
+<meta name="qesis-vintage" content="v9.0 (2026-08-13)">
+<meta name="qesis-record" content="Article 12 record in the qesis-compliance block">
+<meta name="qesis-oversight" content="Article 14, human in the loop, sole signatory">
 <style>
 :root{
   --ink:#1c1b19; --ink-2:#4a4744; --ink-3:#78736d;
@@ -60,250 +64,491 @@ footer{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1rem;
        font-size:.82rem;color:var(--ink-3)}
 .epis{color:var(--cool);font-family:var(--mono);font-size:.8rem}
 
-.phase{border-left:2px solid var(--cool);padding:.1rem 0 .1rem .9rem;margin:1.6rem 0 .6rem}
-.phase h2{margin:.2rem 0 .2rem}
-.phase .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
-          text-transform:uppercase;color:var(--ink-3)}
-.figwrap{height:250px;margin:1rem 0;overflow-x:auto}
-.figwrap svg{height:250px;width:100%;min-width:34rem;display:block}
-.b{fill:var(--paper-2);stroke:var(--rule);stroke-width:1}
-.bg{fill:var(--paper-2);stroke:var(--cool);stroke-width:2}
-.t{fill:var(--ink);font-family:var(--mono);font-size:11px}
-.ts{fill:var(--ink-3);font-family:var(--mono);font-size:9.5px}
-.ar{stroke:var(--cool-2);stroke-width:1.5;fill:none}
-.ah{fill:var(--cool-2)}
-td.pos{color:var(--cool)}
-td.neg{color:var(--ink-3)}
-.tip b{color:var(--hot)}
+.hero{margin:0 0 1.2rem}
+.chip{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;
+      text-transform:uppercase;border:1px solid var(--rule);border-radius:2px;
+      padding:.15rem .45rem;margin:0 .35rem .35rem 0;color:var(--ink-3)}
 .tip{display:flex;flex-wrap:wrap;gap:1.4rem;margin:1rem 0;padding:.9rem 1rem;
      background:var(--paper-2);border:1px solid var(--rule);border-radius:3px}
 .tip div{min-width:8rem}
 .tip b{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:600;
-       font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+       font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--cool)}
 .tip span{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)}
-.cool b{color:var(--cool)}
+.tip .peak b{color:var(--hot)}
+.sec{margin:2.6rem 0 0}
+.figwrap{margin:1rem 0;overflow-x:auto}
+.figwrap svg{width:100%;min-width:34rem;display:block}
+.b{fill:var(--paper-2);stroke:var(--rule);stroke-width:1}
+.bg{fill:var(--paper-2);stroke:var(--cool);stroke-width:2}
+.t{fill:var(--ink);font-family:var(--sans);font-size:12px}
+.ts{fill:var(--ink-3);font-family:var(--mono);font-size:9.5px}
+.tm{fill:var(--ink-2);font-family:var(--sans);font-size:10.5px}
+.ar{stroke:var(--cool-2);stroke-width:1.5;fill:none}
+.ah{fill:var(--cool-2)}
+.tri{fill:none;stroke:var(--rule);stroke-width:1.5}
+.node{fill:var(--paper);stroke:var(--cool);stroke-width:1.5}
+.node-off{fill:var(--paper);stroke:var(--rule);stroke-width:1.5}
+.corner{fill:var(--paper-2);stroke:var(--cool);stroke-width:1.5}
+.edge{stroke:var(--cool-2);stroke-width:1.2;fill:none}
+.edge-clash{stroke:var(--hot);stroke-width:1.6;fill:none;stroke-dasharray:4 3}
+.axis{stroke:var(--rule);stroke-width:1;fill:none}
+.grid{stroke:var(--rule);stroke-width:.6;fill:none}
+.ln-t{stroke:var(--cool);stroke-width:2;fill:none}
+.ln-r{stroke:var(--cool-2);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.mk-hot{stroke:var(--hot);stroke-width:1.4;fill:none}
+.mk-cool{stroke:var(--cool-2);stroke-width:1.2;fill:none;stroke-dasharray:3 3}
+.dot-t{fill:var(--cool)}
+.dot-r{fill:var(--cool-2)}
+.mtx{width:100%;border-collapse:collapse;font-size:.8rem;margin:.6rem 0;table-layout:fixed}
+.mtx th{font-size:.6rem;text-transform:uppercase;letter-spacing:.02em;
+        color:var(--ink-3);font-weight:600;text-align:center;padding:.35rem .15rem;
+        vertical-align:bottom;line-height:1.15;overflow-wrap:anywhere}
+.mtx th.lead{text-align:left;width:9.5%}
+.mtx th.c{width:10.5%;letter-spacing:0;font-size:.55rem;hyphens:none}
+.mtx th.st{width:7%}
+.mtx th.vh{width:21%}
+.mtx td:last-child{padding-right:0}
+.mtx td{border-bottom:1px solid var(--rule);padding:.42rem .2rem;text-align:center}
+.mtx td.lead{text-align:left;color:var(--ink)}
+.mtx tr.row{cursor:pointer}
+.mtx tr.row:hover td{background:var(--paper-2)}
+.pip{display:inline-block;width:.72rem;height:.72rem;border-radius:50%;
+     border:1.5px solid var(--cool);vertical-align:middle}
+.pip.on{background:var(--cool)}
+.pip.off{border-color:var(--rule)}
+.vd{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;
+    text-transform:uppercase;border:1px solid var(--rule);border-radius:2px;
+    padding:.1rem .35rem;color:var(--ink-3);white-space:nowrap}
+.vd.vg{border-color:var(--cool);color:var(--cool)}
+.vd.vy{border-color:var(--ink-3)}
+.vd.vr{border-color:var(--hot);color:var(--hot)}
+.det td{background:var(--paper-2);text-align:left;padding:.7rem .9rem}
+.det p{margin:.25rem 0;font-size:.88rem}
+.det .kv{font-family:var(--mono);color:var(--ink);font-size:.82rem}
+.filters{margin:.6rem 0 .2rem}
+.fbtn{font:inherit;font-size:.76rem;background:var(--paper);color:var(--ink-2);
+      border:1px solid var(--rule);border-radius:2px;padding:.2rem .6rem;
+      margin:0 .3rem .3rem 0;cursor:pointer}
+.fbtn[aria-pressed="true"]{border-color:var(--cool);color:var(--cool)}
+.panel{border-left:2px solid var(--cool);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.panel h4{margin:.2rem 0 .2rem;font-size:.9rem;color:var(--ink)}
+.scrub{display:flex;flex-wrap:wrap;gap:.9rem;align-items:center;margin:.5rem 0 .2rem}
+.scrub input[type=range]{flex:1 1 16rem;min-width:12rem;accent-color:var(--cool)}
+.read{display:flex;flex-wrap:wrap;gap:1.2rem;margin:.4rem 0 .8rem;padding:.7rem .9rem;
+      background:var(--paper-2);border:1px solid var(--rule);border-radius:3px}
+.read div{min-width:7rem}
+.read b{display:block;font-family:var(--mono);font-size:1.15rem;font-weight:600;
+        font-variant-numeric:tabular-nums;color:var(--ink)}
+.read span{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)}
+.cut{list-style:none;margin:.6rem 0;padding:0;font-size:.85rem}
+.cut li{display:flex;gap:.7rem;padding:.28rem .5rem;border-bottom:1px solid var(--rule)}
+.cut li.hit{background:var(--paper-2)}
+.cut .r{font-family:var(--mono);color:var(--ink-3);min-width:1.6rem}
+.cut .c{flex:1}
+.cut .s{font-family:var(--mono);color:var(--ink-2)}
+.gap{border-left:2px solid var(--cool);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.src{font-size:.75rem;color:var(--ink-3);margin:.3rem 0 0;font-family:var(--mono)}
+.prov{font-size:.82rem}
+.prov li{margin:.2rem 0;color:var(--ink-2)}
+.mono{font-family:var(--mono);font-size:.82rem}
+.stage{fill:var(--paper-2);stroke:var(--rule);stroke-width:1}
+.stage-gate{fill:var(--paper-2);stroke:var(--cool);stroke-width:2}
+.raw{fill:none;stroke:var(--rule);stroke-width:1}
+.raw-node{fill:var(--paper-2);stroke:var(--ink-3);stroke-width:.8}
+.refused{stroke:var(--hot);stroke-width:1.2;fill:none;stroke-dasharray:3 3}
+.clean{stroke:var(--cool);stroke-width:1.6;fill:none}
+.cell{fill:var(--cool);opacity:.55}
+.th{fill:var(--ink);font-family:var(--sans);font-size:12.5px;font-weight:600}
+.agents{margin:.8rem 0 0;padding:0;list-style:none}
+.agents li{border-left:2px solid var(--rule);padding:.15rem 0 .35rem .9rem;margin:.7rem 0}
+.agents b{display:block;font-size:.9rem;color:var(--ink)}
+.agents .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
+           text-transform:uppercase;color:var(--ink-3)}
+.agents p{margin:.2rem 0 0;font-size:.88rem}
+.agents li.gate{border-left-color:var(--cool)}
+.axpick{margin:.7rem 0 .3rem}
+.axbtn{font:inherit;font-size:.76rem;background:var(--paper);color:var(--ink-2);
+       border:1px solid var(--rule);border-radius:2px;padding:.2rem .55rem;
+       margin:0 .3rem .3rem 0;cursor:pointer}
+.axbtn[aria-pressed="true"]{border-color:var(--cool);color:var(--cool)}
+.cpl{margin:.4rem 0;padding:0;list-style:none}
+.cpl li{display:grid;grid-template-columns:5.6rem 1fr 3.4rem 1fr 3.4rem;gap:.5rem;
+        align-items:center;padding:.3rem .2rem;border-bottom:1px solid var(--rule);
+        font-size:.82rem}
+.cpl .nm{color:var(--ink)}
+.bar{position:relative;height:1.05rem;background:var(--paper-2);border:1px solid var(--rule)}
+.bar i{position:absolute;top:0;bottom:0;left:50%;display:block}
+.bar i.pos{background:var(--cool)}
+.bar i.neg{background:var(--ink-3)}
+.cpl .v{font-family:var(--mono);font-size:.72rem;font-variant-numeric:tabular-nums;
+        text-align:right;color:var(--ink-2)}
+.bar span.mid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--rule)}
+.cplhead{display:grid;grid-template-columns:5.6rem 1fr 3.4rem 1fr 3.4rem;gap:.5rem;
+         font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;
+         color:var(--ink-3);padding:.2rem}
 </style>
 </head><body><main>
 
-<p><span class="tag">v9.0 (2026-08-13)</span>
-   <span class="tag">causal blueprint</span>
-   <span class="tag">three phases</span></p>
+<div class="hero">
+<p><span class="chip">v9.0 (2026-08-13)</span>
+   <span class="chip">continuously republished</span>
+   <span class="chip">3 states withheld with cause</span></p>
 
-<h1>Where every number on this endpoint comes from.</h1>
+<h1>The instrument that refuses its own bad data.</h1>
 
-<p class="lede">A dashboard shows results. This page shows the chain: what the
-trilemma costs when it is measured rather than asserted, which agent touched the
-number and where the gate sits, and what would have to be true for the findings
-to be wrong. Read it in order. Each phase is checkable against the artefact
-named under it.</p>
-
-<div class="phase"><span class="k">Phase 1, define</span>
-<h2>The trilemma is a trade-off you can price</h2></div>
-
-<p>Algorithmic independence, hyperscale efficiency and ecological sustainability
-are not three separate budgets. Measured across 32 states the six axes are
-weakly entangled at CR 0.124. Restricted to the states that import their
-energy, their minerals and their hyperscalers, entanglement rises to
-0.176 over 26 states. The trilemma is cheap where the substrate is
-domestic and expensive where it is imported, and the gap between those two
-numbers is the whole claim.</p>
-
-<div class="stat">
-  <div class="cool"><b>0.124</b><span>coupling, global n=32</span></div>
-  <div class="cool"><b>0.176</b><span>coupling, import core n=26</span></div>
-  <div class="cool"><b>0.40</b><span>dominant eigenmode, global</span></div>
-  <div class="cool"><b>0.47</b><span>dominant eigenmode, core</span></div>
+<p class="lede">This endpoint does not sell a dataset. It publishes what a
+validation pipeline currently certifies, withholds what it cannot verify, and
+refuses its own release when a published number stops agreeing with the source
+it came from. The first thing it caught was an error in the study it was built
+to support.</p>
 </div>
 
-<div class="scroll"><table>
-<thead><tr><th>Axis pair</th><th class="n">Global r</th><th class="n">Core r</th></tr></thead>
-<tbody><tr><td>FPE and ODI</td><td class="n pos">+0.783</td><td class="n">+0.755</td></tr>
-<tr><td>ODI and ESE</td><td class="n neg">-0.423</td><td class="n">-0.485</td></tr>
-<tr><td>FPE and ESE</td><td class="n neg">-0.385</td><td class="n">-0.445</td></tr>
-<tr><td>WSE and ESE</td><td class="n pos">+0.360</td><td class="n">+0.576</td></tr>
-<tr><td>REE and ESE</td><td class="n neg">-0.281</td><td class="n">-0.304</td></tr>
-<tr><td>WSE and REE</td><td class="n neg">-0.259</td><td class="n">-0.160</td></tr></tbody></table></div>
-<p class="src">The six strongest off-diagonal terms, ranked by absolute value at
-build time from coupling.global.matrix and read across to coupling.core.matrix.
-Sign is the direction, not the strength. Asset: data/qesis_v8.json, vintage
-v9.0 (2026-08-13).</p>
+<div class="tip">
+  <div class="peak"><b>6</b><span>corrections raised against its own source</span></div>
+  <div><b>8</b><span>limitations published with this vintage</span></div>
+  <div><b>3</b><span>states withheld, never filled in</span></div>
+  <div><b>10</b><span>routes to the same failure</span></div>
+</div>
 
-<h3>What the weights actually do</h3>
-<p>A declared weight is an intention. The main effect is what the axis moves in
-practice, estimated as a Pearson correlation ratio over
-32 complete cases with 4000 bootstrap
-resamples. Where the nominal weight falls outside the interval, the published
-weight is not the realised influence and the page says so rather than repeating
-the intention.</p>
-<div class="scroll"><table>
-<thead><tr><th>Axis</th><th class="n">Nominal</th><th class="n">Main effect</th>
-<th class="n">95 percent interval</th><th>Nominal</th></tr></thead>
-<tbody><tr><td>WSE</td><td class="n">0.30</td><td class="n">0.539</td><td class="n">0.331 to 0.724</td><td>OUTSIDE</td></tr>
-<tr><td>CSE</td><td class="n">0.30</td><td class="n">0.407</td><td class="n">0.108 to 0.637</td><td>inside</td></tr>
-<tr><td>ODI</td><td class="n">0.17</td><td class="n">0.024</td><td class="n">0.000 to 0.248</td><td>inside</td></tr>
-<tr><td>REE</td><td class="n">0.15</td><td class="n">0.000</td><td class="n">0.000 to 0.172</td><td>inside</td></tr>
-<tr><td>RGD</td><td class="n">0.08</td><td class="n">0.022</td><td class="n">0.000 to 0.297</td><td>inside</td></tr></tbody></table></div>
-<p class="src">Method: Pearson correlation ratio (main effect Si), Paruolo, Saisana and Saltelli (2013), JRSS-A 176(3), 609-634. For a linear a. Asset: qesis_v8.json
-effective_weights, vintage v9.0 (2026-08-13).</p>
+<h2 class="sec">What the pipeline caught, in its own numbers</h2>
 
-<div class="phase"><span class="k">Phase 2, process</span>
-<h2>Which agent touched the number, and where the gate sits</h2></div>
+<p>An instrument that has never contradicted the person who built it has not
+been tested. This one has. The QESIS Theory column is not the declared formula: recomputing the
+declared formula from the axis columns published beside it disagreed with the
+published column on most rows, and the deviation was sign ordered rather than
+random. The figure was withdrawn, not softened. Every correction since is
+carried in the concordance with its evidence, and 2 of the
+8 limitations on this vintage are marked high severity by the
+pipeline itself.</p>
 
-<p>Four runtimes, one gate. Intake is deliberately permissive and emission is
-deliberately strict, so that everything ambiguous is resolved in one place
-instead of everywhere. The registry is closed at six agents by R-12 and D-019;
-the two not drawn here are HERALD, which publishes only from cleared material,
-and COUNSEL, which owns money and law.</p>
+<ul class="prov">
+  <li>3 of the 35 states carry no composite. Coverage falls below the
+      declared threshold, the cause is published per state, and the value is left
+      absent rather than imputed.</li>
+  <li>1 of the 5 declared weights falls outside its own
+      confidence interval, estimated over 32 complete cases with
+      4000 resamples. The page reports the realised
+      influence, not the intention.</li>
+  <li>The release blocks itself. This page is regenerated from the index and the
+      build fails when a figure here stops matching the asset it came from, so a
+      stale number cannot reach a reader by being forgotten.</li>
+</ul>
+<p class="src">Assets: data/qesis_v8.json, concordance errata and uncertainty
+ledger, vintage v9.0 (2026-08-13). Provenance chain and the full validation
+record travel with this page as machine readable metadata.</p>
+
+<h2 class="sec">How a number gets from a public registry onto this page</h2>
+
+<p>Four runtimes, one gate, and a cleared vintage that this page carries rather
+than requests. Intake is deliberately permissive and emission is deliberately
+strict, so everything ambiguous is settled in one place instead of in every
+place. The three feeds that stop at the gate in the figure are not decoration:
+they are the 3 states whose coverage fell below the declared
+threshold, withheld and published as a gap rather than filled in.</p>
 
 <div class="figwrap">
-<svg viewBox="0 0 760 250" role="img"
-     aria-label="SCOUT intake, then the SENTINEL gate, then ANALYST validation,
-     then ARCHITECT operations, with the gate marked as the only path to
-     publication.">
-  <rect class="b" x="8"   y="60" width="150" height="62" rx="3"/>
-  <rect class="bg" x="196" y="60" width="150" height="62" rx="3"/>
-  <rect class="b" x="384" y="60" width="150" height="62" rx="3"/>
-  <rect class="b" x="572" y="60" width="150" height="62" rx="3"/>
-  <text class="t"  x="20"  y="84">SCOUT</text>
-  <text class="ts" x="20"  y="100">intake, freshness,</text>
-  <text class="ts" x="20"  y="113">licence at source</text>
-  <text class="t"  x="208" y="84">SENTINEL</text>
-  <text class="ts" x="208" y="100">the gate. PASS,</text>
-  <text class="ts" x="208" y="113">REVIEW, BLOCK</text>
-  <text class="t"  x="396" y="84">ANALYST</text>
-  <text class="ts" x="396" y="100">fsQCA, coupling,</text>
-  <text class="ts" x="396" y="113">what would falsify</text>
-  <text class="t"  x="584" y="84">ARCHITECT</text>
-  <text class="ts" x="584" y="100">pipeline, ledgers,</text>
-  <text class="ts" x="584" y="113">the landing</text>
-  <path class="ar" d="M158 91 H188"/><path class="ah" d="M188 86 l10 5 -10 5 z"/>
-  <path class="ar" d="M346 91 H376"/><path class="ah" d="M376 86 l10 5 -10 5 z"/>
-  <path class="ar" d="M534 91 H564"/><path class="ah" d="M564 86 l10 5 -10 5 z"/>
-  <text class="ts" x="196" y="146">nothing reaches the database or the public</text>
-  <text class="ts" x="196" y="159">without passing this box (Rule 1-1)</text>
-  <path class="ar" d="M271 122 V140"/>
-  <text class="ts" x="8"  y="196">Hick: four stages, not seven. Miller: each stage carries three facts.</text>
-  <text class="ts" x="8"  y="212">Postel: SCOUT accepts loosely, SENTINEL emits strictly.</text>
-  <text class="ts" x="8"  y="228">Tesler: the gate's complexity is the system's, never the reader's.</text>
-</svg>
-</div>
-<p class="src">Painted from the stylesheet, never from presentation attributes:
-var() does not resolve inside an attribute (L-047, W-2). Mandates are summarised
-from sovereign-infra/agents/*.md, which remain authoritative.</p>
+<svg viewBox="0 0 760 320" role="img"
+     aria-label="Three stages left to right. An irregular cluster of unverified
+     source streams feeds four stacked runtimes, SCOUT then the SENTINEL gate then
+     ANALYST then ARCHITECT, and a regular grid of cleared values leaves on the
+     right. Three feeds stop at the gate rather than passing it.">
+  <path class="raw" d="M33 46 C150 46, 170 66, 212 66"/><path class="raw" d="M67 74 C150 74, 170 66, 212 66"/><path class="raw" d="M27 104 C150 104, 170 66, 212 66"/><path class="raw" d="M79 128 C150 128, 170 66, 212 66"/><path class="raw" d="M41 158 C150 158, 170 66, 212 66"/><path class="raw" d="M91 182 C150 182, 170 66, 212 66"/><path class="raw" d="M35 208 C150 208, 170 66, 212 66"/><path class="raw" d="M73 236 C150 236, 170 66, 212 66"/><path class="raw" d="M29 264 C150 264, 170 66, 212 66"/><path class="refused" d="M97 96 C150 96, 170 124, 204 124"/><path class="refused" d="M200 120 l8 8 M208 120 l-8 8"/><path class="refused" d="M57 118 C150 118, 170 124, 204 124"/><path class="refused" d="M200 120 l8 8 M208 120 l-8 8"/><path class="refused" d="M101 148 C150 148, 170 124, 204 124"/><path class="refused" d="M200 120 l8 8 M208 120 l-8 8"/><circle class="raw-node" cx="28" cy="46" r="3.4"/><circle class="raw-node" cx="62" cy="74" r="3.4"/><circle class="raw-node" cx="22" cy="104" r="3.4"/><circle class="raw-node" cx="74" cy="128" r="3.4"/><circle class="raw-node" cx="36" cy="158" r="3.4"/><circle class="raw-node" cx="86" cy="182" r="3.4"/><circle class="raw-node" cx="30" cy="208" r="3.4"/><circle class="raw-node" cx="68" cy="236" r="3.4"/><circle class="raw-node" cx="24" cy="264" r="3.4"/><circle class="raw-node" cx="92" cy="96" r="3.4"/><circle class="raw-node" cx="52" cy="118" r="3.4"/><circle class="raw-node" cx="96" cy="148" r="3.4"/><circle class="raw-node" cx="46" cy="196" r="3.4"/><circle class="raw-node" cx="88" cy="224" r="3.4"/><circle class="raw-node" cx="58" cy="258" r="3.4"/>
+  <text class="th" x="16" y="26">Intake</text>
+  <text class="ts" x="16" y="286">unverified at collection,</text>
+  <text class="ts" x="16" y="299">every source dated and licensed</text>
+  <rect class="stage" x="216" y="44" width="196" height="44" rx="3"/><text class="th" x="230" y="63">SCOUT</text><text class="ts" x="230" y="78">continuous intake</text><path class="ar" d="M314 88 V97"/><path class="ah" d="M309 97 l5 9 5 -9 z"/><rect class="stage-gate" x="216" y="102" width="196" height="44" rx="3"/><text class="th" x="230" y="121">SENTINEL</text><text class="ts" x="230" y="136">the compliance gate</text><path class="ar" d="M314 146 V155"/><path class="ah" d="M309 155 l5 9 5 -9 z"/><rect class="stage" x="216" y="160" width="196" height="44" rx="3"/><text class="th" x="230" y="179">ANALYST</text><text class="ts" x="230" y="194">equifinality engine</text><path class="ar" d="M314 204 V213"/><path class="ah" d="M309 213 l5 9 5 -9 z"/><rect class="stage" x="216" y="218" width="196" height="44" rx="3"/><text class="th" x="230" y="237">ARCHITECT</text><text class="ts" x="230" y="252">the island builder</text>
+  <text class="th" x="216" y="26">The clean room</text>
+  <text class="ts" x="216" y="286">3 states withheld here, 6 corrections</text>
+  <text class="ts" x="216" y="299">raised against the source that fed it</text>
+  <path class="clean" d="M412 232 C452 232, 462 120, 500 120"/>
+  <path class="ah" d="M500 115 l10 5 -10 5 z"/>
+  <rect class="cell" x="506" y="58" width="26" height="18" rx="2"/><rect class="cell" x="540" y="58" width="26" height="18" rx="2"/><rect class="cell" x="574" y="58" width="26" height="18" rx="2"/><rect class="cell" x="608" y="58" width="26" height="18" rx="2"/><rect class="cell" x="642" y="58" width="26" height="18" rx="2"/><rect class="cell" x="676" y="58" width="26" height="18" rx="2"/><rect class="cell" x="506" y="84" width="26" height="18" rx="2"/><rect class="cell" x="540" y="84" width="26" height="18" rx="2"/><rect class="cell" x="574" y="84" width="26" height="18" rx="2"/><rect class="cell" x="608" y="84" width="26" height="18" rx="2"/><rect class="cell" x="642" y="84" width="26" height="18" rx="2"/><rect class="cell" x="676" y="84" width="26" height="18" rx="2"/><rect class="cell" x="506" y="110" width="26" height="18" rx="2"/><rect class="cell" x="540" y="110" width="26" height="18" rx="2"/><rect class="cell" x="574" y="110" width="26" height="18" rx="2"/><rect class="cell" x="608" y="110" width="26" height="18" rx="2"/><rect class="cell" x="642" y="110" width="26" height="18" rx="2"/><rect class="cell" x="676" y="110" width="26" height="18" rx="2"/><rect class="cell" x="506" y="136" width="26" height="18" rx="2"/><rect class="cell" x="540" y="136" width="26" height="18" rx="2"/><rect class="cell" x="574" y="136" width="26" height="18" rx="2"/><rect class="cell" x="608" y="136" width="26" height="18" rx="2"/><rect class="cell" x="642" y="136" width="26" height="18" rx="2"/><rect class="cell" x="676" y="136" width="26" height="18" rx="2"/>
+  <text class="th" x="506" y="26">The cleared vintage</text>
+  <text class="ts" x="506" y="164">v9.0 (2026-08-13), 10 routes, carried by</text>
+  <text class="ts" x="506" y="177">this page, fetched from nothing</text>
+  <text class="ts" x="506" y="286">a figure that stops agreeing with</text>
+  <text class="ts" x="506" y="299">its source fails the build</text>
+</svg></div>
 
-<h3>Limits the pipeline carries with the data</h3>
-<p>These are not advice in a prompt, where they are deletable. They travel in
-the index as data, and a gate fails the build if a flag arrives without the
-statement that says what it means.</p>
-<div class="scroll"><table>
-<thead><tr><th>Flag</th><th>Statement</th></tr></thead>
-<tbody><tr><td class="epis">theory_informed_limitation</td><td>The directional expectations behind the intermediate solution (DE-v9.0, DE-v9.1) were written by an analyst who had already read the served pathways, so they are not a blind prior. The intermediate solution is reported as theory-informed and must never be described as a pre-registered or blind expectation. Under the primary anchors it is identical to the complex solution at 0.8719 and 0.5782: the declared expectations simplify nothing, which is a null result and is reported as one.</td></tr>
-<tr><td class="epis">trilemma_status</td><td>The Infrastructural Trilemma does not decompose the condition set. HYPER carried both Algorithmic Independence and Hyperscale Efficiency while CABLE and REE mapped to no constraint, and dropping ESC_inv removed the second condition under Ecological Sustainability. It is an interpretive claim in the theory chapter and takes no part in the model, its calibration or its solution. No pathway term, necessity verdict or solution statistic may be described as a trilemma corner.</td></tr>
-<tr><td class="epis">necessity_rule</td><td>consistency_N &gt;= 0.90 AND RoN &gt;= 0.60 AND coverage_N &gt;= 0.60. No condition or negation clears it. A RoN-only rule labelled GCI_inv necessary at consistency_N 0.0217, because RoN rewards rarity.</td></tr></tbody></table></div>
-<p class="src">Asset: qesis_v8.json agent_reading_contract. Read before any
-evaluation of a country profile or pathway membership.</p>
+<ul class="agents"><li class=""><span class="k">continuous intake</span><b>SCOUT</b><p>Reads the declared source registry for every axis and records the vintage, the licence and the coverage at the point of collection, so a figure can always be traced back to the release it came from.</p></li><li class="gate"><span class="k">the compliance gate</span><b>SENTINEL</b><p>One gate, three verdicts, and nothing reaches the index or this page without passing it. Coverage below the declared threshold is withheld and published as a gap rather than filled in, which is why 3 of the 35 states carry no composite and each says why.</p></li><li class=""><span class="k">equifinality engine</span><b>ANALYST</b><p>Reduces the truth table of the six measured conditions to the smallest set of combinations that are each sufficient on their own, publishes the combinations it cannot rely on beside the ones it can, and states what would falsify the result.</p></li><li class=""><span class="k">the island builder</span><b>ARCHITECT</b><p>Writes the cleared vintage into a hash chained record this page carries with it, so a reader fetches nothing at run time and a figure that stops agreeing with its source fails the build instead of reaching a screen.</p></li></ul>
+<p class="src">Mandates summarised from sovereign-infra/agents, which remain
+authoritative. The registry is closed at six runtimes; the two not drawn are
+HERALD, which publishes only from cleared material, and COUNSEL, which owns
+money and law. Counts derived at build time from data/qesis_v8.json.</p>
 
-<div class="phase"><span class="k">Phase 3, validate</span>
-<h2>Equifinality, then percolation, then what would refute both</h2></div>
+<h2 class="sec">The constraint, and why it is a reading rather than a variable</h2>
 
-<p>There is no single road to high substrate vulnerability. The conservative
-solution returns 10 sufficient configurations at
-consistency 0.9048 and coverage 0.5807 over
-n=32, with 3 states withheld under
-the Binary Integrity Guard and never imputed. Coverage below one is the point:
-the solution explains the cases it covers and declines the rest.</p>
+<p>Algorithmic independence, hyperscale efficiency and ecological sustainability
+do not fit in one state at once. That is the claim the work is built on, and it
+is carried here as an interpretation of the measurements, never as a term inside
+the model. The reason is visible in the figure: one measured condition is
+claimed by two corners at the same time, and two conditions belong to no corner
+at all. A constraint whose corners cannot be told apart by the data cannot also
+be a variable in the model that data feeds.</p>
 
-<div class="scroll"><table>
-<caption class="src" style="text-align:left;caption-side:bottom">
-PRI separates a term that is sufficient for the outcome from one that is equally
-consistent with its negation. 4 of 10 paths sit below
-the 0.75 working convention and are published rather than dropped.</caption>
-<thead><tr><th>Configuration</th><th class="n">Consistency</th><th class="n">PRI</th>
-<th class="n">Coverage</th><th class="n">Cases</th><th>Flag</th></tr></thead>
-<tbody><tr><td class="epis">~WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.8841</td><td class="n">0.6587</td><td class="n">0.1043</td><td class="n">1</td><td>below the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * ~CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.8613</td><td class="n">0.5804</td><td class="n">0.1143</td><td class="n">1</td><td>below the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * ~CABLE * REE * ~HYPER * ESC_inv * GCI_inv</td><td class="n">0.9347</td><td class="n">0.8234</td><td class="n">0.1586</td><td class="n">3</td><td>clears the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * ~CABLE * REE * HYPER * ESC_inv * GCI_inv</td><td class="n">0.9535</td><td class="n">0.9115</td><td class="n">0.1157</td><td class="n">2</td><td>clears the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * ~GCI_inv</td><td class="n">0.9322</td><td class="n">0.8282</td><td class="n">0.1090</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.8273</td><td class="n">0.3032</td><td class="n">0.1016</td><td class="n">1</td><td>DISQUALIFYING: PRI below 0.50</td></tr>
-<tr><td class="epis">WSE * CABLE * REE * ~HYPER * ~ESC_inv * ~GCI_inv</td><td class="n">0.9179</td><td class="n">0.8001</td><td class="n">0.1477</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.8426</td><td class="n">0.4587</td><td class="n">0.1218</td><td class="n">2</td><td>DISQUALIFYING: PRI below 0.50</td></tr>
-<tr><td class="epis">WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv</td><td class="n">0.9568</td><td class="n">0.9106</td><td class="n">0.1193</td><td class="n">1</td><td>clears the 0.75 working convention</td></tr>
-<tr><td class="epis">WSE * CABLE * REE * HYPER * ESC_inv * ~GCI_inv</td><td class="n">0.9602</td><td class="n">0.9328</td><td class="n">0.1232</td><td class="n">2</td><td>clears the 0.75 working convention</td></tr></tbody></table></div>
-<p class="src">Model: WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -&gt; HIGH_SOV_VULN (n=32; freq&gt;=1; incl&gt;=0.80; conservative; one absorption pass). Calibration:
-Ragin direct method, two-sided logistic, sample percentiles 80/50/20. Asset: qesis_v8.json fsqca.solution, vintage
+<div class="figwrap">
+<svg viewBox="0 0 760 330" role="img"
+     aria-label="Six measured conditions on the left and the three corners of the
+     constraint on the right. One condition reaches two corners, two conditions
+     reach none, which is why the constraint is carried as a reading rather than
+     as a variable.">
+  <path class="tri" d="M556 58 L444 262 L664 262 Z"/>
+  <path class="edge-clash" d="M244 178 L546 58"/><path class="edge-clash" d="M244 178 L434 262"/><path class="edge" d="M244 222 L654 262"/>
+  <circle class="node-off" cx="238" cy="46" r="6"/><text class="t" x="16" y="43">Water stress</text><text class="ts" x="16" y="57">not named in the statement</text><circle class="node-off" cx="238" cy="90" r="6"/><text class="t" x="16" y="87">Submarine cable exposure</text><text class="ts" x="16" y="101">reaches no corner</text><circle class="node-off" cx="238" cy="134" r="6"/><text class="t" x="16" y="131">Critical minerals dependence</text><text class="ts" x="16" y="145">reaches no corner</text><circle class="node" cx="238" cy="178" r="6"/><text class="t" x="16" y="175">Hyperscaler concentration</text><text class="ts" x="16" y="189">reaches two corners at once</text><circle class="node" cx="238" cy="222" r="6"/><text class="t" x="16" y="219">Effective sovereignty not held</text><text class="ts" x="16" y="233">assigned one corner it does not measure</text><circle class="node-off" cx="238" cy="266" r="6"/><text class="t" x="16" y="263">Cybersecurity commitment gap</text><text class="ts" x="16" y="277">not named in the statement</text>
+  <circle class="corner" cx="556" cy="58" r="8"/><text class="t" x="556" y="42" text-anchor="middle">Algorithmic independence</text><circle class="corner" cx="444" cy="262" r="8"/><text class="t" x="444" y="288" text-anchor="middle">Hyperscale efficiency</text><circle class="corner" cx="664" cy="262" r="8"/><text class="t" x="664" y="288" text-anchor="middle">Ecological sustainability</text>
+  <text class="tm" x="16" y="316">solid line, one corner. broken line, the same condition claimed by two corners.</text>
+</svg></div>
+<p class="src">Corner assignment read from the served statement that governs how
+this claim may be used. No result on this page is described as a corner of the
+constraint, because the pipeline forbids it.</p>
+
+<p>What the measurements do price is the cost of the trade. Across
+32 states the six axes are weakly entangled at 0.124. Restricted to
+the states that import their energy, their minerals and their hyperscalers,
+entanglement rises to 0.176 over 26 states. The constraint is cheap
+where the substrate is domestic and expensive where it is imported, and the gap
+between those two numbers is the whole of it.</p>
+
+<p>That is also the only form of the constraint the measurements support you
+handling directly. There is no calibrated function here that makes a corner
+collapse when you raise the other two, and staging one would be inventing a law
+this model does not carry. What was measured is entanglement: pick an axis and
+see what is observed moving with it, across all 32 states and again inside
+the import core.</p>
+
+<div class="axpick" role="group" aria-label="Choose an axis"><button class="axbtn" type="button" data-ax="WSE" aria-pressed="true">WSE</button><button class="axbtn" type="button" data-ax="CSE" aria-pressed="false">CSE</button><button class="axbtn" type="button" data-ax="REE" aria-pressed="false">REE</button><button class="axbtn" type="button" data-ax="FPE" aria-pressed="false">FPE</button><button class="axbtn" type="button" data-ax="ODI" aria-pressed="false">ODI</button><button class="axbtn" type="button" data-ax="ESE" aria-pressed="false">ESE</button></div>
+<div class="cplpanel" id="cp-WSE"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">CSE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:3.5%"></i></div><span class="v">+0.070</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:4.5%"></i></div><span class="v">+0.089</span></li><li><span class="nm">REE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:37.0%;width:13.0%"></i></div><span class="v">-0.259</span><div class="bar"><span class="mid"></span><i class="neg" style="left:42.0%;width:8.0%"></i></div><span class="v">-0.160</span></li><li><span class="nm">FPE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:39.5%;width:10.5%"></i></div><span class="v">-0.211</span><div class="bar"><span class="mid"></span><i class="neg" style="left:25.5%;width:24.5%"></i></div><span class="v">-0.490</span></li><li><span class="nm">ODI</span><div class="bar"><span class="mid"></span><i class="neg" style="left:41.0%;width:8.9%"></i></div><span class="v">-0.179</span><div class="bar"><span class="mid"></span><i class="neg" style="left:24.6%;width:25.4%"></i></div><span class="v">-0.509</span></li><li><span class="nm">ESE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:18.0%"></i></div><span class="v">+0.360</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:28.8%"></i></div><span class="v">+0.576</span></li></ul></div><div class="cplpanel" id="cp-CSE"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">WSE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:3.5%"></i></div><span class="v">+0.070</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:4.5%"></i></div><span class="v">+0.089</span></li><li><span class="nm">REE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:5.7%"></i></div><span class="v">+0.114</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:6.9%"></i></div><span class="v">+0.138</span></li><li><span class="nm">FPE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:45.2%;width:4.8%"></i></div><span class="v">-0.095</span><div class="bar"><span class="mid"></span><i class="neg" style="left:44.8%;width:5.2%"></i></div><span class="v">-0.105</span></li><li><span class="nm">ODI</span><div class="bar"><span class="mid"></span><i class="neg" style="left:46.4%;width:3.6%"></i></div><span class="v">-0.072</span><div class="bar"><span class="mid"></span><i class="neg" style="left:42.6%;width:7.4%"></i></div><span class="v">-0.148</span></li><li><span class="nm">ESE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:6.9%"></i></div><span class="v">+0.137</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:5.0%"></i></div><span class="v">+0.099</span></li></ul></div><div class="cplpanel" id="cp-REE"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">WSE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:37.0%;width:13.0%"></i></div><span class="v">-0.259</span><div class="bar"><span class="mid"></span><i class="neg" style="left:42.0%;width:8.0%"></i></div><span class="v">-0.160</span></li><li><span class="nm">CSE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:5.7%"></i></div><span class="v">+0.114</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:6.9%"></i></div><span class="v">+0.138</span></li><li><span class="nm">FPE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:9.8%"></i></div><span class="v">+0.197</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:14.8%"></i></div><span class="v">+0.295</span></li><li><span class="nm">ODI</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:12.2%"></i></div><span class="v">+0.245</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:19.4%"></i></div><span class="v">+0.387</span></li><li><span class="nm">ESE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:36.0%;width:14.1%"></i></div><span class="v">-0.281</span><div class="bar"><span class="mid"></span><i class="neg" style="left:34.8%;width:15.2%"></i></div><span class="v">-0.304</span></li></ul></div><div class="cplpanel" id="cp-FPE"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">WSE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:39.5%;width:10.5%"></i></div><span class="v">-0.211</span><div class="bar"><span class="mid"></span><i class="neg" style="left:25.5%;width:24.5%"></i></div><span class="v">-0.490</span></li><li><span class="nm">CSE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:45.2%;width:4.8%"></i></div><span class="v">-0.095</span><div class="bar"><span class="mid"></span><i class="neg" style="left:44.8%;width:5.2%"></i></div><span class="v">-0.105</span></li><li><span class="nm">REE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:9.8%"></i></div><span class="v">+0.197</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:14.8%"></i></div><span class="v">+0.295</span></li><li><span class="nm">ODI</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:39.1%"></i></div><span class="v">+0.783</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:37.8%"></i></div><span class="v">+0.755</span></li><li><span class="nm">ESE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:30.8%;width:19.2%"></i></div><span class="v">-0.385</span><div class="bar"><span class="mid"></span><i class="neg" style="left:27.8%;width:22.2%"></i></div><span class="v">-0.445</span></li></ul></div><div class="cplpanel" id="cp-ODI"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">WSE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:41.0%;width:8.9%"></i></div><span class="v">-0.179</span><div class="bar"><span class="mid"></span><i class="neg" style="left:24.6%;width:25.4%"></i></div><span class="v">-0.509</span></li><li><span class="nm">CSE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:46.4%;width:3.6%"></i></div><span class="v">-0.072</span><div class="bar"><span class="mid"></span><i class="neg" style="left:42.6%;width:7.4%"></i></div><span class="v">-0.148</span></li><li><span class="nm">REE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:12.2%"></i></div><span class="v">+0.245</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:19.4%"></i></div><span class="v">+0.387</span></li><li><span class="nm">FPE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:39.1%"></i></div><span class="v">+0.783</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:37.8%"></i></div><span class="v">+0.755</span></li><li><span class="nm">ESE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:28.9%;width:21.1%"></i></div><span class="v">-0.423</span><div class="bar"><span class="mid"></span><i class="neg" style="left:25.8%;width:24.2%"></i></div><span class="v">-0.485</span></li></ul></div><div class="cplpanel" id="cp-ESE"><div class="cplhead"><span>Axis</span><span>All 32 states</span><span>Import core, 26</span></div><ul class="cpl"><li><span class="nm">WSE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:18.0%"></i></div><span class="v">+0.360</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:28.8%"></i></div><span class="v">+0.576</span></li><li><span class="nm">CSE</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:6.9%"></i></div><span class="v">+0.137</span><div class="bar"><span class="mid"></span><i class="pos" style="left:50%;width:5.0%"></i></div><span class="v">+0.099</span></li><li><span class="nm">REE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:36.0%;width:14.1%"></i></div><span class="v">-0.281</span><div class="bar"><span class="mid"></span><i class="neg" style="left:34.8%;width:15.2%"></i></div><span class="v">-0.304</span></li><li><span class="nm">FPE</span><div class="bar"><span class="mid"></span><i class="neg" style="left:30.8%;width:19.2%"></i></div><span class="v">-0.385</span><div class="bar"><span class="mid"></span><i class="neg" style="left:27.8%;width:22.2%"></i></div><span class="v">-0.445</span></li><li><span class="nm">ODI</span><div class="bar"><span class="mid"></span><i class="neg" style="left:28.9%;width:21.1%"></i></div><span class="v">-0.423</span><div class="bar"><span class="mid"></span><i class="neg" style="left:25.8%;width:24.2%"></i></div><span class="v">-0.485</span></li></ul></div>
+<p class="src">Correlation stated as correlation, not as cause. Bars run from the
+centre, right for positive and left for negative, on the same scale in both
+columns. Asset: data/qesis_v8.json, coupling block, vintage
 v9.0 (2026-08-13).</p>
 
-<h3>Nothing is published as necessary</h3>
-<div class="gap"><p>No condition or negation is publishable as necessary under D-109. The highest consistency_N in the set is WSE at 0.7896, below the 0.90 bar, so the conjunctive rule is not reached by any condition. REE, published at 0.916 in thesis section 4.5, returns 0.7033 under the primary anchors with RoN 0.5766 and coverage_N 0.5763, and holds above 0.5 in 29 of 32 cases. It also scores 0.7268 against the negated outcome, highe</p></div>
-<p class="src">Asset: qesis_v8.json fsqca.necessity_verdict. Robustness:
-PARTIAL. Sensitivity ranges implemented; the two robustness families below are declared and not yet computed.. The claim is partial until the two
-declared families run, and it says so here rather than in a footnote.</p>
+<h2 class="sec">Ten routes to the same failure, not one</h2>
 
-<h3>Percolation: the network tolerates loss and fails to aim</h3>
-<p>An independent rebuild of the cable topology reproduces the published
-articulation set exactly, 88 of
-88, which is why the rest of this block is citable.
-Over 912 cities and 343 cables, random removal is survivable
-and targeted removal is not. The first twelve targeted removals are cheap. The
-thirteenth is not.</p>
+<p>There is no single road to high substrate vulnerability. The analysis returns
+10 combinations of conditions that are each sufficient on their own.
+6 of them clear the working conventions and are relied on;
+2 sit below the specificity convention and are shown without
+being relied on; 2 fall far enough that they are published
+for completeness and carry no weight. Nothing is dropped, because a route
+removed from a public surface is a route nobody can check.</p>
+
+<div class="filters" role="group" aria-label="Filter routes by verdict">
+  <button class="fbtn" type="button" data-k="all" aria-pressed="true">All 10</button>
+  <button class="fbtn" type="button" data-k="clears" aria-pressed="false">Relied on 6</button>
+  <button class="fbtn" type="button" data-k="below" aria-pressed="false">Shown, not relied on 2</button>
+  <button class="fbtn" type="button" data-k="set_aside" aria-pressed="false">Set aside 2</button>
+</div>
+
+<div class="scroll"><table class="mtx">
+<caption class="src" style="text-align:left;caption-side:bottom">
+A filled circle is a condition present in that route, an open circle is the same
+condition absent. Absence is a term in the model, not a missing value. Select a
+route for its agreement, its specificity and its verdict in full.</caption>
+<thead><tr><th class="lead">Route</th><th class="c">Water stress</th><th class="c">Cable exposure</th><th class="c">Minerals</th><th class="c">Operator</th><th class="c">Sovereignty</th><th class="c">Cyber gap</th><th class="st">States</th><th class="vh">Verdict</th></tr></thead>
+<tbody><tr class="row" data-i="0" data-k="below"><td class="lead">Route 1</td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td class="n">1</td><td><span class="vd vy">Not relied on</span></td></tr><tr class="det" id="d0" hidden><td colspan="9"><p><b>Present in this route:</b> Submarine cable exposure, Critical minerals dependence, Hyperscaler concentration, Cybersecurity commitment gap.</p><p><b>Absent in this route:</b> Water stress, Effective sovereignty not held.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.8841</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.6587</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1043</span>.</p><p><b>Verdict.</b> This route sits below the PRI working convention of 0.75. It is published rather than dropped, and no claim rests on it alone.</p></td></tr><tr class="row" data-i="1" data-k="below"><td class="lead">Route 2</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td class="n">1</td><td><span class="vd vy">Not relied on</span></td></tr><tr class="det" id="d1" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Critical minerals dependence, Effective sovereignty not held.</p><p><b>Absent in this route:</b> Submarine cable exposure, Hyperscaler concentration, Cybersecurity commitment gap.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.8613</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.5804</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1143</span>.</p><p><b>Verdict.</b> This route sits below the PRI working convention of 0.75. It is published rather than dropped, and no claim rests on it alone.</p></td></tr><tr class="row" data-i="2" data-k="clears"><td class="lead">Route 3</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td class="n">3</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d2" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Critical minerals dependence, Effective sovereignty not held, Cybersecurity commitment gap.</p><p><b>Absent in this route:</b> Submarine cable exposure, Hyperscaler concentration.</p><p>States on this route: <span class="kv">3</span>.</p><p>Agreement <span class="kv">0.9347</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.8234</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1586</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr><tr class="row" data-i="3" data-k="clears"><td class="lead">Route 4</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td class="n">2</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d3" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Critical minerals dependence, Hyperscaler concentration, Effective sovereignty not held, Cybersecurity commitment gap.</p><p><b>Absent in this route:</b> Submarine cable exposure.</p><p>States on this route: <span class="kv">2</span>.</p><p>Agreement <span class="kv">0.9535</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.9115</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1157</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr><tr class="row" data-i="4" data-k="clears"><td class="lead">Route 5</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td class="n">1</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d4" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure.</p><p><b>Absent in this route:</b> Critical minerals dependence, Hyperscaler concentration, Effective sovereignty not held, Cybersecurity commitment gap.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.9322</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.8282</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1090</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr><tr class="row" data-i="5" data-k="set_aside"><td class="lead">Route 6</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td class="n">1</td><td><span class="vd vr">Set aside</span></td></tr><tr class="det" id="d5" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure, Cybersecurity commitment gap.</p><p><b>Absent in this route:</b> Critical minerals dependence, Hyperscaler concentration, Effective sovereignty not held.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.8273</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.3032</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1016</span>.</p><p><b>Verdict.</b> This route falls below PRI 0.50, which means it is close to equally consistent with the opposite outcome. It is published for completeness and carries no weight.</p></td></tr><tr class="row" data-i="6" data-k="clears"><td class="lead">Route 7</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip off" aria-label="absent"></span></td><td class="n">1</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d6" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure, Critical minerals dependence.</p><p><b>Absent in this route:</b> Hyperscaler concentration, Effective sovereignty not held, Cybersecurity commitment gap.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.9179</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.8001</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1477</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr><tr class="row" data-i="7" data-k="set_aside"><td class="lead">Route 8</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td class="n">2</td><td><span class="vd vr">Set aside</span></td></tr><tr class="det" id="d7" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure, Critical minerals dependence, Effective sovereignty not held.</p><p><b>Absent in this route:</b> Hyperscaler concentration, Cybersecurity commitment gap.</p><p>States on this route: <span class="kv">2</span>.</p><p>Agreement <span class="kv">0.8426</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.4587</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1218</span>.</p><p><b>Verdict.</b> This route falls below PRI 0.50, which means it is close to equally consistent with the opposite outcome. It is published for completeness and carries no weight.</p></td></tr><tr class="row" data-i="8" data-k="clears"><td class="lead">Route 9</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td><span class="pip on" aria-label="present"></span></td><td class="n">1</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d8" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure, Critical minerals dependence, Hyperscaler concentration, Cybersecurity commitment gap.</p><p><b>Absent in this route:</b> Effective sovereignty not held.</p><p>States on this route: <span class="kv">1</span>.</p><p>Agreement <span class="kv">0.9568</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.9106</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1193</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr><tr class="row" data-i="9" data-k="clears"><td class="lead">Route 10</td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip on" aria-label="present"></span></td><td><span class="pip off" aria-label="absent"></span></td><td class="n">2</td><td><span class="vd vg">Relied on</span></td></tr><tr class="det" id="d9" hidden><td colspan="9"><p><b>Present in this route:</b> Water stress, Submarine cable exposure, Critical minerals dependence, Hyperscaler concentration, Effective sovereignty not held.</p><p><b>Absent in this route:</b> Cybersecurity commitment gap.</p><p>States on this route: <span class="kv">2</span>.</p><p>Agreement <span class="kv">0.9602</span>. Among the states that combine these conditions in this way, that is the share which also carry high substrate vulnerability, on a zero to one scale.</p><p>Specificity <span class="kv">0.9328</span>. How much of that agreement is specific to high vulnerability rather than equally true of its opposite. The working convention is 0.75, and 0.50 is the point below which a route is set aside.</p><p>Share of the outcome this route accounts for: <span class="kv">0.1232</span>.</p><p><b>Verdict.</b> This route clears the working conventions the analysis publishes.</p></td></tr></tbody></table></div>
+
+<h3>What each column measures</h3>
+<ul class="prov"><li><b>Water stress</b>. axis WSE, Water Stress Exposure. Aqueduct 4.0 baseline and SSP3.</li><li><b>Submarine cable exposure</b>. axis CSE, Cable Stress Exposure. EMODnet density and the cable registry.</li><li><b>Critical minerals dependence</b>. axis REE, Rare Earth Element Stress. USGS and CRMA.</li><li><b>Hyperscaler concentration</b>. axis ODI, Operator Dependency Index. Concentration over facility counts.</li><li><b>Effective sovereignty not held</b>. derived. Effective Sovereignty Extended is a jurisdictional and key sovereignty measure over cloud infrastructure: the mean of key sovereignty, supply chain integrity, resource sovereignty, restoration sovereignty and the jurisdictional contract average, on a zero to one scale, inverted here so the condition reads as the share a state does not hold. Five of the 35 states are collected from the pilot audit and thirty are inferred from regulatory framework assessment, and any claim resting on this condition carries that split. Codebook.</li><li><b>Cybersecurity commitment gap</b>. derived. The ITU Global Cybersecurity Index, 2024 fifth edition, scores state level legal, technical and organisational cybersecurity commitments out of 100, and the condition is the remaining gap. Coverage 33 of the 35 states. Codebook.</li></ul>
+<p class="src">Across all 10 routes together, agreement
+0.9048 and coverage 0.5807 over n=32.
+Coverage below one is deliberate: the solution explains the cases it covers and
+declines the rest. Asset: data/qesis_v8.json, solution block, vintage
+v9.0 (2026-08-13).</p>
+
+<div class="gap"><p><b>What is not claimed.</b> No condition is publishable as
+necessary at this vintage. None reaches the conjunctive bar the pipeline
+declares, and one that would have passed a weaker single test is refused by it.
+The full verdict travels with this page as metadata.</p></div>
+
+<h2 class="sec">The cable network tolerates random loss and fails under an aimed one</h2>
+
+<p>An independent rebuild of the topology reproduces the published articulation
+set exactly, 88 of 88, which is
+what makes the rest of this block citable. Over 912 cities and
+343 cables, removing chokepoints at random costs little. Removing them
+in order of how much traffic they carry is a different curve entirely, and the
+first twelve removals are cheap. The thirteenth is not.</p>
+
+<div class="figwrap">
+<svg viewBox="0 0 760 300" role="img"
+     aria-label="Share of cities still connected to the main network as chokepoints
+     are removed, one line for an aimed campaign and one for the mean random
+     campaign, with the single step severance at removal 13 and half collapse at
+     removal 19 marked.">
+  <path class="grid" d="M58.0 232.0 L58.0 236.0"/><text class="ts" x="58.0" y="248.0" text-anchor="middle">0</text><path class="grid" d="M157.9 232.0 L157.9 236.0"/><text class="ts" x="157.9" y="248.0" text-anchor="middle">13</text><path class="grid" d="M204.0 232.0 L204.0 236.0"/><text class="ts" x="204.0" y="248.0" text-anchor="middle">19</text><path class="grid" d="M396.0 232.0 L396.0 236.0"/><text class="ts" x="396.0" y="248.0" text-anchor="middle">44</text><path class="grid" d="M734.0 232.0 L734.0 236.0"/><text class="ts" x="734.0" y="248.0" text-anchor="middle">88</text><path class="grid" d="M58.0 232.0 L734.0 232.0"/><text class="ts" x="52.0" y="235.0" text-anchor="end">0%</text><path class="grid" d="M58.0 174.8 L734.0 174.8"/><text class="ts" x="52.0" y="177.8" text-anchor="end">20%</text><path class="grid" d="M58.0 117.6 L734.0 117.6"/><text class="ts" x="52.0" y="120.6" text-anchor="end">40%</text><path class="grid" d="M58.0 60.3 L734.0 60.3"/><text class="ts" x="52.0" y="63.3" text-anchor="end">60%</text>
+  <path class="axis" d="M58.0 26.0 L58.0 232.0 L734.0 232.0"/>
+  <path class="mk-hot" d="M157.9 26.0 L157.9 232.0"/>
+  <path class="mk-cool" d="M204.0 26.0 L204.0 232.0"/>
+  <text class="tm" x="163.9" y="199.1">largest single step loss, removal 13</text>
+  <text class="tm" x="210.0" y="219.1">half collapse, removal 19</text>
+  <path class="ln-r" d="M58.0 35.9 L65.7 36.2 L73.4 36.5 L81.0 36.8 L88.7 36.9 L96.4 37.1 L104.1 37.3 L111.8 37.5 L119.5 37.7 L127.1 38.1 L134.8 38.4 L142.5 38.9 L150.2 39.2 L157.9 39.4 L165.5 39.7 L173.2 40.1 L180.9 40.4 L188.6 43.1 L196.3 43.3 L204.0 43.6 L211.6 43.8 L219.3 44.1 L227.0 44.3 L234.7 45.1 L242.4 45.4 L250.0 45.8 L257.7 46.8 L265.4 47.0 L273.1 47.2 L280.8 47.4 L288.5 47.7 L296.1 47.9 L303.8 48.1 L311.5 48.3 L319.2 48.5 L326.9 49.2 L334.5 49.3 L342.2 49.7 L349.9 49.9 L357.6 50.1 L365.3 50.3 L373.0 50.6 L380.6 50.9 L388.3 51.3 L396.0 51.6 L403.7 51.9 L411.4 52.1 L419.0 52.4 L426.7 52.6 L434.4 52.7 L442.1 53.2 L449.8 53.4 L457.5 53.6 L465.1 54.0 L472.8 54.1 L480.5 54.4 L488.2 54.5 L495.9 54.9 L503.5 55.1 L511.2 55.6 L518.9 56.4 L526.6 57.0 L534.3 57.2 L542.0 57.4 L549.6 57.8 L557.3 58.0 L565.0 59.3 L572.7 59.5 L580.4 59.7 L588.0 60.0 L595.7 60.1 L603.4 60.3 L611.1 60.5 L618.8 60.7 L626.5 61.1 L634.1 61.3 L641.8 61.5 L649.5 61.6 L657.2 61.8 L664.9 62.1 L672.5 62.8 L680.2 63.0 L687.9 63.2 L695.6 63.3 L703.3 63.5 L711.0 63.5 L718.6 63.7 L726.3 64.0 L734.0 64.2"/>
+  <path class="ln-t" d="M58.0 35.9 L65.7 38.1 L73.4 38.4 L81.0 38.8 L88.7 39.1 L96.4 39.4 L104.1 39.7 L111.8 40.3 L119.5 44.4 L127.1 44.7 L134.8 45.0 L142.5 45.3 L150.2 45.7 L157.9 132.9 L165.5 132.9 L173.2 132.9 L180.9 132.9 L188.6 133.2 L196.3 133.8 L204.0 134.1 L211.6 134.4 L219.3 134.8 L227.0 135.1 L234.7 135.4 L242.4 154.2 L250.0 154.5 L257.7 155.8 L265.4 156.1 L273.1 166.7 L280.8 167.1 L288.5 167.4 L296.1 167.7 L303.8 168.3 L311.5 168.6 L319.2 168.9 L326.9 169.3 L334.5 169.6 L342.2 169.9 L349.9 170.2 L357.6 170.5 L365.3 170.8 L373.0 171.5 L380.6 171.8 L388.3 172.1 L396.0 180.9 L403.7 181.2 L411.4 181.5 L419.0 186.5 L426.7 186.8 L434.4 195.3 L442.1 195.3 L449.8 195.3 L457.5 195.3 L465.1 195.3 L472.8 195.3 L480.5 195.3 L488.2 195.3 L495.9 195.3 L503.5 195.3 L511.2 195.6 L518.9 195.9 L526.6 196.2 L534.3 203.8 L542.0 203.8 L549.6 203.8 L557.3 205.6 L565.0 205.6 L572.7 206.0 L580.4 206.3 L588.0 211.9 L595.7 211.9 L603.4 211.9 L611.1 213.5 L618.8 213.5 L626.5 213.5 L634.1 213.5 L641.8 213.5 L649.5 214.1 L657.2 214.4 L664.9 214.7 L672.5 215.4 L680.2 215.4 L687.9 216.6 L695.6 216.6 L703.3 216.6 L711.0 216.6 L718.6 216.6 L726.3 216.6 L734.0 217.0"/>
+  <circle id="dt" class="dot-t" cx="157.9" cy="132.9" r="4"/>
+  <circle id="dr" class="dot-r" cx="157.9" cy="39.4" r="4"/>
+  <path id="sc" class="axis" d="M157.9 26.0 L157.9 232.0"/>
+  <text class="tm" x="58.0" y="266.0">chokepoint cities removed</text>
+  <text class="tm" x="734.0" y="266.0" text-anchor="end">aimed removal, solid. random removal, dashed.</text>
+  <text class="tm" x="58.0" y="18.0">share of all cities still connected to the main network</text>
+</svg></div>
+
+<div class="scrub">
+  <label for="scrub">Chokepoints removed</label>
+  <input id="scrub" type="range" min="0" max="88" value="13" step="1"
+         aria-describedby="readout">
+</div>
+<div class="read" id="readout">
+  <div><b id="rSteps">13</b><span>removed</span></div>
+  <div><b id="rCities">316</b><span>cities still connected</span></div>
+  <div><b id="rDrop">278</b><span>cut off at this step</span></div>
+  <div><b id="rShare">0.3465</b><span>share connected, aimed</span></div>
+  <div><b id="rRand">0.6732</b><span>share connected, random</span></div>
+  <div><b id="rPair">0.2214</b><span>pair connectivity, aimed</span></div>
+</div>
 
 <div class="tip">
   <div><b>278</b>
-       <span>cities severed at removal 13</span></div>
-  <div class="cool"><b>0.3465</b>
-       <span>pair connectivity, targeted at 13</span></div>
-  <div class="cool"><b>0.6732</b>
-       <span>pair connectivity, random at 13</span></div>
-  <div class="cool"><b>19</b>
-       <span>removals to half collapse</span></div>
+       <span>cities cut off in one step, at removal 13</span></div>
+  <div><b>19</b><span>removals to half collapse</span></div>
+  <div><b>594</b><span>cities connected before the step</span></div>
+  <div><b>316</b><span>connected after it</span></div>
 </div>
 
-<p>The two numbers above are not the same quantity and are published side by
-side so neither is quoted as the other. The single step severance is the largest
-one step loss, at removal 13, taking
-the giant component from 594 cities to
-316. Half collapse arrives later, at removal
-19, when the giant component first
-falls below half its baseline. The critical node in this release is
-Porthcurno, United Kingdom, and which city sits at the tip is a property of
-the release rather than the finding.</p>
-<p class="src">Asset: data/qesis_percolation.json, generated by
-scripts/build_percolation_block.py, vintage v9.0 (2026-08-13), authority
-PUB-1. Closes the second limb of L-056.. The source strings finding.statement and falsifier are
-not reproduced on this page: each contains a word on the writing doctrine's
-banned list (W-1). The numbers they describe are all above and the field names
-locate them in the file.</p>
+<p>Those two thresholds are different quantities and are published side by side
+so neither is quoted as the other. The single step severance is the largest one
+step loss and it arrives at removal 13. Half collapse arrives later, at
+removal 19, when the connected core first falls below half its baseline. The
+node at the tip in this release is Porthcurno, United Kingdom, and which city
+sits there is a property of the release rather than of the finding.</p>
 
-<h3>What would refute this</h3>
-<div class="gap"><p>The percolation finding fails if an independent cable
-topology of comparable coverage produces a targeted removal curve whose largest
-single step severance falls inside the range of its own random removal curve, or
-if the 88 articulation cities fail to reproduce from
-that topology. A different critical node does not refute it. The equifinality
-result fails if the solution does not survive the declared anchor sensitivity,
-which is why both anchor regimes are published and their disagreement is carried
-as data rather than resolved by choosing one.</p></div>
-<p class="src">Popper standing order, ANALYST mandate: every headline finding
-states what would falsify it.</p>
+<h3>The removal order, as the pipeline computed it</h3>
+<ol class="cut"><li data-r="1"><span class="r">1</span><span class="c">Mazara del Vallo, Italy</span><span class="s">7 cut off</span></li><li data-r="2"><span class="r">2</span><span class="c">Fortaleza, Brazil</span><span class="s">1 cut off</span></li><li data-r="3"><span class="r">3</span><span class="c">Penmarch, France</span><span class="s">1 cut off</span></li><li data-r="4"><span class="r">4</span><span class="c">Ajigaura, Japan</span><span class="s">1 cut off</span></li><li data-r="5"><span class="r">5</span><span class="c">Sesimbra, Portugal</span><span class="s">1 cut off</span></li><li data-r="6"><span class="r">6</span><span class="c">Norden, Germany</span><span class="s">1 cut off</span></li><li data-r="7"><span class="r">7</span><span class="c">Bude, United Kingdom</span><span class="s">2 cut off</span></li><li data-r="8"><span class="r">8</span><span class="c">Makaha, Hawaii, United States</span><span class="s">13 cut off</span></li><li data-r="9"><span class="r">9</span><span class="c">Melkbosstrand, South Africa</span><span class="s">1 cut off</span></li><li data-r="10"><span class="r">10</span><span class="c">Shima, Japan</span><span class="s">1 cut off</span></li><li data-r="11"><span class="r">11</span><span class="c">Mtunzini, South Africa</span><span class="s">1 cut off</span></li><li data-r="12"><span class="r">12</span><span class="c">Marseille, France</span><span class="s">1 cut off</span></li><li data-r="13"><span class="r">13</span><span class="c">Porthcurno, United Kingdom</span><span class="s">278 cut off</span></li></ol>
+<p class="src">Assets: data/qesis_percolation.json for every published figure,
+data/axes/cse_percolation.json for the per step curve. The build asserts the two
+agree at the two published points before this page is written.</p>
 
-<h2>Reading this page against the endpoint</h2>
-<p>Every figure here is derived at build time from the two assets named in the
-source lines, so this page cannot say something the artefacts do not. The same
-values are served by <code>qesis_get_coupling</code>,
-<code>qesis_get_pathways</code> and <code>qesis_get_integrity</code>, and
-<code>qesis_get_integrity</code> answers which generation you are reading. The
-deployment plane serves what was promoted and the local plane reads the working
-tree; a reader is always told which one they have. That is G-01b working, not a
-defect.</p>
-<p>Nothing you do here is logged, no cookie is set and there is no backend
-behind this page.</p>
+<h2 class="sec">What would refute all of this</h2>
+<div class="gap"><p>The fragmentation finding fails if an independent topology of
+comparable coverage produces an aimed removal curve whose largest single step
+loss falls inside the range of its own random curve, or if the
+88 articulation cities fail to reproduce from that
+topology. A different city at the tip does not refute it. The equifinality result
+fails if the solution does not survive the declared anchor sensitivity, which is
+why both anchor regimes are published and their disagreement is carried as data
+rather than settled by preference.</p></div>
+<p class="src">Standing order: every headline finding states what would falsify
+it. A finding published without one is not published here.</p>
+
+<h2 class="sec">Point your own systems at it, rather than at this page</h2>
+<p>A report nobody can act on is the failure mode this instrument was built to
+avoid, so the surface is not the product. The same values this page renders are
+served as tools an analyst or an agent calls directly:
+<span class="mono">qesis_get_coupling</span>,
+<span class="mono">qesis_get_pathways</span>,
+<span class="mono">qesis_get_country</span>,
+<span class="mono">qesis_rank_countries</span> and
+<span class="mono">qesis_get_integrity</span>, the last of which answers which
+generation you are reading and whether its chain verifies. Every figure above is
+derived at build time from the assets named in the source lines, so this page
+cannot say something those tools do not.</p>
+<p>The deployment plane serves what was promoted and the local plane reads the
+working tree, and a reader is always told which one they hold. The
+<a href="/dashboard">full country dashboard</a> carries the per state profiles
+and the <a href="/">index summary</a> carries the ranking and the published
+gaps.</p>
+<p>Nothing you do here is logged, no cookie is set and there is no backend behind
+this page. The validation record travels with it as metadata rather than as a
+request to a server.</p>
 
 <footer>
 <p>QESIS+ v9.0 (2026-08-13). Batista Silva, R. (2026). Liquid Sovereignty.
 ESIC/LSE. Dataset: Sovereign_Infra_Intelligence.</p>
 <p>Generated 2026-08-01T12:20:25Z from
-data/qesis_v8.json and data/qesis_percolation.json. Built by
-scripts/build_blueprint.py, never edited by hand.</p>
+data/qesis_v8.json, data/qesis_percolation.json and data/axes/cse_percolation.json.
+Built by scripts/build_blueprint.py, never edited by hand.</p>
 </footer>
-</main></body></html>
+</main>
+<script type="application/json" id="qesis-outcomes">{"v":"v9.0 (2026-08-13)","plot":{"x0":58.0,"x1":734.0,"y0":26.0,"y1":232.0,"xmax":88.0,"ymax":0.72},"cond":["Water stress","Submarine cable exposure","Critical minerals dependence","Hyperscaler concentration","Effective sovereignty not held","Cybersecurity commitment gap"],"routes":[{"p":[0,1,1,1,0,1],"c":0.8841,"s":0.6587,"g":0.1043,"n":1,"k":"below"},{"p":[1,0,1,0,1,0],"c":0.8613,"s":0.5804,"g":0.1143,"n":1,"k":"below"},{"p":[1,0,1,0,1,1],"c":0.9347,"s":0.8234,"g":0.1586,"n":3,"k":"clears"},{"p":[1,0,1,1,1,1],"c":0.9535,"s":0.9115,"g":0.1157,"n":2,"k":"clears"},{"p":[1,1,0,0,0,0],"c":0.9322,"s":0.8282,"g":0.109,"n":1,"k":"clears"},{"p":[1,1,0,0,0,1],"c":0.8273,"s":0.3032,"g":0.1016,"n":1,"k":"set_aside"},{"p":[1,1,1,0,0,0],"c":0.9179,"s":0.8001,"g":0.1477,"n":1,"k":"clears"},{"p":[1,1,1,0,1,0],"c":0.8426,"s":0.4587,"g":0.1218,"n":2,"k":"set_aside"},{"p":[1,1,1,1,0,1],"c":0.9568,"s":0.9106,"g":0.1193,"n":1,"k":"clears"},{"p":[1,1,1,1,1,0],"c":0.9602,"s":0.9328,"g":0.1232,"n":2,"k":"clears"}],"perc":{"tip":13,"half":19,"cities":912,"t":[[625,0.6853,0.4732],[618,0.6776,0.4638],[617,0.6765,0.4633],[616,0.6754,0.4628],[615,0.6743,0.4624],[614,0.6732,0.4619],[613,0.6721,0.4614],[611,0.67,0.4595],[598,0.6557,0.4414],[597,0.6546,0.4409],[596,0.6535,0.4404],[595,0.6524,0.4399],[594,0.6513,0.4394],[316,0.3465,0.2214],[316,0.3465,0.2115],[316,0.3465,0.2114],[316,0.3465,0.1726],[315,0.3454,0.1722],[313,0.3432,0.171],[312,0.3421,0.1706],[311,0.341,0.1702],[310,0.3399,0.1698],[309,0.3388,0.1694],[308,0.3377,0.169],[248,0.2719,0.1314],[247,0.2708,0.1311],[243,0.2664,0.1289],[242,0.2654,0.1286],[208,0.2281,0.1104],[207,0.227,0.1102],[206,0.2259,0.1099],[205,0.2248,0.1096],[203,0.2226,0.1088],[202,0.2215,0.1085],[201,0.2204,0.1083],[200,0.2193,0.108],[199,0.2182,0.1077],[198,0.2171,0.1074],[197,0.216,0.1072],[196,0.2149,0.1069],[195,0.2138,0.1066],[193,0.2116,0.1059],[192,0.2105,0.1056],[191,0.2094,0.1053],[163,0.1787,0.0813],[162,0.1776,0.081],[161,0.1765,0.0808],[145,0.159,0.0747],[144,0.1579,0.0745],[117,0.1283,0.066],[117,0.1283,0.0599],[117,0.1283,0.0598],[117,0.1283,0.0568],[117,0.1283,0.0558],[117,0.1283,0.0552],[117,0.1283,0.0523],[117,0.1283,0.0522],[117,0.1283,0.049],[117,0.1283,0.0485],[116,0.1272,0.0483],[115,0.1261,0.0481],[114,0.125,0.0479],[90,0.0987,0.0419],[90,0.0987,0.0397],[90,0.0987,0.0371],[84,0.0921,0.0358],[84,0.0921,0.0344],[83,0.091,0.0343],[82,0.0899,0.0341],[64,0.0702,0.0309],[64,0.0702,0.0308],[64,0.0702,0.0299],[59,0.0647,0.0291],[59,0.0647,0.0286],[59,0.0647,0.028],[59,0.0647,0.0271],[59,0.0647,0.0263],[57,0.0625,0.0254],[56,0.0614,0.0253],[55,0.0603,0.0252],[53,0.0581,0.0242],[53,0.0581,0.0238],[49,0.0537,0.0233],[49,0.0537,0.0229],[49,0.0537,0.0225],[49,0.0537,0.0224],[49,0.0537,0.0221],[49,0.0537,0.0215],[48,0.0526,0.0214]],"r":[[0.6853,0.4732],[0.6844,0.4731],[0.6833,0.4726],[0.6824,0.4724],[0.6818,0.4726],[0.6813,0.473],[0.6805,0.4728],[0.6798,0.4729],[0.6791,0.473],[0.6778,0.4723],[0.6767,0.4718],[0.675,0.4704],[0.6739,0.4699],[0.6732,0.4701],[0.6721,0.4696],[0.6706,0.4685],[0.6698,0.4683],[0.6601,0.4568],[0.6594,0.4569],[0.6586,0.4567],[0.6579,0.4568],[0.6568,0.4563],[0.6562,0.4564],[0.6533,0.4535],[0.6522,0.453],[0.6509,0.4522],[0.6474,0.4484],[0.6467,0.4485],[0.6458,0.4483],[0.6452,0.4484],[0.6443,0.4482],[0.6434,0.448],[0.6428,0.4481],[0.6421,0.4482],[0.6415,0.4484],[0.639,0.446],[0.6384,0.446],[0.6371,0.4453],[0.6364,0.4453],[0.6357,0.4454],[0.6351,0.4455],[0.634,0.445],[0.6331,0.4448],[0.6316,0.4437],[0.6305,0.4432],[0.6296,0.443],[0.6287,0.4428],[0.6276,0.4423],[0.6272,0.4426],[0.6268,0.443],[0.625,0.4416],[0.6241,0.4413],[0.6235,0.4414],[0.6221,0.4407],[0.6217,0.4411],[0.6208,0.4408],[0.6204,0.4413],[0.6191,0.4404],[0.6184,0.4405],[0.6164,0.4387],[0.6138,0.4361],[0.6116,0.434],[0.611,0.4341],[0.6103,0.4342],[0.609,0.4334],[0.6081,0.4331],[0.6035,0.4279],[0.6029,0.4279],[0.6022,0.428],[0.6011,0.4275],[0.6007,0.4278],[0.6002,0.4283],[0.5993,0.4281],[0.5987,0.4281],[0.5974,0.4273],[0.5967,0.4274],[0.596,0.4275],[0.5954,0.4276],[0.5947,0.4276],[0.5938,0.4274],[0.5914,0.4249],[0.5908,0.4249],[0.5901,0.4251],[0.5897,0.4254],[0.589,0.4255],[0.589,0.4265],[0.5882,0.4263],[0.5873,0.426],[0.5864,0.4258]]}}</script>
+<script type="application/json" id="qesis-compliance">{"_doc":"Article 12 record keeping. The validation record behind the visible surface, machine readable, never rendered. Emitted by scripts/build_blueprint.py at build time from the assets named in provenance.","vintage":"v9.0 (2026-08-13)","provenance":{"index":"data/qesis_v8.json","percolation_block":"data/qesis_percolation.json","percolation_evidence":"data/axes/cse_percolation.json","lineage":{"generated_at_utc":"2026-08-01T12:20:25Z","generator":"scripts/build_v8_4.py applied to v8.3; see sovereign-infra/ops/CITATION_CONCORDANCE.md","formula_id":"QESIS_THEORY_v3","derived_from":{"vintage":"v8.3 (2026-07-31)","generated_at_utc":"2026-07-30T23:57:00Z","generator":"v8.3 remediation transform T-1..T-5, F-11 applied to v8.2; see ops/VALIDATION_REPORT_CSOVE_AND_V83_2026-07-31.md","derived_from":{"vintage":"v8.2 (2026-07)","sha256":"1911a13ae9fdb056020f7afbcad7eecf0849fa3af565df6c8482103555519538","generated_at_utc":"2026-07-29T13:56:21Z","generator":"scripts/build_index.py"},"note":"Provenance transform. No axis value, composite or coverage figure changed, so the source hashes carried here remain the provenance of every number served in v8.4.","sources":{"v8_qesis_country_scores.csv":{"sha256":"022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121","bytes":8516},"cloud_regions_master.csv":{"sha256":"44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423","bytes":114774}}},"sources":{"v8_qesis_country_scores.csv":{"sha256":"022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121","bytes":8516},"cloud_regions_master.csv":{"sha256":"44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423","bytes":114774}},"n_countries":35,"n_ranked":32,"n_epis":3}},"model":"WSE, CABLE, REE, HYPER, ESC_inv, GCI_inv -> HIGH_SOV_VULN (n=32; freq>=1; incl>=0.80; conservative; one absorption pass)","calibration":{"rule":"Ragin direct method, two-sided logistic, sample percentiles 80/50/20","anchors":{"WSE":{"x_in":83.4,"x_cross":44.2,"x_out":19.0},"CABLE":{"x_in":39.7,"x_cross":19.45,"x_out":6.9},"REE":{"x_in":84.1,"x_cross":63.1,"x_out":55.5},"HYPER":{"x_in":55.6,"x_cross":43.75,"x_out":28.0},"ESC_inv":{"x_in":36.5,"x_cross":20.5,"x_out":15.7},"GCI_inv":{"x_in":6.5,"x_cross":1.8,"x_out":0.0},"HIGH_SOV_VULN":{"x_in":49.1,"x_cross":42.65,"x_out":32.5}},"declared_because":"The terms are anchor-sensitive. A sensitivity run at fixed 75/50/25 reproduces the v6.6 trivial-driver failure through REE, so anchors are part of the result rather than a setting."},"solution":{"type":"conservative","sufficient_configurations":10,"consistency":0.9048,"coverage":0.5807,"per_path":[{"expression":"~WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv","raw_consistency":0.8841,"pri":0.6587,"raw_coverage":0.1043,"n_cases":1,"pri_flag":"below the 0.75 working convention","consistency_pri_gap":0.2254},{"expression":"WSE * ~CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv","raw_consistency":0.8613,"pri":0.5804,"raw_coverage":0.1143,"n_cases":1,"pri_flag":"below the 0.75 working convention","consistency_pri_gap":0.2809},{"expression":"WSE * ~CABLE * REE * ~HYPER * ESC_inv * GCI_inv","raw_consistency":0.9347,"pri":0.8234,"raw_coverage":0.1586,"n_cases":3,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.1113},{"expression":"WSE * ~CABLE * REE * HYPER * ESC_inv * GCI_inv","raw_consistency":0.9535,"pri":0.9115,"raw_coverage":0.1157,"n_cases":2,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.042},{"expression":"WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * ~GCI_inv","raw_consistency":0.9322,"pri":0.8282,"raw_coverage":0.109,"n_cases":1,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.104},{"expression":"WSE * CABLE * ~REE * ~HYPER * ~ESC_inv * GCI_inv","raw_consistency":0.8273,"pri":0.3032,"raw_coverage":0.1016,"n_cases":1,"pri_flag":"DISQUALIFYING: PRI below 0.50","consistency_pri_gap":0.5241},{"expression":"WSE * CABLE * REE * ~HYPER * ~ESC_inv * ~GCI_inv","raw_consistency":0.9179,"pri":0.8001,"raw_coverage":0.1477,"n_cases":1,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.1178},{"expression":"WSE * CABLE * REE * ~HYPER * ESC_inv * ~GCI_inv","raw_consistency":0.8426,"pri":0.4587,"raw_coverage":0.1218,"n_cases":2,"pri_flag":"DISQUALIFYING: PRI below 0.50","consistency_pri_gap":0.3839},{"expression":"WSE * CABLE * REE * HYPER * ~ESC_inv * GCI_inv","raw_consistency":0.9568,"pri":0.9106,"raw_coverage":0.1193,"n_cases":1,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.0462},{"expression":"WSE * CABLE * REE * HYPER * ESC_inv * ~GCI_inv","raw_consistency":0.9602,"pri":0.9328,"raw_coverage":0.1232,"n_cases":2,"pri_flag":"clears the 0.75 working convention","consistency_pri_gap":0.0274}]},"necessity_verdict":"No condition or negation is publishable as necessary under D-109. The highest consistency_N in the set is WSE at 0.7896, below the 0.90 bar, so the conjunctive rule is not reached by any condition. REE, published at 0.916 in thesis section 4.5, returns 0.7033 under the primary anchors with RoN 0.5766 and coverage_N 0.5763, and holds above 0.5 in 29 of 32 cases. It also scores 0.7268 against the negated outcome, higher than against the outcome, so it tracks the absence of the result more closely than the result. The sensitivity run is the demonstration: under fixed 75/50/25 anchors REE's consistency rises to 0.9672 while RoN falls to 0.195 and coverage_N to 0.389. The consistency figure rises precisely because the condition becomes near-constant, which is the artefact a bare threshold cannot show and the reason D-109 is conjunctive.","robustness":{"protocol":"Oana and Schneider (2021), SetMethods","status":"PARTIAL. Sensitivity ranges implemented; the two robustness families below are declared and not yet computed.","families":{"sensitivity_ranges":{"status":"IMPLEMENTED","what":"Vary the calibration anchors, the raw consistency threshold and the frequency threshold, and report the range over which the solution holds rather than one point estimate.","evidence":"Two anchor regimes are run: sample percentiles 80/50/20 as primary and fixed substantive 75/50/25 as sensitivity. They disagree, and the disagreement is the finding: REE becomes near-constant under the fixed anchors and its necessity consistency rises from 0.703 to 0.967 while RoN falls from 0.577 to 0.195."},"fit_oriented_robustness":{"status":"DECLARED, NOT COMPUTED","what":"Compare parameters of fit across the test solutions: consistency, coverage and PRI under each perturbation, and report whether the solution's fit degrades gracefully or collapses."},"case_oriented_robustness":{"status":"DECLARED, NOT COMPUTED","what":"withheld from this record by the writing doctrine. Read it at asset.robustness.families.case_oriented_robustness.what in the source asset."}},"not_to_be_confused_with":{"model_specification_robustness":"The 6-condition to 7-condition respecification, published in vintages through v8.4 as `robustness_7cond`, is MODEL-SPECIFICATION robustness: it asks whether the result survives a different condition set. The Oana and Schneider protocol asks whether the result survives different analytic choices on one specification. They answer different questions and neither substitutes for the other. Labelling the respecification as the robustness protocol would overstate what was tested."}},"sensitivity":{"anchors":"fixed substantive 75/50/25","sufficient_configurations":6,"consistency":0.8954,"coverage":0.6528,"check_failed":"C_no_trivial_constant_driver","finding":"REE becomes near-constant and appears in every sufficient path, which is structurally the v6.6 failure arriving through a different condition."},"agent_reading_contract":{"why":"These are limitations on how the fsQCA block may be used. Carried in a prompt they are advisory and deletable; carried here they are data the agent reads and a gate asserts. Each flag ships with its statement, because a boolean is a pointer to a fact and a reader that receives only the pointer has been told a limitation exists and nothing about what it is. R1.26 fails the build if a flag arrives without its statement.","read_before":"any evaluation of a country profile or pathway membership","flags":{"theory_informed_limitation":{"value":true,"statement":"The directional expectations behind the intermediate solution (DE-v9.0, DE-v9.1) were written by an analyst who had already read the served pathways, so they are not a blind prior. The intermediate solution is reported as theory-informed and must never be described as a pre-registered or blind expectation. Under the primary anchors it is identical to the complex solution at 0.8719 and 0.5782: the declared expectations simplify nothing, which is a null result and is reported as one.","authority":"sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.json"},"trilemma_status":{"value":"interpretive_overlay_only","statement":"The Infrastructural Trilemma does not decompose the condition set. HYPER carried both Algorithmic Independence and Hyperscale Efficiency while CABLE and REE mapped to no constraint, and dropping ESC_inv removed the second condition under Ecological Sustainability. It is an interpretive claim in the theory chapter and takes no part in the model, its calibration or its solution. No pathway term, necessity verdict or solution statistic may be described as a trilemma corner.","vocabulary":["interpretive_overlay_only","structural_decomposition"],"authority":"operator decision 2026-08-12, QT-0007"},"necessity_rule":{"value":"D-109 conjunctive","statement":"consistency_N >= 0.90 AND RoN >= 0.60 AND coverage_N >= 0.60. No condition or negation clears it. A RoN-only rule labelled GCI_inv necessary at consistency_N 0.0217, because RoN rewards rarity.","authority":"D-109, CONC-2"}}},"percolation_finding":{"label":"withheld from this record by the writing doctrine. Read it at asset.percolation_finding.label in the source asset.","headline_campaign":"betweenness_recalc","critical_node":"Porthcurno, United Kingdom","tipping_point_removals":13,"tipping_point_share_of_network":0.0143,"cities_severed_in_one_step":278,"lcc_before_tip":594,"lcc_after_tip":316,"pair_connectivity_before":0.4394,"pair_connectivity_after":0.2214,"targeted_at_13_removals":0.3465,"random_at_13_removals":0.6732,"random_at_88_removals":0.5864,"statement":"withheld from this record by the writing doctrine. Read it at asset.percolation_finding.statement in the source asset."},"two_numbers_that_are_not_the_same_number":{"single_step_severance":{"at_removal":13,"cities_severed":278,"meaning":"The largest one-step loss. Removal 13 takes the giant component from 594 cities to 316."},"half_collapse_threshold":{"at_removal":19,"lcc_share":0.3421,"relative_to_baseline":0.4992,"meaning":"The removal at which the giant component first falls below half its baseline. It is a different quantity from the single-step severance and the two are published side by side so neither is quoted as the other."}},"article_14":{"approver":"human in the loop, sole signatory on the Article 14 register","gate":"SENTINEL. Nothing reaches this surface without passing it.","publication_rule":"HERALD publishes only from cleared material. Removing uncertainty to make content shorter is forbidden, which is why every route on the visible surface carries its agreement, its specificity and its verdict."}}</script>
+<script>
+(function(){
+ var el=document.getElementById("qesis-outcomes");
+ if(!el)return;
+ var D=JSON.parse(el.textContent);
+ var P=D.plot;
+ function px(s){return P.x0+(P.x1-P.x0)*(s/P.xmax);}
+ function py(v){return P.y1-(P.y1-P.y0)*(v/P.ymax);}
+ function set(id,v){var n=document.getElementById(id);if(n)n.textContent=v;}
+ function move(id,s,v){var n=document.getElementById(id);
+   if(n){n.setAttribute("cx",px(s).toFixed(1));n.setAttribute("cy",py(v).toFixed(1));}}
+ var rows=[].slice.call(document.querySelectorAll("tr.row"));
+ function toggle(r){
+   var d=document.getElementById("d"+r.getAttribute("data-i"));
+   if(!d)return;
+   var opening=d.hasAttribute("hidden");
+   if(opening){d.removeAttribute("hidden");}else{d.setAttribute("hidden","");}
+   r.setAttribute("aria-expanded",opening?"true":"false");
+ }
+ rows.forEach(function(r){
+   r.setAttribute("tabindex","0");
+   r.setAttribute("role","button");
+   r.setAttribute("aria-expanded","false");
+   var d=document.getElementById("d"+r.getAttribute("data-i"));
+   if(d)d.setAttribute("hidden","");
+   r.addEventListener("click",function(){toggle(r);});
+   r.addEventListener("keydown",function(e){
+     if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle(r);}});
+ });
+ var fb=[].slice.call(document.querySelectorAll(".fbtn"));
+ fb.forEach(function(b){
+   b.addEventListener("click",function(){
+     var k=b.getAttribute("data-k");
+     fb.forEach(function(o){o.setAttribute("aria-pressed",o===b?"true":"false");});
+     rows.forEach(function(r){
+       var show=(k==="all")||(r.getAttribute("data-k")===k);
+       r.style.display=show?"":"none";
+       var d=document.getElementById("d"+r.getAttribute("data-i"));
+       if(d&&!show){d.setAttribute("hidden","");r.setAttribute("aria-expanded","false");}
+     });
+     set("rShown",rows.filter(function(r){return r.style.display!=="none";}).length);
+   });
+ });
+ var ax=[].slice.call(document.querySelectorAll(".axbtn"));
+ var panes=[].slice.call(document.querySelectorAll(".cplpanel"));
+ function showAxis(code){
+   panes.forEach(function(n){
+     if(n.id==="cp-"+code){n.removeAttribute("hidden");}else{n.setAttribute("hidden","");}});
+   ax.forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-ax")===code?"true":"false");});
+ }
+ if(ax.length&&panes.length){
+   ax.forEach(function(b){
+     b.addEventListener("click",function(){showAxis(b.getAttribute("data-ax"));});});
+   showAxis(ax[0].getAttribute("data-ax"));
+ }
+ var s=document.getElementById("scrub");
+ if(s&&D.perc){
+   var draw=function(){
+     var i=parseInt(s.value,10);
+     var t=D.perc.t[i],r=D.perc.r[i];
+     var prev=i>0?D.perc.t[i-1][0]:t[0];
+     set("rSteps",i);
+     set("rCities",t[0]);
+     set("rDrop",Math.max(0,prev-t[0]));
+     set("rShare",t[1].toFixed(4));
+     set("rRand",r[0].toFixed(4));
+     set("rPair",t[2].toFixed(4));
+     move("dt",i,t[1]);move("dr",i,r[0]);
+     var sc=document.getElementById("sc");
+     if(sc){var x=px(i).toFixed(1);
+       sc.setAttribute("d","M"+x+" "+P.y0+" L"+x+" "+P.y1);}
+     [].slice.call(document.querySelectorAll(".cut li")).forEach(function(li){
+       var rk=parseInt(li.getAttribute("data-r"),10);
+       if(rk<=i){li.classList.add("hit");}else{li.classList.remove("hit");}
+     });
+   };
+   s.addEventListener("input",draw);
+   draw();
+ }
+})();
+</script>
+</body></html>
