@@ -40,19 +40,20 @@
    "decision_required": true
   },
   "success_literal_not_measured": {
-   "occurrences": 6,
+   "occurrences": 7,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "the Article 14 held counter tested hitl_approved rather than whether a decision exists, so a decision the operator had already taken was reported back to him as pending for four weeks",
-   "last_seen": "2026-08-28T20:48:16Z",
-   "prior_evidence": "L-155, L-160, L-172, L-201",
+   "last_signature": "a falsifier computed the worst absolute delta of an empty list as zero, compared it against its own threshold, and printed a pass over two null reconstructions",
+   "last_seen": "2026-08-28T21:08:41Z",
+   "prior_evidence": "L-155, L-160, L-172, L-201, L-211",
    "lesson_ids": [
     "L-155",
     "L-160",
     "L-172",
     "L-201",
-    "L-211"
+    "L-211",
+    "L-212"
    ],
    "ci_blocking": true,
    "gate_required": true,

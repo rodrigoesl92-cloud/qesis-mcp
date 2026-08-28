@@ -1,6 +1,6 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-28T20:39:47Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-28T21:09:52Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
@@ -56,8 +56,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 193 max L-210 sha256 e9e83a4c16b8
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 193 max L-210 sha256 e9e83a4c16b8
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -69,7 +69,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 193, unique 193, max L-210, sha256 e9e83a4c16b8198b
+  entries 194, unique 194, max L-211, sha256 e74ea87a5334ac73
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -225,8 +225,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 193 max L-210 sha256 e9e83a4c16b8
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 193 max L-210 sha256 e9e83a4c16b8
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -238,7 +238,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 193, unique 193, max L-210, sha256 e9e83a4c16b8198b
+  entries 194, unique 194, max L-211, sha256 e74ea87a5334ac73
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -357,7 +357,7 @@ Basis: predicate: every prev_hash equals the previous entry_hash (0 breaks)
 755 entries, max 2026-08-28T03:47:32Z
 0 linkage breaks
 1 Article 14 executions held
-9 open tasks
+4 open tasks
 ```
 
 ### 25. qesis-mcp: open pull requests  (INFO, exit 0)
@@ -377,7 +377,7 @@ PR 86 head ops/report-2026-08-28 MERGEABLE BLOCKED
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 0798ecea88b4  fix(ops): render the reserved lessons instead of declaring them absent
+main 17ce8ec2f4b6  feat(axes): the withheld water stress becomes computable, and its fals
 ```
 
 ### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
@@ -393,7 +393,7 @@ owned by this repository's workflows: binding, guard, heal, probe, report
 OWNED binding: success
 OWNED guard: success
 OWNED heal: success
-OWNED probe: success
+OWNED probe: in_progress (not finished at read time; rerun the audit)
 OWNED report: no run on this commit
 informational cloudrun-qesis-mcp-git-europe-west1-rodrigoesl92-cloud-qesis: failure
 informational rmgpgab-qesis-mcp-europe-west1-rodrigoesl92-cloud-qesis-mcp-: failure
@@ -426,7 +426,7 @@ PR 52 head ops/report-2026-08-28 MERGEABLE UNSTABLE
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main dbe3ead1daa1  fix(ops): the ledger and the file that explains its holes travel toget
+main 569155ae29be  feat(ops): the operator queue drops to two, and a rejection stops coun
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -467,7 +467,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 755 entries 0 breaks
-deployment_commit 0798ecea88b4  main 0798ecea88b4
+deployment_commit 17ce8ec2f4b6  main 17ce8ec2f4b6
 tools 8  database connected
 ```
 
