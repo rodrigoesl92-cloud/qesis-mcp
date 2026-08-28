@@ -1,32 +1,39 @@
 {
- "why": "The single declaration of who this service is. Every consumer reads it: the DNS-rebinding guard in server.py, the probe workflows, test_http.py and verify_production.py. scripts/verify_domains.py fails the build if a domain literal appears anywhere that is not declared here, and --live additionally proves the declared probe target actually answers with the vintage this repo serves.",
- "serving": "qesis.qesis.eu",
- "canonical": [
-  "qesis.qesis.eu",
-  "qesis.eu"
- ],
- "retired": [
-  "www.qesis.eu"
- ],
- "_retired_why": "Names this ecosystem published and no longer publishes. They stay declared so a historical reference is not an undeclared literal, and they are excluded from canonical so no control asserts an address nobody serves. scripts/verify_public_domain.py reads canonical only.",
- "vercel": [
-  "qesis-git-main-rodrigoesl92s-projects.vercel.app",
-  "qesis-public.vercel.app",
-  "qesis.vercel.app",
-  "qesis-mcp.vercel.app"
- ],
- "local": [
-  "localhost",
-  "localhost:*",
-  "127.0.0.1",
-  "127.0.0.1:*",
-  "0.0.0.0:*"
- ],
- "probe_base": "https://qesis.qesis.eu",
- "test_host": "qesis.qesis.eu",
- "corrections": {
-  "2026-08-13": "serving was declared as www.qesis.eu and probe_base as qesis-mcp.vercel.app. Both were wrong. The site serves from the subdomain qesis.qesis.eu, which appeared in no declaration and was therefore absent from the rebinding guard's allowed hosts. qesis-mcp.vercel.app is an ORPHANED Vercel project still serving a build from 2026-08-01 at vintage v8.6: it is not this project, it does not appear among the deployment's domains, and the hourly production probe had been testing it for three days. That is the whole of issue #41 and its successor #46. It is retained in the allowed-hosts list because an allowed host nobody serves costs nothing, and removed as the probe target because probing it proves nothing. L-094: consolidating a value into one declaration does not make it correct.",
-  "2026-08-27": "www.qesis.eu removed from canonical. It was attached to the Vercel project and absent from the zone, so the apex answered 308 to a host that was NXDOMAIN at a.regfish-ns.net and every visitor to the EU address reached nothing. The registrar counted 768 errors in 1377 queries over 24 hours. The operator made qesis.eu the primary domain and removed the www alias from the platform on 2026-08-27; https://qesis.eu/health then returned 200 with deployment_commit 550ee76a4474 and a VERIFIED chain. The address is no longer published, so this ecosystem no longer declares it. L-191, and scripts/verify_public_domain.py now asserts every name in canonical hop by hop."
- },
- "note": "qesis.eu and www.qesis.eu are registered at regfish, expiring 2027-08-05 with auto-renew and DNSSEC active, and neither returns a body at present. They stay in canonical so the guard accepts them if and when they are pointed at the deployment, which costs nothing and avoids a 421 on the day the DNS changes."
+  "why": "The single declaration of who this service is. Every consumer reads it: the DNS-rebinding guard in server.py, the probe workflows, test_http.py and verify_production.py. scripts/verify_domains.py fails the build if a domain literal appears anywhere that is not declared here, and --live additionally proves the declared probe target actually answers with the vintage this repo serves.",
+  "serving": "qesis.qesis.eu",
+  "canonical": [
+    "qesis.qesis.eu",
+    "qesis.eu"
+  ],
+  "retired": [
+    "www.qesis.eu"
+  ],
+  "_retired_why": "Names this ecosystem published and no longer publishes. They stay declared so a historical reference is not an undeclared literal, and they are excluded from canonical so no control asserts an address nobody serves. scripts/verify_public_domain.py reads canonical only.",
+  "vercel": [
+    "qesis-git-main-rodrigoesl92s-projects.vercel.app",
+    "qesis-public.vercel.app",
+    "qesis.vercel.app",
+    "qesis-mcp.vercel.app"
+  ],
+  "local": [
+    "localhost",
+    "localhost:*",
+    "127.0.0.1",
+    "127.0.0.1:*",
+    "0.0.0.0:*"
+  ],
+  "probe_base": "https://qesis.qesis.eu",
+  "test_host": "qesis.qesis.eu",
+  "corrections": {
+    "2026-08-13": "serving was declared as www.qesis.eu and probe_base as qesis-mcp.vercel.app. Both were wrong. The site serves from the subdomain qesis.qesis.eu, which appeared in no declaration and was therefore absent from the rebinding guard's allowed hosts. qesis-mcp.vercel.app is an ORPHANED Vercel project still serving a build from 2026-08-01 at vintage v8.6: it is not this project, it does not appear among the deployment's domains, and the hourly production probe had been testing it for three days. That is the whole of issue #41 and its successor #46. It is retained in the allowed-hosts list because an allowed host nobody serves costs nothing, and removed as the probe target because probing it proves nothing. L-094: consolidating a value into one declaration does not make it correct.",
+    "2026-08-27": "www.qesis.eu removed from canonical. It was attached to the Vercel project and absent from the zone, so the apex answered 308 to a host that was NXDOMAIN at a.regfish-ns.net and every visitor to the EU address reached nothing. The registrar counted 768 errors in 1377 queries over 24 hours. The operator made qesis.eu the primary domain and removed the www alias from the platform on 2026-08-27; https://qesis.eu/health then returned 200 with deployment_commit 550ee76a4474 and a VERIFIED chain. The address is no longer published, so this ecosystem no longer declares it. L-191, and scripts/verify_public_domain.py now asserts every name in canonical hop by hop.",
+    "2026-08-28": "serving_third_parties added after reading the served bytes. The finding it was created for turned out to be an artefact of the reader: the Vercel Toolbar script appears only for an authenticated Vercel browser session, and the public page is clean. The control is kept because nothing in this ecosystem had ever read the serving plane's HTML at all, and the allowlist is empty because there is nothing to allow."
+  },
+  "note": "qesis.eu and www.qesis.eu are registered at regfish, expiring 2027-08-05 with auto-renew and DNSSEC active, and neither returns a body at present. They stay in canonical so the guard accepts them if and when they are pointed at the deployment, which costs nothing and avoids a 421 on the day the DNS changes.",
+  "serving_third_parties": {
+    "_why": "Hosts other than this ecosystem's own that appear in the HTML actually SERVED. Every other control here reads the committed artefact; a platform injects at serve time, so a clean artefact can still serve a third party and nothing could tell the difference. This is the missing reader for the serving plane's HTML, as opposed to its JSON health. L-198.",
+    "allow": [],
+    "_measured_2026_08_28": "The public answer is CLEAN. An unauthenticated client gets 82582 bytes from both qesis.eu/blueprint.html and qesis.qesis.eu/blueprint.html with zero occurrences of vercel.live and zero absolute external src attributes. The operator's own browser gets 82771 bytes WITH a vercel.live feedback script, because that browser carries the cookie __vercel_toolbar=1: the Vercel Toolbar injects for an authenticated Vercel session and for nobody else. Read through the operator's browser alone this looks like a third party on every visitor's page and it is not. A reader that carries a session is not a public client; the value was cross-read with a second, unauthenticated reader before it was believed, which is G-01b applied rather than quoted (L-182 is what skipping it costs). allow is therefore empty, and it should stay empty: the control now refuses the first host that appears for a public caller.",
+    "_reader_note": "Run this from somewhere with no operator session. In CI that is automatic. From a laptop, `python scripts/verify_public_domain.py --serving-third-parties <url>` uses urllib and carries no browser state."
+  }
 }
