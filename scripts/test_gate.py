@@ -955,9 +955,15 @@ def check_audit_writer(results: list[tuple[str, bool]]) -> None:
         return
     r = subprocess.run([sys.executable, str(gate), "--selftest"], capture_output=True, text=True)
     results.append(("audit: report renders doctrine-clean and refuses an em dash (L-178)",
-                    r.returncode == 0 and "4/4" in r.stdout))
+                    r.returncode == 0 and "9/9" in r.stdout))
     results.append(("audit: owned checks are read from the workflow files (L-179)",
                     "owned checks" in r.stdout and "PASS  audit: owned" in r.stdout))
+    results.append((
+        "audit: a machine fault is a crash, never a failing predicate (L-193)",
+        "PASS  audit: classify: an out-of-memory exit is a crash" in r.stdout))
+    results.append((
+        "audit: a crash makes the verdict inconclusive, not green (L-193)",
+        "PASS  audit: report writer: a crash makes the audit inconclusive" in r.stdout))
 
 
 

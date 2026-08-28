@@ -359,6 +359,51 @@
    "ci_blocking": false,
    "gate_required": false,
    "decision_required": false
+  },
+  "crash_read_as_refusal": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "779a2e34901d35b08b3410cdd7f0a4b1df9c6c2c11ea46aaca587bad20eab526",
+   "last_signature": "audit_ecosystem.py reported two machine faults as failing predicates and printed NOT GREEN on a healthy tree",
+   "last_seen": "2026-08-27T14:12:54Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-193"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "documented_system_treated_as_unknown": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "872c645770693bcb15311961c11efbcf03aa1c3153ff6feef54ca22f29fb4280",
+   "last_signature": "the PostgreSQL environment was fully documented in three Word manuals and every session searched only the repositories and reported it as an unknown failure",
+   "last_seen": "2026-08-28T01:16:57Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-194"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "credential_granted_is_not_credential_reachable": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "4890470d821174005608af285b6161bf17d6a2f7fc05419bf9723fedd8362f3b",
+   "last_signature": "GCP access was granted by provisioning secrets into the CI store and the agent still could not act, because a repository secret is readable only inside an Actions run",
+   "last_seen": "2026-08-28T01:32:31Z",
+   "prior_evidence": "L-192",
+   "lesson_ids": [
+    "L-195"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
   }
  }
 }
