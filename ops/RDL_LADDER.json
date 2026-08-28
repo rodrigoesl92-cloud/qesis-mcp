@@ -40,20 +40,22 @@
    "decision_required": true
   },
   "success_literal_not_measured": {
-   "occurrences": 7,
+   "occurrences": 9,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "a falsifier computed the worst absolute delta of an empty list as zero, compared it against its own threshold, and printed a pass over two null reconstructions",
-   "last_seen": "2026-08-28T21:08:41Z",
-   "prior_evidence": "L-155, L-160, L-172, L-201, L-211",
+   "last_signature": "the step 0a counter incremented inside a ForEach-Object pipeline block and the caller read zero, so a successful install reported NOTHING INSTALLED",
+   "last_seen": "2026-08-28T22:38:17Z",
+   "prior_evidence": "L-155, L-160, L-172, L-201, L-211, L-212, L-215",
    "lesson_ids": [
     "L-155",
     "L-160",
     "L-172",
     "L-201",
     "L-211",
-    "L-212"
+    "L-212",
+    "L-215",
+    "L-217"
    ],
    "ci_blocking": true,
    "gate_required": true,
@@ -120,13 +122,13 @@
    "decision_required": false
   },
   "claim_from_proxy_not_resource": {
-   "occurrences": 15,
+   "occurrences": 16,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "fab838b17862dec0214f0d106d0c1f3e971cc95ba3c12ccac8580087f4cc5622",
-   "last_signature": "the agent asserted that the water stress exclusion was an upstream territorial-schema artefact and that the gridded source covered the three territories, having read neither the grid nor its country attribution",
-   "last_seen": "2026-08-28T21:28:13Z",
-   "prior_evidence": "L-161, L-162, L-173, L-174, L-179, L-180, L-182, L-183, L-185, L-188, L-203",
+   "last_signature": "the agent placed a workflow file in a directory it had not read the installer's code to confirm, then told the operator his double-click would install it",
+   "last_seen": "2026-08-28T22:27:29Z",
+   "prior_evidence": "L-161, L-162, L-173, L-174, L-179, L-180, L-182, L-183, L-185, L-188, L-203, L-213",
    "lesson_ids": [
     "L-161",
     "L-162",
@@ -139,33 +141,30 @@
     "L-185",
     "L-188",
     "L-203",
-    "L-213"
+    "L-213",
+    "L-214"
    ],
    "ci_blocking": true,
    "gate_required": true,
    "decision_required": true
   },
   "paired_what_is_not_pairable": {
-   "occurrences": 3,
-   "rung": 3,
+   "occurrences": 4,
+   "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "ed169288d47537e9d595e705c7e3f2b5ce4b7c6a467bc9d15d6d72c5ee0f918f",
-   "last_signature": "selfheal.yml step 'Install runtime' runs 'python -m pip install -r requirements.txt' unguarded. qesis-mcp has requirements.txt; sovereign-infra has none. In sovereign-infra the heal job failed in eight seconds, every hour and on every push, before a single control ran, and the run list read as a red loop rather than as a missing file. The workflow was carried across as one file because SH-7 wants one runner serving both repositories, and nothing asked whether every path the file names exists on both sides. The same move as L-170 (a checkout name mirrored as a contract) and L-171 (a script imported that exists in one repository only).",
-   "last_seen": "2026-08-26T00:51:26Z",
-   "prior_evidence": "",
+   "last_signature": "two scripts were added to a CI workflow without being added to the self-heal control set, so the workflow contract refused the landing at its first step",
+   "last_seen": "2026-08-28T22:38:17Z",
+   "prior_evidence": "L-163, L-171, L-175",
    "lesson_ids": [
     "L-163",
     "L-171",
-    "L-175"
+    "L-175",
+    "L-216"
    ],
    "ci_blocking": true,
    "gate_required": true,
-   "decision_required": false,
-   "cleared": {
-    "gate": "scripts/verify_workflow_contract.py",
-    "reason": "C-5 refuses an unguarded requirements install whose file is absent from this repository; the gate runs in both integrity workflows and proves its three fixtures before judging (L-175)",
-    "when": "2026-08-26T00:51:38Z"
-   }
+   "decision_required": true
   },
   "stale_artifact_left_live": {
    "occurrences": 2,

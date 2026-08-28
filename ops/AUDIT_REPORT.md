@@ -1,6 +1,6 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-28T21:30:03Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-28T22:32:39Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
@@ -56,8 +56,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 196 max L-213 sha256 090b806e6ae0
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 196 max L-213 sha256 090b806e6ae0
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -69,7 +69,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 195, unique 195, max L-212, sha256 9604e8230c38e262
+  entries 196, unique 196, max L-213, sha256 090b806e6ae0349e
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -225,8 +225,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 196 max L-213 sha256 090b806e6ae0
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 196 max L-213 sha256 090b806e6ae0
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -238,7 +238,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 195, unique 195, max L-212, sha256 9604e8230c38e262
+  entries 196, unique 196, max L-213, sha256 090b806e6ae0349e
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -357,7 +357,7 @@ Basis: predicate: every prev_hash equals the previous entry_hash (0 breaks)
 755 entries, max 2026-08-28T03:47:32Z
 0 linkage breaks
 1 Article 14 executions held
-4 open tasks
+2 open tasks
 ```
 
 ### 25. qesis-mcp: open pull requests  (INFO, exit 0)
@@ -377,7 +377,7 @@ PR 86 head ops/report-2026-08-28 MERGEABLE BLOCKED
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main e62dac388d47  fix(gates): a falsifier that measured nothing may never report a pass
+main 05bc1656517f  feat(ops): a brief for the operator and a dispatch for the agents, bot
 ```
 
 ### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
@@ -426,7 +426,7 @@ PR 52 head ops/report-2026-08-28 MERGEABLE UNSTABLE
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 2bfbf5e7ef10  fix(ops): a rejection is a decision, and a standing ruling may not ove
+main 3a998188b03f  feat(governance): Decision 6 scoped, the executor rule, and the brief 
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -467,7 +467,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 755 entries 0 breaks
-deployment_commit e62dac388d47  main e62dac388d47
+deployment_commit 05bc1656517f  main 05bc1656517f
 tools 8  database connected
 ```
 

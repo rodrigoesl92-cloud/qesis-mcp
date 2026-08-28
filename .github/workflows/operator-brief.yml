@@ -1,0 +1,81 @@
+name: Operator brief
+
+# Writes the daily brief in two registers and publishes both.
+#   ops/OPERATOR_BRIEF.md and public/status.html, plain English, for the operator.
+#   ops/DISPATCH.json, machine readable, already routed by the SH-10b table, so any
+#   agent session opens one file and executes its own rows instead of re-deriving
+#   the situation. A brief only a human can read is a brief that waits for a human.
+#
+# SH-7. This runs on a GitHub runner and it needs no desktop, no application open
+# and nobody's laptop switched on. The operator reads the result on a phone in any
+# country. A scheduled task inside a desktop application is a reminder, not a
+# schedule, and one was proposed and correctly refused on 2026-08-28.
+#
+# It commits to a branch and opens a pull request rather than pushing to main,
+# because main is Human-on-the-Loop (G-06) and the self-heal loop merges the
+# result once the required check reports.
+
+# It refreshes on every recurring cycle of the ecosystem, not once a day, because
+# the dispatch is only useful if it reflects the last thing that ran. The hourly
+# cron tracks the self-heal loop, and the workflow_run triggers make it refresh the
+# moment the self-heal loop or the daily report finishes rather than up to an hour
+# later.
+on:
+  schedule:
+    - cron: "45 * * * *"
+  workflow_run:
+    workflows: ["Self-heal loop", "Daily ops report", "QESIS+ integrity gate"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+
+      - name: Install what CI installs
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+
+      - name: The brief gate refuses and accepts what it must
+        run: python scripts/build_operator_brief.py --selftest
+
+      - name: Write the brief and the published page
+        run: python scripts/build_operator_brief.py
+
+      - name: Every declared address still resolves
+        run: python scripts/verify_static_routes.py
+
+      - name: Land it, or say nothing changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          BR="ops/brief-$(date -u +%F)"   # one branch per day, refreshed in place
+          git config user.name "qesis-runner"
+          git config user.email "runner@qesis.invalid"
+          if git diff --quiet -- ops/OPERATOR_BRIEF.md public/status.html ops/DISPATCH.json; then
+            echo "brief identical to the committed copy, nothing to land. Zero is zero."
+            exit 0
+          fi
+          git checkout -b "$BR"
+          git add ops/OPERATOR_BRIEF.md public/status.html ops/DISPATCH.json
+          git commit -m "ops(brief): $(date -u +%F) operator brief, generated in CI under SH-7"
+          git push --force-with-lease origin "$BR"
+          gh pr create --fill --head "$BR" --base main \
+            --title "ops(brief): $(date -u +%F) operator brief and agent dispatch" || true
+
+      - name: Print it into the run summary, so it is readable without a clone
+        run: cat ops/OPERATOR_BRIEF.md >> "$GITHUB_STEP_SUMMARY"
