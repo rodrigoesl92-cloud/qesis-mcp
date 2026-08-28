@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-08-27T14:10:14.536921+00:00",
+ "generated_utc": "2026-08-28T02:00:06.113962+00:00",
  "mode": "dry-run",
  "controls": [
   {
@@ -156,16 +156,7 @@
   }
  ],
  "repaired": [],
- "degraded": [
-  {
-   "control": "git_write_capability",
-   "degradation": "host_only_git",
-   "why": "Repairs are written to the working tree and NOT committed from here. can create but CANNOT UNLINK inside .git: Operation not permitted. Git writes will half-complete and litter .git/objects. Leftover probe: .selfheal_probe Class B: the safe failure mode is declared, so the loop degrades and continues rather than escalating. The work is not lost, it is unlanded, and those are different states (L-062).",
-   "stray_objects": 1,
-   "stray_probes": 15,
-   "legacy_probes": 14
-  }
- ],
+ "degraded": [],
  "escalations": [],
  "failed": [],
  "benign": [],
@@ -193,8 +184,8 @@
   }
  },
  "git_writes": {
-  "safe": false,
-  "detail": "can create but CANNOT UNLINK inside .git: Operation not permitted. Git writes will half-complete and litter .git/objects. Leftover probe: .selfheal_probe"
+  "safe": true,
+  "detail": "git writes complete on this filesystem"
  },
  "promotion": {
   "proceed": true,
@@ -214,5 +205,5 @@
   "unmodified_execution_is": "0 repairs held over 0 findings this run",
   "empty_denominator_reads_as": "null, never 1.0"
  },
- "verdict": "DEGRADED"
+ "verdict": "GREEN"
 }

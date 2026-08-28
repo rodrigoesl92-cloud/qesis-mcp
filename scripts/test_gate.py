@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -248,6 +249,33 @@ def run_chain_gate(rows, att) -> tuple[int, str]:
                         "--attestation", str(d / "a.json"), "--quiet"],
                        capture_output=True, text=True)
     return r.returncode, (r.stdout + r.stderr)
+
+
+
+def all_declared_hold(out: str, code: int, floor: int) -> bool:
+    """A sub-suite passes when EVERY declared behaviour holds, not when it
+    reports a number somebody typed here months ago.
+
+    THE TRAP THIS REMOVES. Four call sites asserted a literal count: "9/9",
+    "6/6", "7/7", "12/12". A literal count is a claim about the size of another
+    file's fixture list, and growing that list is the correct thing to do, so
+    the assertion breaks precisely when somebody improves the suite it guards.
+    It broke twice on 2026-08-28: the audit suite grew from 4 to 9 and the
+    landing went red on "4/4", and hours later the public-domain suite grew
+    from 7 to 12 and the required gate refused a change set whose only sin was
+    five new fixtures. Both times the gate was right that something had changed
+    and wrong about what, which is the L-193 shape again.
+
+    The property is a PROPORTION, passed over failed, plus a floor so the suite
+    cannot silently shrink to 1/1 and still read as green. The floor is a
+    ratchet: it is raised deliberately, and it is the only number here anybody
+    ever has to touch. L-201.
+    """
+    m = re.search(r"\b(\d+)/(\d+)\b", out)
+    if m is None:
+        return False
+    passed, total = int(m.group(1)), int(m.group(2))
+    return code == 0 and passed == total and total >= floor
 
 
 def check_chain(results: list[tuple[str, bool]]) -> None:
@@ -955,7 +983,7 @@ def check_audit_writer(results: list[tuple[str, bool]]) -> None:
         return
     r = subprocess.run([sys.executable, str(gate), "--selftest"], capture_output=True, text=True)
     results.append(("audit: report renders doctrine-clean and refuses an em dash (L-178)",
-                    r.returncode == 0 and "9/9" in r.stdout))
+                    all_declared_hold(r.stdout, r.returncode, floor=9)))
     results.append(("audit: owned checks are read from the workflow files (L-179)",
                     "owned checks" in r.stdout and "PASS  audit: owned" in r.stdout))
     results.append((
@@ -1038,7 +1066,7 @@ def check_blueprint(results: list[tuple[str, bool]]) -> None:
                        capture_output=True, text=True)
     out = r.stdout + r.stderr
     results.append(("blueprint: every declared behaviour verified",
-                    r.returncode == 0 and "6/6" in out))
+                    all_declared_hold(out, r.returncode, floor=6)))
     results.append(("blueprint: a moved solution consistency is refused by the sync check",
                     "PASS  blueprint: a moved solution consistency is refused" in out))
     results.append(("blueprint: the built page keeps the validator out of the visible surface",
@@ -1058,11 +1086,14 @@ def check_blueprint(results: list[tuple[str, bool]]) -> None:
 def check_public_domain(results: list[tuple[str, bool]]) -> None:
     """The address a buyer types is a surface, and surfaces carry controls.
 
-    Fixtures only. The live assertion is deliberately not wired into the required
-    gate yet, because the address it would assert is currently a dead end and a
-    gate that blocks every landing until a DNS record appears is a worse failure
-    than the one it reports. It flips to blocking in the landing after the record
-    exists, which is a decision recorded rather than a step forgotten.
+    Fixtures here, live assertion in production-integrity-probe.yml. The address
+    is no longer a dead end: qesis.eu is primary on the Vercel project and serves,
+    so the reason this was fixtures-only is spent. It stays out of the REQUIRED
+    gate on a different argument that has not spent: making every landing depend
+    on a third party answering within twenty seconds turns somebody else's bad
+    minute into a blocked release. The probe runs hourly and on every push, the
+    audit asserts its verdict, and the count below is a proportion rather than a
+    literal so five new fixtures stop being a red build (L-201).
     """
     gate = ROOT / "scripts" / "verify_public_domain.py"
     if not gate.exists():
@@ -1072,7 +1103,7 @@ def check_public_domain(results: list[tuple[str, bool]]) -> None:
                        capture_output=True, text=True)
     out = r.stdout + r.stderr
     results.append(("public domain: every declared behaviour holds",
-                    r.returncode == 0 and "7/7" in out))
+                    all_declared_hold(out, r.returncode, floor=12)))
     results.append(("public domain: a redirect into a host with no DNS record is refused",
                     "PASS  public-domain: a redirect into a host with no DNS record "
                     "is refused" in out))
@@ -1095,7 +1126,7 @@ def check_reading_contract(results: list[tuple[str, bool]]) -> None:
     r = subprocess.run([sys.executable, str(gate), "--selftest"], capture_output=True, text=True)
     out = r.stdout + r.stderr
     results.append(("reading contract: 12 fixtures, one refusal per rule (RC-1 to RC-6)",
-                    r.returncode == 0 and "12/12" in out))
+                    all_declared_hold(out, r.returncode, floor=12)))
     results.append(("reading contract: a cached reader cannot be authoritative (L-182)",
                     "PASS  reading-contract: a plane that admits a cached reader is refused" in out))
     results.append(("reading contract: WebFetch cannot be removed from the forbidden table",

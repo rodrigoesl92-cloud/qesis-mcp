@@ -57,6 +57,12 @@ PROBE_NAME = ".selfheal_probe"
 CONTROLS = [
     ("verify_index",           ["scripts/verify_index.py"]),
     ("verify_chain",           ["scripts/verify_chain.py"]),
+    # L-200 rung 2. The bare invocation judges the tree; this one judges the
+    # sentence the bare one prints when it refuses. C5 called a file on disk
+    # "the served index" and sent a diagnosis at the deployment while the
+    # cause was a mutated working file. D-118 rule 8: the label is part of
+    # the claim, so the label gets fixtures.
+    ("chain_diagnosis",        ["scripts/verify_chain.py", "--selftest"]),
     ("verify_vintage_pairing", ["scripts/verify_vintage_pairing.py"]),
     ("verify_axis_sfc",        ["scripts/verify_axis_sfc.py", "--quiet"]),
     ("verify_action_pinning",  ["scripts/verify_action_pinning.py"]),

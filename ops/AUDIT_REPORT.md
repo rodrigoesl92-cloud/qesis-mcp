@@ -1,11 +1,13 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-27T13:53:54Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-28T02:01:18Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
 
-## Verdict: NOT GREEN, 2 failing (4 informational)
+## Verdict: GREEN (6 informational)
+
+
 
 | # | check | verdict | exit | basis |
 |---|---|---|---|---|
@@ -20,8 +22,8 @@ measurement (D-116, V-5). Nothing here is asserted; V-1.
 | 9 | qesis-mcp: lander contract | **PASS** | 0 | gate: exit code is the contract |
 | 10 | qesis-mcp: landing base fixtures | **PASS** | 0 | gate: exit code is the contract |
 | 11 | qesis-mcp: landing manifest fixtures | **PASS** | 0 | gate: exit code is the contract |
-| 12 | qesis-mcp: preflight, CI's own steps | **FAIL** | 1 | gate: exit code is the contract |
-| 13 | qesis-mcp: self-heal loop, dry run (the `heal` check) | **FAIL** | 1 | gate: exit code is the contract |
+| 12 | qesis-mcp: preflight, CI's own steps | **PASS** | 0 | gate: exit code is the contract |
+| 13 | qesis-mcp: self-heal loop, dry run (the `heal` check) | **PASS** | 0 | gate: exit code is the contract |
 | 14 | sovereign-infra: ledger mirror in sync | **PASS** | 0 | gate: exit code is the contract |
 | 15 | sovereign-infra: ledger singleton | **PASS** | 0 | gate: exit code is the contract |
 | 16 | sovereign-infra: ledger fixtures | **PASS** | 0 | gate: exit code is the contract |
@@ -33,11 +35,11 @@ measurement (D-116, V-5). Nothing here is asserted; V-1.
 | 22 | sovereign-infra: preflight, CI's own steps | **PASS** | 0 | gate: exit code is the contract |
 | 23 | sovereign-infra: self-heal loop, dry run (the `heal` check) | **PASS** | 0 | gate: exit code is the contract |
 | 24 | compliance chain | **PASS** | 0 | predicate: every prev_hash equals the previous entry_hash (0 breaks) |
-| 25 | qesis-mcp: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
+| 25 | qesis-mcp: open pull requests | **INFO** | 0 | measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it |
 | 26 | qesis-mcp: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
 | 27 | qesis-mcp: required and owned checks on main | **PASS** | 0 | measurement: all 1 required check(s) and every completed owned check on main are success; integrations the eco |
 | 28 | qesis-mcp: open issues | **INFO** | 0 | measurement: 0 open issue(s), recorded |
-| 29 | sovereign-infra: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
+| 29 | sovereign-infra: open pull requests | **INFO** | 0 | measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it |
 | 30 | sovereign-infra: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
 | 31 | sovereign-infra: required and owned checks on main | **PASS** | 0 | measurement: ruleset unreadable; every ecosystem-owned check on main is success |
 | 32 | sovereign-infra: open issues | **INFO** | 0 | measurement: 0 open issue(s), recorded |
@@ -54,8 +56,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 175 max L-192 sha256 ca1349c9f0f4
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 175 max L-192 sha256 ca1349c9f0f4
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 178 max L-195 sha256 38254a9ff84c
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 178 max L-195 sha256 38254a9ff84c
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -67,7 +69,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 175, unique 175, max L-192, sha256 ca1349c9f0f40f07
+  entries 178, unique 178, max L-195, sha256 38254a9ff84c5e79
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -127,7 +129,7 @@ RDL DELTA GATE PASSED: 6 accepted, 0 regressions. The ladder introduces no new e
 Basis: gate: exit code is the contract
 
 ```
-OK   workflow contract holds: 30 CI scripts, 18 local controls, 17 declared exemptions, tracked via git ls-files
+OK   workflow contract holds: 31 CI scripts, 19 local controls, 17 declared exemptions, tracked via git ls-files
 ```
 
 ### 8. qesis-mcp: self-heal fixtures  (PASS, exit 0)
@@ -137,7 +139,7 @@ OK   workflow contract holds: 30 CI scripts, 18 local controls, 17 declared exem
 Basis: gate: exit code is the contract
 
 ```
-scope: 17 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, ecosystem_state_check, runner_merge_selftest, reading_contract, test_gate
+scope: 18 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, public_domain, ecosystem_state_check, runner_merge_selftest, reading_contract, test_gate
 SELFHEAL SELFTEST: PASSED, 6 fixtures
 ```
 
@@ -181,38 +183,38 @@ PASS  manifest: accepts a complete manifest
 landing manifest selftest: 5/5 fixtures hold
 ```
 
-### 12. qesis-mcp: preflight, CI's own steps  (FAIL, exit 1)
+### 12. qesis-mcp: preflight, CI's own steps  (PASS, exit 0)
 
 `python scripts/preflight.py`  in `C:\Users\Lenovo\qesis-mcp`
 
 Basis: gate: exit code is the contract
 
 ```
-Running what CI runs, in CI's order, on this tree.
+  PASS  Dashboard agrees with the served index
+  PASS  Service identity is declared once
+  PASS  Outbound endpoints are declared once
+  PASS  Ecosystem state and path registry are not stale
+  PASS  RDL ladder has no family at rung 3
 
-  PASS  Workflow contract holds
-  PASS  Kill switch is clear
-  FAIL  No plaintext secret is reachable   exit 3221225773
-
-PREFLIGHT FAILED. This step will fail the required status check, so the pull request could not merge.
-Nothing has been pushed. Fix this, then run again.
+PREFLIGHT PASSED: every step CI will run passes on this tree.
+This is not a proxy for CI. It is CI's own step list, executed.
 ```
 
-### 13. qesis-mcp: self-heal loop, dry run (the `heal` check)  (FAIL, exit 1)
+### 13. qesis-mcp: self-heal loop, dry run (the `heal` check)  (PASS, exit 0)
 
 `python scripts/selfheal.py --dry-run`  in `C:\Users\Lenovo\qesis-mcp`
 
 Basis: gate: exit code is the contract
 
 ```
+  ok  ecosystem_state_check    PASS
   ok  runner_merge_selftest    PASS
   ok  reading_contract         PASS
   ok  test_gate                PASS
 
-  verdict ESCALATED   repaired 0   degraded 0   escalations 1
-  action gap: friction 1   time to action 0.0s over 0 repairs   unmodified execution 0%
-  promotion: HELD  (control set not fully green)
-    [HIGH] verify_index: python scripts/verify_index.py   (read the R-code it names)
+  verdict GREEN   repaired 0   degraded 0   escalations 0
+  action gap: friction 0   time to action 0.0s over 0 repairs   unmodified execution n/a (no findings)
+  promotion: PROCEED  (policy signed and predicate holds)
 ```
 
 ### 14. sovereign-infra: ledger mirror in sync  (PASS, exit 0)
@@ -223,8 +225,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 175 max L-192 sha256 ca1349c9f0f4
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 175 max L-192 sha256 ca1349c9f0f4
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 178 max L-195 sha256 38254a9ff84c
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 178 max L-195 sha256 38254a9ff84c
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -236,7 +238,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 175, unique 175, max L-192, sha256 ca1349c9f0f40f07
+  entries 178, unique 178, max L-195, sha256 38254a9ff84c5e79
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -296,7 +298,7 @@ RDL DELTA GATE PASSED: 6 accepted, 0 regressions. The ladder introduces no new e
 Basis: gate: exit code is the contract
 
 ```
-OK   workflow contract holds: 11 CI scripts, 18 local controls, 17 declared exemptions, tracked via git ls-files
+OK   workflow contract holds: 12 CI scripts, 19 local controls, 17 declared exemptions, tracked via git ls-files
      scope: 10 control script(s) absent from this repository, out of scope here per selfheal.controls_present(): build_eval.py, build_graph.py, build_landing.py, build_percolation_block.py, self_exposure.py, test_gate.py, verify_axis_sfc.py, verify_index.py, verify_no_plaintext_secrets.py, verify_vintage_pairing.py
 ```
 
@@ -307,7 +309,7 @@ OK   workflow contract holds: 11 CI scripts, 18 local controls, 17 declared exem
 Basis: gate: exit code is the contract
 
 ```
-scope: 17 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, ecosystem_state_check, runner_merge_selftest, reading_contract, test_gate
+scope: 18 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, ecosystem_state_check, runner_merge_selftest, reading_contract, gcp_triggers, test_gate
 SELFHEAL SELFTEST: PASSED, 6 fixtures
 ```
 
@@ -335,10 +337,10 @@ This is not a proxy for CI. It is CI's own step list, executed.
 Basis: gate: exit code is the contract
 
 ```
-  ok  kill_switch              PASS
   ok  ecosystem_state_check    PASS
   ok  runner_merge_selftest    PASS
   ok  reading_contract         PASS
+  ok  gcp_triggers             PASS
 
   verdict GREEN   repaired 0   degraded 0   escalations 0
   action gap: friction 0   time to action 0.0s over 0 repairs   unmodified execution n/a (no findings)
@@ -358,14 +360,14 @@ Basis: predicate: every prev_hash equals the previous entry_hash (0 breaks)
 13 open tasks
 ```
 
-### 25. qesis-mcp: open pull requests  (PASS, exit 0)
+### 25. qesis-mcp: open pull requests  (INFO, exit 0)
 
 `gh pr list --repo rodrigoesl92-cloud/qesis-mcp --state open --limit 50 --json number,headRefName,mergeable,mergeStateStatus`  in `C:\Users\Lenovo\qesis-mcp`
 
-Basis: measurement: 0 open pull requests
+Basis: measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it
 
 ```
-0 open pull requests
+PR 82 head ops/report-2026-08-27 MERGEABLE BLOCKED
 ```
 
 ### 26. qesis-mcp: main  (INFO, exit 0)
@@ -375,7 +377,7 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 550ee76a4474  feat(ops): an unowned check is reported, and the address on the busine
+main 35559ecf68ee  feat(ops): the EU address is asserted live, and a crash stops being re
 ```
 
 ### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
@@ -407,14 +409,14 @@ Basis: measurement: 0 open issue(s), recorded
 0 open issues
 ```
 
-### 29. sovereign-infra: open pull requests  (PASS, exit 0)
+### 29. sovereign-infra: open pull requests  (INFO, exit 0)
 
 `gh pr list --repo rodrigoesl92-cloud/sovereign-infra --state open --limit 50 --json number,headRefName,mergeable,mergeStateStatus`  in `C:\Users\Lenovo\qesis-mcp`
 
-Basis: measurement: 0 open pull requests
+Basis: measurement: 1 open, none DIRTY. Open is unlanded work, not a defect; the lander merges or closes it
 
 ```
-0 open pull requests
+PR 48 head ops/report-2026-08-27 MERGEABLE UNSTABLE
 ```
 
 ### 30. sovereign-infra: main  (INFO, exit 0)
@@ -424,7 +426,7 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 3f89c33bcb90  feat(ops): the Cloud Build triggers become runnable to remove, and the
+main f33aa7405b1c  feat(ops): the trigger disconnect becomes a runnable the runner can ex
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -435,10 +437,11 @@ Basis: measurement: ruleset unreadable; every ecosystem-owned check on main is s
 
 ```
 required by ruleset unreadable: {"message":"Upgrade to GitHub Pro or make this repository public to enable this feature.","documentation_url":"https://docs.github.com/rest/repos/rules#get-rules-for-a-branch","status":"403"}gh: Upgrade to GitHub Pro or make this repository public to enable this feature. (HTTP 403): none readable
-owned by this repository's workflows: claude, guard, heal, promote, qesis-integrity, report, verify
+owned by this repository's workflows: claude, disconnect, guard, heal, promote, qesis-integrity, report, verify
 OWNED claude: no run on this commit
+OWNED disconnect: no run on this commit
 OWNED guard: success
-OWNED heal: no run on this commit
+OWNED heal: success
 OWNED promote: no run on this commit
 OWNED qesis-integrity: success
 OWNED report: no run on this commit
@@ -464,7 +467,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 754 entries 0 breaks
-deployment_commit 550ee76a4474  main 550ee76a4474
+deployment_commit 35559ecf68ee  main 35559ecf68ee
 tools 8  database connected
 ```
 
@@ -477,9 +480,4 @@ Basis: measurement: HTTP 200, predicate: 200
 ```
 HTTP 200
 ```
-
-## What is failing
-
-- **qesis-mcp: preflight, CI's own steps**: gate: exit code is the contract, last line: `Nothing has been pushed. Fix this, then run again.`
-- **qesis-mcp: self-heal loop, dry run (the `heal` check)**: gate: exit code is the contract, last line: `    [HIGH] verify_index: python scripts/verify_index.py   (read the R-code it names)`
 

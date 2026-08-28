@@ -33,6 +33,10 @@ DECLARED = (set(DOMAINS["canonical"]) | set(DOMAINS["vercel"]) | set(DOMAINS["lo
 # stays known, so a historical reference in a test or a comment is not an undeclared
 # literal, while no live control asserts an address nobody serves any more (L-191).
 DECLARED |= {DOMAINS["serving"], DOMAINS["test_host"]}
+# Third parties the SERVED page is permitted to reach. Declared for the same reason
+# `retired` is: a host this ecosystem has knowingly accepted is not an undeclared
+# literal, and the list is the thing a reviewer argues with (L-198).
+DECLARED |= set((DOMAINS.get("serving_third_parties") or {}).get("allow") or [])
 DECLARED |= {DOMAINS["probe_base"].replace("https://", "").replace("http://", "")}
 
 # The pattern is deliberately broad: it must catch a domain nobody thought to

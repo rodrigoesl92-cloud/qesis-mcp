@@ -3,7 +3,7 @@
  "link_breaks": 0,
  "head_sha256": "d68c06af9c9cb8b8ebc3f3984811ace7588a02764541799b992e36d063090232",
  "genesis_sha256": "c53c65edf1f0dd6ed78121b47a33f8afdd50e2ac00821a76edd703f150cb4528",
- "verified_at_utc": "2026-08-27T13:53:17Z",
+ "verified_at_utc": "2026-08-28T02:00:48Z",
  "verifier": "scripts/verify_chain.py",
  "verified_from": "committed artefacts only",
  "link_rule": "sha256(prev_hash | input_hash | output_hash | timestamp)",

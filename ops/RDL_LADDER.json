@@ -40,26 +40,22 @@
    "decision_required": true
   },
   "success_literal_not_measured": {
-   "occurrences": 4,
+   "occurrences": 5,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "audit_ecosystem.py marked main check conclusions PASS on sovereign-infra while the value it had just fetched read heal: failure and qesis-integrity: failure, and marked open pull requests PASS while listing PR 71 as CONFLICTING DIRTY; it forced the row's exit to 0 by hand. The row's verdict came from the exit status of gh, an operation, and never from a predicate over the value the operation returned. The report was built to be the thing the operator opens instead of trusting a sentence, and its own verdict column was a sentence.",
-   "last_seen": "2026-08-24T19:43:36Z",
-   "prior_evidence": "L-100, L-155",
+   "last_signature": "test_gate.py asserted 7/7 for the public-domain suite, the suite grew to twelve fixtures, and the required gate refused a change set whose only sin was five new fixtures",
+   "last_seen": "2026-08-28T03:09:40Z",
+   "prior_evidence": "L-193",
    "lesson_ids": [
     "L-155",
     "L-160",
-    "L-172"
+    "L-172",
+    "L-201"
    ],
    "ci_blocking": true,
    "gate_required": true,
-   "decision_required": true,
-   "cleared": {
-    "gate": "scripts/audit_ecosystem.py",
-    "reason": "Fourth occurrence opened D-116 (a verdict is a predicate over a parsed value, never the exit status of the fetch) and landed it: audit_ecosystem.py has exactly two row constructors, gate() and measure(); every measurement carries its predicate on the row, unparseable is FAIL, no predicate is INFO, required checks come from the branch ruleset.",
-    "when": "2026-08-24T19:44:12Z"
-   }
+   "decision_required": true
   },
   "duplicate_id_from_stale_accessor": {
    "occurrences": 1,
@@ -400,6 +396,81 @@
    "prior_evidence": "L-192",
    "lesson_ids": [
     "L-195"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
+  },
+  "declaration_built_from_one_side_of_a_pair": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "62c8f880ba3a29d56ce9754080bc41d4f35180c2ecf5dd8bd065ed0f054d9e08",
+   "last_signature": "ops/GCP_FOOTPRINT.json listed one repository while three foreign checks exist across two, so the removal runnable would have left the third trigger in place",
+   "last_seen": "2026-08-28T02:19:18Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-196"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "superseded_state_printed_as_the_finding": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "ac3ee62736fafe7465efe2096bbcd153da9a5418864b17cb4b89b6661c88dd47",
+   "last_signature": "LAND_EVERYTHING_FINAL.ps1 set a Note on the first merge attempt and never cleared it, so the result block contradicted the state printed beside it",
+   "last_seen": "2026-08-28T02:50:56Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-197"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "plane_read_through_a_reader_that_adds_state": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "0c4f84a23b4112a13ab289b72c4662e5bbb4212a86f90c3796f25b89b42a60a2",
+   "last_signature": "blueprint.html appeared to serve a third-party vercel.live script to every visitor; it serves it only to a browser authenticated to Vercel and the public page is clean",
+   "last_seen": "2026-08-28T02:51:12Z",
+   "prior_evidence": "L-182",
+   "lesson_ids": [
+    "L-198"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
+  },
+  "instruction_whose_two_halves_cannot_both_hold": {
+   "occurrences": 1,
+   "rung": 1,
+   "owner": "ARCHITECT",
+   "family_hash": "675846c9661979c306f132059177d8b376621d32dc6b6523567e993d48fc997c",
+   "last_signature": "the operator asked for PRI in VALIDATOR_TOKENS so the gate could see it and for the published copy to stay, and VALIDATOR_TOKENS refuses any page containing its entries",
+   "last_seen": "2026-08-28T02:51:27Z",
+   "prior_evidence": "",
+   "lesson_ids": [
+    "L-199"
+   ],
+   "ci_blocking": false,
+   "gate_required": false,
+   "decision_required": false
+  },
+  "index_corrupted_by_a_gate_this_shell_cannot_finish": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "ec36735d117301a08acd1cd9a13da63bae3e22164c5849dd32cea1b6a57e57aa",
+   "last_signature": "preflight was started in the background from a shell whose calls die at 45 seconds, the process was killed inside check_contract's mutation window, and data/qesis_v8.json kept field_no_code_builds",
+   "last_seen": "2026-08-28T02:57:37Z",
+   "prior_evidence": "L-187",
+   "lesson_ids": [
+    "L-200"
    ],
    "ci_blocking": false,
    "gate_required": true,

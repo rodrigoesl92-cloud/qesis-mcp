@@ -39,6 +39,16 @@ jobs:
         # read from data/domains.json canonical, never retyped here.
         run: python scripts/verify_public_domain.py
 
+      - name: The served page reaches no undeclared third party
+        # A runner carries no operator session, which is exactly why this
+        # assertion belongs here and not on a laptop. Read through a browser
+        # logged into Vercel this page appears to serve a vercel.live script;
+        # read by a public client it does not, and the difference is the
+        # reader, not the page (L-198, same class as L-182).
+        run: |
+          python scripts/verify_public_domain.py \
+            --serving-third-parties https://qesis.eu/blueprint.html
+
       - name: Served endpoint agrees with the committed index
         # Three outcomes, not two. Serving the PREVIOUS release is a deploy in
         # flight, not a drift, and failing on it makes every deploy red for a
