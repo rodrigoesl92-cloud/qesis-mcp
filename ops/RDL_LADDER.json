@@ -40,18 +40,19 @@
    "decision_required": true
   },
   "success_literal_not_measured": {
-   "occurrences": 5,
+   "occurrences": 6,
    "rung": 4,
    "owner": "ARCHITECT",
    "family_hash": "09e56236f7b1e7deebf8fc1c6d8c86c89064c55b9aa451bb5667723dc230bf09",
-   "last_signature": "test_gate.py asserted 7/7 for the public-domain suite, the suite grew to twelve fixtures, and the required gate refused a change set whose only sin was five new fixtures",
-   "last_seen": "2026-08-28T03:09:40Z",
-   "prior_evidence": "L-193",
+   "last_signature": "the Article 14 held counter tested hitl_approved rather than whether a decision exists, so a decision the operator had already taken was reported back to him as pending for four weeks",
+   "last_seen": "2026-08-28T20:48:16Z",
+   "prior_evidence": "L-155, L-160, L-172, L-201",
    "lesson_ids": [
     "L-155",
     "L-160",
     "L-172",
-    "L-201"
+    "L-201",
+    "L-211"
    ],
    "ci_blocking": true,
    "gate_required": true,
