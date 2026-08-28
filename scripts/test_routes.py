@@ -20,6 +20,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# The service identity is declared once, in data/domains.json (L-089).
+_HOST = json.loads((ROOT / "data" / "domains.json").read_text(encoding="utf-8"))["test_host"]
 sys.path.insert(0, str(ROOT))
 
 from api.index import app  # noqa: E402
@@ -34,9 +36,9 @@ async def probe(path: str, method: str) -> int:
     scope = {
         "type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1",
         "method": method, "scheme": "https", "path": path, "raw_path": path.encode(),
-        "query_string": b"", "root_path": "", "server": ("www.qesis.eu", 443),
+        "query_string": b"", "root_path": "", "server": (_HOST, 443),
         "client": ("127.0.0.1", 0),
-        "headers": [(b"host", b"www.qesis.eu"), (b"accept", b"application/json")],
+        "headers": [(b"host", _HOST.encode()), (b"accept", b"application/json")],
     }
     status = {"code": None}
 

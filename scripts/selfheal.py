@@ -75,6 +75,10 @@ CONTROLS = [
     ("self_exposure_check",    ["scripts/self_exposure.py", "--check"]),
     ("build_eval_check",       ["scripts/build_eval.py", "--check"]),
     ("build_landing_check",    ["scripts/build_landing.py", "--check"]),
+    # Runs in CI through production-integrity-probe.yml, so it is in the control
+    # set and not in EXEMPT (L-183). Fixtures here, live assertion there: the
+    # self-heal loop must not go red because a third party had a bad minute.
+    ("public_domain",         ["scripts/verify_public_domain.py", "--selftest"]),
     # Every model, every session type, reads ops/ECOSYSTEM_STATE.json and
     # ops/PATH_REGISTRY.json before asserting anything. Those files are only
     # trustworthy if a stale copy fails the build, so the check joins the set.

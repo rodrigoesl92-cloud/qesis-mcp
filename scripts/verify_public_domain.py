@@ -156,7 +156,7 @@ def selftest() -> int:
     the live defect as it stood (V-2)."""
     d = json.loads(DOMAINS.read_text(encoding="utf-8"))
     apex, serving = d["canonical"][1], d["serving"]
-    alias = d["canonical"][2]
+    alias = (d.get("retired") or ["nonexistent.invalid"])[0]
     ok_hop = [{"host": apex, "resolves": True, "status": 200, "location": None,
                "body": {f: 1 for f in REQUIRED_FIELDS}}]
     cases = [

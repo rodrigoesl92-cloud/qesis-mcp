@@ -114,11 +114,56 @@ def row(label: str, cmd, cwd: Path, code: int, tail: list[str], verdict: str, ba
     return r
 
 
+#: Exit codes a gate in this ecosystem chooses. Anything else was chosen by the
+#: operating system, and the two are not the same claim.
+GATE_CODES = {0, 1, 2, 3}
+
+#: The abnormal terminations worth naming, because a reader who sees the raw
+#: number reads it as a defect in the tree. Windows returns NTSTATUS as an
+#: unsigned exit code; POSIX returns 128 + signal.
+ABNORMAL = {
+    0xC000012D: "STATUS_COMMITMENT_LIMIT, the machine ran out of virtual memory",
+    0xC00000FD: "STATUS_STACK_OVERFLOW",
+    0xC0000005: "STATUS_ACCESS_VIOLATION",
+    0xC000013A: "STATUS_CONTROL_C_EXIT, the process was interrupted",
+    137: "SIGKILL, killed by the operating system, usually out of memory",
+    139: "SIGSEGV",
+    143: "SIGTERM, terminated",
+}
+
+
+def classify(code: int) -> tuple[str, str]:
+    """Did the gate refuse, or did the machine fall over? (L-193)
+
+    On 2026-08-27 the audit reported two FAIL rows on main and printed NOT
+    GREEN. Both were `exit 3221225773`, which is `0xC000012D`, the Windows
+    out-of-virtual-memory status. The gates never ran to a verdict. The same
+    step had passed inside the lander's own preflight eleven minutes earlier on
+    the identical tree, and CI passed on the identical commit.
+
+    Reporting that as a failing predicate is the inverse of the defect this file
+    was written to stop: there, an exit code was read as a result; here, a
+    machine fault was read as a refusal. A gate that could not run has not said
+    anything, and an audit that cannot tell the difference sends its operator
+    looking for a defect that does not exist. CRASH is a third outcome, it is
+    never PASS, and it does not read as the tree's fault.
+    """
+    if code == 0:
+        return "PASS", "gate: exit code is the contract"
+    if code in GATE_CODES:
+        return "FAIL", "gate: exit code is the contract"
+    named = ABNORMAL.get(code & 0xFFFFFFFF) or ABNORMAL.get(code)
+    why = f"; {named}" if named else ""
+    return "CRASH", (f"environment: the gate did not run to a verdict, exit {code} "
+                     f"is not one this gate chooses{why}. Re-run it alone before "
+                     f"reading anything into it")
+
+
 def gate(label: str, cmd, cwd: Path, timeout: int = 600) -> dict:
-    """A script whose exit code is its contract."""
+    """A script whose exit code is its contract, where the code is one it chose."""
     code, out = _sh(cmd, cwd, timeout)
-    return row(label, cmd, cwd, code, out.splitlines()[-8:],
-               "PASS" if code == 0 else "FAIL", "gate: exit code is the contract")
+    verdict, basis = classify(code)
+    return row(label, cmd, cwd, code, out.splitlines()[-8:], verdict, basis)
 
 
 def measure(label: str, cmd, cwd: Path, predicate, timeout: int = 120, parse=json.loads) -> tuple[dict, object]:
@@ -372,6 +417,7 @@ def section_d(facts: dict) -> None:
 def render_report(rows: list[dict], stamp: str) -> str:
     """The report text. Prose in it meets the writing doctrine it will be gated by."""
     bad = [r for r in rows if r["verdict"] == "FAIL"]
+    crashed = [r for r in rows if r["verdict"] == "CRASH"]
     info = [r for r in rows if r["verdict"] == "INFO"]
     lines = [
         "# QESIS+ full ecosystem audit",
@@ -381,8 +427,16 @@ def render_report(rows: list[dict], stamp: str) -> str:
         "the predicate that decided its verdict. An exit code alone never decides a",
         "measurement (D-116, V-5). Nothing here is asserted; V-1.",
         "",
-        f"## Verdict: {'GREEN' if not bad else 'NOT GREEN, ' + str(len(bad)) + ' failing'}"
+        "## Verdict: " + (
+            "NOT GREEN, " + str(len(bad)) + " failing" if bad else
+            "INCONCLUSIVE, " + str(len(crashed)) + " gate(s) did not run to a verdict"
+            if crashed else "GREEN")
         + (f" ({len(info)} informational)" if info else ""),
+        "",
+        ("A gate that did not run has not said anything. CRASH rows carry an exit "
+         "code this ecosystem does not choose, which means the machine stopped the "
+         "process rather than the gate refusing the tree. Re-run those alone before "
+         "reading anything into them (L-193)." if crashed else ""),
         "",
         "| # | check | verdict | exit | basis |",
         "|---|---|---|---|---|",
@@ -418,7 +472,7 @@ def write_report() -> int:
             [f"blocking: {', '.join(hits[:8])}"], "FAIL",
             "gate: qesis_agents/style.py blocking hits over the rendered report must be zero (W-1, L-178)")
         text = render_report(rows, stamp)
-    bad = [r for r in rows if r["verdict"] == "FAIL"]
+    bad = [r for r in rows if r["verdict"] in ("FAIL", "CRASH")]
     for repo in (QESIS, INFRA):
         if repo.exists():
             (repo / "ops").mkdir(exist_ok=True)
@@ -434,7 +488,21 @@ def selftest() -> int:
                 "basis": "gate: exit code is the contract"}
     text = render_report([fail_row], "2026-08-26T00:00:00Z")
     offending = text.replace(", last line:", " \u2014 last line:")
+    crash_row = dict(fail_row, label="x: a gate that never ran", exit=3221225773,
+                     verdict="CRASH", basis="environment")
+    crash_text = render_report([crash_row], "2026-08-26T00:00:00Z")
     cases = [
+        ("classify: an exit code the gate chooses is a verdict about the tree",
+         classify(1) == ("FAIL", "gate: exit code is the contract")),
+        ("classify: an out-of-memory exit is a crash, never a failing predicate",
+         classify(3221225773)[0] == "CRASH"
+         and "virtual memory" in classify(3221225773)[1]),
+        ("classify: a crash is never PASS",
+         classify(3221225773)[0] != "PASS" and classify(139)[0] == "CRASH"),
+        ("report writer: a crash makes the audit inconclusive, not green and not failing",
+         "INCONCLUSIVE" in crash_text and "GREEN" not in crash_text),
+        ("report writer: a FAIL row still reads NOT GREEN",
+         "NOT GREEN" in text),
         ("report writer: a FAIL row with a tail renders without an em dash",
          "\u2014" not in text and ", last line: `last line of output`" in text),
         ("report writer: the doctrine check refuses a rendered em dash",

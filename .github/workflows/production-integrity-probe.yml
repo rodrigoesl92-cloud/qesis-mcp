@@ -31,6 +31,14 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: The published address reaches this service
+        # L-191. The probe above asserts the platform alias, which was healthy
+        # for nineteen days while qesis.eu answered 308 to a host that had no DNS
+        # record and every visitor to the EU address reached nothing. The address
+        # a buyer types is a surface and surfaces carry controls. Addresses are
+        # read from data/domains.json canonical, never retyped here.
+        run: python scripts/verify_public_domain.py
+
       - name: Served endpoint agrees with the committed index
         # Three outcomes, not two. Serving the PREVIOUS release is a deploy in
         # flight, not a drift, and failing on it makes every deploy red for a
