@@ -1,6 +1,6 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-28T21:09:52Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-28T21:30:03Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
@@ -56,8 +56,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -69,7 +69,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 194, unique 194, max L-211, sha256 e74ea87a5334ac73
+  entries 195, unique 195, max L-212, sha256 9604e8230c38e262
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -225,8 +225,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 194 max L-211 sha256 e74ea87a5334
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 195 max L-212 sha256 9604e8230c38
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -238,7 +238,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 194, unique 194, max L-211, sha256 e74ea87a5334ac73
+  entries 195, unique 195, max L-212, sha256 9604e8230c38e262
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -377,7 +377,7 @@ PR 86 head ops/report-2026-08-28 MERGEABLE BLOCKED
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 17ce8ec2f4b6  feat(axes): the withheld water stress becomes computable, and its fals
+main e62dac388d47  fix(gates): a falsifier that measured nothing may never report a pass
 ```
 
 ### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
@@ -393,7 +393,7 @@ owned by this repository's workflows: binding, guard, heal, probe, report
 OWNED binding: success
 OWNED guard: success
 OWNED heal: success
-OWNED probe: in_progress (not finished at read time; rerun the audit)
+OWNED probe: success
 OWNED report: no run on this commit
 informational cloudrun-qesis-mcp-git-europe-west1-rodrigoesl92-cloud-qesis: failure
 informational rmgpgab-qesis-mcp-europe-west1-rodrigoesl92-cloud-qesis-mcp-: failure
@@ -426,7 +426,7 @@ PR 52 head ops/report-2026-08-28 MERGEABLE UNSTABLE
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 569155ae29be  feat(ops): the operator queue drops to two, and a rejection stops coun
+main 2bfbf5e7ef10  fix(ops): a rejection is a decision, and a standing ruling may not ove
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -441,7 +441,7 @@ owned by this repository's workflows: claude, disconnect, guard, heal, promote, 
 OWNED claude: no run on this commit
 OWNED disconnect: no run on this commit
 OWNED guard: success
-OWNED heal: no run on this commit
+OWNED heal: success
 OWNED promote: no run on this commit
 OWNED qesis-integrity: success
 OWNED report: no run on this commit
@@ -467,7 +467,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 755 entries 0 breaks
-deployment_commit 17ce8ec2f4b6  main 17ce8ec2f4b6
+deployment_commit e62dac388d47  main e62dac388d47
 tools 8  database connected
 ```
 

@@ -133,6 +133,8 @@ matched_on = {k: set() for k in ALL}
 scanned = 0
 seen_gid0: dict[str, int] = {}
 seen_name0: dict[str, int] = {}
+rejected: dict[str, list] = {k: [] for k in dict(TARGETS, **CONTROLS)}
+attributed = 0
 
 with args.grid.open("r", encoding="utf-8", errors="replace", newline="") as fh:
     rdr = csv.DictReader(fh)
@@ -151,6 +153,7 @@ with args.grid.open("r", encoding="utf-8", errors="replace", newline="") as fh:
         n1 = (row.get("name_1") or "").strip().lower()
         if g0:
             seen_gid0[g0] = seen_gid0.get(g0, 0) + 1
+            attributed += 1
         if n0:
             seen_name0[n0] = seen_name0.get(n0, 0) + 1
         for iso, spec in ALL.items():
@@ -163,8 +166,11 @@ with args.grid.open("r", encoding="utf-8", errors="replace", newline="") as fh:
                 hit = "name_1"
             if hit:
                 matched_on[iso].add(f"{hit}={g0 or n0 or n1}")
-                buckets[iso].append({"score": clean(row.get("bws_score")),
-                                     "area": clean(row.get("area_km2")) or 0.0})
+                raw = row.get("bws_score")
+                sc = clean(raw)
+                if sc is None and len(rejected[iso]) < 5:
+                    rejected[iso].append(repr(raw))
+                buckets[iso].append({"score": sc, "area": clean(row.get("area_km2")) or 0.0})
                 break
 
 print(f"scanned {scanned} catchment record(s)\n")
@@ -180,18 +186,30 @@ for iso, spec in ALL.items():
           f"(unweighted {r['unweighted_0_100']})  via {r['matched_on'] or 'nothing'}")
 
 empty = [iso for iso in ALL if result[iso]["n_cells"] == 0]
+diagnosis = None
 if empty:
-    print("\n  KEY DIAGNOSTIC. Nothing matched for: " + ", ".join(empty))
-    print("  This is a key-format problem, not an absence. What the grid actually contains:")
-    g = sorted(seen_gid0.items(), key=lambda kv: -kv[1])
-    n = sorted(seen_name0.items(), key=lambda kv: -kv[1])
-    print(f"    distinct gid_0 values : {len(g)}   sample: {[k for k, _ in g[:12]]}")
-    print(f"    distinct name_0 values: {len(n)}   sample: {[k for k, _ in n[:12]]}")
-    for iso, spec in ALL.items():
-        if iso in empty:
-            near = [k for k, _ in g if iso in k] or [k for k, _ in n if any(w in k for w in spec["names"])]
-            print(f"    {iso} ({spec['name']}): candidate keys containing it -> {near[:6] or 'none'}")
-    print("  Give the extractor the key it actually uses and this becomes a computation.")
+    no_key = [i for i in empty if not matched_on[i]]
+    no_value = [i for i in empty if matched_on[i]]
+    print("\n  DIAGNOSTIC. Nothing computed for: " + ", ".join(empty))
+    print(f"  Of {scanned} records, {attributed} carry any country attribution "
+          f"({100.0 * attributed / scanned:.1f} per cent). The rest are basins the "
+          f"source does not attribute to a country at all.")
+    if no_key:
+        g = sorted(seen_gid0.items(), key=lambda kv: -kv[1])
+        print(f"  KEY PROBLEM for {', '.join(no_key)}: no record carried the key.")
+        print(f"    distinct gid_0 values: {len(g)}  sample: {[k for k, _ in g[:10]]}")
+        diagnosis = "key_not_present"
+    if no_value:
+        print(f"  SOURCE PROBLEM for {', '.join(no_value)}: records were found and every "
+              f"score in them is unusable.")
+        for iso in no_value:
+            n_rows = len(buckets[iso])
+            a = sum((c.get("area") or 0.0) for c in buckets[iso])
+            print(f"    {iso}: {n_rows} record(s), {a:.1f} km2 attributed, "
+                  f"rejected values seen: {', '.join(rejected[iso]) or 'none'}")
+        print("    This is not a key format problem. The source carries these territories")
+        print("    and publishes no usable water stress value inside them.")
+        diagnosis = "source_has_no_value" if not no_key else "mixed"
 
 falsifier = {"ran": False, "verdict": "FALSIFIER DID NOT RUN",
              "meaning": "No rollup was supplied, so nothing was compared and nothing is claimed."}
@@ -261,6 +279,8 @@ payload = {
     "confounder": "If Aqueduct weights its country rollup by population or by withdrawal rather "
                   "than by area, the reconstruction will diverge systematically. The falsifier "
                   "detects exactly that, which is why it is not optional.",
+    "diagnosis": diagnosis,
+    "records_with_country_attribution": attributed,
     "decision_required": "Admitting a value derived this way beside 32 derived from the rollup "
                          "creates a method asymmetry. The falsifier verdict decides which of the "
                          "two publishable routes is honest, and the human signs it.",

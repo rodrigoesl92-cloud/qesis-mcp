@@ -17,7 +17,11 @@ from __future__ import annotations
 import argparse, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-CONFIGS = [".mcp.json", "vercel.json", "docker-compose.yml", ".claude/launch.json"]
+# Extended 2026-08-28 after the decoy was found a third time, in a shell script
+# rather than a config file. The family is a path literal that no gate reads, and
+# the file extension was never the point (SH-10a).
+CONFIGS = [".mcp.json", "vercel.json", "docker-compose.yml", ".claude/launch.json",
+           "scripts/push_vault.sh", "scripts/gh_ops.py", "docker_update.ps1"]
 
 
 def decoy_paths(registry: dict) -> list[str]:
