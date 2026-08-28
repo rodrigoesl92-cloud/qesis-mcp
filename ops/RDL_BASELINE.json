@@ -1,7 +1,7 @@
 {
  "_doc": "Accepted RDL ladder state. scripts/rdl.py ci-blocking fails only on families that are new at rung 3 or above, or that have escalated above the rung recorded here. History does not fail a build; regressions do.",
- "accepted_at": "2026-08-26T00:51:45Z",
- "reason": "2026-08-26 after the 00:00Z landing: paired_what_is_not_pairable reaches rung 3 with L-175 and its blocker is verify_workflow_contract.py C-5, a step of both integrity workflows, proven by three fixtures that run before every judgement; shell_built_the_query reaches rung 2 with L-176 and verify_lander_contract.py (seven fixtures); disk_snapshot_taken_as_repository enters at rung 1 with L-177 and landing_base.py, repaired in the same change set. No family is accepted without its gate on disk.",
+ "accepted_at": "2026-08-28T22:39:35Z",
+ "reason": "paired_what_is_not_pairable moves from rung 3 to rung 4, answered by ops/D-122_WRITE_THE_WORKFLOW_AND_ITS_CONTROL_TOGETHER.md. The detecting control worked exactly as designed: verify_workflow_contract.py refused at step 1 of 23 and the lander committed, pushed and opened nothing. What rung 4 names here is the absence of a PREVENTING control at authoring time, not a defect in the gate. D-122 proposes scripts/new_workflow.py to scaffold a workflow and its CONTROLS entries in one act, with two fixtures, and leaves the gate untouched. Accepted with the decision landed in the same change set, not ahead of it.",
  "families": {
   "bot_identity_blocked_the_deploy": {
    "rung": 1,
@@ -13,21 +13,80 @@
   },
   "claim_from_proxy_not_resource": {
    "rung": 4,
-   "occurrences": 7,
+   "occurrences": 16,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-161",
     "L-162",
     "L-173",
-    "L-174"
+    "L-174",
+    "L-179",
+    "L-180",
+    "L-182",
+    "L-183",
+    "L-185",
+    "L-188",
+    "L-203",
+    "L-213",
+    "L-214"
    ]
   },
-  "disk_snapshot_taken_as_repository": {
+  "crash_read_as_refusal": {
    "rung": 1,
    "occurrences": 1,
    "owner": "ARCHITECT",
    "lesson_ids": [
-    "L-177"
+    "L-193"
+   ]
+  },
+  "credential_granted_is_not_credential_reachable": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-195"
+   ]
+  },
+  "declaration_built_from_one_side_of_a_pair": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-196",
+    "L-210"
+   ]
+  },
+  "decoy_path_named_by_an_ungated_config": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-209"
+   ]
+  },
+  "dependency_not_declared": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-190"
+   ]
+  },
+  "disk_snapshot_taken_as_repository": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-177",
+    "L-184"
+   ]
+  },
+  "documented_system_treated_as_unknown": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-194"
    ]
   },
   "duplicate_id_from_stale_accessor": {
@@ -55,6 +114,14 @@
     "L-170"
    ]
   },
+  "gate_that_exists_only_inside_a_workflow": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-202"
+   ]
+  },
   "git_lock_family": {
    "rung": 4,
    "occurrences": 4,
@@ -65,11 +132,37 @@
   },
   "guard_not_executed": {
    "rung": 4,
-   "occurrences": 6,
+   "occurrences": 8,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-154",
-    "L-169"
+    "L-169",
+    "L-178",
+    "L-181"
+   ]
+  },
+  "index_corrupted_by_a_gate_this_shell_cannot_finish": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-200"
+   ]
+  },
+  "instruction_repeated_instead_of_delivered": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-192"
+   ]
+  },
+  "instruction_whose_two_halves_cannot_both_hold": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-199"
    ]
   },
   "obeyed_without_counsel": {
@@ -81,13 +174,22 @@
    ]
   },
   "paired_what_is_not_pairable": {
-   "rung": 3,
-   "occurrences": 3,
+   "rung": 4,
+   "occurrences": 4,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-163",
     "L-171",
-    "L-175"
+    "L-175",
+    "L-216"
+   ]
+  },
+  "plane_read_through_a_reader_that_adds_state": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-198"
    ]
   },
   "reasoned_from_memory_not_docs": {
@@ -96,6 +198,30 @@
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-165"
+   ]
+  },
+  "restore_lived_only_in_the_process": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-187"
+   ]
+  },
+  "routed_to_operator_against_the_table": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-205"
+   ]
+  },
+  "scope_of_verdict_not_stated": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-189"
    ]
   },
   "shell_built_the_query": {
@@ -117,12 +243,17 @@
   },
   "success_literal_not_measured": {
    "rung": 4,
-   "occurrences": 4,
+   "occurrences": 9,
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-155",
     "L-160",
-    "L-172"
+    "L-172",
+    "L-201",
+    "L-211",
+    "L-212",
+    "L-215",
+    "L-217"
    ]
   },
   "superseded_artifact_left_runnable": {
@@ -131,6 +262,31 @@
    "owner": "ARCHITECT",
    "lesson_ids": [
     "L-157"
+   ]
+  },
+  "superseded_state_printed_as_the_finding": {
+   "rung": 2,
+   "occurrences": 2,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-197",
+    "L-208"
+   ]
+  },
+  "surface_added_without_its_control": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-191"
+   ]
+  },
+  "validator_rendered_as_product": {
+   "rung": 1,
+   "occurrences": 1,
+   "owner": "ARCHITECT",
+   "lesson_ids": [
+    "L-186"
    ]
   }
  }

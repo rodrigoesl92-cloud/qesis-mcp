@@ -98,6 +98,16 @@ CONTROLS = [
     # loop re-runs, not in EXEMPT, whose target state is empty (L-048).
     ("runner_merge_selftest",  ["scripts/gh_ops.py", "runner-merge", "--selftest"]),
     ("reading_contract",       ["scripts/verify_reading_contract.py", "--quiet"]),
+    # C-3 set parity, entered with the operator brief on 2026-08-29. Both of
+    # these run in CI through .github/workflows/operator-brief.yml, so both join
+    # the set the loop re-runs rather than EXEMPT, whose target state is empty
+    # (L-048). The brief runs as its fixtures here and writes for real there: a
+    # loop that regenerated the published page every hour would fight the
+    # workflow that owns it. The route check is the live assertion in both
+    # places, because a dead public address is a defect whichever process finds
+    # it first.
+    ("operator_brief_fixtures", ["scripts/build_operator_brief.py", "--selftest"]),
+    ("static_routes",          ["scripts/verify_static_routes.py"]),
     ("test_gate",              ["scripts/test_gate.py"]),
 ]
 
