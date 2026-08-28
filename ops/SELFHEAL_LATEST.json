@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-08-28T02:00:06.113962+00:00",
+ "generated_utc": "2026-08-28T03:30:40.780776+00:00",
  "mode": "dry-run",
  "controls": [
   {
@@ -16,6 +16,14 @@
    "exit": 0,
    "tail": [
     "CHAIN CHECK PASSED: the attestation reproduces from the committed spine."
+   ]
+  },
+  {
+   "name": "chain_diagnosis",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "5/5 chain diagnosis behaviours hold"
    ]
   },
   {
@@ -119,7 +127,7 @@
    "status": "PASS",
    "exit": 0,
    "tail": [
-    "7/7 public-domain behaviours hold"
+    "12/12 public-domain behaviours hold"
    ]
   },
   {

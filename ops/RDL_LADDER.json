@@ -475,6 +475,21 @@
    "ci_blocking": false,
    "gate_required": true,
    "decision_required": false
+  },
+  "gate_that_exists_only_inside_a_workflow": {
+   "occurrences": 2,
+   "rung": 2,
+   "owner": "ARCHITECT",
+   "family_hash": "e7d42e7ceb4c6f160b339e3b59d7343530d2db48bdb7109991cf3140b3c2b3d3",
+   "last_signature": "an em dash in ops/D-119_SUBSUITE_RESULT_CONTRACT.md passed both preflights and both required gates, merged, and then failed the verify workflow on main",
+   "last_seen": "2026-08-28T03:49:24Z",
+   "prior_evidence": "L-079",
+   "lesson_ids": [
+    "L-202"
+   ],
+   "ci_blocking": false,
+   "gate_required": true,
+   "decision_required": false
   }
  }
 }
