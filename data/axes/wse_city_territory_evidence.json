@@ -68,25 +68,9 @@
   }
  },
  "falsifier": {
-  "ran": true,
-  "controls": [
-   {
-    "iso3": "ESP",
-    "reconstructed": null,
-    "published": 78.80485334000001,
-    "delta": null
-   },
-   {
-    "iso3": "NLD",
-    "reconstructed": null,
-    "published": 31.62240594,
-    "delta": null
-   }
-  ],
-  "worst_abs_delta": 0.0,
-  "threshold": 5.0,
-  "verdict": "METHOD REPRODUCES THE ROLLUP",
-  "meaning": "The three target figures are comparable with the other 32 and may be proposed for the composite."
+  "ran": false,
+  "verdict": "FALSIFIER DID NOT RUN",
+  "meaning": "No rollup was supplied, so nothing was compared and nothing is claimed."
  },
  "uncertainty": "A catchment crossing a border is counted whole to whichever territory its GADM identity names. For a small territory that is a material share of the total area, so the figure carries more spread than a large state's.",
  "confounder": "If Aqueduct weights its country rollup by population or by withdrawal rather than by area, the reconstruction will diverge systematically. The falsifier detects exactly that, which is why it is not optional.",

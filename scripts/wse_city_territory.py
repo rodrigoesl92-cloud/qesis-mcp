@@ -99,7 +99,17 @@ def selftest() -> int:
     r = aggregate([{"score": 2.0, "area": 0.0}, {"score": 4.0, "area": 0.0}])
     if r["wse_0_100"] != 60.0:
         print(f"  x FIXTURE 4 FAILED: zero-area fallback wrong, got {r}"); ok = False
-    print(f"WSE CITY-TERRITORY SELFTEST: {'PASSED, 4 fixtures' if ok else 'FAILED'}")
+    # 5 the falsifier must NOT pass when a control produced nothing. This fixture
+    # exists because that exact defect shipped on 2026-08-28 and printed
+    # "METHOD REPRODUCES THE ROLLUP" over two null reconstructions. L-211.
+    rows = [{"iso3": "ESP", "reconstructed": None, "published": 78.8, "delta": None},
+            {"iso3": "NLD", "reconstructed": None, "published": 31.6, "delta": None}]
+    deltas = [abs(r["delta"]) for r in rows if r["delta"] is not None]
+    unmeasured = [r["iso3"] for r in rows if r["delta"] is None]
+    verdict = "FALSIFIER DID NOT RUN" if (unmeasured or not deltas) else "METHOD REPRODUCES THE ROLLUP"
+    if verdict != "FALSIFIER DID NOT RUN":
+        print("  x FIXTURE 5 FAILED: a falsifier with no measurement reported a pass"); ok = False
+    print(f"WSE CITY-TERRITORY SELFTEST: {'PASSED, 5 fixtures' if ok else 'FAILED'}")
     return 0 if ok else 1
 
 
@@ -121,6 +131,8 @@ ALL = dict(TARGETS, **CONTROLS)
 buckets = {k: [] for k in ALL}
 matched_on = {k: set() for k in ALL}
 scanned = 0
+seen_gid0: dict[str, int] = {}
+seen_name0: dict[str, int] = {}
 
 with args.grid.open("r", encoding="utf-8", errors="replace", newline="") as fh:
     rdr = csv.DictReader(fh)
@@ -137,6 +149,10 @@ with args.grid.open("r", encoding="utf-8", errors="replace", newline="") as fh:
         g0 = (row.get("gid_0") or "").strip().upper()
         n0 = (row.get("name_0") or "").strip().lower()
         n1 = (row.get("name_1") or "").strip().lower()
+        if g0:
+            seen_gid0[g0] = seen_gid0.get(g0, 0) + 1
+        if n0:
+            seen_name0[n0] = seen_name0.get(n0, 0) + 1
         for iso, spec in ALL.items():
             hit = None
             if g0 == iso:
@@ -163,7 +179,22 @@ for iso, spec in ALL.items():
     print(f"  {iso}  {spec['name']:<12} cells {r['n_cells']:>6}  {v:<14} "
           f"(unweighted {r['unweighted_0_100']})  via {r['matched_on'] or 'nothing'}")
 
-falsifier = {"ran": False}
+empty = [iso for iso in ALL if result[iso]["n_cells"] == 0]
+if empty:
+    print("\n  KEY DIAGNOSTIC. Nothing matched for: " + ", ".join(empty))
+    print("  This is a key-format problem, not an absence. What the grid actually contains:")
+    g = sorted(seen_gid0.items(), key=lambda kv: -kv[1])
+    n = sorted(seen_name0.items(), key=lambda kv: -kv[1])
+    print(f"    distinct gid_0 values : {len(g)}   sample: {[k for k, _ in g[:12]]}")
+    print(f"    distinct name_0 values: {len(n)}   sample: {[k for k, _ in n[:12]]}")
+    for iso, spec in ALL.items():
+        if iso in empty:
+            near = [k for k, _ in g if iso in k] or [k for k, _ in n if any(w in k for w in spec["names"])]
+            print(f"    {iso} ({spec['name']}): candidate keys containing it -> {near[:6] or 'none'}")
+    print("  Give the extractor the key it actually uses and this becomes a computation.")
+
+falsifier = {"ran": False, "verdict": "FALSIFIER DID NOT RUN",
+             "meaning": "No rollup was supplied, so nothing was compared and nothing is claimed."}
 if args.rollup and args.rollup.exists():
     published = {}
     with args.rollup.open("r", encoding="utf-8", errors="replace", newline="") as fh:
@@ -171,28 +202,40 @@ if args.rollup and args.rollup.exists():
             iso = (row.get("gid_0") or "").strip().upper()
             if iso in CONTROLS:
                 published[iso] = clean(row.get("wse_bws_tot_0_100"))
-    rows, worst = [], 0.0
+    rows, deltas = [], []
     for iso in CONTROLS:
         rec = result[iso]["wse_0_100"]; pub = published.get(iso)
-        if rec is None or pub is None:
-            rows.append({"iso3": iso, "reconstructed": rec, "published": pub, "delta": None}); continue
-        d = round(rec - pub, 2); worst = max(worst, abs(d))
+        d = None if (rec is None or pub is None) else round(rec - pub, 2)
+        if d is not None:
+            deltas.append(abs(d))
         rows.append({"iso3": iso, "reconstructed": rec, "published": pub, "delta": d})
-    verdict = ("METHOD REPRODUCES THE ROLLUP" if worst <= 5.0 else
-               "METHOD DOES NOT REPRODUCE THE ROLLUP")
-    falsifier = {"ran": True, "controls": rows, "worst_abs_delta": worst,
-                 "threshold": 5.0, "verdict": verdict,
-                 "meaning": ("The three target figures are comparable with the other 32 and may be "
-                             "proposed for the composite." if worst <= 5.0 else
-                             "The three target figures are NOT comparable with the other 32. Publish "
-                             "them as a diagnostic axis outside the composite, or not at all.")}
+
+    # L-211 applied, not quoted. An empty denominator is null, never a pass.
+    unmeasured = [r["iso3"] for r in rows if r["delta"] is None]
+    if unmeasured or not deltas:
+        worst = None
+        verdict = "FALSIFIER DID NOT RUN"
+        meaning = ("No verdict. " + ", ".join(unmeasured) + " produced no reconstruction, so "
+                   "nothing was compared. A control that yields nothing is not a control that "
+                   "agreed. Until every control reconstructs, the three target figures have no "
+                   "standing and must not be proposed for the composite.")
+    else:
+        worst = max(deltas)
+        passed = worst <= 5.0
+        verdict = ("METHOD REPRODUCES THE ROLLUP" if passed else
+                   "METHOD DOES NOT REPRODUCE THE ROLLUP")
+        meaning = ("The three target figures are comparable with the other 32 and may be "
+                   "proposed for the composite." if passed else
+                   "The three target figures are NOT comparable with the other 32. Publish them "
+                   "as a diagnostic axis outside the composite, or not at all.")
     print("\n  FALSIFIER")
     for r in rows:
         print(f"    {r['iso3']}  reconstructed {r['reconstructed']}  published {r['published']}  "
               f"delta {r['delta']}")
-    print(f"    worst absolute delta {worst} against a threshold of 5.0")
+    print(f"    worst absolute delta {worst} against a threshold of 5.0"
+          if worst is not None else "    worst absolute delta: NOT COMPUTED, a control returned nothing")
     print(f"    {verdict}")
-    print(f"    {falsifier['meaning']}")
+    print(f"    {meaning}")
 else:
     print("\n  FALSIFIER NOT RUN: pass --rollup aqueduct40_country_rankings.csv to settle "
           "whether these figures are comparable with the other 32.")
