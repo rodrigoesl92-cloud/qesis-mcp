@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-08-27T11:58:08.128326+00:00",
+ "generated_utc": "2026-08-28T02:00:06.113962+00:00",
  "mode": "dry-run",
  "controls": [
   {
@@ -115,6 +115,14 @@
    ]
   },
   {
+   "name": "public_domain",
+   "status": "PASS",
+   "exit": 0,
+   "tail": [
+    "7/7 public-domain behaviours hold"
+   ]
+  },
+  {
    "name": "ecosystem_state_check",
    "status": "PASS",
    "exit": 0,
@@ -127,7 +135,7 @@
    "status": "PASS",
    "exit": 0,
    "tail": [
-    "12/12 runner-merge decisions behave as declared"
+    "5/5 foreign-check behaviours hold"
    ]
   },
   {

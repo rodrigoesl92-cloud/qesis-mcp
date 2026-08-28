@@ -239,19 +239,24 @@ async def main() -> int:
               f"chain head {str(health.get('chain', {}).get('head_sha256'))[:12]}")
 
         # The rebinding guard must still refuse a Host it was not told about,
-        # otherwise widening the allowlist for www.qesis.eu quietly disabled it.
+        # otherwise widening the allowlist for a published name quietly disabled it.
         status, _, _ = await request(app, "POST", "/mcp", json.dumps(INIT).encode(),
                                      host="evil.example.com")
         need(status in (400, 421, 403),
              f"an unknown Host got HTTP {status}; the DNS-rebinding guard is off")
         print(f"  rebinding guard: unknown Host -> HTTP {status}")
 
-        for allowed in ("www.qesis.eu", "qesis.eu"):
+        # Read from the declaration, never retyped. This loop named www.qesis.eu
+        # for weeks; when that address was retired on 2026-08-27 the literal made
+        # the gate assert a Host the guard had correctly stopped allowing, and the
+        # test failed for being out of date rather than for finding anything.
+        # L-089 is the rule and L-191 is what it costs to keep a copy.
+        for allowed in _DOMAINS["canonical"]:
             status, _, _ = await request(app, "POST", "/mcp",
                                          json.dumps(INIT).encode(), host=allowed)
             need(status == 200, f"Host {allowed} got HTTP {status}; production "
                                 f"traffic would be refused by the guard")
-        print("  rebinding guard: www.qesis.eu and qesis.eu accepted")
+        print(f"  rebinding guard: {', '.join(_DOMAINS['canonical'])} accepted")
 
     return report()
 

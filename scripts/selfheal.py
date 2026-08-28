@@ -57,6 +57,12 @@ PROBE_NAME = ".selfheal_probe"
 CONTROLS = [
     ("verify_index",           ["scripts/verify_index.py"]),
     ("verify_chain",           ["scripts/verify_chain.py"]),
+    # L-200 rung 2. The bare invocation judges the tree; this one judges the
+    # sentence the bare one prints when it refuses. C5 called a file on disk
+    # "the served index" and sent a diagnosis at the deployment while the
+    # cause was a mutated working file. D-118 rule 8: the label is part of
+    # the claim, so the label gets fixtures.
+    ("chain_diagnosis",        ["scripts/verify_chain.py", "--selftest"]),
     ("verify_vintage_pairing", ["scripts/verify_vintage_pairing.py"]),
     ("verify_axis_sfc",        ["scripts/verify_axis_sfc.py", "--quiet"]),
     ("verify_action_pinning",  ["scripts/verify_action_pinning.py"]),
@@ -75,6 +81,10 @@ CONTROLS = [
     ("self_exposure_check",    ["scripts/self_exposure.py", "--check"]),
     ("build_eval_check",       ["scripts/build_eval.py", "--check"]),
     ("build_landing_check",    ["scripts/build_landing.py", "--check"]),
+    # Runs in CI through production-integrity-probe.yml, so it is in the control
+    # set and not in EXEMPT (L-183). Fixtures here, live assertion there: the
+    # self-heal loop must not go red because a third party had a bad minute.
+    ("public_domain",         ["scripts/verify_public_domain.py", "--selftest"]),
     # Every model, every session type, reads ops/ECOSYSTEM_STATE.json and
     # ops/PATH_REGISTRY.json before asserting anything. Those files are only
     # trustworthy if a stale copy fails the build, so the check joins the set.

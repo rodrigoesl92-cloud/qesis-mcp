@@ -118,6 +118,35 @@ VALIDATOR_TOKENS = [
     "~WSE", "~CABLE", "~REE", "~HYPER", "fsqca.", "effective_weights",
 ]
 
+#: Tokens the visible surface is allowed to carry, at a DECLARED count, and at
+#: no more than that.
+#:
+#: WHY THIS IS NOT VALIDATOR_TOKENS. The operator's instruction on 2026-08-28
+#: was "add PRI to VALIDATOR_TOKENS so the gate can see it, and do not change
+#: the published copy". Those two halves cannot both hold: VALIDATOR_TOKENS is a
+#: banlist, PRI appears four times in the published verdict copy, and adding it
+#: there refuses the page on the next build. A whitelist would satisfy the copy
+#: and see nothing, which is the same as not adding it at all.
+#:
+#: So the token is counted rather than banned or ignored. The four occurrences
+#: that exist are declared with the reason they are acceptable; a fifth refuses.
+#: The gate can now see PRI, the copy is untouched, and the surface cannot drift
+#: further toward the validator's vocabulary without somebody deciding to. Same
+#: shape as `retired` in data/domains.json and the empty serving allowlist: a
+#: known thing is declared, not erased and not ignored (L-199).
+COUNTED_TOKENS = {
+    "PRI": (
+        4,
+        "Four occurrences, both in VERDICTS, each stating a threshold a route "
+        "sits below and what follows from it: 'below the PRI working convention "
+        "of 0.75' and 'falls below PRI 0.50, which means it is close to equally "
+        "consistent with the opposite outcome'. The second expands the meaning "
+        "in plain words, which is what makes them publishable at all. The "
+        "expansion, not the acronym, is the reason. A fifth occurrence refuses "
+        "this build and the decision gets made again.",
+    ),
+}
+
 COMPLIANCE_OPEN = '<script type="application/json" id="qesis-compliance">'
 COMPLIANCE_CLOSE = "</script>"
 
@@ -940,8 +969,19 @@ def check_separation(page: str) -> list:
     metadata block is delimited rather than scattered.
     """
     vis = visible_dom(page)
-    return [f"validator token in the visible surface: {t}"
-            for t in VALIDATOR_TOKENS if t in vis]
+    bad = [f"validator token in the visible surface: {t}"
+           for t in VALIDATOR_TOKENS if t in vis]
+    # The ratchet. A declared token is allowed at its declared count and no
+    # further, so the buyer-facing prose clears the pipeline as it stands and
+    # cannot quietly accumulate more of the validator's vocabulary (L-199).
+    for token, (ceiling, _why) in COUNTED_TOKENS.items():
+        found = vis.count(token)
+        if found > ceiling:
+            bad.append(
+                f"declared token {token!r} appears {found} times in the visible "
+                f"surface and {ceiling} are declared in COUNTED_TOKENS. Either "
+                f"the new occurrence is wrong, or raise the count and say why.")
+    return bad
 
 
 def check_statement_tokens(doc: dict) -> list:

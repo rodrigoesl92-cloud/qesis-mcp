@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import socket
 import sys
 import urllib.request
@@ -146,6 +147,52 @@ def walk(address: str, limit: int = 5) -> list:
     return hops
 
 
+#: Absolute URLs in attribute position. Deliberately broad: it must catch a host
+#: nobody thought to declare, which is the entire failure mode (the same argument
+#: verify_domains.py makes for its own pattern).
+_ABS_URL = re.compile(r'(?:src|href)\s*=\s*["\']https?://([^/"\'\s]+)', re.I)
+
+
+def external_hosts(html: str, own: set) -> list:
+    """Every host the served HTML reaches that is not this ecosystem's own."""
+    seen, out = set(), []
+    for host in _ABS_URL.findall(html or ""):
+        h = host.lower().split(":")[0]
+        if h in own or h in seen:
+            continue
+        seen.add(h)
+        out.append(h)
+    return sorted(out)
+
+
+def undeclared_third_parties(html: str, own: set, allow: set) -> list:
+    """Hosts in the SERVED page that no declaration accepts.
+
+    THE BOUNDARY THIS CROSSES. test_gate.py, check_separation and every other
+    control in this repository read public/blueprint.html on disk. The platform
+    injects into the response. On 2026-08-28 the committed file contained zero
+    occurrences of vercel.live and the served bytes contained one, so the
+    artefact plane was clean, the serving plane was not, and the ecosystem had
+    no control that could tell the difference. Reading a value on one plane is
+    not evidence about another (G-01b, L-182); this is the missing reader for
+    the serving plane's HTML, as opposed to its JSON health. L-198.
+    """
+    return [h for h in external_hosts(html, own)
+            if not any(h == a or h.endswith("." + a) for a in allow)]
+
+
+def fetch_html(url: str) -> tuple:
+    """(status, text). Follows nothing: a redirect is the other control's job."""
+    req = urllib.request.Request(url, headers={"User-Agent": "qesis-serving-check"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return r.status, r.read(400_000).decode("utf-8", "replace")
+    except urllib.error.HTTPError as e:
+        return e.code, ""
+    except Exception as e:                                        # noqa: BLE001
+        return 0, f"{type(e).__name__}: {e}"
+
+
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *a, **k):
         return None
@@ -156,7 +203,7 @@ def selftest() -> int:
     the live defect as it stood (V-2)."""
     d = json.loads(DOMAINS.read_text(encoding="utf-8"))
     apex, serving = d["canonical"][1], d["serving"]
-    alias = d["canonical"][2]
+    alias = (d.get("retired") or ["nonexistent.invalid"])[0]
     ok_hop = [{"host": apex, "resolves": True, "status": 200, "location": None,
                "body": {f: 1 for f in REQUIRED_FIELDS}}]
     cases = [
@@ -183,6 +230,24 @@ def selftest() -> int:
         ("a chain that ends on a redirect never arrives",
          bool(assess("a", [{"host": apex, "resolves": True, "status": 308,
                             "location": None}]))),
+        # L-198. One the control must accept and one it must refuse, and the
+        # refusal fixture is the live defect exactly as it stood on 2026-08-28.
+        ("a page reaching only this ecosystem's own hosts is accepted",
+         undeclared_third_parties(
+             '<script src="https://qesis.eu/a.js"></script>', {"qesis.eu", "qesis.qesis.eu"}, set()) == []),
+        ("the vercel.live injection is refused when nothing declares it",
+         undeclared_third_parties(
+             '<script src="https://vercel.live/_next-live/feedback/feedback.js">',
+             {"qesis.eu", "qesis.qesis.eu"}, set()) == ["vercel.live"]),
+        ("the same injection is accepted once it is declared",
+         undeclared_third_parties(
+             '<script src="https://vercel.live/_next-live/feedback/feedback.js">',
+             {"qesis.eu", "qesis.qesis.eu"}, {"vercel.live"}) == []),
+        ("a subdomain of a declared host is accepted",
+         undeclared_third_parties(
+             '<img src="https://cdn.vercel.live/x.png">', {"qesis.eu", "qesis.qesis.eu"}, {"vercel.live"}) == []),
+        ("a relative path is not a third party",
+         undeclared_third_parties('<script src="/app.js">', {"qesis.eu", "qesis.qesis.eu"}, set()) == []),
         ("silence is not health",
          bool(assess("a", []))),
     ]
@@ -197,9 +262,31 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--address", action="append", default=None)
+    ap.add_argument("--serving-third-parties", metavar="URL", default=None,
+                    help="read the SERVED html at URL and refuse any host that no\ndeclaration in data/domains.json accepts (L-198)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.serving_third_parties:
+        decl = json.loads(DOMAINS.read_text(encoding="utf-8"))
+        own = set(decl.get("canonical") or []) | set(decl.get("retired") or [])
+        allow = set((decl.get("serving_third_parties") or {}).get("allow") or [])
+        status, html = fetch_html(a.serving_third_parties)
+        if status != 200:
+            print(f"SERVING CHECK INCONCLUSIVE: {a.serving_third_parties} answered "
+                  f"{status or html}. A page that did not load has not said anything.",
+                  file=sys.stderr)
+            return 2
+        found = undeclared_third_parties(html, own, allow)
+        for h in sorted(external_hosts(html, own)):
+            print(f"  {'REFUSED' if h in found else 'declared'}  {h}")
+        if found:
+            print("SERVING CHECK FAILED: the served page reaches a host no declaration "
+                  "accepts. Declare it in data/domains.json serving_third_parties with a "
+                  "reason and an owner, or remove it at the platform. L-198.", file=sys.stderr)
+            return 1
+        print(f"SERVING CHECK PASSED: {a.serving_third_parties} reaches no undeclared host.")
+        return 0
     problems = []
     for address in (a.address or public_addresses()):
         hops = walk(address)

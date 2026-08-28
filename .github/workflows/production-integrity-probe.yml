@@ -31,6 +31,24 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: The published address reaches this service
+        # L-191. The probe above asserts the platform alias, which was healthy
+        # for nineteen days while qesis.eu answered 308 to a host that had no DNS
+        # record and every visitor to the EU address reached nothing. The address
+        # a buyer types is a surface and surfaces carry controls. Addresses are
+        # read from data/domains.json canonical, never retyped here.
+        run: python scripts/verify_public_domain.py
+
+      - name: The served page reaches no undeclared third party
+        # A runner carries no operator session, which is exactly why this
+        # assertion belongs here and not on a laptop. Read through a browser
+        # logged into Vercel this page appears to serve a vercel.live script;
+        # read by a public client it does not, and the difference is the
+        # reader, not the page (L-198, same class as L-182).
+        run: |
+          python scripts/verify_public_domain.py \
+            --serving-third-parties https://qesis.eu/blueprint.html
+
       - name: Served endpoint agrees with the committed index
         # Three outcomes, not two. Serving the PREVIOUS release is a deploy in
         # flight, not a drift, and failing on it makes every deploy red for a
