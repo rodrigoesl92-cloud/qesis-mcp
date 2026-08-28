@@ -18,6 +18,14 @@
       "owner": "ARCHITECT",
       "opened": "2026-08-24",
       "closes_when": "the entry is written, or the id is formally retired with a line saying so"
+    },
+    {
+      "from": "L-206",
+      "to": "L-207",
+      "reason": "Reserved by an agent's pending file and never rendered as an entry, then passed by a later append. Declared here so the hole is owned rather than silently legal. Render or retire each id.",
+      "owner": "ARCHITECT",
+      "opened": "2026-08-24",
+      "closes_when": "each id is written as an entry, or formally retired"
     }
   ]
 }

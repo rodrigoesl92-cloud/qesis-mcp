@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method | QESIS+ substrate sovereignty playground</title>
+<meta name="author" content="R. Batista Silva">
+<meta name="citation_author" content="Batista Silva, R.">
+<meta name="dcterms.rightsHolder" content="R. Batista Silva">
+<meta name="description" content="Rebuild the fsQCA finding yourself. Interactive configurational analysis over 35 states, with every source traceable to its institution and metadata.">
+<link rel="canonical" href="https://qesis-public.vercel.app/method.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Rebuild the finding yourself: configurational method for substrate sovereignty",
+  "name": "QESIS+ method and fsQCA playground",
+  "description": "Why substrate sovereignty is analysed configurationally rather than by regression, and how to reproduce the published solution under different calibration assumptions. The analysis engine runs in the reader's browser, so the result can be checked rather than trusted.",
+  "url": "https://qesis-public.vercel.app/method.html",
+  "author": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "inLanguage": "en",
+  "version": "v8.6 (2026-08-09)",
+  "isBasedOn": {
+    "@type": "Dataset",
+    "name": "QESIS+ substrate sovereignty index",
+    "url": "https://qesis-public.vercel.app",
+    "version": "v8.6 (2026-08-09)"
+  },
+  "citation": "Batista Silva, R. (2026). Ontological Blind-Spots: Hybrid War, Imperial Decline, and the Polycrisis No One Can Exit. ESIC University.",
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Fuzzy-set qualitative comparative analysis"
+    },
+    {
+      "@type": "Thing",
+      "name": "Critical infrastructure sovereignty"
+    },
+    {
+      "@type": "Thing",
+      "name": "International political economy"
+    }
+  ],
+  "creativeWorkStatus": "Published"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "QESIS+ substrate sovereignty index",
+  "alternateName": "Quantitative Epistemic Sovereignty Index Stack",
+  "description": "Seven-axis measurement of substrate sovereignty exposure across 35 states. Each axis is defined in the methodology and each score traces to a named source, a licence and a hash. States below the coverage threshold are published as gaps rather than imputed.",
+  "url": "https://qesis-public.vercel.app",
+  "version": "v8.6 (2026-08-09)",
+  "creator": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Rodrigo Batista Silva",
+    "identifier": "https://orcid.org/0009-0007-0993-8408",
+    "@id": "https://orcid.org/0009-0007-0993-8408",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ESIC University"
+    }
+  },
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "conditionsOfAccess": "CC BY-NC 4.0. Commercial use requires an institutional licence.",
+  "isAccessibleForFree": true,
+  "inLanguage": "en",
+  "keywords": [
+    "substrate sovereignty",
+    "digital sovereignty",
+    "critical infrastructure",
+    "international political economy",
+    "fuzzy-set QCA",
+    "EU AI Act",
+    "ISO 42001",
+    "data provenance"
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "WSE Water Stress Exposure",
+      "description": "Exposure of digital infrastructure siting to catchment water stress.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "CSE Cable Stress Exposure",
+      "description": "Exposure arising from submarine cable route and landing concentration.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "REE Rare Earth Element Stress",
+      "description": "Exposure to concentration in rare earth supply relevant to hardware.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "FPE Foreign Platform Exposure",
+      "description": "Share of platform capacity provided from outside the jurisdiction.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "ODI Operator Dependency Index",
+      "description": "Concentration of infrastructure operation among few providers.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "CRD Cloud Risk Density",
+      "description": "Density of cloud service dependency relative to domestic capacity.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "ESE Electricity Stress Exposure",
+      "description": "Exposure of infrastructure to electricity cost, carbon and reliability.",
+      "unitText": "index score, 0 to 100, higher is more exposed"
+    }
+  ],
+  "measurementTechnique": "Composite index under declared axis weights, with a coverage threshold below which a state is reported as an epistemic gap. Configurational analysis by fuzzy-set QCA.",
+  "citation": "Batista Silva, R. (2026). Ontological Blind-Spots: Hybrid War, Imperial Decline, and the Polycrisis No One Can Exit. ESIC University.",
+  "creativeWorkStatus": "Published"
+}
+</script>
+<style>
+:root {
+  --bg:#141b2b; --card:#1b2334; --head:#2a2f3a; --line:#3a445c;
+  --ink:#f8f8f7; --mut:#9aa3ba;
+  --cool-100:#dce7f5; --cool-300:#93b3dd; --cool-500:#5b7fa6; --cool-700:#3f5c7d;
+  --warm-300:#e0c3a5; --warm-500:#c99b72; --warm-700:#9c7350;
+  --hot:#c96a5e; --pos:#4d7c62; --epis:#6d7382;
+  --font-prose:ui-serif,Charter,"Iowan Old Style",Georgia,serif;
+  --font-ui:ui-sans-serif,"Inter",system-ui,sans-serif;
+  --font-num:ui-monospace,"SF Mono","Cascadia Mono",monospace;
+  --t-xs:12px; --t-sm:14px; --t-md:16px; --t-lg:20px; --t-xl:25px; --t-2xl:31px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px; --s-8:64px;
+  --r-sm:4px; --r-md:8px; --r-full:999px; --e-1:0 1px 2px rgb(0 0 0/.30);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:var(--t-md)/1.65 var(--font-prose);-webkit-font-smoothing:antialiased}
+.wrap{max-width:76rem;margin:0 auto;padding:var(--s-5)}
+a{color:var(--cool-300);text-underline-offset:2px}
+h1,h2,h3{font-family:var(--font-ui);line-height:1.25}
+h1{font-size:var(--t-xl);margin-bottom:var(--s-3)}
+h2{font-size:var(--t-lg);margin:var(--s-8) 0 var(--s-4);padding-bottom:var(--s-2);border-bottom:1px solid var(--line)}
+h3{font-size:var(--t-md);margin:var(--s-5) 0 var(--s-3)}
+p{margin-bottom:var(--s-4);max-width:70ch}
+.lede{color:var(--mut);font-size:var(--t-lg);max-width:62ch;line-height:1.5}
+.kicker{font:600 var(--t-xs)/1 var(--font-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--s-3)}
+/* Jakob's Law: a back link where every reader already expects one. */
+.backbar{display:flex;gap:var(--s-3);align-items:center;flex-wrap:wrap;
+  padding-bottom:var(--s-4);margin-bottom:var(--s-5);border-bottom:1px solid var(--line);
+  font:var(--t-sm) var(--font-ui)}
+.backbar a{min-height:44px;display:inline-flex;align-items:center}
+.masthead{border-bottom:1px solid var(--line);padding-bottom:var(--s-5);margin-bottom:var(--s-6)}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.grid{display:grid;gap:var(--s-4)}
+@media(min-width:900px){.grid--3{grid-template-columns:repeat(3,1fr)}
+  .lab{grid-template-columns:320px 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-4);box-shadow:var(--e-1)}
+.stat__n{font:600 var(--t-2xl)/1.1 var(--font-num);display:block}
+.stat__l{font:var(--t-xs)/1.45 var(--font-ui);color:var(--mut);margin-top:var(--s-2);display:block}
+/* Fitts's Law: controls are large and adjacent to the result they change. */
+.lab{display:grid;gap:var(--s-4);align-items:start}
+.panel{position:sticky;top:var(--s-4)}
+.chk{display:flex;gap:var(--s-2);align-items:center;min-height:34px;font:var(--t-sm) var(--font-ui);cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--cool-500);cursor:pointer}
+.chkname{color:var(--mut);font-size:var(--t-xs)}
+.axcode{font-family:var(--font-num);font-weight:600;color:var(--cool-300)}
+.axname{font:var(--t-xs) var(--font-ui);color:var(--mut)}
+label.fld{display:block;font:500 var(--t-sm) var(--font-ui);margin:var(--s-4) 0 var(--s-2)}
+select,input[type=range]{width:100%}
+select{min-height:44px;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:0 var(--s-3);font:var(--t-sm) var(--font-ui)}
+input[type=range]{height:4px;background:var(--line);border-radius:2px;-webkit-appearance:none;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cool-500);cursor:pointer}
+.rowv{display:flex;justify-content:space-between;font:var(--t-xs) var(--font-ui);color:var(--mut);margin-top:var(--s-1)}
+.btn{min-height:44px;width:100%;margin-top:var(--s-4);border:0;border-radius:var(--r-sm);
+  background:var(--cool-500);color:var(--bg);font:600 var(--t-sm) var(--font-ui);cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-family:var(--font-ui);font-size:var(--t-sm)}
+th,td{text-align:left;padding:var(--s-2) var(--s-3);border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:var(--head);font-size:var(--t-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+td.n,th.n{text-align:right;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+.term{font-family:var(--font-num);color:var(--cool-100)}
+/* von Restorff: exactly one isolation per view. The surviving solution. */
+/* The winning row was tinted with rgba(201,106,94,.10), which is the hot accent
+   written as a literal, in a system whose first rule is that nothing outside the
+   token block declares a colour. Mixed from the token instead, so the tint moves
+   when the token moves. Winning terms mark in the warm family: this page spends
+   its one accent on the solution panel, which is the answer the playground
+   exists to produce (DESIGN_SYSTEM 2). */
+tr.win td,tr.win th{background:color-mix(in srgb, var(--warm-500) 12%, transparent)}
+tr.win .term{color:var(--warm-300);font-weight:600}
+.pill{display:inline-block;font:600 var(--t-xs)/1 var(--font-ui);padding:4px 9px;border-radius:var(--r-full);border:1px solid var(--line);color:var(--mut)}
+.pill--ok{color:var(--pos);border-color:var(--pos)}
+.pill--no{color:var(--epis)}
+.vertex{font:var(--t-xs) var(--font-ui);color:var(--warm-300)}
+.srclist{list-style:none;font:var(--t-xs)/1.7 var(--font-ui)}
+.srclist .meta{color:var(--mut)}
+.srclist .lic{color:var(--epis)}
+.note{background:var(--card);border-left:3px solid var(--cool-700);padding:var(--s-4);border-radius:0 var(--r-md) var(--r-md) 0;margin-bottom:var(--s-5)}
+.tri{display:grid;gap:var(--s-3);margin:var(--s-4) 0}
+@media(min-width:760px){.tri{grid-template-columns:repeat(3,1fr)}}
+.tri .card h3{margin-top:0}
+.tri .who{font:var(--t-xs) var(--font-ui);color:var(--mut);display:block;margin-top:var(--s-2)}
+.verdict{font:var(--t-sm)/1.6 var(--font-ui);color:var(--warm-300)}
+.empty{color:var(--mut);font:var(--t-sm) var(--font-ui);padding:var(--s-5) 0}
+/* The one hot accent on this page. It marks the region that carries the answer,
+   and it is one element in the served source rather than one span per term,
+   because the solution is rebuilt by script on every interaction and an accent
+   painted from script is an accent nothing can count. */
+#solution{border-left:3px solid var(--hot);padding-left:var(--s-4)}
+#solution .term{color:var(--cool-100);font-weight:600}
+footer{margin-top:var(--s-8);padding-top:var(--s-5);border-top:1px solid var(--line);font:var(--t-xs)/1.7 var(--font-ui);color:var(--mut)}
+:where(a,button,input,select,summary):focus-visible{outline:2px solid var(--cool-300);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav style="font-size:13px; margin: 8px 0 16px 0; color:var(--mut, #9aa3ba);">
+  <a href="overview.html" style="color:var(--cool-300, #93b3dd); text-decoration:none;">Overview</a> &nbsp;/&nbsp; 
+  <span style="color:var(--ink, #fff); font-weight:600;">Method and playground</span> &nbsp;/&nbsp; 
+  <a href="console.html" style="color:var(--cool-300, #93b3dd); text-decoration:none;">Agent console</a> &nbsp;/&nbsp; 
+  <a href="STIR_Governance_Dashboard.html" style="color:var(--cool-300, #93b3dd); text-decoration:none;">Governance dashboard</a>
+</nav>
+
+<header class="masthead">
+  <p class="kicker">QESIS+ v8.6 (2026-08-09) &middot; method, not marketing</p>
+  <h1>Rebuild the finding yourself</h1>
+  <p class="lede">This page carries the qualitative method behind the index. Choose the
+  causal conditions, move the calibration anchors, and the configurational analysis
+  recomputes in your browser over all 35 states. If your assumptions produce
+  a different answer, that is the point.</p>
+</header>
+
+<section class="grid grid--3" aria-label="What this page demonstrates">
+  <div class="card"><span class="stat__n">35</span><span class="stat__l">states, seven axes, one declared vintage. Nothing sampled, nothing imputed.</span></div>
+  <div class="card"><span class="stat__n">2<sup>k</sup></span><span class="stat__l">configurations enumerated in full. Failing rows are shown, not discarded.</span></div>
+  <div class="card"><span class="stat__n">0</span><span class="stat__l">network calls. The engine runs locally, which is why the result is reproducible.</span></div>
+</section>
+
+<h2 id="why">Why configurational, and not regression</h2>
+<p>Regression asks which variable moves the outcome on average, holding the others still.
+That question assumes the causes are independent and that more of one thing always means
+more of the outcome. Substrate sovereignty is neither. A state can be water rich and cable
+poor, or cable rich and captured at the platform layer, and the combination is what
+decides the outcome rather than any single axis.</p>
+<p>Fuzzy-set Qualitative Comparative Analysis asks a different question: which
+<em>combinations</em> of conditions are consistently sufficient for the outcome. It treats
+causation as conjunctural, asymmetric and equifinal, meaning several distinct routes can
+reach the same result and the route to the outcome is not the mirror of the route away
+from it. That matches the object. It is also falsifiable in a way an R-squared is not:
+a single case inside a sufficient configuration that fails to show the outcome damages
+the claim, and you can go and look for it.</p>
+
+<h2 id="lab">The playground</h2>
+<p>Pick conditions on the left. The truth table, the solution and the trilemma reading
+recompute as you move. Calibration is the analysis, so the anchors are exposed rather
+than buried: change them and watch the solution move.</p>
+
+<div class="lab">
+  <div class="panel card">
+    <h3 style="margin-top:0">Causal conditions</h3>
+    <p style="font:var(--t-xs)/1.5 var(--font-ui);color:var(--mut);max-width:none;margin-bottom:var(--s-3)">
+    Two to four is the usable range. Five conditions is 32 rows, six is 64, and beyond that
+    the table has more configurations than the world has states to fill them.</p>
+    <div id="conds"><label class="chk"><input type="checkbox" name="cond" value="WSE" checked> <span class="axcode">WSE</span> <span class="chkname">Water Stress Exposure</span></label><label class="chk"><input type="checkbox" name="cond" value="CSE" checked> <span class="axcode">CSE</span> <span class="chkname">Cable Stress Exposure</span></label><label class="chk"><input type="checkbox" name="cond" value="REE"> <span class="axcode">REE</span> <span class="chkname">Rare Earth Element Stress</span></label><label class="chk"><input type="checkbox" name="cond" value="FPE"> <span class="axcode">FPE</span> <span class="chkname">Foreign Platform Exposure</span></label><label class="chk"><input type="checkbox" name="cond" value="ODI" checked> <span class="axcode">ODI</span> <span class="chkname">Operator Dependency Index</span></label><label class="chk"><input type="checkbox" name="cond" value="CRD"> <span class="axcode">CRD</span> <span class="chkname">Cloud Risk Density</span></label><label class="chk"><input type="checkbox" name="cond" value="ESE"> <span class="axcode">ESE</span> <span class="chkname">Electricity Stress Exposure</span></label></div>
+
+    <label class="fld" for="outcome">Outcome</label>
+    <select id="outcome">
+      <option value="COMPOSITE" selected>Composite exposure</option>
+      <option value="WSE">WSE Water Stress Exposure</option><option value="CSE">CSE Cable Stress Exposure</option><option value="REE">REE Rare Earth Element Stress</option><option value="FPE">FPE Foreign Platform Exposure</option><option value="ODI">ODI Operator Dependency Index</option><option value="CRD">CRD Cloud Risk Density</option><option value="ESE">ESE Electricity Stress Exposure</option>
+    </select>
+
+    <label class="fld" for="cut">Consistency cutoff <span class="num" id="cutv">0.80</span></label>
+    <input type="range" id="cut" min="0.70" max="0.95" step="0.01" value="0.80">
+    <div class="rowv"><span>permissive 0.70</span><span>strict 0.95</span></div>
+
+    <label class="fld" for="anchor">Calibration spread <span class="num" id="anchorv">80 / 50 / 20</span></label>
+    <input type="range" id="anchor" min="60" max="95" step="1" value="80">
+    <div class="rowv"><span>narrow</span><span>wide percentile anchors</span></div>
+
+    <label class="fld" for="freq">Frequency cutoff <span class="num" id="freqv">1</span></label>
+    <input type="range" id="freq" min="1" max="6" step="1" value="1">
+    <div class="rowv"><span>keep rare rows</span><span>require cases</span></div>
+
+    <button class="btn" id="run">Recompute</button>
+    <button class="btn ghost" id="reset">Reset to the published model</button>
+  </div>
+
+  <div>
+    <div class="card" style="margin-bottom:var(--s-4)">
+      <h3 style="margin-top:0">Solution</h3>
+      <div id="solution" class="empty">Choose at least two conditions.</div>
+    </div>
+
+    <div class="card" style="margin-bottom:var(--s-4)">
+      <h3 style="margin-top:0">Truth table, all configurations</h3>
+      <p style="font:var(--t-xs) var(--font-ui);color:var(--mut);max-width:none">
+      Every row is shown, including the ones that fail. A table that hides its failures
+      cannot be audited.</p>
+      <div class="tablewrap"><table id="tt">
+        <thead><tr><th>Configuration</th><th class="n">Cases</th><th class="n">Consistency</th><th class="n">PRI</th><th class="n">Coverage</th><th>Verdict</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="chart__source" style="font:var(--t-xs) var(--font-ui);color:var(--mut);border-top:1px solid var(--line);padding-top:var(--s-2);margin-top:var(--s-3)">
+      Computed live from QESIS+ v8.6 (2026-08-09) axis scores. Consistency, coverage and PRI
+      follow Ragin. Minimisation is conservative: no counterfactuals on logical remainders,
+      so what you see is the safe solution rather than the tidy one.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Necessity</h3>
+      <p style="font:var(--t-xs) var(--font-ui);color:var(--mut);max-width:none">
+      A condition is conventionally called necessary at consistency 0.90 with coverage 0.60.
+      Anything weaker is reported and not called necessary.</p>
+      <div class="tablewrap"><table id="nec">
+        <thead><tr><th>Condition</th><th class="n">Consistency</th><th class="n">Coverage</th><th>Reading</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="trilemma">The three trilemmas</h2>
+<p>Each solution is read against three constraint structures. Two are established in
+political economy. The third is the contribution this work makes, and the reading is
+strongest where all three point the same way.</p>
+
+<div class="tri">
+  <div class="card">
+    <h3>The political trilemma</h3>
+    <p style="margin-bottom:0">Deep economic integration, the nation state, and mass democratic
+    politics. A state can hold two.</p>
+    <span class="who">Rodrik, D. (2011), The Globalization Paradox</span>
+  </div>
+  <div class="card">
+    <h3>The monetary trilemma</h3>
+    <p style="margin-bottom:0">A fixed exchange rate, free capital movement, and an independent
+    monetary policy. A state can hold two.</p>
+    <span class="who">Mundell (1963) and Fleming (1962)</span>
+  </div>
+  <div class="card">
+    <h3>The infrastructural trilemma</h3>
+    <p style="margin-bottom:0">Algorithmic independence, hyperscale efficiency, and ecological
+    sustainability. A state can hold two.</p>
+    <span class="who">Batista Silva, R. (2026), Ontological Blind-Spots. Sovereignty measured as
+    metabolic capacity, not legal status.</span>
+  </div>
+</div>
+
+<div class="note">
+  <h3 style="margin-top:0">Synthesis for the current solution</h3>
+  <div id="synth" class="verdict">Recompute to read the synthesis.</div>
+</div>
+
+<h2 id="game">The strategic reading</h2>
+<p>A configuration is not only a statistical object. It describes a position a state
+occupies against others, and positions have payoffs. Read as a game, the substrate layer
+has a structure worth naming.</p>
+<p>Hyperscale capacity is a coordination good with strong increasing returns, so the
+dominant strategy for any single state is to attach to an existing hyperscale
+network rather than build a sovereign one. That choice is individually rational and
+collectively produces exactly the concentration the index measures. It is a stag hunt
+rather than a prisoner's dilemma: cooperation on a sovereign alternative pays better for
+everyone than universal defection to a foreign platform, but only if enough states move
+together, and no state moves first alone. The European sovereign cloud efforts are that
+coordination problem played out in public.</p>
+<p>The physical axes behave differently. Water and electricity are not coordination goods,
+they are capacity constraints, and no amount of coordination relaxes them. That asymmetry
+is why the composite weights the physical axes heavily: a state can renegotiate its
+platform dependency, and cannot renegotiate its aquifer.</p>
+
+<h2 id="sources">Every axis, and who measures it</h2>
+<p>Each axis names the institutions that produce the underlying measurement, with the
+dataset and its metadata as separate links. Reading a number and checking a method are
+different tasks and deserve different doors.</p>
+
+<div class="card">
+  <div class="tablewrap"><table>
+    <thead><tr><th>Axis</th><th>Trilemma vertex</th><th>Institutional sources</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row"><span class="axcode">WSE</span><br><span class="axname">Water Stress Exposure</span></th>
+        <td><span class="vertex">ecological sustainability</span></td>
+        <td><ul class="srclist"><li><a href="https://www.wri.org/data/aqueduct-water-risk-atlas" target="_blank" rel="noopener">WRI Aqueduct 4.0</a> <span class="meta">data</span> &middot; <a href="https://www.wri.org/research/aqueduct-40-updated-decision-relevant-global-water-risk-indicators" target="_blank" rel="noopener">metadata</a> <span class="lic">CC BY 4.0</span></li><li><a href="https://www.fao.org/aquastat/en/" target="_blank" rel="noopener">UN SDG 6.4.2 water stress, FAO AQUASTAT</a> <span class="meta">data</span> &middot; <a href="https://unstats.un.org/sdgs/metadata/?Text=&amp;Goal=6&amp;Target=6.4" target="_blank" rel="noopener">metadata</a> <span class="lic">UN open</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">CSE</span><br><span class="axname">Cable Stress Exposure</span></th>
+        <td><span class="vertex">algorithmic independence</span></td>
+        <td><ul class="srclist"><li><a href="https://emodnet.ec.europa.eu/en/human-activities" target="_blank" rel="noopener">EMODnet Human Activities, EU waters</a> <span class="meta">data</span> &middot; <a href="https://emodnet.ec.europa.eu/geonetwork" target="_blank" rel="noopener">metadata</a> <span class="lic">Open, attribution</span></li><li><a href="https://www.submarinecablemap.com" target="_blank" rel="noopener">TeleGeography Submarine Cable Map</a> <span class="meta">data</span> &middot; <a href="https://github.com/telegeography/www.submarinecablemap.com" target="_blank" rel="noopener">metadata</a> <span class="lic">Proprietary. Metadata only, never republished.</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">REE</span><br><span class="axname">Rare Earth Element Stress</span></th>
+        <td><span class="vertex">hyperscale efficiency</span></td>
+        <td><ul class="srclist"><li><a href="https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries" target="_blank" rel="noopener">USGS Mineral Commodity Summaries</a> <span class="meta">data</span> &middot; <a href="https://www.usgs.gov/centers/national-minerals-information-center" target="_blank" rel="noopener">metadata</a> <span class="lic">US public domain</span></li><li><a href="https://single-market-economy.ec.europa.eu/sectors/raw-materials/areas-specific-interest/critical-raw-materials_en" target="_blank" rel="noopener">EU Critical Raw Materials Act list</a> <span class="meta">data</span> &middot; <a href="https://eur-lex.europa.eu/eli/reg/2024/1252/oj" target="_blank" rel="noopener">metadata</a> <span class="lic">EU open</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">FPE</span><br><span class="axname">Foreign Platform Exposure</span></th>
+        <td><span class="vertex">algorithmic independence</span></td>
+        <td><ul class="srclist"><li><a href="https://datahub.itu.int/" target="_blank" rel="noopener">ITU DataHub ICT indicators</a> <span class="meta">data</span> &middot; <a href="https://www.itu.int/en/ITU-D/Statistics/Pages/definitions/default.aspx" target="_blank" rel="noopener">metadata</a> <span class="lic">ITU open</span></li><li><a href="https://unctad.org/digital-economy-report" target="_blank" rel="noopener">UNCTAD Digital Economy Report</a> <span class="meta">data</span> &middot; <a href="https://unctad.org/statistics" target="_blank" rel="noopener">metadata</a> <span class="lic">UN open</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">ODI</span><br><span class="axname">Operator Dependency Index</span></th>
+        <td><span class="vertex">algorithmic independence</span></td>
+        <td><ul class="srclist"><li><a href="https://www.peeringdb.com/" target="_blank" rel="noopener">PeeringDB interconnection registry</a> <span class="meta">data</span> &middot; <a href="https://www.peeringdb.com/apidocs/" target="_blank" rel="noopener">metadata</a> <span class="lic">CC BY 4.0</span></li><li><a href="https://www.oecd.org/digital/" target="_blank" rel="noopener">OECD Digital Economy Outlook</a> <span class="meta">data</span> &middot; <a href="https://www.oecd.org/digital/ieconomy/" target="_blank" rel="noopener">metadata</a> <span class="lic">OECD terms</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">CRD</span><br><span class="axname">Cloud Risk Density</span></th>
+        <td><span class="vertex">hyperscale efficiency</span></td>
+        <td><ul class="srclist"><li><a href="https://www.oecd.org/en/data/datasets/trade-in-value-added.html" target="_blank" rel="noopener">OECD Trade in Value Added 2025</a> <span class="meta">data</span> &middot; <a href="https://www.oecd.org/sti/ind/measuring-trade-in-value-added.htm" target="_blank" rel="noopener">metadata</a> <span class="lic">OECD terms</span></li><li><a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener">EU Data Act, Reg. 2023/2854, portability</a> <span class="meta">data</span> &middot; <a href="https://digital-strategy.ec.europa.eu/en/policies/data-act" target="_blank" rel="noopener">metadata</a> <span class="lic">EU law</span></li></ul></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="axcode">ESE</span><br><span class="axname">Electricity Stress Exposure</span></th>
+        <td><span class="vertex">ecological sustainability</span></td>
+        <td><ul class="srclist"><li><a href="https://doi.org/10.2908/NRG_PC_205" target="_blank" rel="noopener">Eurostat nrg_pc_205 industrial electricity price</a> <span class="meta">data</span> &middot; <a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_pc_esms.htm" target="_blank" rel="noopener">metadata</a> <span class="lic">Eurostat open</span></li><li><a href="https://ember-energy.org/data/yearly-electricity-data/" target="_blank" rel="noopener">Ember yearly electricity data</a> <span class="meta">data</span> &middot; <a href="https://ember-energy.org/about/methodology/" target="_blank" rel="noopener">metadata</a> <span class="lic">CC BY 4.0</span></li></ul></td>
+      </tr></tbody>
+  </table></div>
+</div>
+
+<h3>Country classification systems referenced</h3>
+<div class="card"><ul class="srclist" style="font-size:var(--t-sm)"><li><a href="https://unstats.un.org/unsd/methodology/m49/" target="_blank" rel="noopener">UN M49 standard country codes and regions</a></li><li><a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/906519" target="_blank" rel="noopener">World Bank income classification</a></li><li><a href="https://www.oecd.org/about/members-and-partners/" target="_blank" rel="noopener">OECD members and partners</a></li><li><a href="https://www.wto.org/english/thewto_e/whatis_e/tif_e/org6_e.htm" target="_blank" rel="noopener">WTO membership</a></li><li><a href="https://unctad.org/topic/least-developed-countries/list" target="_blank" rel="noopener">UNCTAD LDC, LLDC and SIDS lists</a></li><li><a href="https://www.iea.org/data-and-statistics" target="_blank" rel="noopener">IEA energy statistics</a></li></ul></div>
+
+<h2 id="compliance">Auditable, traceable, reproducible</h2>
+<p>Those three words are cheap. Here is what each one means concretely, and how to check it.</p>
+
+<div class="grid grid--3">
+  <div class="card">
+    <h3 style="margin-top:0">Auditable</h3>
+    <p style="font-size:var(--t-sm);margin-bottom:0">Every agent operation is risk scored before
+    it runs, hashed on the way out, and appended to a chain where each entry commits to its
+    predecessor. Database triggers refuse deletion and refuse any edit except recording a human
+    approval. A retroactive change breaks the chain downstream where an auditor sees it.
+    <br><br><span class="pill">EU AI Act Art. 12</span> <span class="pill">ISO 42001 A.8.2</span></p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Traceable</h3>
+    <p style="font-size:var(--t-sm);margin-bottom:0">Every asset carries an identifier, a SHA-256
+    and a lineage note, and the register is re-checkable end to end: each entry recomputes from
+    the file it names. Material whose licence was never recorded is reported as unrecorded rather
+    than tidied away, and cannot reach a public artifact.
+    <br><br><span class="pill">EU AI Act Art. 10</span> <span class="pill">ISO 42001 A.6.1</span></p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Reproducible</h3>
+    <p style="font-size:var(--t-sm);margin-bottom:0">The engine on this page is the same algorithm
+    that produced the published solution, ported to run in your browser with no server. Anchors
+    and cutoffs are exposed because calibration is the analysis. Same inputs, same output, every
+    time.
+    <br><br><span class="pill">EU AI Act Art. 11</span> <span class="pill">Annex IV</span></p>
+  </div>
+</div>
+
+<h3>The compliance frame in one paragraph</h3>
+<p>The EU AI Act sets the obligations this system is built against: Article 9 requires risk
+management across the lifecycle, so risk is scored before an operation runs rather than
+reviewed after. Article 10 requires data governance, which is the asset register and the
+licence discipline. Article 11 and Annex IV require technical documentation, which is
+generated from the live registry rather than typed, so it cannot go stale. Article 12
+requires automatic logging and traceability, which is the hash chain. Article 14 requires
+human oversight with a real ability to intervene and stop, which is the gate that currently
+holds every high-risk output. ISO/IEC 42001 wraps those obligations in a management system:
+A.6.1 data quality and provenance, A.6.2 risk assessment, A.8.2 traceability of decisions,
+A.9.3 human oversight and intervention. Neither framework is treated here as a
+post-deployment audit. Both are architectural constraints, which is why the compliance
+tables exist in the schema rather than in a folder.</p>
+
+<h2 id="falsify">What would falsify this</h2>
+<p>Stratify the sample by jurisdiction tier and rerun. If the cross-axis associations
+collapse inside every tier, the pooled coefficients were composition rather than mechanism,
+and the composite would need rebuilding on tier-relative terms. Separately, a single state
+sitting inside a sufficient configuration while showing low outcome membership damages that
+term directly. Both tests are runnable on this page: narrow the conditions, move the anchors,
+and see whether the solution survives your assumptions rather than mine.</p>
+
+<footer>
+  <p>QESIS+ v8.6 (2026-08-09). Citation: Batista Silva, R. (2026). Ontological Blind-Spots: Hybrid War,
+  Imperial Decline, and the Polycrisis No One Can Exit. ESIC/LSE. Demo vintage licensed CC BY-NC;
+  commercial use requires an institutional licence.</p>
+  <p>Generated from the canonical index at 2026-08-09T08:30:20. Method engine ported from
+  <span class="num">qesis_agents/fsqca.py</span>, the same code that produced the published
+  solution. Interface designed against the ten named laws: Nielsen on convention, Fitts on target
+  acquisition, Hick on choice load, Miller on chunking, Postel on strict output, Tesler on
+  where complexity lands, Doherty on the response budget, von Restorff on the single isolated
+  element, Kahneman on the ending, Kurosu and Kashimura on why restraint is functional.</p>
+</footer>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// fsQCA engine, ported from qesis_agents/fsqca.py. Same maths, same
+// corrections: two-sided Ragin calibration, tolerance-band nudge off 0.5,
+// most-significant-bit-first labels, PRI alongside consistency.
+// ═══════════════════════════════════════════════════════════════════════
+const DATA = {"vintage":"v8.6 (2026-08-09)","axes":["WSE","CSE","REE","FPE","ODI","CRD","ESE"],"axisNames":{"WSE":"Water Stress Exposure","CSE":"Cable Stress Exposure","REE":"Rare Earth Element Stress","FPE":"Foreign Platform Exposure","ODI":"Operator Dependency Index","CRD":"Cloud Risk Density","ESE":"Electricity Stress Exposure"},"countries":{"ARE":{"name":"United Arab Emirates","axes":{"WSE":100.0,"CSE":22.2,"REE":63.1,"FPE":35.9,"ODI":55.6,"ESE":23.2,"RGD":11.1},"composite":56.5},"AUS":{"name":"Australia","axes":{"WSE":58.1,"CSE":29.2,"REE":55.5,"FPE":28.6,"ODI":30.9,"ESE":50.2,"RGD":44.4},"composite":43.3},"AUT":{"name":"Austria","axes":{"WSE":5.2,"CSE":0.0,"REE":84.1,"FPE":87.7,"ODI":100.0,"ESE":27.1,"RGD":0.0},"composite":31.2},"BEL":{"name":"Belgium","axes":{"WSE":88.2,"CSE":39.7,"REE":82.5,"FPE":33.9,"ODI":50.0,"ESE":28.4,"RGD":5.6},"composite":59.7},"BHR":{"name":"Bahrain","axes":{"WSE":100.0,"CSE":5.6,"REE":63.1,"FPE":92.1,"ODI":100.0,"ESE":34.5,"RGD":0.0},"composite":58.1},"BRA":{"name":"Brazil","axes":{"WSE":20.8,"CSE":16.7,"REE":63.1,"FPE":19.9,"ODI":36.0,"ESE":39.3,"RGD":22.2},"composite":28.6},"CAN":{"name":"Canada","axes":{"WSE":24.7,"CSE":9.7,"REE":55.5,"FPE":25.0,"ODI":25.0,"ESE":29.0,"RGD":38.9},"composite":26.0},"CHE":{"name":"Switzerland","axes":{"WSE":8.1,"CSE":0.0,"REE":63.1,"FPE":35.6,"ODI":37.5,"ESE":20.4,"RGD":16.7},"composite":19.6},"CHL":{"name":"Chile","axes":{"WSE":89.4,"CSE":8.3,"REE":63.1,"FPE":13.9,"ODI":50.0,"ESE":43.3,"RGD":5.6},"composite":47.7},"DEU":{"name":"Germany","axes":{"WSE":40.8,"CSE":7.3,"REE":82.5,"FPE":27.9,"ODI":28.0,"ESE":40.8,"RGD":22.2},"composite":33.3},"DNK":{"name":"Denmark","axes":{"WSE":19.0,"CSE":29.1,"REE":84.1,"FPE":87.7,"ODI":100.0,"ESE":23.1,"RGD":0.0},"composite":44.0},"ESP":{"name":"Spain","axes":{"WSE":78.8,"CSE":58.7,"REE":82.5,"FPE":33.3,"ODI":33.3,"ESE":27.7,"RGD":11.1},"composite":60.2},"FIN":{"name":"Finland","axes":{"WSE":16.2,"CSE":15.3,"REE":82.5,"FPE":100.0,"ODI":100.0,"ESE":22.5,"RGD":0.0},"composite":38.8},"FRA":{"name":"France","axes":{"WSE":38.3,"CSE":40.3,"REE":82.5,"FPE":27.9,"ODI":28.0,"ESE":25.0,"RGD":22.2},"composite":42.5},"GBR":{"name":"United Kingdom","axes":{"WSE":26.0,"CSE":51.6,"REE":74.0,"FPE":35.6,"ODI":37.5,"ESE":44.3,"RGD":16.7},"composite":42.1},"HKG":{"name":"Hong Kong","axes":{"WSE":null,"CSE":0.0,"REE":63.1,"FPE":33.3,"ODI":50.0,"ESE":38.0,"RGD":5.6},"composite":null},"IDN":{"name":"Indonesia","axes":{"WSE":53.4,"CSE":27.8,"REE":63.1,"FPE":33.3,"ODI":33.3,"ESE":57.4,"RGD":11.1},"composite":40.4},"IND":{"name":"India","axes":{"WSE":82.2,"CSE":22.2,"REE":63.1,"FPE":31.3,"ODI":30.6,"ESE":63.9,"RGD":33.3},"composite":48.7},"ISR":{"name":"Israel","axes":{"WSE":98.8,"CSE":6.9,"REE":63.1,"FPE":25.0,"ODI":25.0,"ESE":42.5,"RGD":16.7},"composite":46.8},"ITA":{"name":"Italy","axes":{"WSE":66.9,"CSE":15.0,"REE":84.1,"FPE":25.0,"ODI":25.0,"ESE":44.1,"RGD":16.7},"composite":42.8},"JPN":{"name":"Japan","axes":{"WSE":39.4,"CSE":30.6,"REE":70.0,"FPE":29.8,"ODI":26.5,"ESE":39.6,"RGD":33.3},"composite":38.7},"KOR":{"name":"South Korea","axes":{"WSE":47.6,"CSE":0.0,"REE":70.0,"FPE":35.6,"ODI":50.0,"ESE":31.4,"RGD":5.6},"composite":33.7},"MEX":{"name":"Mexico","axes":{"WSE":79.9,"CSE":5.6,"REE":63.1,"FPE":19.9,"ODI":33.3,"ESE":45.4,"RGD":11.1},"composite":41.7},"MYS":{"name":"Malaysia","axes":{"WSE":20.7,"CSE":26.4,"REE":63.1,"FPE":29.9,"ODI":50.0,"ESE":44.5,"RGD":5.6},"composite":32.5},"NLD":{"name":"Netherlands","axes":{"WSE":31.6,"CSE":24.0,"REE":82.5,"FPE":13.9,"ODI":100.0,"ESE":33.3,"RGD":0.0},"composite":46.1},"NOR":{"name":"Norway","axes":{"WSE":3.8,"CSE":5.6,"REE":63.1,"FPE":87.7,"ODI":100.0,"ESE":16.3,"RGD":5.6},"composite":29.7},"NZL":{"name":"New Zealand","axes":{"WSE":1.0,"CSE":6.9,"REE":63.1,"FPE":29.9,"ODI":50.0,"ESE":29.1,"RGD":5.6},"composite":20.8},"POL":{"name":"Poland","axes":{"WSE":33.2,"CSE":59.3,"REE":82.5,"FPE":33.9,"ODI":50.0,"ESE":59.3,"RGD":5.6},"composite":49.1},"QAT":{"name":"Qatar","axes":{"WSE":100.0,"CSE":8.3,"REE":63.1,"FPE":33.9,"ODI":50.0,"ESE":28.4,"RGD":5.6},"composite":50.9},"SAU":{"name":"Saudi Arabia","axes":{"WSE":99.6,"CSE":64.3,"REE":63.1,"FPE":60.0,"ODI":100.0,"ESE":42.3,"RGD":0.0},"composite":75.6},"SGP":{"name":"Singapore","axes":{"WSE":null,"CSE":29.2,"REE":63.1,"FPE":25.0,"ODI":33.3,"ESE":36.5,"RGD":11.1},"composite":null},"SWE":{"name":"Sweden","axes":{"WSE":15.6,"CSE":45.7,"REE":82.5,"FPE":29.9,"ODI":50.0,"ESE":18.2,"RGD":5.6},"composite":39.7},"TWN":{"name":"Taiwan","axes":{"WSE":null,"CSE":15.3,"REE":63.1,"FPE":36.1,"ODI":50.0,"ESE":41.1,"RGD":5.6},"composite":null},"USA":{"name":"United States","axes":{"WSE":52.1,"CSE":100.0,"REE":55.5,"FPE":35.7,"ODI":36.8,"ESE":43.1,"RGD":100.0},"composite":68.2},"ZAF":{"name":"South Africa","axes":{"WSE":83.4,"CSE":9.7,"REE":63.1,"FPE":27.9,"ODI":28.0,"ESE":75.1,"RGD":22.2},"composite":43.9}}};
+const EPS = 1e-9, NUDGE = 0.001;
+
+function calibrate(raw, xin, xcross, xout) {
+  if (xin === xcross || xcross === xout) return raw.map(() => 0.5);
+  const ln19 = Math.log(19);
+  const aHi = ln19 / (xin - xcross), aLo = ln19 / (xcross - xout);
+  return raw.map(v => {
+    const a = ((v >= xcross) === (xin > xcross)) ? aHi : aLo;
+    const z = -a * (v - xcross);
+    let s = z > 700 ? 0 : z < -700 ? 1 : 1 / (1 + Math.exp(z));
+    if (Math.abs(s - 0.5) < NUDGE) s = s >= 0.5 ? 0.5 + NUDGE : 0.5 - NUDGE;
+    return Math.min(1, Math.max(0, s));
+  });
+}
+
+function consCov(x, y) {
+  let sx = 0, sy = 0, smin = 0, sminNot = 0;
+  for (let i = 0; i < x.length; i++) {
+    sx += x[i]; sy += y[i];
+    smin += Math.min(x[i], y[i]);
+    sminNot += Math.min(x[i], 1 - y[i]);
+  }
+  const cons = sx > EPS ? smin / sx : 0;
+  const cov = sy > EPS ? smin / sy : 0;
+  const den = sx - sminNot;
+  const pri = den > EPS ? Math.max(0, (smin - sminNot) / den) : 0;
+  return { cons, cov, pri };
+}
+
+function percentile(sorted, p) {
+  return sorted[Math.floor(p * (sorted.length - 1))];
+}
+
+function minimise(terms, k) {
+  let cur = new Set(terms), changed = true, reduced = false;
+  while (changed) {
+    changed = false;
+    const next = new Set(), used = new Set();
+    const items = [...cur].sort();
+    for (const a of items) for (const b of items) {
+      if (a >= b) continue;
+      let diff = -1, n = 0;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) { diff = i; n++; }
+      if (n === 1) {
+        next.add(a.slice(0, diff) + '-' + a.slice(diff + 1));
+        used.add(a); used.add(b); changed = true; reduced = true;
+      }
+    }
+    cur = new Set([...cur].filter(t => !used.has(t)).concat([...next]));
+  }
+  return { terms: [...cur].sort(), reduced };
+}
+
+function series(ax) {
+  const out = {};
+  for (const [iso, c] of Object.entries(DATA.countries)) {
+    const v = ax === 'COMPOSITE' ? c.composite : (c.axes || {})[ax];
+    if (v !== null && v !== undefined) out[iso] = v;
+  }
+  return out;
+}
+
+function expr(term, conds) {
+  const parts = [];
+  for (let i = 0; i < conds.length; i++) {
+    if (term[i] === '1') parts.push(conds[i]);
+    else if (term[i] === '0') parts.push('~' + conds[i]);
+  }
+  return parts.length ? parts.join(' * ') : '(tautology)';
+}
+
+let lastRun = null;
+
+function run() {
+  const conds = [...document.querySelectorAll('input[name=cond]:checked')].map(e => e.value);
+  const outcome = document.getElementById('outcome').value;
+  const cutoff = parseFloat(document.getElementById('cut').value);
+  const freqCut = parseInt(document.getElementById('freq').value, 10);
+  const spread = parseInt(document.getElementById('anchor').value, 10) / 100;
+
+  const solEl = document.getElementById('solution');
+  const ttBody = document.querySelector('#tt tbody');
+  const necBody = document.querySelector('#nec tbody');
+  ttBody.innerHTML = ''; necBody.innerHTML = '';
+
+  const usable = conds.filter(c => c !== outcome);
+  if (usable.length < 2) {
+    solEl.className = 'empty';
+    solEl.textContent = 'Choose at least two conditions that are not the outcome.';
+    document.getElementById('synth').textContent = 'Recompute to read the synthesis.';
+    return;
+  }
+  if (usable.length > 6) {
+    solEl.className = 'empty';
+    solEl.textContent = usable.length + ' conditions is ' + Math.pow(2, usable.length) +
+      ' configurations against ' + Object.keys(DATA.countries).length +
+      ' states. Below three states per row the table stops meaning anything. Drop a condition.';
+    return;
+  }
+
+  // Cases present on every selected axis and the outcome.
+  const all = [outcome, ...usable].map(series);
+  let isos = Object.keys(all[0]);
+  for (const s of all.slice(1)) isos = isos.filter(i => i in s);
+  isos.sort();
+  if (isos.length < 6) {
+    solEl.className = 'empty';
+    solEl.textContent = 'Only ' + isos.length + ' states carry all of these axes. ' +
+      'Coverage gaps are published rather than imputed, so the table is refused instead of filled.';
+    return;
+  }
+
+  const cal = {}, anchors = {};
+  for (const name of [outcome, ...usable]) {
+    const s = series(name);
+    const raw = isos.map(i => s[i]);
+    const sorted = [...raw].sort((a, b) => a - b);
+    const xin = percentile(sorted, spread);
+    const xcross = percentile(sorted, 0.5);
+    const xout = percentile(sorted, 1 - spread);
+    anchors[name] = [xin, xcross, xout];
+    cal[name] = (xin === xcross || xcross === xout)
+      ? raw.map(() => 0.5) : calibrate(raw, xin, xcross, xout);
+  }
+
+  const y = cal[outcome], k = usable.length, rows = [];
+  for (let m = 0; m < (1 << k); m++) {
+    const bits = [];
+    for (let pos = 0; pos < k; pos++) bits.push((m >> (k - 1 - pos)) & 1);
+    const mem = isos.map((_, ci) => {
+      let lo = 1;
+      for (let p = 0; p < k; p++) {
+        const v = cal[usable[p]][ci];
+        lo = Math.min(lo, bits[p] ? v : 1 - v);
+      }
+      return lo;
+    });
+    const st = consCov(mem, y);
+    const nCases = mem.filter(v => v > 0.5).length;
+    rows.push({
+      label: bits.join(''), mem, nCases,
+      cons: st.cons, pri: st.pri, cov: st.cov,
+      ok: st.cons >= cutoff && nCases >= freqCut
+    });
+  }
+  rows.sort((a, b) => b.cons - a.cons);
+
+  for (const r of rows) {
+    const tr = document.createElement('tr');
+    if (r.ok) tr.className = 'win';
+    tr.innerHTML = '<th scope="row" class="term">' + expr(r.label, usable) + '</th>' +
+      '<td class="n">' + r.nCases + '</td>' +
+      '<td class="n">' + r.cons.toFixed(3) + '</td>' +
+      '<td class="n">' + r.pri.toFixed(3) + '</td>' +
+      '<td class="n">' + r.cov.toFixed(3) + '</td>' +
+      '<td>' + (r.ok ? '<span class="pill pill--ok">sufficient</span>'
+                     : '<span class="pill pill--no">below cutoff</span>') + '</td>';
+    ttBody.appendChild(tr);
+  }
+
+  const surv = rows.filter(r => r.ok);
+  let solCons = 0, solCov = 0;
+  if (surv.length) {
+    const union = isos.map((_, ci) => Math.max(...surv.map(r => r.mem[ci])));
+    const st = consCov(union, y);
+    solCons = st.cons; solCov = st.cov;
+  }
+  const mini = minimise(surv.map(r => r.label), k);
+
+  // Necessity
+  for (const c of usable) {
+    for (const neg of [false, true]) {
+      const x = cal[c].map(v => neg ? 1 - v : v);
+      const st = consCov(y, x);
+      const name = (neg ? '~' : '') + c;
+      const nec = st.cons >= 0.90 && st.cov >= 0.60;
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<th scope="row" class="term">' + name + '</th>' +
+        '<td class="n">' + st.cons.toFixed(3) + '</td>' +
+        '<td class="n">' + st.cov.toFixed(3) + '</td>' +
+        '<td>' + (nec ? '<span class="pill pill--ok">necessary</span>'
+                      : '<span class="pill pill--no">not necessary</span>') + '</td>';
+      necBody.appendChild(tr);
+    }
+  }
+
+  solEl.className = '';
+  if (!surv.length) {
+    solEl.innerHTML = '<p style="margin:0">No configuration reaches consistency ' +
+      cutoff.toFixed(2) + ' at this frequency cutoff over ' + isos.length +
+      ' states. That is a result, not an error: at these assumptions the conditions you chose ' +
+      'are not jointly sufficient for ' + outcome + '.</p>';
+  } else {
+    solEl.innerHTML =
+      '<p style="margin:0 0 var(--s-3)"><span class="term">' +
+      mini.terms.map(t => expr(t, usable)).join('</span> &nbsp;+&nbsp; <span class="term">') +
+      '</span> &rarr; ' + outcome + '</p>' +
+      '<p style="margin:0;font:var(--t-sm) var(--font-ui);color:var(--mut)">' +
+      surv.length + ' sufficient configuration' + (surv.length > 1 ? 's' : '') +
+      ' over ' + isos.length + ' states. Solution consistency ' + solCons.toFixed(3) +
+      ', coverage ' + solCov.toFixed(3) + '. ' +
+      (mini.reduced ? 'Terms absorbed by conservative minimisation. ' : 'No absorption possible. ') +
+      'Anchors at the ' + Math.round(spread * 100) + 'th, 50th and ' +
+      Math.round((1 - spread) * 100) + 'th percentile.</p>';
+  }
+
+  lastRun = { usable, outcome, surv, mini, isos, solCons, solCov };
+  synthesise();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Trilemma synthesis. Each axis loads on one vertex of the infrastructural
+// trilemma; a solution that spans two vertices is describing a state that
+// cannot hold both, which is the whole claim.
+// ═══════════════════════════════════════════════════════════════════════
+const VERTEX = {
+  WSE: 'ecological sustainability', ESE: 'ecological sustainability',
+  CSE: 'algorithmic independence', FPE: 'algorithmic independence', ODI: 'algorithmic independence',
+  REE: 'hyperscale efficiency', CRD: 'hyperscale efficiency'
+};
+
+function synthesise() {
+  const el = document.getElementById('synth');
+  if (!lastRun || !lastRun.surv.length) {
+    el.textContent = 'No sufficient configuration at these assumptions, so there is nothing to read against the trilemmas.';
+    return;
+  }
+  const { usable, outcome, mini, isos, solCov } = lastRun;
+  const vs = [...new Set(usable.map(a => VERTEX[a]).filter(Boolean))];
+  const terms = mini.terms.map(t => expr(t, usable));
+
+  let s = '<p style="margin:0 0 var(--s-3)"><strong>' + terms.join('</strong> and <strong>') +
+    '</strong> is sufficient for ' + outcome + ' across ' + isos.length + ' states.</p>';
+
+  if (vs.length >= 2) {
+    s += '<p style="margin:0 0 var(--s-3)">The conditions span ' + vs.length +
+      ' vertices of the infrastructural trilemma: ' + vs.join(', ') +
+      '. A state inside this configuration is being asked to hold vertices the trilemma says ' +
+      'cannot be held together, which is why the outcome follows. This is the thesis claim in ' +
+      'its testable form.</p>';
+  } else {
+    s += '<p style="margin:0 0 var(--s-3)">All conditions load on a single vertex, ' + vs[0] +
+      '. The configuration describes pressure inside one face of the trilemma rather than a ' +
+      'contradiction between faces, so it is a severity reading rather than a structural one.</p>';
+  }
+
+  const hasPlatform = usable.some(a => ['FPE', 'ODI', 'CRD'].includes(a));
+  const hasPhysical = usable.some(a => ['WSE', 'ESE', 'REE'].includes(a));
+  if (hasPlatform && hasPhysical) {
+    s += '<p style="margin:0">Read against Rodrik, this is the integration face of the political ' +
+      'trilemma: the platform conditions are the price of deep integration, and the physical ' +
+      'conditions are the part of national capacity that integration cannot substitute for. ' +
+      'Read against Mundell and Fleming, the analogy is exact in structure rather than in ' +
+      'content: a state can float its dependency or fix it, and cannot do both while keeping ' +
+      'an independent substrate policy. Coverage of ' + solCov.toFixed(2) +
+      ' says how much of the outcome this account reaches, and the remainder is honestly elsewhere.</p>';
+  } else if (hasPlatform) {
+    s += '<p style="margin:0">Platform conditions only. This is the coordination game described ' +
+      'below: individually rational attachment to foreign capacity, collectively producing the ' +
+      'concentration the index measures.</p>';
+  } else {
+    s += '<p style="margin:0">Physical conditions only. These are capacity constraints rather ' +
+      'than coordination goods, so no amount of cooperation relaxes them. A state can ' +
+      'renegotiate its platform dependency and cannot renegotiate its aquifer.</p>';
+  }
+  el.innerHTML = s;
+}
+
+// Doherty Threshold: recompute on input, not on a submit round trip.
+let t = null;
+function schedule() { clearTimeout(t); t = setTimeout(run, 90); }
+
+document.getElementById('cut').addEventListener('input', e => {
+  document.getElementById('cutv').textContent = parseFloat(e.target.value).toFixed(2); schedule();
+});
+document.getElementById('freq').addEventListener('input', e => {
+  document.getElementById('freqv').textContent = e.target.value; schedule();
+});
+document.getElementById('anchor').addEventListener('input', e => {
+  const v = parseInt(e.target.value, 10);
+  document.getElementById('anchorv').textContent = v + ' / 50 / ' + (100 - v); schedule();
+});
+document.getElementById('outcome').addEventListener('change', schedule);
+document.querySelectorAll('input[name=cond]').forEach(c => c.addEventListener('change', schedule));
+document.getElementById('run').addEventListener('click', run);
+document.getElementById('reset').addEventListener('click', () => {
+  document.querySelectorAll('input[name=cond]').forEach(c => {
+    c.checked = ['WSE', 'CSE', 'ODI'].includes(c.value);
+  });
+  document.getElementById('outcome').value = 'COMPOSITE';
+  document.getElementById('cut').value = 0.80; document.getElementById('cutv').textContent = '0.80';
+  document.getElementById('freq').value = 1; document.getElementById('freqv').textContent = '1';
+  document.getElementById('anchor').value = 80; document.getElementById('anchorv').textContent = '80 / 50 / 20';
+  run();
+});
+run();
+</script>
+</body>
+</html>

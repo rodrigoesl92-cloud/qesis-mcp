@@ -168,15 +168,68 @@ def vintage() -> str:
     return "not determinable from this checkout"
 
 
-def build_state() -> dict:
-    ops = ROOT / "ops"
-    decisions = sorted(f.name for f in ops.glob("D-1*.md")) if ops.is_dir() else []
-    pending = []
+#: The one regex the two canonical ledger writers use, `verify_ledger_singleton`
+#: and `rdl_append`. Copied deliberately rather than imported, because those are
+#: scripts rather than a module; if it ever diverges the fixtures below fail.
+_LEDGER_HEADER = re.compile(r"^\*\*L-(\d{3})", re.M)
+
+
+def live_lesson_ids() -> set[int]:
+    """Ids that already exist as ENTRIES in this repository's ledger.
+
+    Read from the ledger itself, never from the state file that this function
+    exists to make honest. D-115: a control queries the thing it asserts.
+    """
+    led = ROOT / "ops" / "LESSONS_LEDGER.md"
+    if not led.exists():
+        return set()
+    return {int(m) for m in
+            _LEDGER_HEADER.findall(led.read_text(encoding="utf-8", errors="replace"))}
+
+
+def pending_facts(ops: Path, live: set[int]) -> tuple[list, list]:
+    """Split the RDL pending files into work that is outstanding and residue.
+
+    WHY THE SPLIT. Reading the pending file alone answers "which ids does this
+    file name", and the question every session actually asks is "which lessons
+    are still unappended". Those differ the moment an append succeeds and the
+    file survives it, which is the state measured on 2026-08-28: ten ids named
+    by the file, all ten already live in the ledger, and ECOSYSTEM_STATE telling
+    every session that ten lessons were outstanding. That is D-115's own failure
+    mode inside the file written to prevent it, so the fix belongs here and not
+    in whatever leaves the residue behind.
+
+    Consumed ids are REPORTED rather than dropped. An id that silently vanishes
+    from this file cannot be distinguished from an id nobody ever reserved, and
+    a known thing is declared rather than erased (L-199).
+    """
+    pending: list[dict] = []
+    consumed: list[dict] = []
     for f in sorted(ops.glob("RDL_PENDING*.md")) if ops.is_dir() else []:
         t = f.read_text(encoding="utf-8", errors="replace")
         ids = sorted({int(m) for m in re.findall(r"\*\*L-(\d{3})", t)})
-        if ids:
-            pending.append({"file": f.name, "ids": [f"L-{i:03d}" for i in ids]})
+        if not ids:
+            continue
+        out = [f"L-{i:03d}" for i in ids if i not in live]
+        done = [f"L-{i:03d}" for i in ids if i in live]
+        if out:
+            pending.append({"file": f.name, "ids": out})
+        if done:
+            consumed.append({
+                "file": f.name,
+                "ids": done,
+                "note": "already entries in the ledger. The file is residue from an "
+                        "append that succeeded, not outstanding work. Harmless: "
+                        "rdl_append.py skips ids already present before it appends, "
+                        "so no duplicate id can be created from this state.",
+            })
+    return pending, consumed
+
+
+def build_state() -> dict:
+    ops = ROOT / "ops"
+    decisions = sorted(f.name for f in ops.glob("D-1*.md")) if ops.is_dir() else []
+    pending, consumed = pending_facts(ops, live_lesson_ids())
     return {
         "_doc": "Measured state of the ecosystem. Every session reads this before "
                 "asserting anything about the ecosystem. Generated, never hand "
@@ -194,6 +247,7 @@ def build_state() -> dict:
         "decision_documents_present": decisions,
         "promotion_policy_signed": (ops / "G-07_PROMOTION_POLICY_SIGNED.json").exists(),
         "rdl_pending_append": pending,
+        "rdl_pending_consumed": consumed,
         "hard_constraints": [
             "No agent runs ANY git command from the zero-trust analysis mount, "
             "read-only included. status, add and diff each take .git/index.lock "
@@ -247,10 +301,18 @@ def _strip_volatile(x):
     # bytes, which is the third occurrence of a gate no correct action could
     # satisfy: L-158, L-166, and this. The file still records it; it is a
     # measurement of where the file was generated, not a contract.
+    # `rdl_pending_consumed` joined the set on 2026-08-28 with the same argument
+    # that put `rdl_pending_append` here, and it is stated rather than assumed:
+    # the two repositories hold DIFFERENT pending files by construction, because
+    # the truncation that clears them survives in one checkout and not in the
+    # other. Comparing it would make --check pass in qesis-mcp and fail in
+    # sovereign-infra on a correct tree, which is L-158, L-166 and L-170 reached
+    # a fourth time. It is measured, it stays IN the file, it is not a contract.
     VOLATILE = {
         "generated_utc", "probe", "repository",
         "ledger", "rdl_ladder", "served_vintage",
-        "rdl_pending_append", "decision_documents_present",
+        "rdl_pending_append", "rdl_pending_consumed",
+        "decision_documents_present",
         "promotion_policy_signed",
     }
     if isinstance(x, dict):
@@ -290,6 +352,7 @@ def selftest() -> int:
     import copy as _copy
     import tempfile
     fails: list[str] = []
+    n = 0  # L-201: a sub-suite reports the count it MEASURED, never a literal.
     state, registry = build_state(), build_registry()
     with tempfile.TemporaryDirectory() as d:
         sp, rp = Path(d) / "ECOSYSTEM_STATE.json", Path(d) / "PATH_REGISTRY.json"
@@ -309,6 +372,7 @@ def selftest() -> int:
         rp.write_text(json.dumps(r2), encoding="utf-8")
         if check_files({sp: state, rp: registry}):
             fails.append("volatile-only drift was refused")
+        n += 1
 
         # REFUSE: a canonical path moved.
         r3 = _copy.deepcopy(registry)
@@ -316,6 +380,7 @@ def selftest() -> int:
         rp.write_text(json.dumps(r3), encoding="utf-8")
         if not check_files({rp: registry}):
             fails.append("a moved canonical path was accepted")
+        n += 1
 
         # REFUSE: a hard constraint dropped.
         s3 = _copy.deepcopy(state)
@@ -323,18 +388,78 @@ def selftest() -> int:
         sp.write_text(json.dumps(s3), encoding="utf-8")
         if not check_files({sp: state}):
             fails.append("a dropped hard constraint was accepted")
+        n += 1
 
         # REFUSE: absent and unreadable.
         rp.unlink()
         if not check_files({rp: registry}):
             fails.append("an absent registry was accepted")
+        n += 1
         sp.write_text("{not json", encoding="utf-8")
         if not check_files({sp: state}):
             fails.append("an unreadable state file was accepted")
+        n += 1
+
+    # ------------------------------------------------------------------
+    # pending_facts, the 2026-08-28 repair. An id already in the ledger is
+    # residue; an id that is not is outstanding work. Both halves, or the
+    # split is a coin (V-2).
+    # ------------------------------------------------------------------
+    with tempfile.TemporaryDirectory() as d:
+        ops = Path(d)
+        (ops / "RDL_PENDING_APPEND.md").write_text(
+            "**L-193 \u00b7 a lesson that has already been appended** body\n\n"
+            "**L-902 \u00b7 a lesson that has not** body\n", encoding="utf-8")
+        pend, cons = pending_facts(ops, {193})
+
+        # REFUSE: the exact defect measured on 2026-08-28.
+        if any("L-193" in e["ids"] for e in pend):
+            fails.append("an id already in the ledger was reported as pending")
+        n += 1
+        # ACCEPT: a genuinely unappended id is still reported.
+        if not any("L-902" in e["ids"] for e in pend):
+            fails.append("a genuinely pending id was dropped")
+        n += 1
+        # The consumed half is declared, never silently erased (L-199).
+        if not any("L-193" in e["ids"] for e in cons):
+            fails.append("a consumed id was erased instead of declared")
+        n += 1
+
+        # A file whose every id is live yields zero pending and is not listed.
+        (ops / "RDL_PENDING_APPEND.md").write_text(
+            "**L-193 \u00b7 every id in this file is live** body\n", encoding="utf-8")
+        pend2, cons2 = pending_facts(ops, {193})
+        if pend2:
+            fails.append("a fully consumed file was still reported as pending")
+        n += 1
+        if not cons2:
+            fails.append("a fully consumed file was not declared as consumed")
+        n += 1
+
+        # An empty pending file is neither pending nor consumed. Zero is zero.
+        (ops / "RDL_PENDING_APPEND.md").write_text("", encoding="utf-8")
+        if pending_facts(ops, {193}) != ([], []):
+            fails.append("an empty pending file produced a row")
+        n += 1
+
+    # V-6: the reader is on trial against the system's own accessor, not against
+    # itself. If `_LEDGER_HEADER` ever diverges from the regex the two canonical
+    # ledger writers use, this is where it is caught rather than in production.
+    lf = ledger_facts()
+    if lf.get("status") == "PASS":
+        live = live_lesson_ids()
+        if len(live) != lf.get("entries"):
+            fails.append(f"live_lesson_ids read {len(live)} ids while "
+                         f"verify_ledger_singleton reports {lf.get('entries')}")
+        n += 1
+        if lf.get("max") not in {f"L-{i:03d}" for i in live}:
+            fails.append(f"live_lesson_ids does not carry the accessor's max, {lf.get('max')}")
+        n += 1
 
     for f in fails:
         print(f"SELFTEST FAIL: {f}")
-    print("ECOSYSTEM STATE SELFTEST: " + ("PASSED, 5 fixtures" if not fails else "FAILED"))
+    print(f"ECOSYSTEM STATE SELFTEST: "
+          + (f"PASSED, {n} fixtures" if not fails else f"FAILED, {len(fails)} of {n}"))
     return 1 if fails else 0
 
 

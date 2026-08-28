@@ -1,2104 +1,1608 @@
 {
- "generated_utc": "2026-08-14T16:41:27.785322Z",
+ "generated_utc": "2026-08-28T18:28:29.600255+00:00",
  "generator": "scripts/build_data_map.py",
- "authority": "D-111 change set. Remedy for L-104 and L-105.",
- "why": "A digital twin that cannot locate its own inputs is not a twin. Sessions before this one re-derived file locations by guessing and got them wrong three times in one day. cloud_regions_master.csv is named in lineage.sources and lives in NEITHER repository: it is in the thesis database. cse_percolation.json and emodnet_cse_evidence.json were named in CLAUDE.md item PUB-1 and were never opened. This map is read FIRST.",
- "read_before": "any statement containing the words missing, absent, gap, unrecorded or incomplete",
- "roots": {
-  "qesis-mcp": "/sessions/trusting-brave-fermat/mnt/qesis-mcp",
-  "sovereign-infra": "/sessions/trusting-brave-fermat/mnt/sovereign-infra",
-  "thesis-db": "/sessions/trusting-brave-fermat/mnt/Final Master Thesis"
+ "run": {
+  "reachable_roots": [
+   "qesis-mcp",
+   "thesis-db"
+  ],
+  "unreachable_roots": [
+   "sovereign-infra"
+  ],
+  "plane_note": "This block is the only part of the document that is about this run rather than about the ecosystem. --check ignores it. G-01b."
  },
- "counts": {
-  "files_indexed": 700,
-  "distinct_names": 586,
-  "critical_found": 15,
-  "critical_missing": 0,
-  "unreadable_paths": 0
- },
- "critical_sources": {
-  "chain_spine.jsonl": {
-   "name": "chain_spine.jsonl",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/chain_spine.jsonl",
-     "bytes": 284736,
-     "modified": "2026-08-13",
-     "sha256": "68e2e90bbcb41d598c159fba237d51945e2fdbc28d5c45fb18620d1db327f219"
-    }
-   ]
+ "content": {
+  "authority": "ARCHITECT filesystem mandate 2026-08-14. Remedy for L-104, L-105.",
+  "read_before": "any statement containing the words missing, absent, gap, unrecorded or incomplete",
+  "why": "A digital twin that cannot locate its own inputs is not a twin. Paths here are LOGICAL root plus repository-relative path. An absolute path in this document is a defect, because an absolute path is true on one machine and false on the next.",
+  "roots": {
+   "qesis-mcp": {
+    "role": "served surface, MCP server, index artefact, CI gates, landing page",
+    "signature": "data/qesis_v8.json",
+    "plane": "always reachable, this script lives in it",
+    "indexed_subdirectories": [
+     "data",
+     "ops",
+     "scripts",
+     "api",
+     "public",
+     "eval",
+     "qesis_agents"
+    ],
+    "decoys_declared": [],
+    "reachable": true,
+    "files_indexed": 212,
+    "files": [
+     {
+      "path": "api/__init__.py",
+      "bytes": 0,
+      "volatile": false
+     },
+     {
+      "path": "api/fsqca.py",
+      "bytes": 6590,
+      "volatile": false
+     },
+     {
+      "path": "api/index.py",
+      "bytes": 10546,
+      "volatile": false
+     },
+     {
+      "path": "api/pack/download.ts",
+      "bytes": 3679,
+      "volatile": false
+     },
+     {
+      "path": "api/telemetry.py",
+      "bytes": 1373,
+      "volatile": false
+     },
+     {
+      "path": "data/DATA_MAP.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "data/RELEASES.json",
+      "bytes": 5896,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/cse_percolation.json",
+      "bytes": 103750,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/ember_ese_evidence.json",
+      "bytes": 8017,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/emodnet_cse_evidence.json",
+      "bytes": 11836,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/eti_convergence_evidence.json",
+      "bytes": 2157,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/fidelity_full_sample.json",
+      "bytes": 6707,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/instrument_self_exposure.json",
+      "bytes": 6537,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/odi_capacity_bounds.json",
+      "bytes": 15232,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/u02_restatement.json",
+      "bytes": 929,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/u07_odi_override_export.json",
+      "bytes": 1448,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/v9_1_sdi_scaffold.json",
+      "bytes": 5056,
+      "volatile": false
+     },
+     {
+      "path": "data/axes/v9_sfc_scaffold.json",
+      "bytes": 16713,
+      "volatile": false
+     },
+     {
+      "path": "data/chain_attestation.json",
+      "bytes": 1035,
+      "volatile": false
+     },
+     {
+      "path": "data/chain_spine.jsonl",
+      "bytes": 285870,
+      "volatile": false
+     },
+     {
+      "path": "data/domains.json",
+      "bytes": 5000,
+      "volatile": false
+     },
+     {
+      "path": "data/electricity_yearly_global_EMBER.csv",
+      "bytes": 15593443,
+      "volatile": false
+     },
+     {
+      "path": "data/electricity_yearly_lower_EUROPE_EMBER.csv",
+      "bytes": 4082699,
+      "volatile": false
+     },
+     {
+      "path": "data/ember_electricity_data_methodology.pdf",
+      "bytes": 982710,
+      "volatile": false
+     },
+     {
+      "path": "data/endpoints.json",
+      "bytes": 2753,
+      "volatile": false
+     },
+     {
+      "path": "data/frames_v9_1.json",
+      "bytes": 2190,
+      "volatile": false
+     },
+     {
+      "path": "data/fsqca/equifinality_v85.json",
+      "bytes": 45101,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_graph.json",
+      "bytes": 34165,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_percolation.json",
+      "bytes": 5043,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_v8.0_superseded.json",
+      "bytes": 14829,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_v8.2_superseded.json",
+      "bytes": 70364,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_v8.3_CANDIDATE.json",
+      "bytes": 76220,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_v8.json",
+      "bytes": 129030,
+      "volatile": false
+     },
+     {
+      "path": "data/qesis_v8.json.pre-v8.5.bak",
+      "bytes": 95229,
+      "volatile": false
+     },
+     {
+      "path": "data/sqlite/qesis_ops.sqlite",
+      "bytes": 11706368,
+      "volatile": false
+     },
+     {
+      "path": "data/vintage_lineage.json",
+      "bytes": 10294,
+      "volatile": false
+     },
+     {
+      "path": "eval/evaluation.xml",
+      "bytes": 4962,
+      "volatile": false
+     },
+     {
+      "path": "ops/AUDIT_REPORT.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/BACKLOG_AND_COMPLIANCE.md",
+      "bytes": 785,
+      "volatile": false
+     },
+     {
+      "path": "ops/CI_LAST_FAILURE.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/CLOSEOUT_2026-08-24.md",
+      "bytes": 6022,
+      "volatile": false
+     },
+     {
+      "path": "ops/CLOSE_ISSUES.md",
+      "bytes": 1154,
+      "volatile": false
+     },
+     {
+      "path": "ops/COMMIT_MSG.txt",
+      "bytes": 2929,
+      "volatile": false
+     },
+     {
+      "path": "ops/COMMIT_MSG_2026-08-21.txt",
+      "bytes": 5019,
+      "volatile": false
+     },
+     {
+      "path": "ops/COUNSEL_AUTHORSHIP_COPYRIGHT_AND_SIGNATURE.md",
+      "bytes": 10048,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-103_STATUS.md",
+      "bytes": 8499,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-108_SAU_CSE_PROVENANCE.md",
+      "bytes": 3472,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-110_KG_FSQCA_ASSESSMENT.md",
+      "bytes": 14681,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md",
+      "bytes": 10144,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-112_RDL_TAXONOMY_ADR.md",
+      "bytes": 9008,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-113_CLOUD_RUNTIME_AND_L045.md",
+      "bytes": 12567,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-114_CONCURRENCY_DISCIPLINE.md",
+      "bytes": 3686,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-115_ROUTE_NOT_SIDE_EFFECT.md",
+      "bytes": 5081,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-116_VERDICT_IS_A_PREDICATE.md",
+      "bytes": 4729,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-117_UNATTENDED_MEANS_LANDED.md",
+      "bytes": 6985,
+      "volatile": false
+     },
+     {
+      "path": "ops/D-118_AGENTIC_OBSERVABILITY.md",
+      "bytes": 9202,
+      "volatile": false
+     },
+     {
+      "path": "ops/DAILY_REPORT_2026-08-19.md",
+      "bytes": 6026,
+      "volatile": false
+     },
+     {
+      "path": "ops/DECISION_DOSSIER_2026-08-19.md",
+      "bytes": 11635,
+      "volatile": false
+     },
+     {
+      "path": "ops/DEPLOYMENT_AUDIT_2026-08-02.md",
+      "bytes": 5138,
+      "volatile": false
+     },
+     {
+      "path": "ops/DEPLOY_2026-08-19.ps1",
+      "bytes": 7896,
+      "volatile": false
+     },
+     {
+      "path": "ops/DISPATCH_2026-08-28_ARCHITECT_INSTRUCTION_SURFACE.md",
+      "bytes": 9456,
+      "volatile": false
+     },
+     {
+      "path": "ops/DISPATCH_BOARD_2026-08-14.md",
+      "bytes": 19411,
+      "volatile": false
+     },
+     {
+      "path": "ops/DORA_ROI_BASELINE.md",
+      "bytes": 1184,
+      "volatile": false
+     },
+     {
+      "path": "ops/ECOSYSTEM_STATE.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/EDA_VS_BATCH_BENCHMARK.json",
+      "bytes": 3362,
+      "volatile": false
+     },
+     {
+      "path": "ops/ENDPOINT_DECLARATION_PROPAGATION.md",
+      "bytes": 5879,
+      "volatile": false
+     },
+     {
+      "path": "ops/EOD_2026-08-05.md",
+      "bytes": 3153,
+      "volatile": false
+     },
+     {
+      "path": "ops/EVIDENCE_LATEST.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/FILESYSTEM_REORG_PLAN_2026-08-28.md",
+      "bytes": 12618,
+      "volatile": false
+     },
+     {
+      "path": "ops/FILESYSTEM_STANDARD.md",
+      "bytes": 13539,
+      "volatile": false
+     },
+     {
+      "path": "ops/FIX_CI_2026-08-19.ps1",
+      "bytes": 5494,
+      "volatile": false
+     },
+     {
+      "path": "ops/FIX_PR68.ps1",
+      "bytes": 6623,
+      "volatile": false
+     },
+     {
+      "path": "ops/G-07_AUTONOMOUS_REMEDIATION.md",
+      "bytes": 10835,
+      "volatile": false
+     },
+     {
+      "path": "ops/G-07_PROMOTION_POLICY_SIGNED.json",
+      "bytes": 3650,
+      "volatile": false
+     },
+     {
+      "path": "ops/G-08_ADVERSARIAL_AGENT_PROTOCOL.md",
+      "bytes": 4820,
+      "volatile": false
+     },
+     {
+      "path": "ops/Governance_AI_Alignment_Blueprint.md",
+      "bytes": 1141,
+      "volatile": false
+     },
+     {
+      "path": "ops/HANDOFF_2026-08-09_LAND_THE_LOCK.md",
+      "bytes": 7230,
+      "volatile": false
+     },
+     {
+      "path": "ops/HANDOFF_2026-08-15_LAND_AND_VERIFY.md",
+      "bytes": 9004,
+      "volatile": false
+     },
+     {
+      "path": "ops/HANDOVER_2026-08-24.md",
+      "bytes": 10466,
+      "volatile": false
+     },
+     {
+      "path": "ops/HANDOVER_2026-08-26.md",
+      "bytes": 14210,
+      "volatile": false
+     },
+     {
+      "path": "ops/KILL_SWITCH.json",
+      "bytes": 1291,
+      "volatile": false
+     },
+     {
+      "path": "ops/LAND.md",
+      "bytes": 1555,
+      "volatile": false
+     },
+     {
+      "path": "ops/LAND_2026-08-19.ps1",
+      "bytes": 5599,
+      "volatile": false
+     },
+     {
+      "path": "ops/LAND_2026-08-21.md",
+      "bytes": 4799,
+      "volatile": false
+     },
+     {
+      "path": "ops/LEDGER_GAPS.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/LESSONS_LEDGER.md",
+      "bytes": 230673,
+      "volatile": false
+     },
+     {
+      "path": "ops/MILESTONE_v8.6.md",
+      "bytes": 6692,
+      "volatile": false
+     },
+     {
+      "path": "ops/MODELING_LAYERS_MDA.md",
+      "bytes": 10950,
+      "volatile": false
+     },
+     {
+      "path": "ops/OFFICIAL_STATUS_REPORT_2026-08-11.md",
+      "bytes": 6827,
+      "volatile": false
+     },
+     {
+      "path": "ops/PATH_REGISTRY.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/PRIOR_ART_ETI_2026.md",
+      "bytes": 7532,
+      "volatile": false
+     },
+     {
+      "path": "ops/PR_BODY_2026-08-15.md",
+      "bytes": 5045,
+      "volatile": false
+     },
+     {
+      "path": "ops/PUSH_2026-08-15.ps1",
+      "bytes": 8088,
+      "volatile": false
+     },
+     {
+      "path": "ops/RDL Strategy for agents and AI Governability.md",
+      "bytes": 2296,
+      "volatile": false
+     },
+     {
+      "path": "ops/RDL_BASELINE.json",
+      "bytes": 2955,
+      "volatile": false
+     },
+     {
+      "path": "ops/RDL_LADDER.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/RDL_PENDING_2026-08-24_scheduled_sweep.md",
+      "bytes": 0,
+      "volatile": false
+     },
+     {
+      "path": "ops/RDL_PENDING_APPEND.md",
+      "bytes": 9387,
+      "volatile": false
+     },
+     {
+      "path": "ops/RD_INTAKE_ASSESSMENT_2026-08-21.md",
+      "bytes": 25653,
+      "volatile": false
+     },
+     {
+      "path": "ops/RECOVER_AND_LAND_2026-08-15.ps1",
+      "bytes": 8344,
+      "volatile": false
+     },
+     {
+      "path": "ops/RESUME_REBASE_2026-08-15.ps1",
+      "bytes": 6008,
+      "volatile": false
+     },
+     {
+      "path": "ops/ROOTCAUSE_2026-08-19.ps1",
+      "bytes": 7778,
+      "volatile": false
+     },
+     {
+      "path": "ops/SCOUT_INTAKE_2026-08-15_UN_COMTRADE_SDI.md",
+      "bytes": 6414,
+      "volatile": false
+     },
+     {
+      "path": "ops/SELFHEAL_LATEST.json",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/SESSION_2026-08-26_STIR_DIRECTIVE.md",
+      "bytes": 13970,
+      "volatile": false
+     },
+     {
+      "path": "ops/SESSION_2026-08-27_HERALD_TRANSLATION_LAYER.md",
+      "bytes": 19823,
+      "volatile": false
+     },
+     {
+      "path": "ops/SESSION_2026-08-27b_FOREIGN_CHECKS.md",
+      "bytes": 13715,
+      "volatile": false
+     },
+     {
+      "path": "ops/SESSION_2026-08-27c_PUBLIC_DOMAIN_LIVE.md",
+      "bytes": 5511,
+      "volatile": false
+     },
+     {
+      "path": "ops/SESSION_REPORT_2026-08-08.md",
+      "bytes": 8052,
+      "volatile": false
+     },
+     {
+      "path": "ops/SOURCE_ACQUISITION_REGISTER.md",
+      "bytes": 22251,
+      "volatile": false
+     },
+     {
+      "path": "ops/SOURCE_PRECEDENCE.json",
+      "bytes": 9376,
+      "volatile": false
+     },
+     {
+      "path": "ops/SPONSORSHIP_REGISTER.md",
+      "bytes": 5982,
+      "volatile": false
+     },
+     {
+      "path": "ops/STATUS_REPORT_STEP7_2026-08-09.md",
+      "bytes": 2225,
+      "volatile": false
+     },
+     {
+      "path": "ops/SYNTHESIS_PHD_PRIVATE_MARKET.md",
+      "bytes": 1140,
+      "volatile": false
+     },
+     {
+      "path": "ops/V86_INTEGRITY_PATCH_VERIFICATION.md",
+      "bytes": 7173,
+      "volatile": false
+     },
+     {
+      "path": "ops/V9.0_PATH_AND_ROUTING.md",
+      "bytes": 11193,
+      "volatile": false
+     },
+     {
+      "path": "ops/VINTAGE_LINEAGE.md",
+      "bytes": 536,
+      "volatile": false
+     },
+     {
+      "path": "ops/VISUALISATION_SPEC.md",
+      "bytes": 10079,
+      "volatile": false
+     },
+     {
+      "path": "ops/dag_execution_latest.log",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/issue_replies/close_66_67.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/prototypes/V1_V2_V6_landing_redesign.html",
+      "bytes": 190928,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/V1_V2_V6_landing_v2.html",
+      "bytes": 209650,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/V1_effective_weights.html",
+      "bytes": 13131,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/build_landing_redesign.py",
+      "bytes": 38206,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/build_landing_v2.py",
+      "bytes": 53558,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/verify_landing_contrast.py",
+      "bytes": 2128,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/verify_landing_interaction.py",
+      "bytes": 3005,
+      "volatile": false
+     },
+     {
+      "path": "ops/prototypes/verify_landing_payload.py",
+      "bytes": 4908,
+      "volatile": false
+     },
+     {
+      "path": "ops/reports/2026-08-27.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/reports/ARCHITECT_FILESYSTEM_2026-08-28.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "ops/reports/_smoketest.md",
+      "bytes": null,
+      "volatile": true
+     },
+     {
+      "path": "public/blueprint.html",
+      "bytes": 82582,
+      "volatile": false
+     },
+     {
+      "path": "public/index.html",
+      "bytes": 15167,
+      "volatile": false
+     },
+     {
+      "path": "qesis_agents/orchestration_gate.py",
+      "bytes": 8233,
+      "volatile": false
+     },
+     {
+      "path": "scripts/_blueprint_selftest.html",
+      "bytes": 20322,
+      "volatile": false
+     },
+     {
+      "path": "scripts/_walk.py",
+      "bytes": 3058,
+      "volatile": false
+     },
+     {
+      "path": "scripts/append_chain_entry.py",
+      "bytes": 4590,
+      "volatile": false
+     },
+     {
+      "path": "scripts/apply_20260815_patchset.py",
+      "bytes": 14847,
+      "volatile": false
+     },
+     {
+      "path": "scripts/apply_operator_decisions.py",
+      "bytes": 8132,
+      "volatile": false
+     },
+     {
+      "path": "scripts/audit_ecosystem.py",
+      "bytes": 28076,
+      "volatile": false
+     },
+     {
+      "path": "scripts/bench_eda_vs_batch.py",
+      "bytes": 11294,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_blueprint.py",
+      "bytes": 66022,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_data_map.py",
+      "bytes": 27183,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_ecosystem_state.py",
+      "bytes": 22282,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_eval.py",
+      "bytes": 6137,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_graph.py",
+      "bytes": 17910,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_index.py",
+      "bytes": 28690,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_landing.py",
+      "bytes": 14794,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_ops_report.py",
+      "bytes": 10694,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_percolation_block.py",
+      "bytes": 9476,
+      "volatile": false
+     },
+     {
+      "path": "scripts/build_v8_4.py",
+      "bytes": 38121,
+      "volatile": false
+     },
+     {
+      "path": "scripts/bump_vintage.py",
+      "bytes": 11120,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ci_feedback.py",
+      "bytes": 6728,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ci_local.py",
+      "bytes": 9458,
+      "volatile": false
+     },
+     {
+      "path": "scripts/claim_gate.py",
+      "bytes": 5196,
+      "volatile": false
+     },
+     {
+      "path": "scripts/compute_fidelity.py",
+      "bytes": 9319,
+      "volatile": false
+     },
+     {
+      "path": "scripts/compute_odi_bounds.py",
+      "bytes": 9274,
+      "volatile": false
+     },
+     {
+      "path": "scripts/coupling.py",
+      "bytes": 7054,
+      "volatile": false
+     },
+     {
+      "path": "scripts/dag_engine.py",
+      "bytes": 821,
+      "volatile": false
+     },
+     {
+      "path": "scripts/eti_extract.py",
+      "bytes": 8415,
+      "volatile": false
+     },
+     {
+      "path": "scripts/fsqca_equifinality.py",
+      "bytes": 18566,
+      "volatile": false
+     },
+     {
+      "path": "scripts/fsqca_runner.py",
+      "bytes": 334,
+      "volatile": false
+     },
+     {
+      "path": "scripts/fsqca_variant_probe.py",
+      "bytes": 8982,
+      "volatile": false
+     },
+     {
+      "path": "scripts/gh_ops.py",
+      "bytes": 39480,
+      "volatile": false
+     },
+     {
+      "path": "scripts/git_unlock.py",
+      "bytes": 5141,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ingest_ember.py",
+      "bytes": 5729,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ingest_emodnet.py",
+      "bytes": 8729,
+      "volatile": false
+     },
+     {
+      "path": "scripts/kill_switch.py",
+      "bytes": 4056,
+      "volatile": false
+     },
+     {
+      "path": "scripts/landing_base.py",
+      "bytes": 7789,
+      "volatile": false
+     },
+     {
+      "path": "scripts/landing_manifest.py",
+      "bytes": 6865,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ledger_sync.py",
+      "bytes": 7783,
+      "volatile": false
+     },
+     {
+      "path": "scripts/merge_pr.py",
+      "bytes": 8301,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ops/Complete-V91-Rebase.ps1",
+      "bytes": 7695,
+      "volatile": false
+     },
+     {
+      "path": "scripts/ops/Repair-GitHub.ps1",
+      "bytes": 9935,
+      "volatile": false
+     },
+     {
+      "path": "scripts/percolation_cse.py",
+      "bytes": 12743,
+      "volatile": false
+     },
+     {
+      "path": "scripts/preflight.py",
+      "bytes": 5472,
+      "volatile": false
+     },
+     {
+      "path": "scripts/probe_remote.py",
+      "bytes": 5920,
+      "volatile": false
+     },
+     {
+      "path": "scripts/prove_axis_sfc_contract.py",
+      "bytes": 5521,
+      "volatile": false
+     },
+     {
+      "path": "scripts/prove_release_gate.py",
+      "bytes": 5004,
+      "volatile": false
+     },
+     {
+      "path": "scripts/rdl.py",
+      "bytes": 25861,
+      "volatile": false
+     },
+     {
+      "path": "scripts/rdl_append.py",
+      "bytes": 8500,
+      "volatile": false
+     },
+     {
+      "path": "scripts/retrieval_manifest.json",
+      "bytes": 12759,
+      "volatile": false
+     },
+     {
+      "path": "scripts/run_fsqca.R",
+      "bytes": 2377,
+      "volatile": false
+     },
+     {
+      "path": "scripts/scout_sfc_intake.py",
+      "bytes": 9192,
+      "volatile": false
+     },
+     {
+      "path": "scripts/self_exposure.py",
+      "bytes": 13692,
+      "volatile": false
+     },
+     {
+      "path": "scripts/selfheal.py",
+      "bytes": 40557,
+      "volatile": false
+     },
+     {
+      "path": "scripts/shapelite.py",
+      "bytes": 4380,
+      "volatile": false
+     },
+     {
+      "path": "scripts/smoke_server.py",
+      "bytes": 4243,
+      "volatile": false
+     },
+     {
+      "path": "scripts/test_gate.py",
+      "bytes": 57699,
+      "volatile": false
+     },
+     {
+      "path": "scripts/test_http.py",
+      "bytes": 13050,
+      "volatile": false
+     },
+     {
+      "path": "scripts/test_routes.py",
+      "bytes": 5687,
+      "volatile": false
+     },
+     {
+      "path": "scripts/vercel_gate.py",
+      "bytes": 5714,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_action_pinning.py",
+      "bytes": 2764,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_axis_sfc.py",
+      "bytes": 8127,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_chain.py",
+      "bytes": 9944,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_dashboard.py",
+      "bytes": 5623,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_domains.py",
+      "bytes": 7384,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_endpoints.py",
+      "bytes": 5296,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_eti_convergence.py",
+      "bytes": 10382,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_index.py",
+      "bytes": 21260,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_lander_contract.py",
+      "bytes": 8596,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_ledger_singleton.py",
+      "bytes": 17768,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_no_plaintext_secrets.py",
+      "bytes": 7961,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_production.py",
+      "bytes": 4799,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_public_domain.py",
+      "bytes": 14423,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_reading_contract.py",
+      "bytes": 8273,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_release.py",
+      "bytes": 2843,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_retrieval_corpus.py",
+      "bytes": 5507,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_served_contract.py",
+      "bytes": 5738,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_static_routes.py",
+      "bytes": 8107,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_vintage_pairing.py",
+      "bytes": 9699,
+      "volatile": false
+     },
+     {
+      "path": "scripts/verify_workflow_contract.py",
+      "bytes": 22823,
+      "volatile": false
+     }
+    ]
+   },
+   "sovereign-infra": {
+    "role": "evidence plane, ops ledgers, agent runtime, governance record",
+    "signature": "ops/GOVERNANCE.md",
+    "plane": "desktop and paired checkout only, absent from a single-repo CI job",
+    "indexed_subdirectories": [
+     "ops",
+     "agents",
+     "design",
+     "data"
+    ],
+    "decoys_declared": [
+     "C:\\Users\\Lenovo\\sovereign-infra"
+    ],
+    "reachable": false,
+    "unreachable_cause": "no candidate carried the signature ops/GOVERNANCE.md; 3 candidate(s) probed",
+    "files": null,
+    "files_indexed": null
+   },
+   "thesis-db": {
+    "role": "the source CSV exports and the thesis governance record",
+    "signature": "_DATABASE/csv_exports",
+    "plane": "desktop only, never reachable from a GitHub runner",
+    "indexed_subdirectories": [
+     "_DATABASE/csv_exports",
+     "_GOVERNANCE"
+    ],
+    "decoys_declared": [],
+    "reachable": true,
+    "files_indexed": 57,
+    "files": [
+     {
+      "path": "_DATABASE/csv_exports/_refresh_schedule.csv",
+      "bytes": 810,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/_sources.csv",
+      "bytes": 11308,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/aqueduct40_country_rankings.csv",
+      "bytes": 174379,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/cloud_regions_import.csv",
+      "bytes": 2049,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/cloud_regions_master.csv",
+      "bytes": 114774,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/cse_country_metrics.csv",
+      "bytes": 720,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/cse_landings_inferred.csv",
+      "bytes": 5755,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/documentos_sem_licenca.csv",
+      "bytes": 9863,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/europarl_plenary_docs.csv",
+      "bytes": 9369,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/eurostat_industrial_electricity.csv",
+      "bytes": 9124,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/hyperscale_operators.csv",
+      "bytes": 1968,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/legacy_fsqca_solution_v66.csv",
+      "bytes": 2179,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_aqueduct_4_0_batch_35.csv",
+      "bytes": 8689,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_bau_assumptions.csv",
+      "bytes": 3341,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_cable_registry_343.csv",
+      "bytes": 47317,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_corrections_log_v7_1.csv",
+      "bytes": 3266,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_cover.csv",
+      "bytes": 4725,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_csove_master_data.csv",
+      "bytes": 6147,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_csove_methodology.csv",
+      "bytes": 3290,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_csove_rankings.csv",
+      "bytes": 5399,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_energy_2050_projections.csv",
+      "bytes": 8797,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_esc_compliance.csv",
+      "bytes": 3335,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_esc_srf_framework.csv",
+      "bytes": 6656,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_ese_v7_telemetry.csv",
+      "bytes": 4103,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_ese_v8_component_audit.csv",
+      "bytes": 2193,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_fsqca_truth_tables.csv",
+      "bytes": 23511,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_fsqca_v7_1_ese_tests.csv",
+      "bytes": 1927,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_key_eff_sovereignty_35.csv",
+      "bytes": 9125,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_landing_stations_city_node.csv",
+      "bytes": 5490,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_lindblad_d_rho_spec.csv",
+      "bytes": 2909,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_macro_template_lindblad.csv",
+      "bytes": 6654,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_oecd_tiva_2025.csv",
+      "bytes": 4135,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_outcome_calibration.csv",
+      "bytes": 876,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_physical_constraints_matrix.csv",
+      "bytes": 2855,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_qct_v7_1_matrix_with_ese.csv",
+      "bytes": 1520,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_qesis_country_scores.csv",
+      "bytes": 8516,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_qesis_temporal.csv",
+      "bytes": 3268,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_rare_earths_ree.csv",
+      "bytes": 7428,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_telegeography_corridors_2025.csv",
+      "bytes": 10560,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_theoretical_memo.csv",
+      "bytes": 27413,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_thesis_dphil_gaps.csv",
+      "bytes": 6295,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_timeevolution_bau.csv",
+      "bytes": 8099,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_v7_2_full_coverage_results.csv",
+      "bytes": 2351,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_v8_0_canonical_declaration.csv",
+      "bytes": 1496,
+      "volatile": false
+     },
+     {
+      "path": "_DATABASE/csv_exports/v8_viva_prep.csv",
+      "bytes": 1437,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/AI_POLICY.md",
+      "bytes": 3392,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/ASSET_REGISTER.csv",
+      "bytes": 50533,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/AUDIT_ASSESSMENT_2026-07-27.md",
+      "bytes": 4059,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/CLEANUP_PLAN.ps1",
+      "bytes": 4507,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/DECISION_LOG.md",
+      "bytes": 83223,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/DUPLICATES_LOG.csv",
+      "bytes": 23406,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/INCIDENT_PROCEDURE.md",
+      "bytes": 1858,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/LIVE_DATA_FEASIBILITY_2026-07-27.md",
+      "bytes": 4838,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/PROVENANCE_MANIFEST.csv",
+      "bytes": 251147,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/RISK_REGISTER.md",
+      "bytes": 3648,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/ROADMAP_MCP_AGENTS.md",
+      "bytes": 6033,
+      "volatile": false
+     },
+     {
+      "path": "_GOVERNANCE/incidents/INC-20260731-01.md",
+      "bytes": 3079,
+      "volatile": false
+     }
+    ]
+   }
   },
-  "domains.json": {
-   "name": "domains.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/domains.json",
-     "bytes": 1999,
-     "modified": "2026-08-13",
-     "sha256": "41204fc706ed98c4517cf28e6a1daa9693e4cb22d3e46ae234457bb4e156a9d5"
-    }
-   ]
+  "critical_sources": {
+   "qesis_v8.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/qesis_v8.json",
+      "bytes": 129030,
+      "sha256": "8009815e4c19132048bf285cf6622cc864e7bc090fc31627b09ce0145463647d"
+     }
+    ],
+    "status": "located"
+   },
+   "chain_spine.jsonl": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/chain_spine.jsonl",
+      "bytes": 285870,
+      "sha256": "fcc9a62c56d80056a31496e0b7a245177d51a6d50424fa701724f32376c8c00b"
+     }
+    ],
+    "status": "located"
+   },
+   "chain_attestation.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/chain_attestation.json",
+      "bytes": 1035,
+      "sha256": "ef0de5cdd9d204555b9cbec02f839d6faad6a4aca0d420f066cdae46e74dc8b2"
+     }
+    ],
+    "status": "located"
+   },
+   "domains.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/domains.json",
+      "bytes": 5000,
+      "sha256": "937dc7f4386624934a7f6c85514c043400d2b26d9e13b94ba50a375d111b3d3a"
+     }
+    ],
+    "status": "located"
+   },
+   "vintage_lineage.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/vintage_lineage.json",
+      "bytes": 10294,
+      "sha256": "56f06d67d4a1d2f59e017777295d414de125e9f6f7ff98dcdadc53a5dc470a8d"
+     }
+    ],
+    "status": "located"
+   },
+   "endpoints.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/endpoints.json",
+      "bytes": 2753,
+      "sha256": "b0519d81c393b927a45a89bac6316b3f2fc6d15e6087939556c3d85d54eac892"
+     }
+    ],
+    "status": "located"
+   },
+   "cse_percolation.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/axes/cse_percolation.json",
+      "bytes": 103750,
+      "sha256": "159d5c6a143a9b9efee4daf1338e131cbe29f2d587cc8d760822195bf23a81e1"
+     }
+    ],
+    "status": "located"
+   },
+   "ember_ese_evidence.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/axes/ember_ese_evidence.json",
+      "bytes": 8017,
+      "sha256": "e332efbca13c0402a119e503b3fec343142d4ee14e71f8523e5079befac38545"
+     }
+    ],
+    "status": "located"
+   },
+   "emodnet_cse_evidence.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/axes/emodnet_cse_evidence.json",
+      "bytes": 11836,
+      "sha256": "7c6e94c6c7c038d973f73624496efd1a4f9b8726cbc504abbbb88aa09bc12ec5"
+     }
+    ],
+    "status": "located"
+   },
+   "v9_sfc_scaffold.json": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "data/axes/v9_sfc_scaffold.json",
+      "bytes": 16713,
+      "sha256": "16679785a55e65078092e94f3bf25de8fcb46908ebcc331595bdb94edffaa3b7"
+     }
+    ],
+    "status": "located"
+   },
+   "LESSONS_LEDGER.md": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "ops/LESSONS_LEDGER.md",
+      "bytes": 230673,
+      "sha256": "0b4ca2d6c30bc12ce7e5a35c5f7192e776d8f6a007c6ffe4f6f731b91ec9100e"
+     }
+    ],
+    "status": "located"
+   },
+   "SOURCE_ACQUISITION_REGISTER.md": {
+    "locations": [
+     {
+      "root": "qesis-mcp",
+      "path": "ops/SOURCE_ACQUISITION_REGISTER.md",
+      "bytes": 22251,
+      "sha256": "5bf1b7a3724a440d61af5ba658a00866ac9ff4c6e04a451c02a917decee7ba1c"
+     }
+    ],
+    "status": "located"
+   },
+   "GOVERNANCE.md": {
+    "locations": [],
+    "status": "unreachable_root"
+   },
+   "ARTICLE_14_REGISTER.md": {
+    "locations": [],
+    "status": "unreachable_root"
+   },
+   "tokens.css": {
+    "locations": [],
+    "status": "unreachable_root"
+   },
+   "cloud_regions_master.csv": {
+    "locations": [
+     {
+      "root": "thesis-db",
+      "path": "_DATABASE/csv_exports/cloud_regions_master.csv",
+      "bytes": 114774,
+      "sha256": "44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423"
+     }
+    ],
+    "status": "located"
+   },
+   "v8_qesis_country_scores.csv": {
+    "locations": [
+     {
+      "root": "thesis-db",
+      "path": "_DATABASE/csv_exports/v8_qesis_country_scores.csv",
+      "bytes": 8516,
+      "sha256": "022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121"
+     }
+    ],
+    "status": "located"
+   }
   },
-  "qesis_v8.json": {
-   "name": "qesis_v8.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/qesis_v8.json",
-     "bytes": 129030,
-     "modified": "2026-08-13",
-     "sha256": "8009815e4c19132048bf285cf6622cc864e7bc090fc31627b09ce0145463647d"
-    }
-   ]
+  "index_cited_sources": {
+   "v8_qesis_country_scores.csv": {
+    "declared_sha256": "022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121",
+    "declared_bytes": 8516,
+    "located": true,
+    "reproduces": true,
+    "note": null
+   },
+   "cloud_regions_master.csv": {
+    "declared_sha256": "44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423",
+    "declared_bytes": 114774,
+    "located": true,
+    "reproduces": true,
+    "note": null
+   }
   },
-  "vintage_lineage.json": {
-   "name": "vintage_lineage.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/vintage_lineage.json",
-     "bytes": 10554,
-     "modified": "2026-08-14",
-     "sha256": "1a3549fb4e654dd7f5072d932e680ed013606bf071d25bb79c8b1b5f08103ed6"
-    },
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/ops/vintage_lineage.json",
-     "bytes": 9045,
-     "modified": "2026-08-13",
-     "sha256": "4ddcfd30b1f64a0d4d3852c5d09b703000e9377a5dc02989a8480bf44851c1df"
-    }
-   ]
-  },
-  "cse_percolation.json": {
-   "name": "cse_percolation.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/axes/cse_percolation.json",
-     "bytes": 103750,
-     "modified": "2026-08-13",
-     "sha256": "159d5c6a143a9b9efee4daf1338e131cbe29f2d587cc8d760822195bf23a81e1"
-    }
-   ]
-  },
-  "ember_ese_evidence.json": {
-   "name": "ember_ese_evidence.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/axes/ember_ese_evidence.json",
-     "bytes": 8017,
-     "modified": "2026-08-13",
-     "sha256": "e332efbca13c0402a119e503b3fec343142d4ee14e71f8523e5079befac38545"
-    }
-   ]
-  },
-  "emodnet_cse_evidence.json": {
-   "name": "emodnet_cse_evidence.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/axes/emodnet_cse_evidence.json",
-     "bytes": 11165,
-     "modified": "2026-08-13",
-     "sha256": "ed239a2c1cbb005c6d47757fbfe438f7c95616729b2e3befd1769b3f7417965f"
-    }
-   ]
-  },
-  "v9_sfc_scaffold.json": {
-   "name": "v9_sfc_scaffold.json",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/data/axes/v9_sfc_scaffold.json",
-     "bytes": 16713,
-     "modified": "2026-08-14",
-     "sha256": "16679785a55e65078092e94f3bf25de8fcb46908ebcc331595bdb94edffaa3b7"
-    }
-   ]
-  },
-  "LESSONS_LEDGER.md": {
-   "name": "LESSONS_LEDGER.md",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/ops/LESSONS_LEDGER.md",
-     "bytes": 1345,
-     "modified": "2026-08-13",
-     "sha256": "1d640a47e6b5b805984102145efb4cd52816b1517cd3d9899ebd50c8b416d7bf"
-    },
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/ops/LESSONS_LEDGER.md",
-     "bytes": 86833,
-     "modified": "2026-08-14",
-     "sha256": "6eb964aacd53ae0962ba76f7a463aaad064a63ecaae8573ade0a33e1323ea029"
-    },
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/var/backups/2026-07-30/LESSONS_LEDGER.md",
-     "bytes": 31551,
-     "modified": "2026-08-12",
-     "sha256": "e510953650722553fd828687f5e740a78074b5661f46a508d441cb0c7eae0ff6"
-    }
-   ]
-  },
-  "SOURCE_ACQUISITION_REGISTER.md": {
-   "name": "SOURCE_ACQUISITION_REGISTER.md",
-   "locations": [
-    {
-     "repo": "qesis-mcp",
-     "path": "qesis-mcp/ops/SOURCE_ACQUISITION_REGISTER.md",
-     "bytes": 7579,
-     "modified": "2026-08-14",
-     "sha256": "04613b456a29766a6bb4be0e0d95f509c2052b7618b7f8a8058cbc5a4b5481cb"
-    },
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/ops/SOURCE_ACQUISITION_REGISTER.md",
-     "bytes": 7579,
-     "modified": "2026-08-14",
-     "sha256": "04613b456a29766a6bb4be0e0d95f509c2052b7618b7f8a8058cbc5a4b5481cb"
-    }
-   ]
-  },
-  "tokens.css": {
-   "name": "tokens.css",
-   "locations": [
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/design/tokens.css",
-     "bytes": 6098,
-     "modified": "2026-07-28",
-     "sha256": "b94cc910d8e1bf8d290b7892d4fb875c9795659c777169441619664564d7ddd9"
-    }
-   ]
-  },
-  "ARTICLE_14_REGISTER.md": {
-   "name": "ARTICLE_14_REGISTER.md",
-   "locations": [
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/ops/ARTICLE_14_REGISTER.md",
-     "bytes": 7844,
-     "modified": "2026-08-12",
-     "sha256": "564922c96b5706d2dff74b1131b9af644ca103cdfd054b84b2205140eba963b2"
-    }
-   ]
-  },
-  "GOVERNANCE.md": {
-   "name": "GOVERNANCE.md",
-   "locations": [
-    {
-     "repo": "sovereign-infra",
-     "path": "sovereign-infra/ops/GOVERNANCE.md",
-     "bytes": 19467,
-     "modified": "2026-08-13",
-     "sha256": "b984005ae2c7416955b0200b52575b8b71dd25a2934657dbfcc181907622289e"
-    }
-   ]
-  },
-  "cloud_regions_master.csv": {
-   "name": "cloud_regions_master.csv",
-   "locations": [
-    {
-     "repo": "thesis-db",
-     "path": "Final Master Thesis/_DATABASE/csv_exports/cloud_regions_master.csv",
-     "bytes": 114774,
-     "modified": "2026-07-27",
-     "sha256": "44d203ae4322b829f7a13e00abc5c722d87b008ffd9fd437d8b7b5cc54a8a423"
-    }
-   ]
-  },
-  "v8_qesis_country_scores.csv": {
-   "name": "v8_qesis_country_scores.csv",
-   "locations": [
-    {
-     "repo": "thesis-db",
-     "path": "Final Master Thesis/_DATABASE/csv_exports/v8_qesis_country_scores.csv",
-     "bytes": 8516,
-     "modified": "2026-07-27",
-     "sha256": "022e4f0bfbb5e064f49d6203107bdf6729b718854ec26fa3c648a68eb518a121"
-    }
-   ]
+  "counts": {
+   "roots_declared": 3,
+   "roots_reachable": 2,
+   "files_indexed": 269,
+   "critical_declared": 17,
+   "critical_located": 14
   }
- },
- "critical_missing": [],
- "index": {
-  ".mcp.json": [
-   "qesis-mcp/.mcp.json",
-   "sovereign-infra/.mcp.json"
-  ],
-  "10m_culturalne_10m_populated_places.pdf": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/10m_culturalne_10m_populated_places.pdf"
-  ],
-  "20250701_emodnethumanactivities_q22025_lf.xlsx": [
-   "Final Master Thesis/20250701_emodnethumanactivities_q22025_lf.xlsx"
-  ],
-  "2026-07-28.md": [
-   "sovereign-infra/ops/reports/2026-07-28.md"
-  ],
-  "2026-07-29.md": [
-   "sovereign-infra/ops/reports/2026-07-29.md"
-  ],
-  "2026-07-30.md": [
-   "sovereign-infra/ops/reports/2026-07-30.md"
-  ],
-  "2026-07-31.md": [
-   "sovereign-infra/ops/reports/2026-07-31.md"
-  ],
-  "2026-08-01.md": [
-   "sovereign-infra/ops/reports/2026-08-01.md"
-  ],
-  "2026-08-01_D-103_fsqca_rerun.md": [
-   "sovereign-infra/ops/analysis/2026-08-01_D-103_fsqca_rerun.md"
-  ],
-  "2026-08-02.md": [
-   "sovereign-infra/ops/reports/2026-08-02.md"
-  ],
-  "2026-08-03.md": [
-   "sovereign-infra/ops/reports/2026-08-03.md"
-  ],
-  "2026-08-13.md": [
-   "sovereign-infra/ops/reports/2026-08-13.md"
-  ],
-  "2026-08-14.md": [
-   "sovereign-infra/ops/reports/2026-08-14.md"
-  ],
-  "7-digital-industry-and-space_horizon-2026-2027_en.pdf": [
-   "Final Master Thesis/7-digital-industry-and-space_horizon-2026-2027_en.pdf"
-  ],
-  "7eyp7o9i35afqvpvvh5gujt8w.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/7eyp7o9i35afqvpvvh5gujt8w.pdf"
-  ],
-  "9781464822049.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/9781464822049.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/9781464822049.pdf"
-  ],
-  "ABS+Cloud+Computing+Implementation+Guide+2.0+-+Workbook.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/ABS+Cloud+Computing+Implementation+Guide+2.0+-+Workbook.pdf"
-  ],
-  "ACCEPTANCE_2026-07-28.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-07-28.json"
-  ],
-  "ACCEPTANCE_2026-07-29.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-07-29.json"
-  ],
-  "ACCEPTANCE_2026-07-30.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-07-30.json"
-  ],
-  "ACCEPTANCE_2026-07-31.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-07-31.json"
-  ],
-  "ACCEPTANCE_2026-08-01.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-08-01.json"
-  ],
-  "ACCEPTANCE_2026-08-13.json": [
-   "sovereign-infra/ops/reports/ACCEPTANCE_2026-08-13.json"
-  ],
-  "AGENTIC AI_Hybrid AI Ecosystem Compliance Strategy.pdf": [
-   "sovereign-infra/_QUARANTINE/2026-07-28/AGENTIC AI_Hybrid AI Ecosystem Compliance Strategy.pdf"
-  ],
-  "AGENTIC_ECOSYSTEM_REPORT_2026-07-27.md": [
-   "sovereign-infra/ops/AGENTIC_ECOSYSTEM_REPORT_2026-07-27.md"
-  ],
-  "AGENTS.md": [
-   "qesis-mcp/my-agent/AGENTS.md"
-  ],
-  "AGENT_ACCEPTANCE_TESTS.md": [
-   "sovereign-infra/ops/AGENT_ACCEPTANCE_TESTS.md"
-  ],
-  "AI Project Management.pdf": [
-   "qesis-mcp/Digital Twin R&D/AI Project Management.pdf"
-  ],
-  "AI and Submarine Cables - January 2025 Webinar.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/AI and Submarine Cables - January 2025 Webinar.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/AI and Submarine Cables - January 2025 Webinar.pdf"
-  ],
-  "AI_ARCHITECTURE.md": [
-   "Final Master Thesis/Thesis AI/AI_ARCHITECTURE.md"
-  ],
-  "AI_POLICY.md": [
-   "sovereign-infra/var/backups/2026-07-30/AI_POLICY.md",
-   "Final Master Thesis/_GOVERNANCE/AI_POLICY.md"
-  ],
-  "APA Style 7th Edition.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/APA Style 7th Edition.pdf"
-  ],
-  "APA Style Guide 7th edition.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/APA Style Guide 7th edition.pdf"
-  ],
-  "APA Style, 7th edition -.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/APA Style, 7th edition -.pdf"
-  ],
-  "APIGEE-[SPR-2023] Apigee Edge AWS-GCP BSI C5 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2023] Apigee Edge AWS-GCP BSI C5 Type II..pdf"
-  ],
-  "APIGEE-[SPR-2023] Apigee Edge AWS-GCP PCI-DSS..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2023] Apigee Edge AWS-GCP PCI-DSS..pdf"
-  ],
-  "APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 1..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 1..pdf"
-  ],
-  "APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 2 Type 2..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 2 Type 2..pdf"
-  ],
-  "APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 3..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2023] Apigee Edge AWS-GCP SOC 3..pdf"
-  ],
-  "APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO 27017..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO 27017..pdf"
-  ],
-  "APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO 27018..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO 27018..pdf"
-  ],
-  "APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO27001..pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO27001..pdf",
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO27001..pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/APIGEE-[SPR-2024] Apigee Edge AWS-GCP ISO27001..pdf"
-  ],
-  "APP_SHEET-[SPR-2023] AppSheet SOC 2..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/APP_SHEET-[SPR-2023] AppSheet SOC 2..pdf"
-  ],
-  "ARTICLE_14_REGISTER.md": [
-   "sovereign-infra/ops/ARTICLE_14_REGISTER.md"
-  ],
-  "ASSET_REGISTER.csv": [
-   "sovereign-infra/var/backups/2026-07-30/ASSET_REGISTER.csv",
-   "Final Master Thesis/_GOVERNANCE/ASSET_REGISTER.csv"
-  ],
-  "AUDIT_2026-07-28.md": [
-   "sovereign-infra/ops/AUDIT_2026-07-28.md"
-  ],
-  "AUDIT_2026-07-28_FULL.md": [
-   "sovereign-infra/ops/AUDIT_2026-07-28_FULL.md"
-  ],
-  "AUDIT_ASSESSMENT_2026-07-27.md": [
-   "Final Master Thesis/_GOVERNANCE/AUDIT_ASSESSMENT_2026-07-27.md"
-  ],
-  "AUTHORS.md": [
-   "qesis-mcp/AUTHORS.md"
-  ],
-  "AWS Artifact - Welcome.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS Artifact - Welcome.pdf"
-  ],
-  "AWS CloudHSM - User Guide.pdf": [
-   "Final Master Thesis/AWS CloudHSM - User Guide.pdf"
-  ],
-  "AWS Cost Management - User Guide.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS Cost Management - User Guide.pdf"
-  ],
-  "AWS General Reference - Reference guide.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/AWS General Reference - Reference guide.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/AWS General Reference - Reference guide.pdf"
-  ],
-  "AWS Key Management Service.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS Key Management Service.pdf"
-  ],
-  "AWS Outposts - User guide for second-generation Outposts racks.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS Outposts - User guide for second-generation Outposts racks.pdf"
-  ],
-  "AWS Pricing.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS Pricing.pdf"
-  ],
-  "AWS _ Startseite der Konsole _ eu-north-1.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS _ Startseite der Konsole _ eu-north-1.pdf"
-  ],
-  "AWS+European+Sovereign+Cloud+-+Sovereign+Reference+Framework+(ESC-SRF).pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS+European+Sovereign+Cloud+-+Sovereign+Reference+Framework+(ESC-SRF).pdf"
-  ],
-  "AWS_CLI_26.pdf": [
-   "Final Master Thesis/AWS_CLI_26.pdf"
-  ],
-  "AWS_GDPR_DPA.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AWS_GDPR_DPA.pdf"
-  ],
-  "AZURA pricing.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/AZURA pricing.pdf"
-  ],
-  "Accessibility+Conformance+Report+(VPAT)+-+Amazon+Athena.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/Accessibility+Conformance+Report+(VPAT)+-+Amazon+Athena.pdf"
-  ],
-  "Alle Services _ AWS _ us-east-1.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/Alle Services _ AWS _ us-east-1.pdf"
-  ],
-  "Amazon Virtual Private Cloud - User Guide.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/Amazon Virtual Private Cloud - User Guide.pdf"
-  ],
-  "Application form for Masters Diploma.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Application form for Masters Diploma.pdf"
-  ],
-  "Aqueduct40_baseline_monthly_y2023m07d05.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Aqueduct40/Aqueduct40_baseline_monthly_y2023m07d05.csv"
-  ],
-  "Aqueduct40_future_annual_y2023m07d05.csv": [
-   "Final Master Thesis/Aqueduct40_future_annual_y2023m07d05.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Aqueduct40/Aqueduct40_future_annual_y2023m07d05.csv"
-  ],
-  "Arquitetura Macrossistemica da 4 IR.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Arquitetura Macrossistemica da 4 IR.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/WRITTING SAMPLES - MASTER THESIS/Arquitetura Macrossistemica da 4 IR.pdf"
-  ],
-  "Azure Key Valt.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/Azure Key Valt.pdf"
-  ],
-  "BACKLOG_AND_COMPLIANCE.md": [
-   "qesis-mcp/ops/BACKLOG_AND_COMPLIANCE.md"
-  ],
-  "BARE_METAL_SOLUTION-2025 Bare Metal Solution PCI DSS..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-2025 Bare Metal Solution PCI DSS..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution BSI C5 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution BSI C5 Type II..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 1 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 1 Type II..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 2 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 2 Type II..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 3..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[FALL-2024] Bare Metal Solution SOC 3..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27001..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27001..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27017..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27017..pdf"
-  ],
-  "BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27018..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BARE_METAL_SOLUTION-[SPR-2025] Bare Metal Solutions ISO 27018..pdf"
-  ],
-  "BIS.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/BIS.pdf"
-  ],
-  "BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 1 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 1 Report..pdf"
-  ],
-  "BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 2 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 2 Report..pdf"
-  ],
-  "BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 3 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/BQOMNI_GCNV_GCVE-[FALL-2024] GCP (BQ Omni, GCNV, and GCVE) SOC 3 Report..pdf"
-  ],
-  "Bandwidth Demand is Strong in Latin America, But It's Slowing.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Bandwidth Demand is Strong in Latin America, But It's Slowing.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Bandwidth Demand is Strong in Latin America, But It's Slowing.pdf"
-  ],
-  "Bibliothek 7f2aa828e08683c5a70c017284a6ebd6.md": [
-   "qesis-mcp/content/notion-archives/Bibliothek 7f2aa828e08683c5a70c017284a6ebd6.md"
-  ],
-  "CHANGELOG.md": [
-   "sovereign-infra/CHANGELOG.md"
-  ],
-  "CITATION_CONCORDANCE.md": [
-   "sovereign-infra/CITATION_CONCORDANCE.md",
-   "sovereign-infra/ops/CITATION_CONCORDANCE.md"
-  ],
-  "CITATION_LOG.json": [
-   "sovereign-infra/ops/CITATION_LOG.json"
-  ],
-  "CLAUDE.md": [
-   "qesis-mcp/CLAUDE.md",
-   "qesis-mcp/my-agent/CLAUDE.md",
-   "sovereign-infra/CLAUDE.md",
-   "Final Master Thesis/CLAUDE.md"
-  ],
-  "CLEARING_PLAN_2026-07-30.md": [
-   "sovereign-infra/ops/CLEARING_PLAN_2026-07-30.md"
-  ],
-  "CLOSEOUT_2026-08-01.md": [
-   "sovereign-infra/ops/CLOSEOUT_2026-08-01.md"
-  ],
-  "CMEK.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/CMEK.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/CMEK.pdf"
-  ],
-  "CODEBOOK.md": [
-   "qesis-mcp/CODEBOOK.md"
-  ],
-  "CONNECTIVITY_BATCH_AUDIT_2026-07-31.md": [
-   "sovereign-infra/ops/CONNECTIVITY_BATCH_AUDIT_2026-07-31.md"
-  ],
-  "COUNTRY_LAYER_CTPI_CLOUD_INGEST_2026-02-08.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/COUNTRY_LAYER_CTPI_CLOUD_INGEST_2026-02-08.xlsx"
-  ],
-  "CROSS_INDICATOR_SCAN_2026-07-31.md": [
-   "sovereign-infra/ops/CROSS_INDICATOR_SCAN_2026-07-31.md"
-  ],
-  "CSovE_Dataset_QESIS_March2026.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Carbon layer/CSovE_Dataset_QESIS_March2026.xlsx"
-  ],
-  "CTPI_RawData_NODE.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/CTPI_RawData_NODE.xlsx"
-  ],
-  "CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS.xlsx"
-  ],
-  "CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS__UPDATED.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS__UPDATED.pdf"
-  ],
-  "CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS__UPDATED.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/CTPI_RawData_NODE_ENRICHED2_ESC_EFF_2026-02-13_UPDATED_ESC_PLACEHOLDERS__UPDATED.xlsx"
-  ],
-  "CTPI_panel_results__UPDATED.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/CTPI_panel_results__UPDATED.csv"
-  ],
-  "Cable feature geodata (D-011 D-013 gap) 3aaaa828e086814e8a12eba05134f764.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Cable feature geodata (D-011 D-013 gap) 3aaaa828e086814e8a12eba05134f764.md"
-  ],
-  "Cable to city_ID 3.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Cable to city_ID 3.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Cable to city_ID 3.pdf"
-  ],
-  "Calendario Académico Curso 2025-2026 MASTER UNIVERSITARIO provisionales v6.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Calendario Académico Curso 2025-2026 MASTER UNIVERSITARIO provisionales v6.pdf"
-  ],
-  "Canonical database (SQLite + CSV lineage layer) 3aaaa828e08681669a47f88e14a6f562.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Canonical database (SQLite + CSV lineage layer) 3aaaa828e08681669a47f88e14a6f562.md"
-  ],
-  "Cargoson – Number of Data Centers by Country (Nov 2025).pdf": [
-   "Final Master Thesis/Cargoson – Number of Data Centers by Country (Nov 2025).pdf"
-  ],
-  "Cargoson_DC_COUNT_Nov2025_extract.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Cargoson_DC_COUNT_Nov2025_extract.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Cargoson_DC_COUNT_Nov2025_extract.xlsx"
-  ],
-  "Causal Identification & Policy Evaluation.pdf": [
-   "Final Master Thesis/Causal Identification & Policy Evaluation.pdf"
-  ],
-  "City cables_TFM_data.pdf": [
-   "Final Master Thesis/City cables_TFM_data.pdf"
-  ],
-  "Cleaned_Energy_AI_Water_Ecosystem.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/Cleaned_Energy_AI_Water_Ecosystem.csv"
-  ],
-  "Commission Delegated Regulation (EU) 2023_2772.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Commission Delegated Regulation (EU) 2023_2772.pdf"
-  ],
-  "Connectivity_MacroHolistic.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Connectivity_MacroHolistic.xlsx"
-  ],
-  "Consolidated_Energy_AI_Water_Infrastructure.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/Consolidated_Energy_AI_Water_Infrastructure.csv"
-  ],
-  "Country specific recommendations_CSR_EU.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Country specific recommendations_CSR_EU.xlsx"
-  ],
-  "CritMinerals_2025-09-PB02.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/CritMinerals_2025-09-PB02.pdf"
-  ],
-  "Custom MCP write-path server (FastMCP + Postgres) 3aaaa828e0868106a1bfc6fb3c5595f1.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Custom MCP write-path server (FastMCP + Postgres) 3aaaa828e0868106a1bfc6fb3c5595f1.md"
-  ],
-  "Cybersecurity Supply Chain Risk.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Cybersecurity Supply Chain Risk.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Cybersecurity Supply Chain Risk.pdf"
-  ],
-  "D-103_STATUS.md": [
-   "qesis-mcp/ops/D-103_STATUS.md"
-  ],
-  "D-103_fsqca_rerun.json": [
-   "sovereign-infra/ops/analysis/D-103_fsqca_rerun.json"
-  ],
-  "D-107_TICKET_SWEEP.md": [
-   "sovereign-infra/ops/D-107_TICKET_SWEEP.md"
-  ],
-  "D-108_SAU_CSE_PROVENANCE.md": [
-   "qesis-mcp/ops/D-108_SAU_CSE_PROVENANCE.md"
-  ],
-  "D-109_fsqca_5cond.json": [
-   "sovereign-infra/ops/analysis/D-109_fsqca_5cond.json"
-  ],
-  "D-110_KG_FSQCA_ASSESSMENT.md": [
-   "qesis-mcp/ops/D-110_KG_FSQCA_ASSESSMENT.md"
-  ],
-  "D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md": [
-   "qesis-mcp/ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md",
-   "sovereign-infra/ops/D-111_SFC_RETIREMENT_AND_DUAL_FRAME.md"
-  ],
-  "DA-25-1072A2.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/DA-25-1072A2.xlsx"
-  ],
-  "DATA_RESILIENCE.md": [
-   "sovereign-infra/ops/DATA_RESILIENCE.md"
-  ],
-  "DECISION_LOG.md": [
-   "sovereign-infra/var/backups/2026-07-30/DECISION_LOG.md",
-   "Final Master Thesis/_GOVERNANCE/DECISION_LOG.md"
-  ],
-  "DEPLOY.md": [
-   "qesis-mcp/DEPLOY.md"
-  ],
-  "DEPLOYMENT_AUDIT_2026-08-02.md": [
-   "qesis-mcp/ops/DEPLOYMENT_AUDIT_2026-08-02.md"
-  ],
-  "DEPLOYMENT_STATUS_2026-07-31.md": [
-   "sovereign-infra/ops/DEPLOYMENT_STATUS_2026-07-31.md"
-  ],
-  "DESIGN_SYSTEM.md": [
-   "sovereign-infra/design/DESIGN_SYSTEM.md"
-  ],
-  "DE_BSH_CONTIS_Data_CablesLine.pdf": [
-   "Final Master Thesis/DE_BSH_CONTIS_Data_CablesLine.pdf"
-  ],
-  "DIMENSIONAL_MAPPING_v8.5.md": [
-   "qesis-mcp/docs/DIMENSIONAL_MAPPING_v8.5.md"
-  ],
-  "DIRECTIONAL_EXPECTATIONS_v9.1.freeze.json": [
-   "sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.freeze.json"
-  ],
-  "DIRECTIONAL_EXPECTATIONS_v9.1.json": [
-   "sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.1.json"
-  ],
-  "DIRECTIONAL_EXPECTATIONS_v9.freeze.json": [
-   "sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.freeze.json"
-  ],
-  "DIRECTIONAL_EXPECTATIONS_v9.json": [
-   "sovereign-infra/ops/analysis/DIRECTIONAL_EXPECTATIONS_v9.json"
-  ],
-  "DISPATCH_BOARD_2026-08-14.md": [
-   "qesis-mcp/ops/DISPATCH_BOARD_2026-08-14.md"
-  ],
-  "DORA_ROI_BASELINE.md": [
-   "qesis-mcp/my-agent/DORA_ROI_BASELINE.md",
-   "qesis-mcp/ops/DORA_ROI_BASELINE.md"
-  ],
-  "DUPLICATES_LOG.csv": [
-   "Final Master Thesis/_GOVERNANCE/DUPLICATES_LOG.csv"
-  ],
-  "Das 1x1 des Nachhaltigkeitsmanagements.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Das 1x1 des Nachhaltigkeitsmanagements.pdf"
-  ],
-  "Data Center Operator Profiles_telegeographic.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Data Center Operator Profiles_telegeographic.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Data Center Operator Profiles_telegeographic.pdf"
-  ],
-  "Data Centers_Telegeographic_2025.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Data Centers_Telegeographic_2025.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Data Centers_Telegeographic_2025.pdf"
-  ],
-  "Data center by country.pdf": [
-   "Final Master Thesis/Data center by country.pdf"
-  ],
-  "Defense_Presentation_Ontological_Blind_Spots.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Defense_Presentation_Ontological_Blind_Spots.pdf"
-  ],
-  "Digital Statecraft_2026.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Digital Statecraft_2026.pdf"
-  ],
-  "ECMA-424_2nd_edition_december_2025.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/ECMA-424_2nd_edition_december_2025.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/ECMA-424_2nd_edition_december_2025.pdf"
-  ],
-  "EDA_VS_BATCH_BENCHMARK.json": [
-   "qesis-mcp/ops/EDA_VS_BATCH_BENCHMARK.json"
-  ],
-  "EHPC-AIF-2026SC02-014_Batista Silva_Consolidated_online_forms.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EHPC-AIF-2026SC02-014_Batista Silva_Consolidated_online_forms.pdf"
-  ],
-  "EJIM_Eizaguirre et al (2025).pdf": [
-   "Final Master Thesis/EJIM_Eizaguirre et al (2025).pdf"
-  ],
-  "ELIAS project_email_LoI.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/ELIAS project_email_LoI.pdf"
-  ],
-  "EMODnetEUprojectDataSubmissionGuidelines_March2024.pdf": [
-   "Final Master Thesis/EMODnetEUprojectDataSubmissionGuidelines_March2024.pdf"
-  ],
-  "ENTSO-E Transparency API token not registered 3abaa828e086810682ced25fc5c25a10.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/ENTSO-E Transparency API token not registered 3abaa828e086810682ced25fc5c25a10.md"
-  ],
-  "ENTSOE_RESEARCH_ASSESSMENT_2026-07-31.md": [
-   "sovereign-infra/ops/ENTSOE_RESEARCH_ASSESSMENT_2026-07-31.md"
-  ],
-  "ENTSOE_RUNBOOK.md": [
-   "sovereign-infra/ops/ENTSOE_RUNBOOK.md"
-  ],
-  "EOD_2026-08-05.md": [
-   "qesis-mcp/ops/EOD_2026-08-05.md"
-  ],
-  "ERRATA_D104.md": [
-   "sovereign-infra/ops/ERRATA_D104.md"
-  ],
-  "EU AI Act.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EU AI Act.pdf"
-  ],
-  "EU AI Act_summarized.pdf": [
-   "qesis-mcp/Digital Twin R&D/EU AI Act_summarized.pdf"
-  ],
-  "EU Funding & Tenders Portal.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EU Funding & Tenders Portal.pdf"
-  ],
-  "EU Funding & Tenders Portal2.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EU Funding & Tenders Portal2.pdf"
-  ],
-  "EU Funding & Tenders Portal3.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EU Funding & Tenders Portal3.pdf"
-  ],
-  "EU_Toolkit_EFGH_2026-02-05.xlsx": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/EU_Toolkit_EFGH_2026-02-05/EU_Toolkit_EFGH_2026-02-05.xlsx"
-  ],
-  "EU_Toolkit_EFGH_Models_2026-02-05.xlsx": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/EU_Toolkit_EFGH_2026-02-05/EU_Toolkit_EFGH_Models_2026-02-05.xlsx"
-  ],
-  "EU_Toolkit_FINAL_EFGH_G1G2_H_RoadmapB_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/EU_Toolkit_FINAL_EFGH_G1G2_H_RoadmapB_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08.xlsx",
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/EU_Toolkit_FINAL_EFGH_G1G2_H_RoadmapB_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08.xlsx"
-  ],
-  "EVI Country Classification.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/EVI Country Classification.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/EVI Country Classification.pdf"
-  ],
-  "EVI Scores Country Summary.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/EVI Scores Country Summary.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/EVI Scores Country Summary.pdf"
-  ],
-  "EXO_drivers_template_TFM.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/EXO_drivers_template_TFM.csv"
-  ],
-  "EnergyDataSpaces_2026-01.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/EnergyDataSpaces_2026-01.pdf"
-  ],
-  "Equinix SG1_site ecosystem.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Equinix SG1_site ecosystem.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Equinix SG1_site ecosystem.pdf"
-  ],
-  "Erste Schritte (1) 26faa828e0868033805dd8f7b3befbb3.md": [
-   "qesis-mcp/content/notion-archives/Erste Schritte (1) 26faa828e0868033805dd8f7b3befbb3.md"
-  ],
-  "Erste Schritte 26faa828e08680b5bfc0d0c18e7899a2.md": [
-   "qesis-mcp/content/notion-archives/Erste Schritte 26faa828e08680b5bfc0d0c18e7899a2.md"
-  ],
-  "Europe Horizon_consortium email.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Europe Horizon_consortium email.pdf"
-  ],
-  "External Vulnerability Index (1).pdf": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/External Vulnerability Index (1).pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/External Vulnerability Index (1).pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/External Vulnerability Index (1).pdf"
-  ],
-  "External Vulnerability Index.pdf": [
-   "Final Master Thesis/External Vulnerability Index.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/External Vulnerability Index.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/External Vulnerability Index.pdf"
-  ],
-  "FINAL LSE IDEAS - ESIC 2026 TIMETABLE.pdf": [
-   "Final Master Thesis/FINAL LSE IDEAS - ESIC 2026 TIMETABLE.pdf"
-  ],
-  "FullAnalysis_Workbook_STIR - Kopie.xlsx": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/FullAnalysis_Workbook_STIR - Kopie.xlsx"
-  ],
-  "FullAnalysis_Workbook_STIR.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/FullAnalysis_Workbook_STIR.xlsx"
-  ],
-  "GCP-2023 Google Cloud ENS Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-2023 Google Cloud ENS Certificate..pdf"
-  ],
-  "GCP-2025 GCP SOC 1 Type II Audit Report Bridge Letter (11-1-25-12-31-2025)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-2025 GCP SOC 1 Type II Audit Report Bridge Letter (11-1-25-12-31-2025)..pdf"
-  ],
-  "GCP-2025 GCP SOC 2 Type II Audit Report Bridge Letter (11-1-25-12-31-2025)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-2025 GCP SOC 2 Type II Audit Report Bridge Letter (11-1-25-12-31-2025)..pdf"
-  ],
-  "GCP-2025 Google Cloud GNS Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-2025 Google Cloud GNS Certificate..pdf"
-  ],
-  "GCP-Gemini 3 Pro Model Documentation..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-Gemini 3 Pro Model Documentation..pdf"
-  ],
-  "GCP-[2024] Google Cloud PCI 3DS..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[2024] Google Cloud PCI 3DS..pdf"
-  ],
-  "GCP-[2025] CSAP Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[2025] CSAP Certification..pdf"
-  ],
-  "GCP-[2025] GCP K-ISMS Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[2025] GCP K-ISMS Certification..pdf"
-  ],
-  "GCP-[2025] Google Cloud ISO 42001 Certification (Surveillance Audit)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[2025] Google Cloud ISO 42001 Certification (Surveillance Audit)..pdf"
-  ],
-  "GCP-[FALL-2019] GCP ENS Audit Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2019] GCP ENS Audit Report..pdf"
-  ],
-  "GCP-[FALL-2024] GCP IRAP ..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2024] GCP IRAP ..pdf"
-  ],
-  "GCP-[FALL-2025] GCP ISO 27001 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP ISO 27001 Certification..pdf"
-  ],
-  "GCP-[FALL-2025] GCP ISO 27017 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP ISO 27017 Certification..pdf"
-  ],
-  "GCP-[FALL-2025] GCP PCI DSS Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP PCI DSS Certification..pdf"
-  ],
-  "GCP-[FALL-2025] GCP SOC 1 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP SOC 1 Report..pdf"
-  ],
-  "GCP-[FALL-2025] GCP SOC 2 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP SOC 2 Report..pdf"
-  ],
-  "GCP-[FALL-2025] GCP SOC 3 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[FALL-2025] GCP SOC 3 Report..pdf"
-  ],
-  "GCP-[Fall-2024] Google Cloud Platform ISO 27018 - Statement of Applicability..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[Fall-2024] Google Cloud Platform ISO 27018 - Statement of Applicability..pdf"
-  ],
-  "GCP-[Fall-2024] Google Cloud Platform ISO 27701 - Statement of Applicability..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[Fall-2024] Google Cloud Platform ISO 27701 - Statement of Applicability..pdf"
-  ],
-  "GCP-[SPR-2023] GCP CSA Star CAIQ..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2023] GCP CSA Star CAIQ..pdf"
-  ],
-  "GCP-[SPR-2025] GCP C5 Basic Criteria Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP C5 Basic Criteria Certification..pdf"
-  ],
-  "GCP-[SPR-2025] GCP CSA STAR Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP CSA STAR Certificate..pdf"
-  ],
-  "GCP-[SPR-2025] GCP GSMA SAS-SM..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP GSMA SAS-SM..pdf"
-  ],
-  "GCP-[SPR-2025] GCP ISO 9001 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP ISO 9001 Certification..pdf"
-  ],
-  "GCP-[SPR-2025] GCP MTCS Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP MTCS Certificate..pdf"
-  ],
-  "GCP-[SPR-2025] GCP OSPAR Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP OSPAR Report..pdf"
-  ],
-  "GCP-[SPR-2025] GCP SOC 2 Type II + CSA STAR Audit Report (5-1-2024 - 4-30-2025)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] GCP SOC 2 Type II + CSA STAR Audit Report (5-1-2024 - 4-30-2025)..pdf"
-  ],
-  "GCP-[SPR-2025] Google Cloud Platform ISO 27001 - Statement of Applicability (2025-05-07)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] Google Cloud Platform ISO 27001 - Statement of Applicability (2025-05-07)..pdf"
-  ],
-  "GCP-[SPR-2025] Google Cloud Platform ISO 27017 - Statement of Applicability (2025-05-07)..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] Google Cloud Platform ISO 27017 - Statement of Applicability (2025-05-07)..pdf"
-  ],
-  "GCP-[SPR-2025] Google Cloud Platform PBHVA Summary Report ..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] Google Cloud Platform PBHVA Summary Report ..pdf"
-  ],
-  "GCP-[SPR-2025] Google Cloud Platform PBMM Summary Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPR-2025] Google Cloud Platform PBMM Summary Report..pdf"
-  ],
-  "GCP-[SPRING-2024] GCP OSPAR Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SPRING-2024] GCP OSPAR Report..pdf"
-  ],
-  "GCP-[SUM-2025] GCP ISO 27018 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SUM-2025] GCP ISO 27018 Certification..pdf"
-  ],
-  "GCP-[SUM-2025] GCP ISO 27701 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[SUM-2025] GCP ISO 27701 Certification..pdf"
-  ],
-  "GCP-[Summer 2025] GCP SNI 27001 Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GCP-[Summer 2025] GCP SNI 27001 Certificate..pdf"
-  ],
-  "GCP_RUNBOOK.md": [
-   "sovereign-infra/ops/GCP_RUNBOOK.md"
-  ],
-  "GEO-[FALL-2025] Google Maps Platform CSA STAR CAIQ..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[FALL-2025] Google Maps Platform CSA STAR CAIQ..pdf"
-  ],
-  "GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive ISO 27001 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive ISO 27001 Certification..pdf"
-  ],
-  "GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive ISO 27017 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive ISO 27017 Certification..pdf"
-  ],
-  "GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive SOC 2 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive SOC 2 Report..pdf"
-  ],
-  "GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive SOC 3 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[FALL-2025] Google Maps Platform and Google Maps Automotive SOC 3 Report..pdf"
-  ],
-  "GEO-[SPR-2025] Google Maps Platform and Google Maps Automotive ISO 9001 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GEO-[SPR-2025] Google Maps Platform and Google Maps Automotive ISO 9001 Certification..pdf"
-  ],
-  "GEOGRAPHICAL DISTRIBUTION OF WAFER FABRICATION CAPACITY_semicondutor axis.pdf": [
-   "qesis-mcp/Digital Twin R&D/GEOGRAPHICAL DISTRIBUTION OF WAFER FABRICATION CAPACITY_semicondutor axis.pdf"
-  ],
-  "GOOGLE_DISTRIBUTED_CLOUD-[2024] GDCE SOC 2..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GOOGLE_DISTRIBUTED_CLOUD-[2024] GDCE SOC 2..pdf"
-  ],
-  "GOOGLE_DISTRIBUTED_CLOUD-[2025] GDCc PCI DSS..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/GOOGLE_DISTRIBUTED_CLOUD-[2025] GDCc PCI DSS..pdf"
-  ],
-  "GOVERNANCE.md": [
-   "sovereign-infra/ops/GOVERNANCE.md"
-  ],
-  "GRID_AUDIT_AND_PROPOSAL_ASSESSMENT_2026-07-31.md": [
-   "sovereign-infra/ops/GRID_AUDIT_AND_PROPOSAL_ASSESSMENT_2026-07-31.md"
-  ],
-  "G_SUITE-2023 Google Workspace ENS Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-2023 Google Workspace ENS Certificate..pdf"
-  ],
-  "G_SUITE-[FALL-2025] Google Workspace ISO 27001 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[FALL-2025] Google Workspace ISO 27001 Certification..pdf"
-  ],
-  "G_SUITE-[FALL-2025] Google Workspace ISO 27017 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[FALL-2025] Google Workspace ISO 27017 Certification..pdf"
-  ],
-  "G_SUITE-[FALL-2025] Google Workspace SOC 3 Report..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[FALL-2025] Google Workspace SOC 3 Report..pdf"
-  ],
-  "G_SUITE-[Fall-2024] Google Workspace ISO 27701 - Statement of Applicability..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[Fall-2024] Google Workspace ISO 27701 - Statement of Applicability..pdf"
-  ],
-  "G_SUITE-[SPR-2023] Workspace CSA Star CAIQ..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[SPR-2023] Workspace CSA Star CAIQ..pdf"
-  ],
-  "G_SUITE-[SPR-2025] Workspace ISO 27018 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[SPR-2025] Workspace ISO 27018 Certification..pdf"
-  ],
-  "G_SUITE-[SPR-2025] Workspace ISO 27701 Certification..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[SPR-2025] Workspace ISO 27701 Certification..pdf"
-  ],
-  "G_SUITE-[SPR-2025] Workspace MTCS Certificate..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/G_SUITE-[SPR-2025] Workspace MTCS Certificate..pdf"
-  ],
-  "GitHub publication layer (sovereign-infra) 3aaaa828e086818fb12bf35c4244159e.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/GitHub publication layer (sovereign-infra) 3aaaa828e086818fb12bf35c4244159e.md"
-  ],
-  "Global Risk Forecast 2026 _ Crisis24.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/Global Risk Forecast 2026 _ Crisis24.pdf"
-  ],
-  "Global network risk & how to respond.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Global network risk & how to respond.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Global network risk & how to respond.pdf"
-  ],
-  "GlobalFindexDatabase2025.csv": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/GlobalFindexDatabase2025.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/GlobalFindexDatabase2025.csv"
-  ],
-  "Globethics_EoI_Rodrigo_Batista_Silva.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Globethics_EoI_Rodrigo_Batista_Silva.pdf"
-  ],
-  "Globethics_Submission_Rodrigo_Batista_Silva.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Globethics_Submission_Rodrigo_Batista_Silva.pdf"
-  ],
-  "Google Cloud network pricing.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Google Cloud network pricing.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Google Cloud network pricing.pdf"
-  ],
-  "Governance_AI_Alignment_Blueprint.md": [
-   "qesis-mcp/my-agent/Governance_AI_Alignment_Blueprint.md",
-   "qesis-mcp/ops/Governance_AI_Alignment_Blueprint.md"
-  ],
-  "Guia-Normas-APA-7ma-edicion.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Guia-Normas-APA-7ma-edicion.pdf"
-  ],
-  "HANDOFF.md": [
-   "qesis-mcp/HANDOFF.md",
-   "sovereign-infra/design/HANDOFF.md",
-   "sovereign-infra/ops/qesis-mcp-private/HANDOFF.md"
-  ],
-  "HANDOFF_2026-08-09_LAND_THE_LOCK.md": [
-   "qesis-mcp/ops/HANDOFF_2026-08-09_LAND_THE_LOCK.md"
-  ],
-  "HANDOFF_CLAUDE_CODE_2026-07-31.md": [
-   "sovereign-infra/ops/HANDOFF_CLAUDE_CODE_2026-07-31.md"
-  ],
-  "Handbook-of-Marketing-ScalMulti-Item-Measures-for-Marketing-and-Consumer-Behavior-Research-PDFDr.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Handbook-of-Marketing-ScalMulti-Item-Measures-for-Marketing-and-Consumer-Behavior-Research-PDFDr.pdf"
-  ],
-  "Home 139d97977ab94ead8a2818b7eff33fee.md": [
-   "qesis-mcp/content/notion-archives/Home 139d97977ab94ead8a2818b7eff33fee.md"
-  ],
-  "Home-Ansichten de97468d06e048b9a10d1a4a97bd9cd6.md": [
-   "qesis-mcp/content/notion-archives/Home-Ansichten de97468d06e048b9a10d1a4a97bd9cd6.md"
-  ],
-  "IDC MarketScape - Worldwide Desktop as a Service 2026 Vendor Assessment.pdf": [
-   "qesis-mcp/Digital Twin R&D/IDC MarketScape - Worldwide Desktop as a Service 2026 Vendor Assessment.pdf"
-  ],
-  "IDC_Mastering Modern Digital Workspace Management_REPORT.pdf": [
-   "qesis-mcp/Digital Twin R&D/IDC_Mastering Modern Digital Workspace Management_REPORT.pdf"
-  ],
-  "IDIDataset_2025.csv": [
-   "Final Master Thesis/IDIDataset_2025.csv"
-  ],
-  "IDIDataset_2025.xlsx": [
-   "Final Master Thesis/IDIDataset_2025.xlsx"
-  ],
-  "INC-20260731-01.md": [
-   "sovereign-infra/ops/INC-20260731-01.md",
-   "Final Master Thesis/_GOVERNANCE/incidents/INC-20260731-01.md"
-  ],
-  "INC-20260813-01.md": [
-   "sovereign-infra/ops/INC-20260813-01.md"
-  ],
-  "INCIDENT_PROCEDURE.md": [
-   "Final Master Thesis/_GOVERNANCE/INCIDENT_PROCEDURE.md"
-  ],
-  "ISO 42001 EU AI Act audit assessment 3aaaa828e086814e9326fb832f564ec1.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/ISO 42001 EU AI Act audit assessment 3aaaa828e086814e9326fb832f564ec1.md"
-  ],
-  "ISO27001-Compliance-Checklist.pdf": [
-   "qesis-mcp/Digital Twin R&D/ISO27001-Compliance-Checklist.pdf"
-  ],
-  "ISO42001_FinServ_Guide.pdf": [
-   "qesis-mcp/Digital Twin R&D/ISO42001_FinServ_Guide.pdf"
-  ],
-  "ISO42001_FinServ_Guide2.pdf": [
-   "qesis-mcp/Digital Twin R&D/ISO42001_FinServ_Guide2.pdf"
-  ],
-  "ISO42001_FinServ_Tracker.xlsx": [
-   "qesis-mcp/Digital Twin R&D/ISO42001_FinServ_Tracker.xlsx"
-  ],
-  "ITU_DH.csv": [
-   "Final Master Thesis/ITU_DH.csv"
-  ],
-  "ITU_GCI_GCI_OVRL_SCRE.csv": [
-   "Final Master Thesis/ITU_GCI_GCI_OVRL_SCRE.csv"
-  ],
-  "ITU_GCI_GCI_OVRL_SCRE.pdf": [
-   "Final Master Thesis/ITU_GCI_GCI_OVRL_SCRE.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/ITU_GCI_GCI_OVRL_SCRE.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/ITU_GCI_GCI_OVRL_SCRE.pdf"
-  ],
-  "ITU_GCI_GCI_OVRL_SCRE_WIDEF.csv": [
-   "Final Master Thesis/ITU_GCI_GCI_OVRL_SCRE_WIDEF.csv"
-  ],
-  "IXP_database.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/IXP_database.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/IXP_database.pdf"
-  ],
-  "Introduction to exvatools.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Introduction to exvatools.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Introduction to exvatools.pdf"
-  ],
-  "KPI table stale since it was seeded 3abaa828e0868108bdb4fff210eb2972.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/KPI table stale since it was seeded 3abaa828e0868108bdb4fff210eb2972.md"
-  ],
-  "KPI_TABLE.csv": [
-   "sovereign-infra/ops/KPI_TABLE.csv"
-  ],
-  "LESSONS_LEDGER.md": [
-   "qesis-mcp/ops/LESSONS_LEDGER.md",
-   "sovereign-infra/ops/LESSONS_LEDGER.md",
-   "sovereign-infra/var/backups/2026-07-30/LESSONS_LEDGER.md"
-  ],
-  "LICENCE_CLASSIFICATION.json": [
-   "sovereign-infra/ops/LICENCE_CLASSIFICATION.json"
-  ],
-  "LIVE_DATA_FEASIBILITY_2026-07-27.md": [
-   "Final Master Thesis/_GOVERNANCE/LIVE_DATA_FEASIBILITY_2026-07-27.md"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27017..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27017..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27018..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27018..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27701..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 27701..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 9001..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)  ISO 9001..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)  PCI DSS..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)  PCI DSS..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core) BSI C5 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core) BSI C5 Type II..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core) SOC 2 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core) SOC 2 Type II..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core) SOC 3..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core) SOC 3..pdf"
-  ],
-  "LOOKER-[SPR-2024] Looker (Google Cloud core)SOC 1 Type II..pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Audit-Reports-1770311894472-4c20a4/LOOKER-[SPR-2024] Looker (Google Cloud core)SOC 1 Type II..pdf"
-  ],
-  "LSE IDEAS - ESIC 2026 Handbook.pdf": [
-   "Final Master Thesis/LSE IDEAS - ESIC 2026 Handbook.pdf"
-  ],
-  "Live open-data connections (Aqueduct, ENTSO-E, Cop 3aaaa828e08681249c01ca54cb3a1391.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Live open-data connections (Aqueduct, ENTSO-E, Cop 3aaaa828e08681249c01ca54cb3a1391.md"
-  ],
-  "MANIFEST.json": [
-   "sovereign-infra/var/backups/2026-07-30/MANIFEST.json"
-  ],
-  "MASTER_CLOUD_TABLE.xlsx": [
-   "Final Master Thesis/MASTER_CLOUD_TABLE.xlsx"
-  ],
-  "MASTER_CLOUD_TABLE_v2_CSE.xlsx": [
-   "Final Master Thesis/MASTER_CLOUD_TABLE_v2_CSE.xlsx"
-  ],
-  "MASTER_ECOSYSTEM_SPEC_v8.4.md": [
-   "qesis-mcp/docs/MASTER_ECOSYSTEM_SPEC_v8.4.md"
-  ],
-  "MASTER_ECOSYSTEM_SPEC_v8.5.md": [
-   "qesis-mcp/docs/MASTER_ECOSYSTEM_SPEC_v8.5.md"
-  ],
-  "MILESTONE_v8.6.md": [
-   "qesis-mcp/ops/MILESTONE_v8.6.md"
-  ],
-  "MODELING_LAYERS_MDA.md": [
-   "qesis-mcp/my-agent/MODELING_LAYERS_MDA.md",
-   "qesis-mcp/ops/MODELING_LAYERS_MDA.md"
-  ],
-  "MONETIZATION_PLAYBOOK.md": [
-   "sovereign-infra/ops/MONETIZATION_PLAYBOOK.md"
-  ],
-  "MORNING_2026-07-29.md": [
-   "sovereign-infra/ops/MORNING_2026-07-29.md"
-  ],
-  "MORNING_2026-07-30.md": [
-   "sovereign-infra/ops/MORNING_2026-07-30.md"
-  ],
-  "MORNING_2026-08-02.md": [
-   "sovereign-infra/ops/MORNING_2026-08-02.md"
-  ],
-  "MORNING_2026-08-03.md": [
-   "sovereign-infra/ops/MORNING_2026-08-03.md"
-  ],
-  "Market Connectivity Score_telegeographic.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Market Connectivity Score_telegeographic.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Market Connectivity Score_telegeographic.pdf"
-  ],
-  "Master_Cloud_regions.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Master_Cloud_regions.xlsx"
-  ],
-  "Meine Aufgaben 5814301464db47d59381b24ff48b2fd1.md": [
-   "qesis-mcp/content/notion-archives/Meine Aufgaben 5814301464db47d59381b24ff48b2fd1.md"
-  ],
-  "NIST.SP.800-218.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/NIST.SP.800-218.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/NIST.SP.800-218.pdf"
-  ],
-  "NL_Rijkswaterstaat_Telecom_kabels_noordzee.pdf": [
-   "Final Master Thesis/NL_Rijkswaterstaat_Telecom_kabels_noordzee.pdf"
-  ],
-  "New requirements for cloud portability EU Data Act.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/New requirements for cloud portability EU Data Act.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/New requirements for cloud portability EU Data Act.pdf"
-  ],
-  "OFFICIAL_STATUS_REPORT_2026-08-11.md": [
-   "qesis-mcp/ops/OFFICIAL_STATUS_REPORT_2026-08-11.md"
-  ],
-  "OPERATIONS_MANUAL.md": [
-   "sovereign-infra/ops/OPERATIONS_MANUAL.md"
-  ],
-  "Ontological Blind Spots - Master Thesis Defense.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Ontological Blind Spots - Master Thesis Defense.pdf"
-  ],
-  "Ontological_Blind_Spots_Thesis.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Ontological_Blind_Spots_Thesis.pdf"
-  ],
-  "Ontological_Blind_Spots_Thesis_PREVIEW.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Ontological_Blind_Spots_Thesis_PREVIEW.pdf"
-  ],
-  "Operational database is zero bytes 3abaa828e08681579ce6ed2426a75901.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ Ops Tickets/Operational database is zero bytes 3abaa828e08681579ce6ed2426a75901.md"
-  ],
-  "OptionA_Empirical_Ingredients_Dataset_20260211T165325Z.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/OptionA_Empirical_Ingredients_Dataset_20260211T165325Z.xlsx"
-  ],
-  "PHILOSOPHY_DAMPED_CASCADE.md": [
-   "sovereign-infra/design/PHILOSOPHY_DAMPED_CASCADE.md"
-  ],
-  "PROVENANCE_MANIFEST.csv": [
-   "sovereign-infra/var/backups/2026-07-30/PROVENANCE_MANIFEST.csv",
-   "Final Master Thesis/_GOVERNANCE/PROVENANCE_MANIFEST.csv"
-  ],
-  "PTC_26_telegeography_for_pdf.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/PTC_26_telegeography_for_pdf.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/PTC_26_telegeography_for_pdf.pdf"
-  ],
-  "PUBLISHING_GUIDE.md": [
-   "sovereign-infra/PUBLISHING_GUIDE.md"
-  ],
-  "Packet Clearing House (PCH) - CABLE SYSTEM DATABASE.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Packet Clearing House (PCH) - CABLE SYSTEM DATABASE.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Packet Clearing House (PCH) - CABLE SYSTEM DATABASE.pdf"
-  ],
-  "PeeringDB_Global_FINAL.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/PeeringDB_Global_FINAL.xlsx"
-  ],
-  "PeeringDB_Global_FINAL__UPDATED.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/PeeringDB_Global_FINAL__UPDATED.xlsx"
-  ],
-  "People d3daa828e08682dfb0d8014512d331ec.md": [
-   "qesis-mcp/content/notion-archives/People d3daa828e08682dfb0d8014512d331ec.md"
-  ],
-  "People d3daa828e08682dfb0d8014512d331ec_all.csv": [
-   "sovereign-infra/Notion_exports_archives/Export-a54c1c73-02bc-4c13-a16c-a10d3efa7c13/Private & Shared/People d3daa828e08682dfb0d8014512d331ec_all.csv"
-  ],
-  "Platform Global 2025.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Platform Global 2025.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Platform Global 2025.pdf"
-  ],
-  "Policy documents (AI Policy, Ethics, Governance, D 3aaaa828e0868101920ee8b2c7ef893f.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Policy documents (AI Policy, Ethics, Governance, D 3aaaa828e0868101920ee8b2c7ef893f.md"
-  ],
-  "Portfolio 26faa828e08680c9bae5f6c34d9f85a0.md": [
-   "qesis-mcp/content/notion-archives/Portfolio 26faa828e08680c9bae5f6c34d9f85a0.md"
-  ],
-  "Power BI dashboard views 3aaaa828e0868155825ef3b1713da716.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Power BI dashboard views 3aaaa828e0868155825ef3b1713da716.md"
-  ],
-  "Provenance register & dedupe 3aaaa828e086817392d7e7084c88823c.md": [
-   "qesis-mcp/content/notion-archives/Workstreams/Provenance register & dedupe 3aaaa828e086817392d7e7084c88823c.md"
-  ],
-  "QESIS+ Ops Tickets 74a6605432c949909c35e57c59038eb5.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ Ops Tickets 74a6605432c949909c35e57c59038eb5.md"
-  ],
-  "QESIS+ Ops Tickets 74a6605432c949909c35e57c59038eb5_all.csv": [
-   "sovereign-infra/Notion_exports_archives/Export-a54c1c73-02bc-4c13-a16c-a10d3efa7c13/Private & Shared/QESIS+ — Digital Twin OS · Command Board/QESIS+ Ops Tickets 74a6605432c949909c35e57c59038eb5_all.csv"
-  ],
-  "QESIS+ session close 2026-07-31 v8 3 serving, thre 3aeaa828e086811eb895fd82eaf0729d.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ session close 2026-07-31 v8 3 serving, thre 3aeaa828e086811eb895fd82eaf0729d.md"
-  ],
-  "QESIS+ v8 3 deployment record, 2026-07-31 3aeaa828e08681d9852cfb8c0c981ec1.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ v8 3 deployment record, 2026-07-31 3aeaa828e08681d9852cfb8c0c981ec1.md"
-  ],
-  "QESIS+ — Digital Twin OS · Command Board 3aaaa828e086817a8d38d857e2a9c22a.md": [
-   "qesis-mcp/content/notion-archives/QESIS+ — Digital Twin OS · Command Board 3aaaa828e086817a8d38d857e2a9c22a.md"
-  ],
-  "QESIS_ECOSYSTEM_STATUS_2026-08-13.md": [
-   "Final Master Thesis/QESIS_ECOSYSTEM_STATUS_2026-08-13.md"
-  ],
-  "QESIS_Ecosystem_Architecture_v1.md": [
-   "qesis-mcp/Digital Twin R&D/QESIS_Ecosystem_Architecture_v1.md"
-  ],
-  "QESIS_ROADMAP_v9_to_v10.md": [
-   "Final Master Thesis/QESIS_ROADMAP_v9_to_v10.md"
-  ],
-  "QESIS_TimeEvolution_BAU_v1.xlsx": [
-   "Final Master Thesis/QESIS_TimeEvolution_BAU_v1.xlsx"
-  ],
-  "QESIS_macro_template_TableTwo_v1.xlsx": [
-   "Final Master Thesis/QESIS_macro_template_TableTwo_v1.xlsx"
-  ],
-  "QUERY_CABLES_2.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/QUERY_CABLES_2.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/QUERY_CABLES_2.pdf"
-  ],
-  "QUICKSTART.md": [
-   "Final Master Thesis/Thesis AI/QUICKSTART.md"
-  ],
-  "Query_ Cables (ID_ 2).pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Query_ Cables (ID_ 2).pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Query_ Cables (ID_ 2).pdf"
-  ],
-  "Query_ City (ID_ 1).pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Query_ City (ID_ 1).pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Query_ City (ID_ 1).pdf"
-  ],
-  "RAD_CTPI_Integrated_Workbook_CoverageRecalc_2024_2026-02-10_v2.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/RAD_CTPI_Integrated_Workbook_CoverageRecalc_2024_2026-02-10_v2.xlsx",
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/RAD_CTPI_Integrated_Workbook_CoverageRecalc_2024_2026-02-10_v2.xlsx"
-  ],
-  "RAD_CTPI_Integrated_Workbook_CoverageRecalc_2024_2026-02-10_v2__UPDATED.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/RAD_CTPI_Integrated_Workbook_CoverageRecalc_2024_2026-02-10_v2__UPDATED.xlsx"
-  ],
-  "RDL Strategy for agents and AI Governability.md": [
-   "qesis-mcp/my-agent/RDL Strategy for agents and AI Governability.md",
-   "qesis-mcp/ops/RDL Strategy for agents and AI Governability.md"
-  ],
-  "README.md": [
-   "qesis-mcp/README.md",
-   "sovereign-infra/README.md",
-   "sovereign-infra/var/vault/README.md",
-   "Final Master Thesis/Thesis AI/README.md",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/wp-travel.11.1.1/wp-travel/inc/gateways/standard-paypal/php-paypal-ipn/README.md",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/wp-travel.11.1.1/wp-travel/inc/gateways/standard-paypal/php-paypal-ipn/README.md"
-  ],
-  "RELEASES.json": [
-   "qesis-mcp/data/RELEASES.json"
-  ],
-  "RELEASE_NOTES.md": [
-   "sovereign-infra/var/staged/v8.5/RELEASE_NOTES.md"
-  ],
-  "REMEDIATION_v8.4.md": [
-   "sovereign-infra/ops/REMEDIATION_v8.4.md"
-  ],
-  "RENDER_CONTRACT.md": [
-   "sovereign-infra/ops/RENDER_CONTRACT.md"
-  ],
-  "REPORT_EXECUTIVE.md": [
-   "qesis-mcp/REPORT_EXECUTIVE.md"
-  ],
-  "REPORT_EXECUTIVE_v8.0_superseded.md": [
-   "sovereign-infra/ops/qesis-mcp-private/REPORT_EXECUTIVE_v8.0_superseded.md"
-  ],
-  "RISK_REGISTER.md": [
-   "sovereign-infra/var/backups/2026-07-30/RISK_REGISTER.md",
-   "Final Master Thesis/_GOVERNANCE/RISK_REGISTER.md"
-  ],
-  "RJ-2023-092.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RJ-2023-092.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RJ-2023-092.pdf"
-  ],
-  "ROADMAP_MCP_AGENTS.md": [
-   "Final Master Thesis/_GOVERNANCE/ROADMAP_MCP_AGENTS.md"
-  ],
-  "RUNBOOK.md": [
-   "sovereign-infra/ops/RUNBOOK.md"
-  ],
-  "Regulation EU_OJ_L_202302854_EN_TXT.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Regulation EU_OJ_L_202302854_EN_TXT.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Regulation EU_OJ_L_202302854_EN_TXT.pdf"
-  ],
-  "Regulation_EU_AI Act.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Regulation_EU_AI Act.pdf"
-  ],
-  "Report_Emerging-Resilience-in-the-Semiconductor-Supply-Chain.pdf": [
-   "Final Master Thesis/Report_Emerging-Resilience-in-the-Semiconductor-Supply-Chain.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/Report_Emerging-Resilience-in-the-Semiconductor-Supply-Chain.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Report_Emerging-Resilience-in-the-Semiconductor-Supply-Chain.pdf"
-  ],
-  "ResearchReport-2026DevSecOps.pdf": [
-   "qesis-mcp/Digital Twin R&D/ResearchReport-2026DevSecOps.pdf"
-  ],
-  "RoadmapB_CABLE_LANDINGS_CableToCity_Metadata_2026-02-05.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RoadmapB_CABLE_LANDINGS_CableToCity_Metadata_2026-02-05.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RoadmapB_CABLE_LANDINGS_CableToCity_Metadata_2026-02-05.xlsx"
-  ],
-  "RoadmapB_EXVI_SCORE_Proxy_EVI_IMPORT.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RoadmapB_EXVI_SCORE_Proxy_EVI_IMPORT.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RoadmapB_EXVI_SCORE_Proxy_EVI_IMPORT.xlsx"
-  ],
-  "RoadmapB_NewInputs_EVI_SEMICAP_Pack_2026-02-05.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RoadmapB_NewInputs_EVI_SEMICAP_Pack_2026-02-05.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RoadmapB_NewInputs_EVI_SEMICAP_Pack_2026-02-05.xlsx"
-  ],
-  "RoadmapB_SEMICAP_SHARE_Proxy_Public_IMPORT.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RoadmapB_SEMICAP_SHARE_Proxy_Public_IMPORT.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RoadmapB_SEMICAP_SHARE_Proxy_Public_IMPORT.xlsx"
-  ],
-  "RoadmapE_KEY_SOVEREIGNTY_Evidence_Metadata_2026-02-05.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/RoadmapE_KEY_SOVEREIGNTY_Evidence_Metadata_2026-02-05.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/RoadmapE_KEY_SOVEREIGNTY_Evidence_Metadata_2026-02-05.xlsx"
-  ],
-  "Rodrigo Batista Silva 26faa828e08680748fdbc9354d16d9d0.md": [
-   "qesis-mcp/content/notion-archives/Rodrigo Batista Silva 26faa828e08680748fdbc9354d16d9d0.md"
-  ],
-  "SAMPLE 1.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/SAMPLE 1.xlsx"
-  ],
-  "SAMPLE 3.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/SAMPLE 3.xlsx"
-  ],
-  "SAS Output.pdf": [
-   "Final Master Thesis/SAS Output.pdf"
-  ],
-  "SEMI World Fab Forecast Sample_2022_04_22.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/SEMI World Fab Forecast Sample_2022_04_22.xlsx",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/SEMI World Fab Forecast Sample_2022_04_22.xlsx"
-  ],
-  "SEMICAP_SHARE country table.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/SEMICAP_SHARE country table.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/SEMICAP_SHARE country table.pdf"
-  ],
-  "SESSION_REPORT_2026-08-08.md": [
-   "qesis-mcp/ops/SESSION_REPORT_2026-08-08.md"
-  ],
-  "SOURCE_ACQUISITION_REGISTER.md": [
-   "qesis-mcp/ops/SOURCE_ACQUISITION_REGISTER.md",
-   "sovereign-infra/ops/SOURCE_ACQUISITION_REGISTER.md"
-  ],
-  "SPDX-3.0.1-1.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/SPDX-3.0.1-1.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/SPDX-3.0.1-1.pdf"
-  ],
-  "SPONSORSHIP_REGISTER.md": [
-   "qesis-mcp/ops/SPONSORSHIP_REGISTER.md",
-   "sovereign-infra/ops/SPONSORSHIP_REGISTER.md"
-  ],
-  "SR_Hyperscale_Self_Build_Report_2024_EXECSUM.pdf": [
-   "Final Master Thesis/SR_Hyperscale_Self_Build_Report_2024_EXECSUM.pdf"
-  ],
-  "STATUS_REPORT_2026-07-27.md": [
-   "Final Master Thesis/STATUS_REPORT_2026-07-27.md"
-  ],
-  "STATUS_REPORT_2026-07-29.md": [
-   "sovereign-infra/ops/STATUS_REPORT_2026-07-29.md"
-  ],
-  "STATUS_REPORT_STEP7_2026-08-09.md": [
-   "qesis-mcp/ops/STATUS_REPORT_STEP7_2026-08-09.md",
-   "sovereign-infra/ops/STATUS_REPORT_STEP7_2026-08-09.md"
-  ],
-  "STATUS_REPORT_v9.0_2026-08-13.md": [
-   "sovereign-infra/ops/STATUS_REPORT_v9.0_2026-08-13.md"
-  ],
-  "STIR_Index_v2_BatistaSilva_2026.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/STIR_Index_v2_BatistaSilva_2026.xlsx"
-  ],
-  "SWD_2025_11_F1_OTHER_STAFF_WORKING_PAPER_EN_V3_P1_3877728.PDF": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/SWD_2025_11_F1_OTHER_STAFF_WORKING_PAPER_EN_V3_P1_3877728.PDF",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/SWD_2025_11_F1_OTHER_STAFF_WORKING_PAPER_EN_V3_P1_3877728.PDF"
-  ],
-  "SYNTHESIS_PHD_PRIVATE_MARKET.md": [
-   "qesis-mcp/my-agent/SYNTHESIS_PHD_PRIVATE_MARKET.md",
-   "qesis-mcp/ops/SYNTHESIS_PHD_PRIVATE_MARKET.md"
-  ],
-  "Session 2026-07-27 (evening) — Agent Ecosystem v1  3aaaa828e08681f5b3b4fed024780f92.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-27 (evening) — Agent Ecosystem v1  3aaaa828e08681f5b3b4fed024780f92.md"
-  ],
-  "Session 2026-07-27 (late) — Ecosystem v1 1 COUNSEL 3aaaa828e086813fbd1debca4a9d05d1.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-27 (late) — Ecosystem v1 1 COUNSEL 3aaaa828e086813fbd1debca4a9d05d1.md"
-  ],
-  "Session 2026-07-27 (night) — Intake executed, Data 3aaaa828e08681b6a929deb462cfe304.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-27 (night) — Intake executed, Data 3aaaa828e08681b6a929deb462cfe304.md"
-  ],
-  "Session 2026-07-28 (2) — Dashboard v2 map, motion, 3aaaa828e0868133ad60ddaff57357b4.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-28 (2) — Dashboard v2 map, motion, 3aaaa828e0868133ad60ddaff57357b4.md"
-  ],
-  "Session 2026-07-28 (3) — Dashboard v3 attribution, 3abaa828e08681329c2fc79897a59e20.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-28 (3) — Dashboard v3 attribution, 3abaa828e08681329c2fc79897a59e20.md"
-  ],
-  "Session 2026-07-28 (4, close) — Trilemma lineage + 3abaa828e08681e29114e7724c4a8215.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-28 (4, close) — Trilemma lineage + 3abaa828e08681e29114e7724c4a8215.md"
-  ],
-  "Session 2026-07-28 — STIR Governance Dashboard shi 3aaaa828e08681ac83c7c9ea8fe5904d.md": [
-   "qesis-mcp/content/notion-archives/Session 2026-07-28 — STIR Governance Dashboard shi 3aaaa828e08681ac83c7c9ea8fe5904d.md"
-  ],
-  "Solicitud Certificados ESIC Universidad.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Solicitud Certificados ESIC Universidad.pdf"
-  ],
-  "Sovereign_Infra_Intelligence_v6.1.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Sovereign_Infra_Intelligence_v6.1.xlsx"
-  ],
-  "Sovereign_Infra_Intelligence_v6.2.xlsx": [
-   "Final Master Thesis/Sovereign_Infra_Intelligence_v6.2.xlsx"
-  ],
-  "Sovereign_Infra_Intelligence_v6.6.xlsx": [
-   "sovereign-infra/Sovereign_Infra_Intelligence_v6.6.xlsx",
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Sovereign_Infra_Intelligence_v6.6.xlsx"
-  ],
-  "Sovereign_Infra_Intelligence_v6.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Sovereign_Infra_Intelligence_v6.xlsx"
-  ],
-  "Sovereign_Infra_Intelligence_v8_0_FINAL.xlsx": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Sovereign_Infra_Intelligence_v8_0_FINAL.xlsx"
-  ],
-  "State of the Network 2026_TeleGeography.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/State of the Network 2026_TeleGeography.pdf"
-  ],
-  "Statista_Whitepaper_Consumer-Trends-2026.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Statista_Whitepaper_Consumer-Trends-2026.pdf"
-  ],
-  "Status of Global EVI Data and Scores.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Status of Global EVI Data and Scores.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Status of Global EVI Data and Scores.pdf"
-  ],
-  "Sub_options_final.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Sub_options_final.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Sub_options_final.pdf"
-  ],
-  "Submarine Networks World 2025.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/Submarine Networks World 2025.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/Submarine Networks World 2025.pdf"
-  ],
-  "Synergistic_AI_Agents_Integrating_Knowledge_Graphs.pdf": [
-   "qesis-mcp/Digital Twin R&D/Synergistic_AI_Agents_Integrating_Knowledge_Graphs.pdf"
-  ],
-  "TBp.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/TBp.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/TBp.pdf"
-  ],
-  "TECHNICAL_DOCUMENTATION.md": [
-   "sovereign-infra/ops/TECHNICAL_DOCUMENTATION.md"
-  ],
-  "TFM_AIIndex_Operational_Toolkit_v1.xlsx": [
-   "Final Master Thesis/TFM_AIIndex_Operational_Toolkit_v1.xlsx"
-  ],
-  "TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA.xlsx"
-  ],
-  "TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08(Country_Fiche_Template).csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08(Country_Fiche_Template).csv"
-  ],
-  "TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08(Unified_Decision_Queue).csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/TFM_EU_Reg_AI_Toolkit_UPDATED_KEY_SOVEREIGNTY_EVIDENCEPACK_2026-02-05_MSE_EXVIVA_FINAL_INFRA_CONNECTIVITY_2026-02-08(Unified_Decision_Queue).csv"
-  ],
-  "TFM_EU_Reg_AI_Toolkit_WITH_COMPLETED_NODE.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/TFM_EU_Reg_AI_Toolkit_WITH_COMPLETED_NODE.xlsx"
-  ],
-  "TFM_PrimerData_Full.xlsx": [
-   "Final Master Thesis/TFM_PrimerData_Full.xlsx"
-  ],
-  "TFSC_Eizaguirre et al (2026).pdf": [
-   "Final Master Thesis/TFSC_Eizaguirre et al (2026).pdf"
-  ],
-  "TICKETS.json": [
-   "sovereign-infra/ops/TICKETS.json"
-  ],
-  "Table_cables to city.pdf": [
-   "Final Master Thesis/Table_cables to city.pdf"
-  ],
-  "The Architecture of Lack_ Navigating the Seven Axes of Sovereign Intelligence in the 4IR.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/The Architecture of Lack_ Navigating the Seven Axes of Sovereign Intelligence in the 4IR.pdf"
-  ],
-  "The Subsea Cables Connecting LATAM and Beyond.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/The Subsea Cables Connecting LATAM and Beyond.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/The Subsea Cables Connecting LATAM and Beyond.pdf"
-  ],
-  "The-Complete-GitHub-Actions-Security-Checklist.pdf": [
-   "qesis-mcp/Digital Twin R&D/The-Complete-GitHub-Actions-Security-Checklist.pdf"
-  ],
-  "Thesis Research and Market Analysis.pdf": [
-   "Final Master Thesis/Thesis Research and Market Analysis.pdf"
-  ],
-  "Thesis_FullAnalysis_DefenseWorkbook_v2_updated.xlsx": [
-   "Final Master Thesis/Thesis_FullAnalysis_DefenseWorkbook_v2_updated.xlsx"
-  ],
-  "Tutor_605608_Rodrigo_Batista_Silva.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Tutor_605608_Rodrigo_Batista_Silva.pdf"
-  ],
-  "UPDATED_ESC_with_AWS.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/UPDATED_ESC_with_AWS.xlsx"
-  ],
-  "Uncertainty_Ledger.csv.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/Uncertainty_Ledger.csv.xlsx"
-  ],
-  "UnderseaCables_LSE_2025.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/UnderseaCables_LSE_2025.pdf"
-  ],
-  "Untitled 26faa828e08680ef969cce0ae3465b55.md": [
-   "qesis-mcp/content/notion-archives/Untitled 26faa828e08680ef969cce0ae3465b55.md"
-  ],
-  "Untitled 3abaa828e0868080ac6fcbc5b6bc7d56.md": [
-   "qesis-mcp/content/notion-archives/Untitled 3abaa828e0868080ac6fcbc5b6bc7d56.md"
-  ],
-  "Untitled 3abaa828e0868145b3d3ebcede483b9a.md": [
-   "qesis-mcp/content/notion-archives/Untitled 3abaa828e0868145b3d3ebcede483b9a.md"
-  ],
-  "Untitled 3abaa828e08681e486d8c1063ece6494.md": [
-   "qesis-mcp/content/notion-archives/Untitled 3abaa828e08681e486d8c1063ece6494.md"
-  ],
-  "V86_INTEGRITY_PATCH_VERIFICATION.md": [
-   "qesis-mcp/ops/V86_INTEGRITY_PATCH_VERIFICATION.md"
-  ],
-  "V9.0_PATH_AND_ROUTING.md": [
-   "qesis-mcp/ops/V9.0_PATH_AND_ROUTING.md"
-  ],
-  "VALIDATION_REPORT_CSOVE_AND_V83_2026-07-31.md": [
-   "sovereign-infra/ops/VALIDATION_REPORT_CSOVE_AND_V83_2026-07-31.md"
-  ],
-  "VERCEL_RUNBOOK.md": [
-   "sovereign-infra/ops/VERCEL_RUNBOOK.md"
-  ],
-  "VINTAGE_LINEAGE.md": [
-   "qesis-mcp/ops/VINTAGE_LINEAGE.md",
-   "sovereign-infra/ops/VINTAGE_LINEAGE.md"
-  ],
-  "VISUALISATION_SPEC.md": [
-   "qesis-mcp/ops/VISUALISATION_SPEC.md"
-  ],
-  "Visual Mapping of Formulas - Google Docs.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/Visual Mapping of Formulas - Google Docs.pdf"
-  ],
-  "WIOT2000_Nov16_ROW.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WIOT2000_Nov16_ROW.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/WIOT2000_Nov16_ROW.pdf"
-  ],
-  "WIOT200_Nov_16_ROW.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WIOT200_Nov_16_ROW.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/WIOT200_Nov_16_ROW.pdf"
-  ],
-  "WP-Developers_Guide_to_RAG-ES.pdf": [
-   "qesis-mcp/Digital Twin R&D/WP-Developers_Guide_to_RAG-ES.pdf"
-  ],
-  "WRITING_STYLE.md": [
-   "sovereign-infra/ops/WRITING_STYLE.md"
-  ],
-  "Workstreams 447b4f2a61714bc1bac66312d1c6531e.md": [
-   "qesis-mcp/content/notion-archives/Workstreams 447b4f2a61714bc1bac66312d1c6531e.md"
-  ],
-  "Workstreams 447b4f2a61714bc1bac66312d1c6531e_all.csv": [
-   "sovereign-infra/Notion_exports_archives/Export-a54c1c73-02bc-4c13-a16c-a10d3efa7c13/Private & Shared/QESIS+ — Digital Twin OS · Command Board/Workstreams 447b4f2a61714bc1bac66312d1c6531e_all.csv"
-  ],
-  "World Fixed and mobile subscriptions data - ITU DataHub.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/World Fixed and mobile subscriptions data - ITU DataHub.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/World Fixed and mobile subscriptions data - ITU DataHub.pdf"
-  ],
-  "_refresh_schedule.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/_refresh_schedule.csv"
-  ],
-  "_sources.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/_sources.csv"
-  ],
-  "analyst.md": [
-   "sovereign-infra/agents/analyst.md"
-  ],
-  "aqueduct-40-technical-note.pdf": [
-   "Final Master Thesis/aqueduct-40-technical-note.pdf"
-  ],
-  "aqueduct40_country_overlay_from_rankings.csv": [
-   "Final Master Thesis/aqueduct40_country_overlay_from_rankings.csv"
-  ],
-  "aqueduct40_country_rankings.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/aqueduct40_country_rankings.csv"
-  ],
-  "arcgis_cable_layer_schema.json": [
-   "Final Master Thesis/_DATABASE/sql/arcgis_cable_layer_schema.json"
-  ],
-  "architect.md": [
-   "sovereign-infra/agents/architect.md"
-  ],
-  "awscarbonfootprintexport.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/awscarbonfootprintexport.csv"
-  ],
-  "cable_landings_by_country.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/cable_landings_by_country.csv"
-  ],
-  "call-fiche_digital-2026-ai-09_en.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/call-fiche_digital-2026-ai-09_en.pdf"
-  ],
-  "career_support_service_OS.pdf": [
-   "qesis-mcp/Digital Twin R&D/career_support_service_OS.pdf"
-  ],
-  "chain_attestation.json": [
-   "qesis-mcp/data/chain_attestation.json"
-  ],
-  "chain_spine.jsonl": [
-   "qesis-mcp/data/chain_spine.jsonl"
-  ],
-  "ci-notes.md": [
-   "qesis-mcp/docs/ci-notes.md"
-  ],
-  "city layer_ID 1.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/city layer_ID 1.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/city layer_ID 1.pdf"
-  ],
-  "city_cable_country_long.csv": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/city_cable_country_long.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/city_cable_country_long.csv"
-  ],
-  "city_id_to_country.csv": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/city_id_to_country.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/city_id_to_country.csv"
-  ],
-  "city_layer_from_pdf.csv": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/city_layer_from_pdf.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/city_layer_from_pdf.csv"
-  ],
-  "cloud_regions_import.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/cloud_regions_import.csv"
-  ],
-  "cloud_regions_master.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/cloud_regions_master.csv"
-  ],
-  "cloud_regions_with_water_rankings_v2.xlsx": [
-   "Final Master Thesis/cloud_regions_with_water_rankings_v2.xlsx"
-  ],
-  "colo-pricing-h1-2021_sample.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/colo-pricing-h1-2021_sample.xlsx"
-  ],
-  "composer.json": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/wp-travel.11.1.1/wp-travel/inc/gateways/standard-paypal/php-paypal-ipn/composer.json",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/wp-travel.11.1.1/wp-travel/inc/gateways/standard-paypal/php-paypal-ipn/composer.json"
-  ],
-  "console_snapshot.json": [
-   "sovereign-infra/var/console_snapshot.json"
-  ],
-  "counsel.md": [
-   "sovereign-infra/agents/counsel.md"
-  ],
-  "country_scores_scenarios.csv.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/country_scores_scenarios.csv.xlsx"
-  ],
-  "create-a-custom-agent.md.pdf": [
-   "sovereign-infra/_QUARANTINE/2026-07-28/create-a-custom-agent.md.pdf"
-  ],
-  "cse_country_metrics.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/cse_country_metrics.csv"
-  ],
-  "cse_landings_inferred.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/cse_landings_inferred.csv"
-  ],
-  "cse_percolation.json": [
-   "qesis-mcp/data/axes/cse_percolation.json"
-  ],
-  "d-ind-ict_mdd-2025-1-pdf-e.pdf": [
-   "Final Master Thesis/d-ind-ict_mdd-2025-1-pdf-e.pdf"
-  ],
-  "data_FAQ.md": [
-   "Final Master Thesis/data_FAQ.md"
-  ],
-  "data_dictionary_country-rankings.md": [
-   "Final Master Thesis/data_dictionary_country-rankings.md"
-  ],
-  "data_dictionary_water-risk-atlas.md": [
-   "Final Master Thesis/data_dictionary_water-risk-atlas.md"
-  ],
-  "demo-trip.csv": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/wp-travel.11.1.1/wp-travel/assets/demo-trip.csv",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/wp-travel.11.1.1/wp-travel/assets/demo-trip.csv"
-  ],
-  "documentos_sem_licenca.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/documentos_sem_licenca.csv"
-  ],
-  "domains.json": [
-   "qesis-mcp/data/domains.json"
-  ],
-  "eBookMonitoringModernInfrastructure.pdf": [
-   "qesis-mcp/Digital Twin R&D/eBookMonitoringModernInfrastructure.pdf"
-  ],
-  "electricity_yearly_global_EMBER.csv": [
-   "qesis-mcp/data/electricity_yearly_global_EMBER.csv"
-  ],
-  "electricity_yearly_lower_EUROPE_EMBER.csv": [
-   "qesis-mcp/data/electricity_yearly_lower_EUROPE_EMBER.csv"
-  ],
-  "ember_electricity_data_methodology.pdf": [
-   "qesis-mcp/data/ember_electricity_data_methodology.pdf"
-  ],
-  "ember_ese_evidence.json": [
-   "qesis-mcp/data/axes/ember_ese_evidence.json"
-  ],
-  "emodnet_cse_evidence.json": [
-   "qesis-mcp/data/axes/emodnet_cse_evidence.json"
-  ],
-  "equifinality_v85.json": [
-   "qesis-mcp/data/fsqca/equifinality_v85.json"
-  ],
-  "europarl_plenary_docs.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/europarl_plenary_docs.csv"
-  ],
-  "eurostat_industrial_electricity.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/eurostat_industrial_electricity.csv"
-  ],
-  "ext_go_agg_esms.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/ext_go_agg_esms.sdmx/ext_go_agg_esms.xlsx"
-  ],
-  "fidelity_full_sample.json": [
-   "qesis-mcp/data/axes/fidelity_full_sample.json"
-  ],
-  "frames_v9_1.json": [
-   "qesis-mcp/data/frames_v9_1.json"
-  ],
-  "fsqca.md": [
-   "qesis-mcp/docs/fsqca.md"
-  ],
-  "fsqca_agentic_failure.json": [
-   "sovereign-infra/var/fsqca_agentic_failure.json"
-  ],
-  "fsqca_block.json": [
-   "sovereign-infra/var/staged/v8.5/fsqca_block.json"
-  ],
-  "governance_itu_interconnection_v1.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/governance_itu_interconnection_v1.xlsx"
-  ],
-  "hai-ai-index-2025-policy-highlights.pdf": [
-   "Final Master Thesis/hai-ai-index-2025-policy-highlights.pdf"
-  ],
-  "handshake_latest.json": [
-   "qesis-mcp/04_Workspace_Handshakes/handshake_latest.json"
-  ],
-  "herald.md": [
-   "sovereign-infra/agents/herald.md"
-  ],
-  "hyperscale_operators.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/hyperscale_operators.csv"
-  ],
-  "infra_connectivity_feature_block_panel_WITH_CONCENTRATION.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/infra_connectivity_feature_block_panel_WITH_CONCENTRATION.csv"
-  ],
-  "instructions.md": [
-   "qesis-mcp/my-agent/agent/instructions.md"
-  ],
-  "itu_data_extract_1770553208957.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/itu_data_extract_1770553208957.csv"
-  ],
-  "legacy_fsqca_solution_v66.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/legacy_fsqca_solution_v66.csv"
-  ],
-  "liquid-sovereignty-essay-linkedin.md": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/liquid-sovereignty-essay-linkedin.md"
-  ],
-  "macro_template.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/macro_template.csv"
-  ],
-  "manifest.json": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/FULL DATA ECOSYSTEM/wp-travel.11.1.1/wp-travel/app/assets/manifest.json",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/wp-travel.11.1.1/wp-travel/app/assets/manifest.json"
-  ],
-  "marketplace-api_aws.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/AWS download/marketplace-api_aws.pdf"
-  ],
-  "master_data.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/master_data.csv",
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/master_data.csv"
-  ],
-  "mcp_payload.json": [
-   "qesis-mcp/mcp_payload.json"
-  ],
-  "metadata-EMODnet_HA_OG_Offshore_Installations_20201021.pdf": [
-   "Final Master Thesis/metadata-EMODnet_HA_OG_Offshore_Installations_20201021.pdf"
-  ],
-  "mit-cio-generative-ai-report.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/mit-cio-generative-ai-report.pdf"
-  ],
-  "ne_10m_populated_places_dbf.pdf": [
-   "Final Master Thesis/ne_10m_populated_places_dbf.pdf"
-  ],
-  "odi_capacity_bounds.json": [
-   "qesis-mcp/data/axes/odi_capacity_bounds.json"
-  ],
-  "package-lock.json": [
-   "qesis-mcp/package-lock.json",
-   "qesis-mcp/my-agent/package-lock.json"
-  ],
-  "package.json": [
-   "qesis-mcp/package.json",
-   "qesis-mcp/my-agent/package.json"
-  ],
-  "qesis_graph.json": [
-   "qesis-mcp/data/qesis_graph.json"
-  ],
-  "qesis_v8.0_superseded.json": [
-   "qesis-mcp/data/qesis_v8.0_superseded.json",
-   "sovereign-infra/ops/qesis-mcp-private/data/qesis_v8.0_superseded.json"
-  ],
-  "qesis_v8.2_superseded.json": [
-   "qesis-mcp/data/qesis_v8.2_superseded.json",
-   "sovereign-infra/ops/qesis-mcp-private/data/qesis_v8.2_superseded.json"
-  ],
-  "qesis_v8.3_CANDIDATE.json": [
-   "qesis-mcp/data/qesis_v8.3_CANDIDATE.json",
-   "sovereign-infra/ops/qesis-mcp-private/data/qesis_v8.3_CANDIDATE.json"
-  ],
-  "qesis_v8.json": [
-   "qesis-mcp/data/qesis_v8.json"
-  ],
-  "query_Copilot.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/query_Copilot.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/query_Copilot.pdf"
-  ],
-  "query_copilot_2.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/query_copilot_2.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/query_copilot_2.pdf"
-  ],
-  "query_copilot_3.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/query_copilot_3.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/query_copilot_3.pdf"
-  ],
-  "receipt_Ontological_Blind_Spots_Thesis.pdf.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/WRITTING SAMPLES - MASTER THESIS/receipt_Ontological_Blind_Spots_Thesis.pdf.pdf"
-  ],
-  "rethinking-the-financial-network.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/rethinking-the-financial-network.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/rethinking-the-financial-network.pdf"
-  ],
-  "retrieval_manifest.json": [
-   "qesis-mcp/scripts/retrieval_manifest.json"
-  ],
-  "roi-of-ai-assisted-software-development-2026.pdf": [
-   "qesis-mcp/Digital Twin R&D/roi-of-ai-assisted-software-development-2026.pdf"
-  ],
-  "scout.md": [
-   "sovereign-infra/agents/scout.md"
-  ],
-  "sentinel.md": [
-   "sovereign-infra/agents/sentinel.md"
-  ],
-  "servers.json": [
-   "sovereign-infra/pgadmin/servers.json"
-  ],
-  "single event file.txt.json": [
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/single event file.txt.json"
-  ],
-  "single event file_ai agent.json": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/single event file_ai agent.json"
-  ],
-  "statistic_id1262346_projected-electricity-generation-worldwide-1995-2050.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/statistic_id1262346_projected-electricity-generation-worldwide-1995-2050.xlsx"
-  ],
-  "statistic_id1418478_electricity-demand-in-the-european-union-outlook-2050-by-sector-and-scenario.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/statistic_id1418478_electricity-demand-in-the-european-union-outlook-2050-by-sector-and-scenario.xlsx"
-  ],
-  "statistic_id1418493_electricity-demand-in-the-european-union-outlook-2030-by-sector-and-scenario.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/statistic_id1418493_electricity-demand-in-the-european-union-outlook-2030-by-sector-and-scenario.xlsx"
-  ],
-  "statistic_id1461657_industrial-electricity-prices-worldwide-2016-2023-by-select-country.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/statistic_id1461657_industrial-electricity-prices-worldwide-2016-2023-by-select-country.xlsx"
-  ],
-  "statistic_id1536969_ai-electricity-consumption-worldwide-2023-2028.xlsx": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/statistic_id1536969_ai-electricity-consumption-worldwide-2023-2028.xlsx"
-  ],
-  "status_snapshot.json": [
-   "sovereign-infra/var/status_snapshot.json"
-  ],
-  "study_id15684_water-statista-dossier.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id15684_water-statista-dossier.pdf"
-  ],
-  "study_id161993_the-polycrisis.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id161993_the-polycrisis.pdf"
-  ],
-  "study_id162257_consumer-trends-2024.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id162257_consumer-trends-2024.pdf"
-  ],
-  "study_id163605_tech-trends-2024.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id163605_tech-trends-2024.pdf"
-  ],
-  "study_id188383_geothermal-energy-worldwide.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id188383_geothermal-energy-worldwide.pdf"
-  ],
-  "study_id193250_global-energy-consumption-outlook.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id193250_global-energy-consumption-outlook.pdf"
-  ],
-  "study_id75419_environmental-impact-of-ai.pdf": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/DATABASE Thesis/Final Data/electricity grid/study_id75419_environmental-impact-of-ai.pdf"
-  ],
-  "subcables.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/subcables.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/subcables.pdf"
-  ],
-  "subcables3.pdf": [
-   "Final Master Thesis/FULL DATA ECOSYSTEM/subcables3.pdf",
-   "Final Master Thesis/_DUPLICATES_QUARANTINE/Thesis AI/data/run_audit.py/subcables3.pdf"
-  ],
-  "telegeography-transport-networks-research-executive-summary.pdf": [
-   "Final Master Thesis/telegeography-transport-networks-research-executive-summary.pdf"
-  ],
-  "tokens.css": [
-   "sovereign-infra/design/tokens.css"
-  ],
-  "tsconfig.json": [
-   "qesis-mcp/tsconfig.json",
-   "qesis-mcp/my-agent/tsconfig.json"
-  ],
-  "u02_restatement.json": [
-   "qesis-mcp/data/axes/u02_restatement.json"
-  ],
-  "u07_odi_override_export.json": [
-   "qesis-mcp/data/axes/u07_odi_override_export.json"
-  ],
-  "uncertainty_U-02.json": [
-   "sovereign-infra/var/staged/v8.5/uncertainty_U-02.json"
-  ],
-  "v8_aqueduct_4_0_batch_35.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_aqueduct_4_0_batch_35.csv"
-  ],
-  "v8_bau_assumptions.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_bau_assumptions.csv"
-  ],
-  "v8_cable_registry_343.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_cable_registry_343.csv"
-  ],
-  "v8_corrections_log_v7_1.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_corrections_log_v7_1.csv"
-  ],
-  "v8_cover.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_cover.csv"
-  ],
-  "v8_csove_master_data.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_csove_master_data.csv"
-  ],
-  "v8_csove_methodology.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_csove_methodology.csv"
-  ],
-  "v8_csove_rankings.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_csove_rankings.csv"
-  ],
-  "v8_energy_2050_projections.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_energy_2050_projections.csv"
-  ],
-  "v8_esc_compliance.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_esc_compliance.csv"
-  ],
-  "v8_esc_srf_framework.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_esc_srf_framework.csv"
-  ],
-  "v8_ese_v7_telemetry.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_ese_v7_telemetry.csv"
-  ],
-  "v8_ese_v8_component_audit.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_ese_v8_component_audit.csv"
-  ],
-  "v8_fsqca_truth_tables.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_fsqca_truth_tables.csv"
-  ],
-  "v8_fsqca_v7_1_ese_tests.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_fsqca_v7_1_ese_tests.csv"
-  ],
-  "v8_key_eff_sovereignty_35.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_key_eff_sovereignty_35.csv"
-  ],
-  "v8_landing_stations_city_node.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_landing_stations_city_node.csv"
-  ],
-  "v8_lindblad_d_rho_spec.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_lindblad_d_rho_spec.csv"
-  ],
-  "v8_macro_template_lindblad.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_macro_template_lindblad.csv"
-  ],
-  "v8_oecd_tiva_2025.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_oecd_tiva_2025.csv"
-  ],
-  "v8_outcome_calibration.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_outcome_calibration.csv"
-  ],
-  "v8_physical_constraints_matrix.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_physical_constraints_matrix.csv"
-  ],
-  "v8_qct_v7_1_matrix_with_ese.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_qct_v7_1_matrix_with_ese.csv"
-  ],
-  "v8_qesis_country_scores.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_qesis_country_scores.csv"
-  ],
-  "v8_qesis_temporal.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_qesis_temporal.csv"
-  ],
-  "v8_rare_earths_ree.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_rare_earths_ree.csv"
-  ],
-  "v8_telegeography_corridors_2025.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_telegeography_corridors_2025.csv"
-  ],
-  "v8_theoretical_memo.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_theoretical_memo.csv"
-  ],
-  "v8_thesis_dphil_gaps.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_thesis_dphil_gaps.csv"
-  ],
-  "v8_timeevolution_bau.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_timeevolution_bau.csv"
-  ],
-  "v8_v7_2_full_coverage_results.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_v7_2_full_coverage_results.csv"
-  ],
-  "v8_v8_0_canonical_declaration.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_v8_0_canonical_declaration.csv"
-  ],
-  "v8_viva_prep.csv": [
-   "Final Master Thesis/_DATABASE/csv_exports/v8_viva_prep.csv"
-  ],
-  "v9_1_sdi_scaffold.json": [
-   "qesis-mcp/data/axes/v9_1_sdi_scaffold.json"
-  ],
-  "v9_sfc_scaffold.json": [
-   "qesis-mcp/data/axes/v9_sfc_scaffold.json"
-  ],
-  "vercel.json": [
-   "qesis-mcp/vercel.json",
-   "sovereign-infra/site/vercel.json"
-  ],
-  "vintage_lineage.json": [
-   "qesis-mcp/data/vintage_lineage.json",
-   "sovereign-infra/ops/vintage_lineage.json"
-  ],
-  "vintage_lineage_row.md": [
-   "sovereign-infra/var/staged/v8.5/vintage_lineage_row.md"
-  ],
-  "vulnerabilities in the semicondutor supply chain_OECD.pdf": [
-   "qesis-mcp/Digital Twin R&D/vulnerabilities in the semicondutor supply chain_OECD.pdf"
-  ],
-  "wse_ese_template_TFM.csv": [
-   "Final Master Thesis/Thesis AI/data/run_audit.py/wse_ese_template_TFM.csv"
-  ]
  }
 }
