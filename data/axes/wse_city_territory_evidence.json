@@ -1,7 +1,7 @@
 {
  "_doc": "WSE for the three territories the Aqueduct 4.0 country rollup does not carry, computed from the gridded baseline that does. Evidence only. Nothing here changes a composite until the methodology decision is signed.",
  "generator": "scripts/wse_city_territory.py",
- "source_grid": "C:\\Users\\Lenovo\\OneDrive\\Documents\\INITIUM\\Master IR & GE\\Final Master Thesis\\Aqueduct40_baseline_annual_y2023.csv",
+ "source_grid": "/sessions/youthful-affectionate-wright/mnt/Final Master Thesis/Aqueduct40_baseline_annual_y2023.csv",
  "method": "Area-weighted mean of bws_score over the catchment records belonging to each territory by GADM identity (gid_0, falling back to name_0 or name_1 because a territory the rollup collapses may sit nested under its parent), rescaled by 20. The rescale is read off the published rollup, where wse_bws_tot_0_100 equals score_bws_tot times 20, verified against AFG 3.369185991 to 67.38371982.",
  "rescale": 20.0,
  "records_scanned": 68510,
@@ -74,5 +74,7 @@
  },
  "uncertainty": "A catchment crossing a border is counted whole to whichever territory its GADM identity names. For a small territory that is a material share of the total area, so the figure carries more spread than a large state's.",
  "confounder": "If Aqueduct weights its country rollup by population or by withdrawal rather than by area, the reconstruction will diverge systematically. The falsifier detects exactly that, which is why it is not optional.",
+ "diagnosis": "source_has_no_value",
+ "records_with_country_attribution": 9850,
  "decision_required": "Admitting a value derived this way beside 32 derived from the rollup creates a method asymmetry. The falsifier verdict decides which of the two publishable routes is honest, and the human signs it."
 }

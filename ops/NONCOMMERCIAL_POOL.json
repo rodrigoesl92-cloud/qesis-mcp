@@ -1,0 +1,21 @@
+{
+ "_doc": "The sources cleared for non-commercial use only, and every deliverable that draws on them. Read by scripts/verify_noncommercial_scope.py, which refuses any commercial deliverable drawing on this pool. The clearance of Article 14 Decision 6 on 2026-08-28 rests on this file staying true.",
+ "_why_this_exists": "Non-commercial is a property of the USE and not of the user. A declaration that the platform is non-commercial clears CC-BY-NC sources for the public surface and clears nothing else. The exposure it creates is retroactive: if one of these sources reaches a paid deliverable next year, the use was out of scope from the day it started and no later document repairs it. This file plus its gate is the control that keeps the clearance true rather than remembered.",
+ "clearance": {
+  "decision": "Article 14 Decision 6, licence resolution and monetisation clearance",
+  "cleared_by": "R. Batista Silva",
+  "cleared_utc": "2026-08-28",
+  "scope": "The free, public, non-commercial surface of qesis.eu and the academic thesis lineage. Nothing else.",
+  "grounds": "The platform delivers the Infrastructural Trilemma hypothesis as public academic foresight and charges nothing for it. CC-BY-NC terms are satisfied for that use.",
+  "does_not_cover": [
+   "Any institutional or enterprise licence over output derived from these sources",
+   "Any paid data pack, report or consulting deliverable",
+   "Any redistribution of the source data itself, which the licences govern separately"
+  ],
+  "lapses_when": "Any deliverable drawing on a pooled source declares a price, a licence fee or an institutional-licence flag. The gate refuses that build."
+ },
+ "sources": [],
+ "_sources_note": "Populated by SENTINEL licence_audit from the acquisition register. Empty means the audit has not yet named the pool, and the gate degrades rather than passing vacuously.",
+ "deliverables": [],
+ "_deliverables_note": "Populated when the first deliverable is defined. The public site is not a deliverable in this sense because it carries no revenue marker."
+}

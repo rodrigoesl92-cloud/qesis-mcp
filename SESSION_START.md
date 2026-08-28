@@ -26,6 +26,21 @@ things about this ecosystem that were false, and every one of them was false in
 the same way: **the claim came from something other than the thing being claimed
 about.**
 
+## Before the four commands: read the dispatch
+
+`ops/DISPATCH.json` is written every morning by a GitHub runner, not by a person
+and not on anybody's machine. It carries the verdict, every control with the
+command that produced it, and every finding **already routed by the SH-10b table**.
+
+Open it first. Execute the rows that carry your mandate, in the session that reads
+them. Occurrences one to three never reach the operator, and the dispatch is where
+they go instead. A row addressed to HUMAN that names no SH-4 clause is misrouted by
+definition and is yours, not his.
+
+The plain-English half of the same run is `ops/OPERATOR_BRIEF.md`, published to
+qesis.eu/status so the operator can read it from a phone in any country with every
+machine of his switched off.
+
 ## The four commands that orient a session
 
 Run these before saying anything about the state of this project. They take

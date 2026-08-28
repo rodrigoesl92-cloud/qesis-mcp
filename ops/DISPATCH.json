@@ -1,0 +1,97 @@
+{
+ "_doc": "The agent-facing half of the daily brief. Read this before deciding what to do. Every row is already routed by the SH-10b table. Execute your own rows in the session that reads them; occurrences one to three never reach the operator.",
+ "_read_order": [
+  "ops/AUDIT_REPORT.md",
+  "ops/SELFHEAL_LATEST.json",
+  "ops/reports/<latest>.md",
+  "ops/CI_LAST_FAILURE.md",
+  "ops/PATH_REGISTRY.json",
+  "ops/ECOSYSTEM_STATE.json",
+  "CLAUDE.md"
+ ],
+ "_hard_rules": [
+  "Never run any git command from a zero-trust analysis mount, read-only included (L-122, L-123, L-150).",
+  "Connect C:\\Users\\Lenovo\\OneDrive\\sovereign-infra. The non-OneDrive path is an empty decoy (L-143).",
+  "A control that did not execute is NOT MEASURED, never a pass (D-120).",
+  "Never report a count of open items to the operator. Deliver items to their owners."
+ ],
+ "generated_utc": "2026-08-28T22:15:24Z",
+ "served_vintage": "v9.0 (2026-08-13)",
+ "verdict": "GREEN",
+ "controls": [
+  {
+   "finding": "the lessons ledger is whole",
+   "verdict": "holding",
+   "owner": "ARCHITECT",
+   "command": "python scripts/verify_ledger_singleton.py",
+   "tail": "LEDGER SINGLETON CHECK PASSED"
+  },
+  {
+   "finding": "no new class of failure appeared",
+   "verdict": "holding",
+   "owner": "ARCHITECT",
+   "command": "python scripts/rdl.py ci-blocking",
+   "tail": "RDL DELTA GATE PASSED: 6 accepted, 0 regressions. The ladder introduces no new escalation in this change set."
+  },
+  {
+   "finding": "every published address works",
+   "verdict": "holding",
+   "owner": "ARCHITECT",
+   "command": "python scripts/verify_static_routes.py",
+   "tail": "STATIC ROUTE CHECK PASSED: every declared address resolves to a file the platform serves."
+  },
+  {
+   "finding": "no setting points at the wrong folder",
+   "verdict": "holding",
+   "owner": "ARCHITECT",
+   "command": "python scripts/verify_config_paths.py",
+   "tail": "CONFIG PATH CHECK PASSED: no tracked config names a declared decoy."
+  },
+  {
+   "finding": "the licence stays inside its scope",
+   "verdict": "holding",
+   "owner": "COUNSEL",
+   "command": "python scripts/verify_noncommercial_scope.py",
+   "tail": "NON-COMMERCIAL SCOPE CHECK PASSED: every source is used inside the scope it was cleared for."
+  },
+  {
+   "finding": "the index is publishable",
+   "verdict": "holding",
+   "owner": "SENTINEL",
+   "command": "python scripts/verify_index.py",
+   "tail": "GATE PASSED: index is publishable."
+  },
+  {
+   "finding": "the evidence chain reproduces",
+   "verdict": "holding",
+   "owner": "SENTINEL",
+   "command": "python scripts/verify_chain.py",
+   "tail": "CHAIN CHECK PASSED: the attestation reproduces from the committed spine."
+  }
+ ],
+ "board_degraded": null,
+ "fed_by": [
+  "ops/SELFHEAL_LATEST.json, hourly self-heal loop",
+  "ops/AUDIT_REPORT.md, cross-repository audit",
+  "ops/CI_LAST_FAILURE.md, CI feedback on a real failure",
+  "ops/RDL_LADDER.json, the escalation ladder",
+  "ops/reports/, the daily runner narrative",
+  "the control set, executed in this run"
+ ],
+ "actions": [
+  {
+   "source": "RDL ladder",
+   "owner": "ARCHITECT",
+   "finding": "git_lock_family at rung 4: the control sits in the wrong layer and no D- answers it yet",
+   "verdict": "RUNG 4, UNANSWERED",
+   "measured_by": "python scripts/rdl.py status",
+   "routed_by": "SH-10b table, not by judgement",
+   "action": "execute now, in this session, and record the repair. Do not file a row instead of repairing it (SH-3)."
+  }
+ ],
+ "actions_by_owner": {
+  "ARCHITECT": [
+   "git_lock_family at rung 4: the control sits in the wrong layer and no D- answers it yet"
+  ]
+ }
+}

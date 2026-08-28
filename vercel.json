@@ -23,6 +23,14 @@
       "dest": "/api/index"
     },
     {
+      "src": "/status",
+      "dest": "/status.html"
+    },
+    {
+      "src": "/status.html",
+      "dest": "/status.html"
+    },
+    {
       "src": "/",
       "dest": "/index.html"
     },
