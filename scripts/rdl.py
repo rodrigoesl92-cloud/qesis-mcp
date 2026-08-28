@@ -125,6 +125,47 @@ def find_store() -> Path | None:
     return next((p for p in STORES if p.exists()), None)
 
 
+def reservation_dirs() -> tuple[list[Path], list[str]]:
+    """Every ops directory that can hold a reservation: this one and the pair's.
+
+    WHY BOTH SIDES, added 2026-08-28. The ledger is ONE file mirrored across two
+    repositories, and R3 of the singleton gate exists to prove it. Reservations
+    were read from this repository alone, so two sessions working the pair at the
+    same time allocated the same id from two different checkouts. Measured that
+    evening: a scheduled task reserved L-203 in qesis-mcp at 20:15 local and this
+    executor issued L-203 again in sovereign-infra eleven minutes later, because
+    nothing it read could see the other side. That is L-073 reached through the
+    module written to prevent L-073, and it is L-196's rule arriving at the
+    allocator: a declaration about a pair of repositories is built from both
+    sides or it is not built.
+
+    Resolved by the singleton gate's own resolver, so there is ONE definition of
+    where the sibling is (L-169), and the decoy stub at C:\\Users\\Lenovo\\
+    sovereign-infra is never mistaken for the repository (L-143).
+
+    Returns the directories AND the human-readable scope, because a sibling that
+    is not checked out narrows the allocation base and the caller must say so
+    rather than allocate as if the other side were empty (D-007).
+    """
+    dirs = [ROOT / "ops"]
+    notes: list[str] = []
+    try:
+        import importlib.util as _ilu
+        spec = _ilu.spec_from_file_location(
+            "_vls", ROOT / "scripts" / "verify_ledger_singleton.py")
+        mod = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        for led in mod.sibling_ledgers(ROOT, ROOT / "ops" / "LESSONS_LEDGER.md"):
+            d = led.parent
+            if d.is_dir() and d.resolve() != (ROOT / "ops").resolve():
+                dirs.append(d)
+    except Exception as exc:
+        notes.append(f"sibling unresolved ({type(exc).__name__}), one side only")
+    if len(dirs) == 1 and not notes:
+        notes.append("sibling not checked out, one side only")
+    return dirs, notes
+
+
 def reserved_ids() -> set[int]:
     """Ids already allocated into a pending append but not yet in the ledger.
 
@@ -138,18 +179,94 @@ def reserved_ids() -> set[int]:
     store. This also picks up ids reserved by another agent's pending file, which
     is how COUNSEL's scheduled sweep and this executor stay out of each other's
     range without either of them locking the ledger (L-152).
+
+    Since 2026-08-28 it reads BOTH repositories rather than only this one. See
+    `reservation_dirs` for why.
     """
+    return ids_in_dirs(reservation_dirs()[0])
+
+
+def ids_in_dirs(dirs) -> set[int]:
+    """Every id reserved in the given ops directories. Pure, so it has fixtures."""
     out: set[int] = set()
-    ops = ROOT / "ops"
-    if not ops.is_dir():
-        return out
-    for f in sorted(ops.glob("RDL_PENDING*.md")):
-        text = f.read_text(encoding="utf-8", errors="replace")
-        out |= {int(m) for m in re.findall(r"\*\*L-(\d{3})", text)}
-        # COUNSEL's sweep writes "provisionally L-150" in prose rather than as an
-        # entry header, so a reservation in either shape is honoured.
-        out |= {int(m) for m in re.findall(r"[Pp]rovisionally L-(\d{3})", text)}
+    for ops in dirs:
+        if not ops.is_dir():
+            continue
+        for f in sorted(ops.glob("RDL_PENDING*.md")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            out |= {int(m) for m in re.findall(r"\*\*L-(\d{3})", text)}
+            # COUNSEL's sweep writes "provisionally L-150" in prose rather than
+            # as an entry header, so a reservation in either shape is honoured.
+            out |= {int(m) for m in re.findall(r"[Pp]rovisionally L-(\d{3})", text)}
     return out
+
+
+def selftest() -> int:
+    """V-2 for the allocator. Rung 2 for `declaration_built_from_one_side_of_a_pair`.
+
+    The duplicate of 2026-08-28 was not caught by anything, because nothing in
+    this module had a fixture at all. One refuse and one accept, or the gate is
+    a coin (L-049).
+    """
+    import tempfile
+    fails: list[str] = []
+    n = 0
+    with tempfile.TemporaryDirectory() as d:
+        a, b = Path(d) / "repo_a" / "ops", Path(d) / "repo_b" / "ops"
+        a.mkdir(parents=True)
+        b.mkdir(parents=True)
+        (a / "RDL_PENDING_APPEND.md").write_text(
+            "**L-300 · reserved in this repository** body\n", encoding="utf-8")
+        (b / "RDL_PENDING_APPEND.md").write_text(
+            "**L-301 · reserved in the paired repository** body\n", encoding="utf-8")
+
+        # REFUSE: the one-sided read, which is the 2026-08-28 duplicate exactly
+        # as it happened. A reservation in the pair must not be invisible.
+        if 301 in ids_in_dirs([a]):
+            fails.append("the fixture is wrong: a one-sided read saw the sibling")
+        n += 1
+        # ACCEPT: both sides, both ids.
+        both = ids_in_dirs([a, b])
+        if both != {300, 301}:
+            fails.append(f"a both-sides read returned {sorted(both)}, expected [300, 301]")
+        n += 1
+        # A prose reservation is honoured wherever it lives (L-152).
+        (b / "RDL_PENDING_sweep.md").write_text(
+            "COUNSEL reserves provisionally L-302 for the sweep\n", encoding="utf-8")
+        if 302 not in ids_in_dirs([a, b]):
+            fails.append("a prose reservation in the sibling was missed")
+        n += 1
+        # The allocation floor is the HIGHEST reservation anywhere in the pair.
+        if max(ids_in_dirs([a, b])) != 302:
+            fails.append("the allocation floor ignored the sibling's highest id")
+        n += 1
+        # An absent sibling narrows the base and must never read as empty.
+        if ids_in_dirs([a, Path(d) / "not_checked_out" / "ops"]) != {300}:
+            fails.append("an absent directory changed the result instead of being skipped")
+        n += 1
+
+    # Live half: the scope of the read is reported, and no id is reserved twice
+    # across the pair right now. The second is the condition L-073 makes a build
+    # failure, checked before it can reach the ledger rather than after.
+    dirs, notes = reservation_dirs()
+    if len(dirs) == 1 and not notes:
+        fails.append("a one-sided read reported no scope note")
+    n += 1
+    seen: dict[int, list[str]] = {}
+    for ops in dirs:
+        for i in ids_in_dirs([ops]):
+            seen.setdefault(i, []).append(str(ops))
+    dupes = {i: v for i, v in seen.items() if len(v) > 1}
+    if dupes:
+        fails.append("id reserved on both sides of the pair: "
+                     + ", ".join(f"L-{i:03d}" for i in sorted(dupes)))
+    n += 1
+
+    for f in fails:
+        print(f"SELFTEST FAIL: {f}")
+    print("RDL ALLOCATOR SELFTEST: "
+          + (f"PASSED, {n} fixtures" if not fails else f"FAILED, {len(fails)} of {n}"))
+    return 1 if fails else 0
 
 
 def next_lesson_id() -> tuple[int, str]:
@@ -173,11 +290,17 @@ def next_lesson_id() -> tuple[int, str]:
             f"RDL REFUSES: cannot allocate a lesson id from the accessor ({exc}). "
             "Reading the tail of the ledger is not a fallback, it is L-151."
         )
+    dirs, notes = reservation_dirs()
     res = reserved_ids()
     nxt = max([ledger_max] + sorted(res)) + 1
     how = f"verify_ledger_singleton.py .max={ledger_max}"
     if res:
         how += f" plus {len(res)} reserved in ops/RDL_PENDING*.md, highest L-{max(res):03d}"
+    # The SCOPE of the read is part of the claim. An allocation made from one
+    # side of the pair is still an allocation, and it says so (L-196, D-007).
+    how += f", reservations read from {len(dirs)} ops director{'y' if len(dirs) == 1 else 'ies'}"
+    if notes:
+        how += " (" + "; ".join(notes) + ")"
     return nxt, how
 
 
@@ -589,6 +712,7 @@ def main() -> int:
                    help="the L- ids that record those prior occurrences")
     sub.add_parser("status")
     sub.add_parser("ci-blocking")
+    sub.add_parser("selftest")
     bl = sub.add_parser("baseline")
     bl.add_argument("--accept", action="store_true")
     bl.add_argument("--reason", default="")
@@ -602,6 +726,8 @@ def main() -> int:
         return cmd_status()
     if a.cmd == "ci-blocking":
         return cmd_ci_blocking()
+    if a.cmd == "selftest":
+        return selftest()
     if a.cmd == "baseline":
         return cmd_baseline(a.accept, a.reason)
     if a.cmd == "clear":

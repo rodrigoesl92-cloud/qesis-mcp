@@ -1,11 +1,11 @@
 # QESIS+ full ecosystem audit
 
-Generated 2026-08-28T03:35:28Z by `scripts/audit_ecosystem.py`.
+Generated 2026-08-28T04:11:59Z by `scripts/audit_ecosystem.py`.
 Every row carries the command that produced it, the exit code it returned, and
 the predicate that decided its verdict. An exit code alone never decides a
 measurement (D-116, V-5). Nothing here is asserted; V-1.
 
-## Verdict: NOT GREEN, 1 failing (4 informational)
+## Verdict: GREEN (4 informational)
 
 
 
@@ -37,7 +37,7 @@ measurement (D-116, V-5). Nothing here is asserted; V-1.
 | 24 | compliance chain | **PASS** | 0 | predicate: every prev_hash equals the previous entry_hash (0 breaks) |
 | 25 | qesis-mcp: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
 | 26 | qesis-mcp: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
-| 27 | qesis-mcp: required and owned checks on main | **FAIL** | 0 | measurement: every REQUIRED status check and every completed check this repository OWNS must be success on mai |
+| 27 | qesis-mcp: required and owned checks on main | **PASS** | 0 | measurement: all 1 required check(s) and every completed owned check on main are success; integrations the eco |
 | 28 | qesis-mcp: open issues | **INFO** | 0 | measurement: 0 open issue(s), recorded |
 | 29 | sovereign-infra: open pull requests | **PASS** | 0 | measurement: 0 open pull requests |
 | 30 | sovereign-infra: main | **INFO** | 0 | measurement: recorded for the deployment comparison |
@@ -56,8 +56,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository qesis-mcp
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 184 max L-201 sha256 4009c6c03efc
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 184 max L-201 sha256 4009c6c03efc
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 185 max L-202 sha256 0b4ca2d6c30b
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 185 max L-202 sha256 0b4ca2d6c30b
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -69,7 +69,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  (repository: qesis-mcp)
-  entries 184, unique 184, max L-201, sha256 4009c6c03efc51fd
+  entries 185, unique 185, max L-202, sha256 0b4ca2d6c30bc12c
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md)
@@ -225,8 +225,8 @@ Basis: gate: exit code is the contract
 
 ```
 LEDGER SYNC: 2 reachable cop(y/ies), repository sovereign-infra
-  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 184 max L-201 sha256 4009c6c03efc
-  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 184 max L-201 sha256 4009c6c03efc
+  canonical    C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  entries 185 max L-202 sha256 0b4ca2d6c30b
+  canonical    C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md  entries 185 max L-202 sha256 0b4ca2d6c30b
 LEDGER SYNC: every reachable copy is already canonical and identical. Zero is zero.
 ```
 
@@ -238,7 +238,7 @@ Basis: gate: exit code is the contract
 
 ```
 ledger: C:\Users\Lenovo\OneDrive\sovereign-infra\ops\LESSONS_LEDGER.md  (repository: sovereign-infra)
-  entries 184, unique 184, max L-201, sha256 4009c6c03efc51fd
+  entries 185, unique 185, max L-202, sha256 0b4ca2d6c30bc12c
   R1  no duplicate id
   R2  17 absent ids, all declared
   R3  sibling agrees (C:\Users\Lenovo\qesis-mcp\ops\LESSONS_LEDGER.md)
@@ -298,7 +298,7 @@ RDL DELTA GATE PASSED: 6 accepted, 0 regressions. The ladder introduces no new e
 Basis: gate: exit code is the contract
 
 ```
-OK   workflow contract holds: 12 CI scripts, 19 local controls, 17 declared exemptions, tracked via git ls-files
+OK   workflow contract holds: 13 CI scripts, 20 local controls, 17 declared exemptions, tracked via git ls-files
      scope: 10 control script(s) absent from this repository, out of scope here per selfheal.controls_present(): build_eval.py, build_graph.py, build_landing.py, build_percolation_block.py, self_exposure.py, test_gate.py, verify_axis_sfc.py, verify_index.py, verify_no_plaintext_secrets.py, verify_vintage_pairing.py
 ```
 
@@ -309,7 +309,7 @@ OK   workflow contract holds: 12 CI scripts, 19 local controls, 17 declared exem
 Basis: gate: exit code is the contract
 
 ```
-scope: 18 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, ecosystem_state_check, runner_merge_selftest, reading_contract, gcp_triggers, test_gate
+scope: 20 control(s) out of scope in this repository, script not present: verify_index, verify_chain, verify_vintage_pairing, verify_axis_sfc, verify_action_pinning, verify_secrets, verify_workflow, doctrine_gate, doctrine_fixtures, kill_switch, build_graph_check, build_percolation_check, self_exposure_check, build_eval_check, build_landing_check, ecosystem_state_check, runner_merge_selftest, reading_contract, gcp_triggers, test_gate
 SELFHEAL SELFTEST: PASSED, 6 fixtures
 ```
 
@@ -320,10 +320,10 @@ SELFHEAL SELFTEST: PASSED, 6 fixtures
 Basis: gate: exit code is the contract
 
 ```
-  PASS  The self-heal runner survives this repository's script set
-  PASS  The evidence hierarchy holds and its contract refuses
   PASS  Every third-party action is pinned to a full-length commit
   PASS  The runner merge decision refuses and accepts what it must
+  PASS  The writing doctrine holds over every tracked document
+  PASS  The doctrine gate refuses and accepts what it must
   PASS  Workflow contract holds for this repository's own script s
 
 PREFLIGHT PASSED: every step CI will run passes on this tree.
@@ -354,7 +354,7 @@ Basis: gate: exit code is the contract
 Basis: predicate: every prev_hash equals the previous entry_hash (0 breaks)
 
 ```
-754 entries, max 2026-08-13T08:55:59Z
+755 entries, max 2026-08-28T03:47:32Z
 0 linkage breaks
 1 Article 14 executions held
 13 open tasks
@@ -377,23 +377,23 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main e9ee7af26f84  ops(report): 2026-08-27 daily ops report, generated in CI under SH-7
+main b0450fb7bf0b  fix(ops): pair the ledger with the doctrine gate lesson
 ```
 
-### 27. qesis-mcp: required and owned checks on main  (FAIL, exit 0)
+### 27. qesis-mcp: required and owned checks on main  (PASS, exit 0)
 
 `gh api repos/rodrigoesl92-cloud/qesis-mcp/commits/main/check-runs?per_page=100`  in `C:\Users\Lenovo\qesis-mcp`
 
-Basis: measurement: every REQUIRED status check and every completed check this repository OWNS must be success on main (D-116 rules 5 and 6); not: qesis-integrity=never reported
+Basis: measurement: all 1 required check(s) and every completed owned check on main are success; integrations the ecosystem does not own (e.g. Cloud Build) are informational
 
 ```
 required by ruleset: qesis-integrity
-REQUIRED qesis-integrity: never reported
+REQUIRED qesis-integrity: success
 owned by this repository's workflows: binding, guard, heal, probe, report
-OWNED binding: no run on this commit
+OWNED binding: success
 OWNED guard: success
-OWNED heal: no run on this commit
-OWNED probe: no run on this commit
+OWNED heal: success
+OWNED probe: success
 OWNED report: no run on this commit
 informational cloudrun-qesis-mcp-git-europe-west1-rodrigoesl92-cloud-qesis: failure
 informational rmgpgab-qesis-mcp-europe-west1-rodrigoesl92-cloud-qesis-mcp-: failure
@@ -426,7 +426,7 @@ Basis: measurement: 0 open pull requests
 Basis: measurement: recorded for the deployment comparison
 
 ```
-main 17095c1b6bf0  ops(report): 2026-08-27 daily ops report, generated in CI under SH-7
+main 3debd752f198  fix(ops): remove em dashes per L-015 and L-079
 ```
 
 ### 31. sovereign-infra: required and owned checks on main  (PASS, exit 0)
@@ -441,11 +441,11 @@ owned by this repository's workflows: claude, disconnect, guard, heal, promote, 
 OWNED claude: no run on this commit
 OWNED disconnect: no run on this commit
 OWNED guard: success
-OWNED heal: no run on this commit
+OWNED heal: success
 OWNED promote: no run on this commit
 OWNED qesis-integrity: success
 OWNED report: no run on this commit
-OWNED verify: failure
+OWNED verify: success
 informational cloudrun-sovereign-infra-git-europe-west1-rodrigoesl92-cloud: failure
 ```
 
@@ -467,7 +467,7 @@ Basis: measurement: status ok, chain VERIFIED with 0 breaks, attestation agrees,
 
 ```
 status ok  vintage v9.0 (2026-08-13)  chain VERIFIED 754 entries 0 breaks
-deployment_commit e9ee7af26f84  main e9ee7af26f84
+deployment_commit b0450fb7bf0b  main b0450fb7bf0b
 tools 8  database connected
 ```
 
@@ -480,8 +480,4 @@ Basis: measurement: HTTP 200, predicate: 200
 ```
 HTTP 200
 ```
-
-## What is failing
-
-- **qesis-mcp: required and owned checks on main**: measurement: every REQUIRED status check and every completed check this repository OWNS must be success on main (D-116 rules 5 and 6); not: qesis-integrity=never reported, last line: `informational rmgpgab-qesis-mcp-europe-west1-rodrigoesl92-cloud-qesis-mcp-: failure`
 
