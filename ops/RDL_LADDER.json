@@ -403,18 +403,19 @@
    "decision_required": false
   },
   "declaration_built_from_one_side_of_a_pair": {
-   "occurrences": 1,
-   "rung": 1,
+   "occurrences": 2,
+   "rung": 2,
    "owner": "ARCHITECT",
    "family_hash": "62c8f880ba3a29d56ce9754080bc41d4f35180c2ecf5dd8bd065ed0f054d9e08",
-   "last_signature": "ops/GCP_FOOTPRINT.json listed one repository while three foreign checks exist across two, so the removal runnable would have left the third trigger in place",
-   "last_seen": "2026-08-28T02:19:18Z",
-   "prior_evidence": "",
+   "last_signature": "the lander appended lessons to both ledger copies and wrote the gap declaration that made the result legal into only one of them, so the repository that received the entries could not justify the holes they left",
+   "last_seen": "2026-08-28T20:17:31Z",
+   "prior_evidence": "L-194",
    "lesson_ids": [
-    "L-196"
+    "L-196",
+    "L-210"
    ],
    "ci_blocking": false,
-   "gate_required": false,
+   "gate_required": true,
    "decision_required": false
   },
   "superseded_state_printed_as_the_finding": {
