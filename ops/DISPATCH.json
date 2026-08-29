@@ -15,7 +15,7 @@
   "A control that did not execute is NOT MEASURED, never a pass (D-120).",
   "Never report a count of open items to the operator. Deliver items to their owners."
  ],
- "generated_utc": "2026-08-28T22:15:24Z",
+ "generated_utc": "2026-08-29T22:39:42Z",
  "served_vintage": "v9.0 (2026-08-13)",
  "verdict": "GREEN",
  "controls": [
@@ -69,7 +69,7 @@
    "tail": "CHAIN CHECK PASSED: the attestation reproduces from the committed spine."
   }
  ],
- "board_degraded": null,
+ "board_degraded": "The task board lives in the private repository and this runner checks out one. Not measured here, and not reported as zero.",
  "fed_by": [
   "ops/SELFHEAL_LATEST.json, hourly self-heal loop",
   "ops/AUDIT_REPORT.md, cross-repository audit",
