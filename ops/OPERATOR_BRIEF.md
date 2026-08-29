@@ -1,6 +1,6 @@
-# QESIS+ status, Friday 28 August 2026
+# QESIS+ status, Saturday 29 August 2026
 
-_Written by the runner at 22:15 UTC. Nobody's computer was involved._
+_Written by the runner at 22:39 UTC. Nobody's computer was involved._
 
 ## Everything is running. Nothing needs you.
 
@@ -18,7 +18,7 @@ The instrument is serving vintage **v9.0 (2026-08-13)**.
 
 ## What is yours
 
-Nothing. No decision is waiting on you.
+Not measurable from here. The task board lives in the private repository and this runner checks out one. Not measured here, and not reported as zero.
 
 ---
 
